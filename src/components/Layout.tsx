@@ -5,7 +5,7 @@ import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { loadStory, saveStory, createBlankStory } from '@/utils/storage';
 import { AppSidebar } from './AppSidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/auth';
 import { toast } from '@/components/ui/use-toast';
 
 interface LayoutProps {

@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,8 +14,8 @@ import Settings from "./pages/Settings";
 import Help from "./pages/Help";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
-import { AuthProvider } from "./hooks/useAuth";
-import { useAuth } from "./hooks/useAuth";
+import { AuthProvider } from "./hooks/auth";
+import { useAuth } from "./hooks/auth";
 
 const queryClient = new QueryClient();
 
