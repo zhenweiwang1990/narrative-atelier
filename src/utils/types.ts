@@ -63,8 +63,13 @@ export interface ChoiceElement extends BaseElement {
 export interface QteElement extends BaseElement {
   type: 'qte';
   description: string;
+  introText?: string; // Guide text shown before QTE starts
+  timeLimit?: number; // Time limit in seconds (3-6)
+  keySequence?: string; // Sequence of characters to press (3-6 chars)
   successSceneId: string;
   failureSceneId: string;
+  successTransition?: string; // Narration text for success transition
+  failureTransition?: string; // Narration text for failure transition
 }
 
 export interface DialogueTaskElement extends BaseElement {
@@ -75,6 +80,8 @@ export interface DialogueTaskElement extends BaseElement {
   openingLine: string;
   successSceneId: string;
   failureSceneId: string;
+  successTransition?: string; // Narration text for success transition
+  failureTransition?: string; // Narration text for failure transition
 }
 
 export type SceneElement = 

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { 
   Character, 
@@ -144,8 +145,13 @@ const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementE
           type: 'qte',
           order: newOrder,
           description: 'Enter QTE description here...',
+          introText: 'Get ready...',
+          timeLimit: 3,
+          keySequence: 'ABC',
           successSceneId: '',
-          failureSceneId: ''
+          failureSceneId: '',
+          successTransition: 'You succeeded!',
+          failureTransition: 'You failed!'
         } as QteElement;
         break;
         
@@ -159,7 +165,9 @@ const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementE
           background: 'Enter background information here...',
           openingLine: 'Enter the opening line from this character...',
           successSceneId: '',
-          failureSceneId: ''
+          failureSceneId: '',
+          successTransition: 'The conversation went well.',
+          failureTransition: 'The conversation did not go as planned.'
         } as DialogueTaskElement;
         break;
         
@@ -296,6 +304,20 @@ const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementE
     updateElement(elementId, updatedElement);
   };
 
+  // Validate QTE time limit (3-6 seconds)
+  const validateTimeLimit = (value: number): number => {
+    if (value < 3) return 3;
+    if (value > 6) return 6;
+    return value;
+  };
+
+  // Validate QTE key sequence (3-6 chars)
+  const validateKeySequence = (value: string): string => {
+    if (value.length < 3) return value.padEnd(3, 'A');
+    if (value.length > 6) return value.substring(0, 6);
+    return value;
+  };
+
   // Get element icon
   const getElementIcon = (type: ElementType) => {
     switch (type) {
@@ -375,7 +397,7 @@ const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementE
         </Button>
       </div>
       
-      <div className="space-y-2">
+      <div className="space-y-2 overflow-y-auto h-[calc(100vh-14rem)]">
         {elements.length === 0 ? (
           <div className="text-center py-6 bg-muted/30 rounded-lg border border-dashed">
             <p className="text-sm text-muted-foreground">No elements yet. Add your first scene element.</p>
@@ -404,7 +426,7 @@ const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementE
                     onClick={() => onSelectElement && onSelectElement(element.id)}
                   />
                   
-                  <AccordionTrigger className="hover:no-underline py-0 flex-1">
+                  <AccordionTrigger className="hover:no-underline py-0 flex-1" onClick={() => onSelectElement && onSelectElement(element.id)}>
                     <div className="flex items-center space-x-2">
                       {getElementIcon(element.type)}
                       <h3 className="font-medium capitalize text-sm">{element.type}</h3>
@@ -616,6 +638,45 @@ const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementE
                         />
                       </div>
                       
+                      <div>
+                        <Label className="text-xs">Intro Text</Label>
+                        <Input
+                          value={(element as QteElement).introText || ''}
+                          onChange={(e) => updateElement(element.id, { introText: e.target.value })}
+                          className="mt-1 h-7 text-xs"
+                          placeholder="Text shown before QTE starts"
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <Label className="text-xs">Time Limit (3-6 seconds)</Label>
+                          <Input
+                            type="number"
+                            min={3}
+                            max={6}
+                            value={(element as QteElement).timeLimit || 3}
+                            onChange={(e) => updateElement(element.id, { 
+                              timeLimit: validateTimeLimit(parseInt(e.target.value, 10)) 
+                            })}
+                            className="mt-1 h-7 text-xs"
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label className="text-xs">Key Sequence (3-6 chars)</Label>
+                          <Input
+                            value={(element as QteElement).keySequence || ''}
+                            onChange={(e) => updateElement(element.id, { 
+                              keySequence: validateKeySequence(e.target.value) 
+                            })}
+                            className="mt-1 h-7 text-xs"
+                            maxLength={6}
+                            placeholder="ABC"
+                          />
+                        </div>
+                      </div>
+                      
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <div>
                           <Label className="text-xs">Success Scene</Label>
@@ -659,6 +720,34 @@ const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementE
                           </Select>
                         </div>
                       </div>
+                      
+                      <Collapsible className="border rounded-md p-2 bg-muted/20">
+                        <CollapsibleTrigger className="flex items-center justify-between w-full text-xs font-medium">
+                          Transition Texts <ChevronDown className="h-3 w-3" />
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="pt-2 space-y-2">
+                          <div>
+                            <Label className="text-xs">Success Transition</Label>
+                            <Textarea
+                              value={(element as QteElement).successTransition || ''}
+                              onChange={(e) => updateElement(element.id, { successTransition: e.target.value })}
+                              className="mt-1 text-sm"
+                              rows={2}
+                              placeholder="Narration after success"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs">Failure Transition</Label>
+                            <Textarea
+                              value={(element as QteElement).failureTransition || ''}
+                              onChange={(e) => updateElement(element.id, { failureTransition: e.target.value })}
+                              className="mt-1 text-sm"
+                              rows={2}
+                              placeholder="Narration after failure"
+                            />
+                          </div>
+                        </CollapsibleContent>
+                      </Collapsible>
                     </div>
                   )}
                   
@@ -758,6 +847,34 @@ const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementE
                           </Select>
                         </div>
                       </div>
+                      
+                      <Collapsible className="border rounded-md p-2 bg-muted/20">
+                        <CollapsibleTrigger className="flex items-center justify-between w-full text-xs font-medium">
+                          Transition Texts <ChevronDown className="h-3 w-3" />
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="pt-2 space-y-2">
+                          <div>
+                            <Label className="text-xs">Success Transition</Label>
+                            <Textarea
+                              value={(element as DialogueTaskElement).successTransition || ''}
+                              onChange={(e) => updateElement(element.id, { successTransition: e.target.value })}
+                              className="mt-1 text-sm"
+                              rows={2}
+                              placeholder="Narration after success"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-xs">Failure Transition</Label>
+                            <Textarea
+                              value={(element as DialogueTaskElement).failureTransition || ''}
+                              onChange={(e) => updateElement(element.id, { failureTransition: e.target.value })}
+                              className="mt-1 text-sm"
+                              rows={2}
+                              placeholder="Narration after failure"
+                            />
+                          </div>
+                        </CollapsibleContent>
+                      </Collapsible>
                     </div>
                   )}
                 </AccordionContent>
