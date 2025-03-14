@@ -3,8 +3,7 @@ import React from 'react';
 import {
   ReactFlow, 
   Background, 
-  Controls, 
-  MiniMap,
+  Controls,
   NodeTypes
 } from 'reactflow';
 import 'reactflow/dist/style.css';
@@ -34,9 +33,7 @@ const FlowEditor = ({ onSceneSelect }: FlowEditorProps) => {
     onNodesChange,
     onEdgesChange,
     onConnect,
-    onNodeClick,
-    setNodes,
-    setEdges
+    onNodeClick
   } = useFlowTransformers(story, setStory, onSceneSelect);
 
   const {
@@ -54,7 +51,7 @@ const FlowEditor = ({ onSceneSelect }: FlowEditorProps) => {
   );
 
   return (
-    <div className="w-full h-[70vh] border rounded-lg bg-white shadow-sm">
+    <div className="w-full h-full border rounded-lg bg-white shadow-sm overflow-hidden">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -64,10 +61,12 @@ const FlowEditor = ({ onSceneSelect }: FlowEditorProps) => {
         onNodeClick={onNodeClick}
         nodeTypes={nodeTypes}
         fitView
+        minZoom={0.5}
+        maxZoom={2}
+        defaultViewport={{ x: 0, y: 0, zoom: 1 }}
       >
         <Background />
-        <Controls />
-        <MiniMap />
+        <Controls position="bottom-right" showInteractive={false} />
         
         <FlowActionsPanel
           selectedNode={selectedNode}

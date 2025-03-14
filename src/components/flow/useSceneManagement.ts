@@ -7,8 +7,8 @@ import { generateId } from '@/utils/storage';
 export const useSceneManagement = (
   story: Story | null,
   setStory: React.Dispatch<React.SetStateAction<Story | null>> | null,
-  nodes: FlowNode[],
-  setNodes: React.Dispatch<React.SetStateAction<FlowNode[]>>,
+  nodes: Node[],
+  setNodes: React.Dispatch<React.SetStateAction<Node[]>>,
   setEdges: React.Dispatch<React.SetStateAction<any[]>>,
   selectedNode: Node | null,
   setSelectedNode: React.Dispatch<React.SetStateAction<Node | null>>,
@@ -36,17 +36,22 @@ export const useSceneManagement = (
       scenes: [...story.scenes, newScene]
     });
     
+    // Find location name
+    const locationName = story.locations.find(loc => loc.id === newScene.locationId)?.name || 'Unknown Location';
+    
     // Add to flow
-    const newNode: FlowNode = {
+    const newNode = {
       id: newSceneId,
       type: 'scene',
       data: {
         label: newScene.title,
-        sceneType: newScene.type
+        sceneType: newScene.type,
+        locationName: locationName,
+        elements: []
       },
       position: {
-        x: (nodeCount % 4) * 250,
-        y: Math.floor(nodeCount / 4) * 150
+        x: (nodeCount % 3) * 250,
+        y: Math.floor(nodeCount / 3) * 180
       }
     };
     

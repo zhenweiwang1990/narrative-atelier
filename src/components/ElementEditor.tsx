@@ -145,6 +145,7 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
           goal: 'Enter dialogue goal here...',
           targetCharacterId: story.characters.find(c => c.role !== 'protagonist')?.id || '',
           background: 'Enter background information here...',
+          openingLine: 'Enter the opening line from this character...',
           successSceneId: '',
           failureSceneId: ''
         } as DialogueTaskElement;
@@ -276,12 +277,12 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
   // Get element icon
   const getElementIcon = (type: ElementType) => {
     switch (type) {
-      case 'narration': return <AlignLeft className="h-5 w-5" />;
-      case 'dialogue': return <MessageSquare className="h-5 w-5" />;
-      case 'thought': return <Brain className="h-5 w-5" />;
-      case 'choice': return <ListTree className="h-5 w-5" />;
-      case 'qte': return <Gamepad className="h-5 w-5" />;
-      case 'dialogueTask': return <MessagesSquare className="h-5 w-5" />;
+      case 'narration': return <AlignLeft className="h-4 w-4" />;
+      case 'dialogue': return <MessageSquare className="h-4 w-4" />;
+      case 'thought': return <Brain className="h-4 w-4" />;
+      case 'choice': return <ListTree className="h-4 w-4" />;
+      case 'qte': return <Gamepad className="h-4 w-4" />;
+      case 'dialogueTask': return <MessagesSquare className="h-4 w-4" />;
     }
   };
 
@@ -300,13 +301,13 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
   if (!story) return null;
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-1">
         <Button 
           variant="outline" 
           size="sm" 
           onClick={() => addElement('narration')}
-          className="flex items-center text-xs"
+          className="flex items-center text-xs h-7"
         >
           <AlignLeft className="h-3 w-3 mr-1" /> Narration
         </Button>
@@ -314,7 +315,7 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
           variant="outline" 
           size="sm" 
           onClick={() => addElement('dialogue')}
-          className="flex items-center text-xs"
+          className="flex items-center text-xs h-7"
         >
           <MessageSquare className="h-3 w-3 mr-1" /> Dialogue
         </Button>
@@ -322,7 +323,7 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
           variant="outline" 
           size="sm" 
           onClick={() => addElement('thought')}
-          className="flex items-center text-xs"
+          className="flex items-center text-xs h-7"
         >
           <Brain className="h-3 w-3 mr-1" /> Thought
         </Button>
@@ -330,7 +331,7 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
           variant="outline" 
           size="sm" 
           onClick={() => addElement('choice')}
-          className="flex items-center text-xs"
+          className="flex items-center text-xs h-7"
         >
           <ListTree className="h-3 w-3 mr-1" /> Choice
         </Button>
@@ -338,7 +339,7 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
           variant="outline" 
           size="sm" 
           onClick={() => addElement('qte')}
-          className="flex items-center text-xs"
+          className="flex items-center text-xs h-7"
         >
           <Gamepad className="h-3 w-3 mr-1" /> QTE
         </Button>
@@ -346,69 +347,69 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
           variant="outline" 
           size="sm" 
           onClick={() => addElement('dialogueTask')}
-          className="flex items-center text-xs"
+          className="flex items-center text-xs h-7"
         >
           <MessagesSquare className="h-3 w-3 mr-1" /> Dialogue Task
         </Button>
       </div>
       
-      <div className="space-y-3">
+      <div className="space-y-2">
         {elements.length === 0 ? (
-          <div className="text-center py-10 bg-muted/30 rounded-lg border border-dashed">
-            <p className="text-muted-foreground">No elements yet. Add your first scene element.</p>
+          <div className="text-center py-6 bg-muted/30 rounded-lg border border-dashed">
+            <p className="text-sm text-muted-foreground">No elements yet. Add your first scene element.</p>
           </div>
         ) : (
           elements.map((element, index) => (
             <Card 
               key={element.id} 
-              className={cn("p-4 transition-all", getElementClass(element.type))}
+              className={cn("p-3 transition-all text-sm", getElementClass(element.type))}
             >
-              <div className="flex justify-between items-start mb-3">
+              <div className="flex justify-between items-start mb-2">
                 <div className="flex items-center space-x-2">
                   {getElementIcon(element.type)}
-                  <h3 className="font-medium capitalize">{element.type}</h3>
+                  <h3 className="font-medium capitalize text-sm">{element.type}</h3>
                 </div>
                 
                 <div className="flex items-center space-x-1">
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    className="h-8 w-8" 
+                    className="h-6 w-6" 
                     onClick={() => moveElementUp(index)}
                     disabled={index === 0}
                   >
-                    <MoveUp className="h-4 w-4" />
+                    <MoveUp className="h-3 w-3" />
                   </Button>
                   <Button 
                     variant="ghost" 
                     size="icon"
-                    className="h-8 w-8"
+                    className="h-6 w-6"
                     onClick={() => moveElementDown(index)}
                     disabled={index === elements.length - 1}
                   >
-                    <MoveDown className="h-4 w-4" />
+                    <MoveDown className="h-3 w-3" />
                   </Button>
                   <Button 
                     variant="ghost" 
                     size="icon"
-                    className="h-8 w-8 text-destructive"
+                    className="h-6 w-6 text-destructive"
                     onClick={() => deleteElement(element.id)}
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-3 w-3" />
                   </Button>
                 </div>
               </div>
               
               {/* Narration Element */}
               {element.type === 'narration' && (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <div>
-                    <Label>Text</Label>
+                    <Label className="text-xs">Text</Label>
                     <Textarea
                       value={(element as NarrationElement).text}
                       onChange={(e) => updateElement(element.id, { text: e.target.value })}
-                      className="mt-1"
-                      rows={3}
+                      className="mt-1 text-sm"
+                      rows={2}
                     />
                   </div>
                 </div>
@@ -416,14 +417,14 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
               
               {/* Dialogue Element */}
               {element.type === 'dialogue' && (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <div>
-                    <Label>Character</Label>
+                    <Label className="text-xs">Character</Label>
                     <Select 
                       value={(element as DialogueElement).characterId}
                       onValueChange={(value) => updateElement(element.id, { characterId: value })}
                     >
-                      <SelectTrigger className="mt-1">
+                      <SelectTrigger className="mt-1 h-8 text-xs">
                         <SelectValue placeholder="Select character" />
                       </SelectTrigger>
                       <SelectContent>
@@ -439,12 +440,12 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
                   </div>
                   
                   <div>
-                    <Label>Dialogue</Label>
+                    <Label className="text-xs">Dialogue</Label>
                     <Textarea
                       value={(element as DialogueElement).text}
                       onChange={(e) => updateElement(element.id, { text: e.target.value })}
-                      className="mt-1"
-                      rows={3}
+                      className="mt-1 text-sm"
+                      rows={2}
                     />
                   </div>
                 </div>
@@ -452,14 +453,14 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
               
               {/* Thought Element */}
               {element.type === 'thought' && (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <div>
-                    <Label>Character</Label>
+                    <Label className="text-xs">Character</Label>
                     <Select 
                       value={(element as ThoughtElement).characterId}
                       onValueChange={(value) => updateElement(element.id, { characterId: value })}
                     >
-                      <SelectTrigger className="mt-1">
+                      <SelectTrigger className="mt-1 h-8 text-xs">
                         <SelectValue placeholder="Select character" />
                       </SelectTrigger>
                       <SelectContent>
@@ -475,12 +476,12 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
                   </div>
                   
                   <div>
-                    <Label>Thought</Label>
+                    <Label className="text-xs">Thought</Label>
                     <Textarea
                       value={(element as ThoughtElement).text}
                       onChange={(e) => updateElement(element.id, { text: e.target.value })}
-                      className="mt-1"
-                      rows={3}
+                      className="mt-1 text-sm"
+                      rows={2}
                     />
                   </div>
                 </div>
@@ -488,41 +489,41 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
               
               {/* Choice Element */}
               {element.type === 'choice' && (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <div>
-                    <Label>Description</Label>
+                    <Label className="text-xs">Description</Label>
                     <Textarea
                       value={(element as ChoiceElement).text}
                       onChange={(e) => updateElement(element.id, { text: e.target.value })}
-                      className="mt-1"
+                      className="mt-1 text-sm"
                       rows={2}
                     />
                   </div>
                   
                   <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <Label>Options</Label>
+                    <div className="flex justify-between items-center mb-1">
+                      <Label className="text-xs">Options</Label>
                       <Button 
                         variant="ghost" 
                         size="sm" 
                         onClick={() => addChoiceOption(element.id)}
                         disabled={(element as ChoiceElement).options.length >= 3}
-                        className="h-8 text-xs"
+                        className="h-6 text-xs"
                       >
-                        <Plus className="h-3 w-3 mr-1" /> Add Option
+                        <Plus className="h-3 w-3 mr-1" /> Add
                       </Button>
                     </div>
                     
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       {(element as ChoiceElement).options.map((option, optIdx) => (
-                        <div key={option.id} className="p-3 border rounded-md bg-muted/20">
-                          <div className="flex justify-between items-start mb-2">
+                        <div key={option.id} className="p-2 border rounded-md bg-muted/20">
+                          <div className="flex justify-between items-start mb-1">
                             <Label className="text-xs">Option {optIdx + 1}</Label>
                             
                             <Button 
                               variant="ghost" 
                               size="icon"
-                              className="h-6 w-6 text-destructive"
+                              className="h-5 w-5 text-destructive"
                               onClick={() => deleteChoiceOption(element.id, option.id)}
                               disabled={(element as ChoiceElement).options.length <= 1}
                             >
@@ -533,7 +534,7 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
                           <Input
                             value={option.text}
                             onChange={(e) => updateChoiceOption(element.id, option.id, { text: e.target.value })}
-                            className="mb-2"
+                            className="mb-1 h-7 text-xs"
                             placeholder="Option text"
                           />
                           
@@ -543,7 +544,7 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
                               value={option.nextSceneId}
                               onValueChange={(value) => updateChoiceOption(element.id, option.id, { nextSceneId: value })}
                             >
-                              <SelectTrigger className="mt-1">
+                              <SelectTrigger className="mt-1 h-7 text-xs">
                                 <SelectValue placeholder="Select next scene" />
                               </SelectTrigger>
                               <SelectContent>
@@ -566,25 +567,25 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
               
               {/* QTE Element */}
               {element.type === 'qte' && (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <div>
-                    <Label>Description</Label>
+                    <Label className="text-xs">Description</Label>
                     <Textarea
                       value={(element as QteElement).description}
                       onChange={(e) => updateElement(element.id, { description: e.target.value })}
-                      className="mt-1"
-                      rows={3}
+                      className="mt-1 text-sm"
+                      rows={2}
                     />
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <div>
-                      <Label>Success Scene</Label>
+                      <Label className="text-xs">Success Scene</Label>
                       <Select 
                         value={(element as QteElement).successSceneId}
                         onValueChange={(value) => updateElement(element.id, { successSceneId: value })}
                       >
-                        <SelectTrigger className="mt-1">
+                        <SelectTrigger className="mt-1 h-8 text-xs">
                           <SelectValue placeholder="Select scene" />
                         </SelectTrigger>
                         <SelectContent>
@@ -600,12 +601,12 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
                     </div>
                     
                     <div>
-                      <Label>Failure Scene</Label>
+                      <Label className="text-xs">Failure Scene</Label>
                       <Select 
                         value={(element as QteElement).failureSceneId}
                         onValueChange={(value) => updateElement(element.id, { failureSceneId: value })}
                       >
-                        <SelectTrigger className="mt-1">
+                        <SelectTrigger className="mt-1 h-8 text-xs">
                           <SelectValue placeholder="Select scene" />
                         </SelectTrigger>
                         <SelectContent>
@@ -625,23 +626,23 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
               
               {/* Dialogue Task Element */}
               {element.type === 'dialogueTask' && (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <div>
-                    <Label>Goal</Label>
+                    <Label className="text-xs">Goal</Label>
                     <Input
                       value={(element as DialogueTaskElement).goal}
                       onChange={(e) => updateElement(element.id, { goal: e.target.value })}
-                      className="mt-1"
+                      className="mt-1 h-7 text-xs"
                     />
                   </div>
                   
                   <div>
-                    <Label>Target Character</Label>
+                    <Label className="text-xs">Target Character</Label>
                     <Select 
                       value={(element as DialogueTaskElement).targetCharacterId}
                       onValueChange={(value) => updateElement(element.id, { targetCharacterId: value })}
                     >
-                      <SelectTrigger className="mt-1">
+                      <SelectTrigger className="mt-1 h-8 text-xs">
                         <SelectValue placeholder="Select character" />
                       </SelectTrigger>
                       <SelectContent>
@@ -655,25 +656,36 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
                       </SelectContent>
                     </Select>
                   </div>
-                  
+
                   <div>
-                    <Label>Background</Label>
+                    <Label className="text-xs">Opening Line</Label>
                     <Textarea
-                      value={(element as DialogueTaskElement).background}
-                      onChange={(e) => updateElement(element.id, { background: e.target.value })}
-                      className="mt-1"
-                      rows={3}
+                      value={(element as DialogueTaskElement).openingLine || ''}
+                      onChange={(e) => updateElement(element.id, { openingLine: e.target.value })}
+                      className="mt-1 text-sm"
+                      rows={2}
+                      placeholder="What does this character say first?"
                     />
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <Label className="text-xs">Background</Label>
+                    <Textarea
+                      value={(element as DialogueTaskElement).background}
+                      onChange={(e) => updateElement(element.id, { background: e.target.value })}
+                      className="mt-1 text-sm"
+                      rows={2}
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <div>
-                      <Label>Success Scene</Label>
+                      <Label className="text-xs">Success Scene</Label>
                       <Select 
                         value={(element as DialogueTaskElement).successSceneId}
                         onValueChange={(value) => updateElement(element.id, { successSceneId: value })}
                       >
-                        <SelectTrigger className="mt-1">
+                        <SelectTrigger className="mt-1 h-8 text-xs">
                           <SelectValue placeholder="Select scene" />
                         </SelectTrigger>
                         <SelectContent>
@@ -689,12 +701,12 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
                     </div>
                     
                     <div>
-                      <Label>Failure Scene</Label>
+                      <Label className="text-xs">Failure Scene</Label>
                       <Select 
                         value={(element as DialogueTaskElement).failureSceneId}
                         onValueChange={(value) => updateElement(element.id, { failureSceneId: value })}
                       >
-                        <SelectTrigger className="mt-1">
+                        <SelectTrigger className="mt-1 h-8 text-xs">
                           <SelectValue placeholder="Select scene" />
                         </SelectTrigger>
                         <SelectContent>

@@ -1,16 +1,23 @@
 
-import { useCallback, useEffect } from 'react';
-import { Node, Edge, Connection, addEdge } from 'reactflow';
-import { useNodesState, useEdgesState } from 'reactflow';
-import { Story, Scene, FlowNode, FlowEdge } from '@/utils/types';
+import { useCallback, useEffect, useState } from 'react';
+import { 
+  Node, 
+  Edge, 
+  Connection, 
+  addEdge, 
+  useNodesState, 
+  useEdgesState, 
+  MarkerType 
+} from 'reactflow';
+import { Story, Scene, SceneElement, FlowNode, FlowEdge } from '@/utils/types';
 
 export const useFlowTransformers = (
   story: Story | null,
   setStory: React.Dispatch<React.SetStateAction<Story | null>> | null,
   onSceneSelect: (sceneId: string) => void
 ) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState<FlowNode[]>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<FlowEdge[]>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge[]>([]);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
 
   // Convert scenes to nodes and connections
@@ -18,23 +25,29 @@ export const useFlowTransformers = (
     if (!story) return;
 
     // Create nodes from scenes
-    const flowNodes: FlowNode[] = story.scenes.map((scene, index) => ({
-      id: scene.id,
-      type: 'scene',
-      data: {
-        label: scene.title,
-        sceneType: scene.type
-      },
-      position: {
-        x: (index % 4) * 250,
-        y: Math.floor(index / 4) * 150
-      }
-    }));
+    const flowNodes = story.scenes.map((scene, index) => {
+      const location = story.locations.find(loc => loc.id === scene.locationId);
+      
+      return {
+        id: scene.id,
+        type: 'scene',
+        data: {
+          label: scene.title,
+          sceneType: scene.type,
+          locationName: location?.name || 'Unknown Location',
+          elements: scene.elements
+        },
+        position: {
+          x: (index % 3) * 250,
+          y: Math.floor(index / 3) * 180
+        }
+      };
+    });
 
     setNodes(flowNodes);
 
     // Create edges from scene connections
-    const flowEdges: FlowEdge[] = [];
+    const flowEdges: Edge[] = [];
     
     // Linear connections from nextSceneId
     story.scenes.forEach(scene => {
@@ -44,41 +57,85 @@ export const useFlowTransformers = (
           source: scene.id,
           target: scene.nextSceneId,
           type: 'smoothstep',
-          label: 'Next'
+          animated: false,
+          label: 'Next',
+          markerEnd: {
+            type: MarkerType.ArrowClosed
+          }
         });
       }
     });
 
     // Connections from choice elements
     story.scenes.forEach(scene => {
-      scene.elements.forEach(element => {
+      scene.elements.forEach((element, elemIndex) => {
         if (element.type === 'choice') {
-          element.options.forEach(option => {
+          element.options.forEach((option, optIndex) => {
+            if (option.nextSceneId) {
+              flowEdges.push({
+                id: `e-${scene.id}-${option.nextSceneId}-choice-${optIndex}`,
+                source: scene.id,
+                target: option.nextSceneId,
+                sourceHandle: `choice-${elemIndex}-${optIndex}`,
+                label: `Choice: ${option.text.substring(0, 15)}${option.text.length > 15 ? '...' : ''}`,
+                type: 'smoothstep',
+                animated: true,
+                style: { stroke: '#f59e0b' }
+              });
+            }
+          });
+        } else if (element.type === 'qte') {
+          if (element.successSceneId) {
             flowEdges.push({
-              id: `e-${scene.id}-${option.nextSceneId}-${option.id}`,
+              id: `e-${scene.id}-${element.successSceneId}-qte-success-${elemIndex}`,
               source: scene.id,
-              target: option.nextSceneId,
-              label: `Choice: ${option.text.substring(0, 20)}${option.text.length > 20 ? '...' : ''}`,
-              type: 'smoothstep'
+              sourceHandle: `qte-success-${elemIndex}`,
+              target: element.successSceneId,
+              label: 'Success',
+              type: 'smoothstep',
+              animated: true,
+              style: { stroke: '#10b981' }
             });
-          });
-        } else if (element.type === 'qte' || element.type === 'dialogueTask') {
-          // Add edges for QTE and DialogueTask success/failure
-          flowEdges.push({
-            id: `e-${scene.id}-${element.successSceneId}-success`,
-            source: scene.id,
-            target: element.successSceneId,
-            label: 'Success',
-            type: 'smoothstep'
-          });
+          }
           
-          flowEdges.push({
-            id: `e-${scene.id}-${element.failureSceneId}-failure`,
-            source: scene.id,
-            target: element.failureSceneId,
-            label: 'Failure',
-            type: 'smoothstep'
-          });
+          if (element.failureSceneId) {
+            flowEdges.push({
+              id: `e-${scene.id}-${element.failureSceneId}-qte-failure-${elemIndex}`,
+              source: scene.id,
+              sourceHandle: `qte-failure-${elemIndex}`,
+              target: element.failureSceneId,
+              label: 'Failure',
+              type: 'smoothstep',
+              animated: true,
+              style: { stroke: '#ef4444' }
+            });
+          }
+        } else if (element.type === 'dialogueTask') {
+          if (element.successSceneId) {
+            flowEdges.push({
+              id: `e-${scene.id}-${element.successSceneId}-dialogueTask-success-${elemIndex}`,
+              source: scene.id,
+              sourceHandle: `dialogueTask-success-${elemIndex}`,
+              target: element.successSceneId,
+              label: 'Success',
+              type: 'smoothstep',
+              animated: true,
+              style: { stroke: '#10b981' }
+            });
+          }
+          
+          if (element.failureSceneId) {
+            flowEdges.push({
+              id: `e-${scene.id}-${element.failureSceneId}-dialogueTask-failure-${elemIndex}`,
+              source: scene.id,
+              sourceHandle: `dialogueTask-failure-${elemIndex}`,
+              target: element.failureSceneId,
+              label: 'Failure',
+              type: 'smoothstep',
+              animated: true,
+              style: { stroke: '#ef4444' }
+            });
+          }
         }
       });
     });
@@ -95,7 +152,10 @@ export const useFlowTransformers = (
       setEdges((eds) => addEdge({
         ...connection,
         id: `e-${connection.source}-${connection.target}`,
-        type: 'smoothstep'
+        type: 'smoothstep',
+        markerEnd: {
+          type: MarkerType.ArrowClosed
+        }
       }, eds));
       
       // Update the story data - set the next scene
@@ -106,7 +166,7 @@ export const useFlowTransformers = (
           if (scene.id === connection.source) {
             return {
               ...scene,
-              nextSceneId: connection.target
+              nextSceneId: connection.target as string
             };
           }
           return scene;
@@ -122,11 +182,11 @@ export const useFlowTransformers = (
   );
 
   // Handle node selection
-  const onNodeClick = (_: React.MouseEvent, node: Node) => {
+  const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
     setSelectedNode(node);
     // Call the parent's scene select handler
     onSceneSelect(node.id);
-  };
+  }, [onSceneSelect]);
 
   return {
     nodes,
@@ -141,6 +201,3 @@ export const useFlowTransformers = (
     setEdges
   };
 };
-
-// Fix missing import
-import { useState } from 'react';

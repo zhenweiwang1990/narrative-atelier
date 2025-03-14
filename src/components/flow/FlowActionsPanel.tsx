@@ -2,8 +2,8 @@
 import React from 'react';
 import { Panel } from 'reactflow';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2 } from 'lucide-react';
-import { Node } from 'reactflow';
+import { Plus, Trash2, ZoomIn, ZoomOut, FitScreen } from 'lucide-react';
+import { Node, useReactFlow } from 'reactflow';
 
 interface FlowActionsPanelProps {
   selectedNode: Node | null;
@@ -16,28 +16,62 @@ const FlowActionsPanel = ({
   onAddScene, 
   onDeleteScene 
 }: FlowActionsPanelProps) => {
+  const { zoomIn, zoomOut, fitView } = useReactFlow();
+
   return (
-    <Panel position="top-right" className="bg-white p-2 rounded-md shadow-sm border">
-      <div className="flex space-x-2">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="flex items-center text-xs"
-          onClick={onAddScene}
-        >
-          <Plus className="h-3 w-3 mr-1" /> Add Scene
-        </Button>
-        
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex items-center text-xs"
-          onClick={onDeleteScene}
-          disabled={!selectedNode}
-        >
-          <Trash2 className="h-3 w-3 mr-1 text-destructive" /> Delete
-        </Button>
-      </div>
+    <Panel position="top-right" className="bg-white p-1 rounded-md shadow-sm border flex space-x-1">
+      <Button 
+        variant="outline" 
+        size="icon" 
+        className="h-7 w-7"
+        onClick={onAddScene}
+        title="Add Scene"
+      >
+        <Plus className="h-3.5 w-3.5" />
+      </Button>
+      
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-7 w-7"
+        onClick={onDeleteScene}
+        disabled={!selectedNode}
+        title="Delete Scene"
+      >
+        <Trash2 className="h-3.5 w-3.5 text-destructive" />
+      </Button>
+
+      <div className="border-l mx-1 h-7"></div>
+      
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-7 w-7"
+        onClick={() => zoomIn()}
+        title="Zoom In"
+      >
+        <ZoomIn className="h-3.5 w-3.5" />
+      </Button>
+      
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-7 w-7"
+        onClick={() => zoomOut()}
+        title="Zoom Out"
+      >
+        <ZoomOut className="h-3.5 w-3.5" />
+      </Button>
+      
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-7 w-7"
+        onClick={() => fitView()}
+        title="Fit View"
+      >
+        <FitScreen className="h-3.5 w-3.5" />
+      </Button>
     </Panel>
   );
 };

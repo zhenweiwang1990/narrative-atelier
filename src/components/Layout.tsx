@@ -3,6 +3,8 @@ import React, { ReactNode, useState, useEffect } from 'react';
 import { Story } from '@/utils/types';
 import { loadStory, saveStory, createBlankStory } from '@/utils/storage';
 import Navbar from './Navbar';
+import { AppSidebar } from './AppSidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 
 interface LayoutProps {
   children: ReactNode;
@@ -54,29 +56,34 @@ const Layout = ({ children }: LayoutProps) => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <Navbar story={story} onImport={handleImport} onSave={handleSave} />
-      <main className="flex-1 container mx-auto px-4 py-6 md:px-6 md:py-8 animate-fade-up">
-        {story ? (
-          <StoryContext.Provider value={{ story, setStory }}>
-            {children}
-          </StoryContext.Provider>
-        ) : (
-          <div className="flex items-center justify-center h-[60vh]">
-            <div className="animate-pulse text-center">
-              <p className="text-lg text-muted-foreground">Loading story data...</p>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-background text-foreground">
+        <AppSidebar />
+        <div className="flex flex-col flex-1 w-full">
+          <Navbar story={story} onImport={handleImport} onSave={handleSave} />
+          <main className="flex-1 px-3 py-3 md:px-4 md:py-4 animate-fade-up">
+            {story ? (
+              <StoryContext.Provider value={{ story, setStory }}>
+                {children}
+              </StoryContext.Provider>
+            ) : (
+              <div className="flex items-center justify-center h-[60vh]">
+                <div className="animate-pulse text-center">
+                  <p className="text-lg text-muted-foreground">Loading story data...</p>
+                </div>
+              </div>
+            )}
+          </main>
+          <footer className="py-3 border-t border-border">
+            <div className="px-3 md:px-4">
+              <p className="text-center text-xs text-muted-foreground">
+                Narrative Atelier — Interactive Story Editor
+              </p>
             </div>
-          </div>
-        )}
-      </main>
-      <footer className="py-6 border-t border-border">
-        <div className="container mx-auto px-4 md:px-6">
-          <p className="text-center text-sm text-muted-foreground">
-            Narrative Atelier — Interactive Story Editor
-          </p>
+          </footer>
         </div>
-      </footer>
-    </div>
+      </div>
+    </SidebarProvider>
   );
 };
 

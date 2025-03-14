@@ -72,6 +72,7 @@ export interface DialogueTaskElement extends BaseElement {
   goal: string;
   targetCharacterId: string;
   background: string;
+  openingLine: string;
   successSceneId: string;
   failureSceneId: string;
 }
@@ -114,6 +115,8 @@ export interface FlowNode {
   data: {
     label: string;
     sceneType: SceneType;
+    locationName?: string;
+    elements?: SceneElement[];
   };
   position: {
     x: number;
@@ -125,6 +128,10 @@ export interface FlowEdge {
   id: string;
   source: string;
   target: string;
+  sourceHandle?: string;
+  targetHandle?: string;
   label?: string;
   type?: string;
+  animated?: boolean;
+  style?: React.CSSProperties;
 }
