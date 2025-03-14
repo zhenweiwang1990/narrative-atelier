@@ -52,6 +52,8 @@ const FlowEditor = ({ onSceneSelect }: FlowEditorProps) => {
     onSceneSelect
   );
 
+  if (!story) return null;
+
   return (
     <div className="w-full h-full border rounded-lg bg-white shadow-sm overflow-hidden">
       <ReactFlow

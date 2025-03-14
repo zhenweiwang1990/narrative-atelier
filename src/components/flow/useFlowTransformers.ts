@@ -9,7 +9,7 @@ import {
   useEdgesState, 
   MarkerType 
 } from 'reactflow';
-import { Story, Scene, SceneElement, FlowNode, FlowEdge } from '@/utils/types';
+import { Story, Scene, SceneElement } from '@/utils/types';
 
 export const useFlowTransformers = (
   story: Story | null,
@@ -41,7 +41,7 @@ export const useFlowTransformers = (
           x: (index % 3) * 250,
           y: Math.floor(index / 3) * 180
         }
-      } as Node;
+      } as unknown as Node;
     });
 
     setNodes(flowNodes);
