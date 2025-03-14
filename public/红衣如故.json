@@ -1,0 +1,257 @@
+{
+  "id": "story_1741992613812",
+  "title": "红衣如故(Demo)",
+  "author": "Miss AI",
+  "description": "漼时宜跳下城楼的时候，再次醒来发现自己回到了离开清河郡第一次前往南辰王府的路上。",
+  "characters": [
+    {
+      "id": "character_1741992613812",
+      "name": "漼时宜\t",
+      "gender": "female",
+      "role": "protagonist",
+      "bio": "",
+      "portrait": "https://aishen-s3-1309519128.cos.ap-shanghai.myqcloud.com/story_card/01JP78A40AHEV9BWTZFH73CXMF.png",
+      "fullBody": "https://aishen-s3-1309519128.cos.ap-shanghai.myqcloud.com/story_card/01JP78A40AHEV9BWTZFH73CXMF_cutout.png"
+    },
+    {
+      "id": "character_1741992882743_9h05pmt",
+      "name": "周生辰",
+      "gender": "male",
+      "role": "supporting",
+      "bio": "",
+      "portrait": "https://aishen-s3-1309519128.cos.ap-shanghai.myqcloud.com/story_card/01JP78YJB90MNEC6ZP2BFZGG90.png",
+      "fullBody": "https://aishen-s3-1309519128.cos.ap-shanghai.myqcloud.com/story_card/01JP78YJB90MNEC6ZP2BFZGG90_cutout.png"
+    },
+    {
+      "id": "character_1741993163772_9dqn30l",
+      "name": "崔母",
+      "gender": "female",
+      "role": "supporting",
+      "bio": ""
+    },
+    {
+      "id": "character_1741993174532_l8f35d0",
+      "name": "成喜",
+      "gender": "female",
+      "role": "supporting",
+      "bio": ""
+    }
+  ],
+  "locations": [
+    {
+      "id": "location_1741992613812",
+      "name": "城楼",
+      "description": "城楼上",
+      "scenes": ["scene_1741992613812"],
+      "background": "https://aishen-s3-1309519128.cos.ap-shanghai.myqcloud.com/moment_upload_image/01JP4GVJWBP6RTBQJF8S5BJV0K.png"
+    },
+    {
+      "id": "location_1741992959086_8khc9z3",
+      "name": "去西州城路上",
+      "description": "",
+      "background": "https://aishen-s3-1309519128.cos.ap-shanghai.myqcloud.com/moment_upload_image/01JP4H0R37BJ6N8T0F8449ZRCG.png",
+      "scenes": []
+    },
+    {
+      "id": "location_1741992984166_4r8wgc4",
+      "name": "大殿里",
+      "description": "",
+      "background": "https://aishen-s3-1309519128.cos.ap-shanghai.myqcloud.com/moment_upload_image/01JP4HBBN05CDEC7WPHAQVJSTQ.png",
+      "scenes": []
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene_1741992613812",
+      "title": "S0",
+      "type": "start",
+      "locationId": "location_1741992613812",
+      "elements": [
+        {
+          "id": "element_1741992613812",
+          "type": "narration",
+          "order": 0,
+          "text": "“周生辰，我来嫁你了……你不说话，我就当你答应了……”"
+        },
+        {
+          "id": "narration_1741993065181_gatn693",
+          "type": "narration",
+          "order": 1,
+          "text": "你纵身跃下城楼，白雪纷飞，身处寒风之中，竟不觉痛。这是心如死灰的感觉。"
+        },
+        {
+          "id": "narration_1741993066237_j79z4ef",
+          "type": "narration",
+          "order": 2,
+          "text": "刹那间，恍惚的白光包围了你，接着感受到一个温暖的怀抱。"
+        }
+      ],
+      "nextSceneId": "scene_1741993015686_ljygh18"
+    },
+    {
+      "id": "scene_1741993015686_ljygh18",
+      "title": "S1",
+      "type": "normal",
+      "locationId": "location_1741992959086_8khc9z3",
+      "elements": [
+        {
+          "id": "dialogue_1741993199604_ihxu2pn",
+          "type": "dialogue",
+          "order": 0,
+          "characterId": "character_1741993163772_9dqn30l",
+          "text": "时宜，时宜你没事吧？"
+        },
+        {
+          "id": "narration_1741993214941_4101pjh",
+          "type": "narration",
+          "order": 1,
+          "text": "你猛然睁开双眼，发现自己正完好无损地坐在漼家马车中，扑在母亲怀里。"
+        },
+        {
+          "id": "narration_1741993238044_ns8imlb",
+          "type": "narration",
+          "order": 2,
+          "text": "车外立刻传来随从匆忙的声音：“夫人恕罪，刚才马儿受惊，夫人和姑娘可还好？”"
+        },
+        {
+          "id": "narration_1741993248172_pjy3wvv",
+          "type": "narration",
+          "order": 3,
+          "text": "漼三娘清了清嗓子，淡淡开口回应道：“无妨。”"
+        },
+        {
+          "id": "dialogue_1741993257357_lj67snx",
+          "type": "dialogue",
+          "order": 4,
+          "characterId": "character_1741992613812",
+          "text": "这怎么可能？！明明我……是从城墙跳下来的！这……回到过去了吗？"
+        },
+        {
+          "id": "narration_1741993268459_44ngbry",
+          "type": "narration",
+          "order": 5,
+          "text": "马车缓缓前行，母亲轻抚着你的背，语气温柔。"
+        },
+        {
+          "id": "dialogue_1741993269044_3u3wlnb",
+          "type": "dialogue",
+          "order": 6,
+          "characterId": "character_1741993163772_9dqn30l",
+          "text": "时宜，母亲适才见你梦中蹙眉，可是魇着了？"
+        },
+        {
+          "id": "dialogue_1741993269492_zxjytjg",
+          "type": "dialogue",
+          "order": 7,
+          "characterId": "character_1741992613812",
+          "text": "——母亲不用担心，只是梦境太真，一时分不清梦和现实了。"
+        },
+        {
+          "id": "dialogue_1741993301611_d5v57g6",
+          "type": "dialogue",
+          "order": 8,
+          "characterId": "character_1741993163772_9dqn30l",
+          "text": "傻孩子，梦虽真实，却始终是梦，人要向前看。"
+        },
+        {
+          "id": "thought_1741993336268_m2f3why",
+          "type": "thought",
+          "order": 9,
+          "characterId": "character_1741992613812",
+          "text": "竟真的是……回到了从清河郡去西州王府的路上。天道昭雪也好，临死前的幻梦也罢，这次，我决不能让一切重蹈覆辙！\"\n  "
+        },
+        {
+          "id": "thought_1741993346523_hnvfbpt",
+          "type": "thought",
+          "order": 10,
+          "characterId": "character_1741992613812",
+          "text": "无论这是真实的轮回，还是幻梦临终的挣扎，我都不能任由前世的悲剧再次发生。他与我，绝不能重蹈那样的结局！\""
+        }
+      ],
+      "nextSceneId": "scene_1741993026302_0opepxg"
+    },
+    {
+      "id": "scene_1741993026302_0opepxg",
+      "title": "S3",
+      "type": "normal",
+      "locationId": "location_1741992984166_4r8wgc4",
+      "elements": [
+        {
+          "id": "narration_1741993369051_mfwxnfy",
+          "type": "narration",
+          "order": 0,
+          "text": "几日后，小南辰王周生辰归来，漼家随之入王府正式拜师。"
+        },
+        {
+          "id": "narration_1741993372308_hqdh1v1",
+          "type": "narration",
+          "order": 1,
+          "text": "漼家礼数周全，你端着备好的礼物，一步一步走向他。"
+        },
+        {
+          "id": "choice_1741993382363_2iars3s",
+          "type": "choice",
+          "order": 2,
+          "text": "你决定",
+          "options": [
+            {
+              "id": "option_1741993382363_1q6mdge",
+              "text": "跪地奉上拜师礼",
+              "nextSceneId": "scene_1741993026566_dj2a5hm"
+            },
+            {
+              "id": "option_1741993406698_884fa60",
+              "text": "端立呈上拜师礼",
+              "nextSceneId": "scene_1741993417467_gpd9os2"
+            }
+          ]
+        }
+      ],
+      "nextSceneId": "scene_1741993026566_dj2a5hm"
+    },
+    {
+      "id": "scene_1741993026566_dj2a5hm",
+      "title": "S4",
+      "type": "normal",
+      "locationId": "location_1741992984166_4r8wgc4",
+      "elements": [
+        {
+          "id": "dialogue_1741993507962_7tmrie5",
+          "type": "dialogue",
+          "order": 0,
+          "characterId": "character_1741992882743_9h05pmt",
+          "text": "时宜，在家中被唤作十一是吗？正好我这里已有十名弟子，我便唤你十一，可好？"
+        }
+      ]
+    },
+    {
+      "id": "scene_1741993026902_xpi9iz1",
+      "title": "S5",
+      "type": "normal",
+      "locationId": "location_1741992613812",
+      "elements": []
+    },
+    {
+      "id": "scene_1741993417467_gpd9os2",
+      "title": "S3A",
+      "type": "normal",
+      "locationId": "location_1741992984166_4r8wgc4",
+      "elements": [
+        {
+          "id": "narration_1741993491882_ggb98tz",
+          "type": "narration",
+          "order": 0,
+          "text": "你站在周生辰面前，手托拜师礼，目光坚定。"
+        },
+        {
+          "id": "dialogue_1741993620800_pat5a3z",
+          "type": "dialogue",
+          "order": 1,
+          "characterId": "character_1741992882743_9h05pmt",
+          "text": "我唤你十一，可好？"
+        }
+      ]
+    }
+  ],
+  "globalValues": []
+}
