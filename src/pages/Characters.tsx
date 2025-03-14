@@ -1,52 +1,75 @@
-
-import React, { useState } from 'react';
-import { useStory } from '@/components/Layout';
-import CharacterCard from '@/components/CharacterCard';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Search, Edit, Trash2, User } from 'lucide-react';
-import { Character, CharacterGender, CharacterRole } from '@/utils/types';
-import { generateId } from '@/utils/storage';
+import React, { useState } from "react";
+import { useStory } from "@/components/Layout";
+import CharacterCard from "@/components/CharacterCard";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Plus, Search, Edit, Trash2, User } from "lucide-react";
+import { Character, CharacterGender, CharacterRole } from "@/utils/types";
+import { generateId } from "@/utils/storage";
 
 const Characters = () => {
   const { story, setStory } = useStory();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
+  const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(
+    null
+  );
   const [formData, setFormData] = useState<Partial<Character>>({
-    name: '',
-    gender: 'male',
-    role: 'supporting',
-    bio: '',
-    portrait: '',
-    fullBody: ''
+    name: "",
+    gender: "male",
+    role: "supporting",
+    bio: "",
+    portrait: "",
+    fullBody: "",
   });
 
   // 获取选中的角色用于编辑
-  const selectedCharacter = story?.characters.find(c => c.id === selectedCharacterId) || null;
+  const selectedCharacter =
+    story?.characters.find((c) => c.id === selectedCharacterId) || null;
 
   // 根据搜索查询过滤角色
-  const filteredCharacters = story?.characters.filter(character =>
-    character.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    character.bio.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || [];
+  const filteredCharacters =
+    story?.characters.filter(
+      (character) =>
+        character.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        character.bio.toLowerCase().includes(searchQuery.toLowerCase())
+    ) || [];
 
   // 打开创建角色对话框
   const handleOpenCreateDialog = () => {
     setIsEditMode(false);
     setFormData({
-      name: '',
-      gender: 'male',
-      role: 'supporting',
-      bio: '',
-      portrait: '',
-      fullBody: ''
+      name: "",
+      gender: "male",
+      role: "supporting",
+      bio: "",
+      portrait: "",
+      fullBody: "",
     });
     setIsDialogOpen(true);
   };
@@ -60,21 +83,23 @@ const Characters = () => {
       gender: character.gender,
       role: character.role,
       bio: character.bio,
-      portrait: character.portrait || '',
-      fullBody: character.fullBody || ''
+      portrait: character.portrait || "",
+      fullBody: character.fullBody || "",
     });
     setIsDialogOpen(true);
   };
 
   // 处理表单输入变化
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // 处理选择变化
   const handleSelectChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // 处理角色创建或更新
@@ -83,11 +108,11 @@ const Characters = () => {
 
     if (isEditMode && selectedCharacterId) {
       // 更新现有角色
-      const updatedCharacters = story.characters.map(character => {
+      const updatedCharacters = story.characters.map((character) => {
         if (character.id === selectedCharacterId) {
           return {
             ...character,
-            ...formData
+            ...formData,
           } as Character;
         }
         return character;
@@ -95,23 +120,23 @@ const Characters = () => {
 
       setStory({
         ...story,
-        characters: updatedCharacters
+        characters: updatedCharacters,
       });
     } else {
       // 创建新角色
       const newCharacter: Character = {
-        id: generateId('character'),
-        name: formData.name || '新角色',
-        gender: formData.gender as CharacterGender || 'male',
-        role: formData.role as CharacterRole || 'supporting',
-        bio: formData.bio || '',
+        id: generateId("character"),
+        name: formData.name || "新角色",
+        gender: (formData.gender as CharacterGender) || "male",
+        role: (formData.role as CharacterRole) || "supporting",
+        bio: formData.bio || "",
         portrait: formData.portrait || undefined,
-        fullBody: formData.fullBody || undefined
+        fullBody: formData.fullBody || undefined,
       };
 
       setStory({
         ...story,
-        characters: [...story.characters, newCharacter]
+        characters: [...story.characters, newCharacter],
       });
     }
 
@@ -124,7 +149,9 @@ const Characters = () => {
 
     setStory({
       ...story,
-      characters: story.characters.filter(character => character.id !== characterId)
+      characters: story.characters.filter(
+        (character) => character.id !== characterId
+      ),
     });
   };
 
@@ -136,7 +163,7 @@ const Characters = () => {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">角色</h1>
           <p className="text-sm text-muted-foreground">
-            管理您故事中的角色及其属性。
+            管理您剧情中的角色及其属性。
           </p>
         </div>
 
@@ -172,12 +199,15 @@ const Characters = () => {
           <TableBody>
             {filteredCharacters.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center h-32 text-muted-foreground">
+                <TableCell
+                  colSpan={6}
+                  className="text-center h-32 text-muted-foreground"
+                >
                   未找到角色。添加您的第一个角色以开始。
                 </TableCell>
               </TableRow>
             ) : (
-              filteredCharacters.map(character => (
+              filteredCharacters.map((character) => (
                 <TableRow key={character.id}>
                   <TableCell>
                     {character.portrait ? (
@@ -192,10 +222,18 @@ const Characters = () => {
                       </div>
                     )}
                   </TableCell>
-                  <TableCell className="font-medium">{character.name}</TableCell>
-                  <TableCell className="capitalize">{character.role === 'protagonist' ? '主角' : '配角'}</TableCell>
+                  <TableCell className="font-medium">
+                    {character.name}
+                  </TableCell>
                   <TableCell className="capitalize">
-                    {character.gender === 'male' ? '男' : character.gender === 'female' ? '女' : '其他'}
+                    {character.role === "protagonist" ? "主角" : "配角"}
+                  </TableCell>
+                  <TableCell className="capitalize">
+                    {character.gender === "male"
+                      ? "男"
+                      : character.gender === "female"
+                      ? "女"
+                      : "其他"}
                   </TableCell>
                   <TableCell className="hidden md:table-cell text-muted-foreground text-sm truncate max-w-[300px]">
                     {character.bio}
@@ -228,9 +266,9 @@ const Characters = () => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[525px]">
           <DialogHeader>
-            <DialogTitle>{isEditMode ? '编辑角色' : '创建角色'}</DialogTitle>
+            <DialogTitle>{isEditMode ? "编辑角色" : "创建角色"}</DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-4 py-2">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -242,12 +280,12 @@ const Characters = () => {
                   onChange={handleInputChange}
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="role">角色类型</Label>
                 <Select
                   value={formData.role}
-                  onValueChange={(value) => handleSelectChange('role', value)}
+                  onValueChange={(value) => handleSelectChange("role", value)}
                 >
                   <SelectTrigger id="role">
                     <SelectValue placeholder="选择角色类型" />
@@ -259,13 +297,13 @@ const Characters = () => {
                 </Select>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="gender">性别</Label>
                 <Select
                   value={formData.gender}
-                  onValueChange={(value) => handleSelectChange('gender', value)}
+                  onValueChange={(value) => handleSelectChange("gender", value)}
                 >
                   <SelectTrigger id="gender">
                     <SelectValue placeholder="选择性别" />
@@ -277,7 +315,7 @@ const Characters = () => {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="portrait">头像URL</Label>
                 <Input
@@ -289,7 +327,7 @@ const Characters = () => {
                 />
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="fullBody">全身像URL</Label>
               <Input
@@ -300,7 +338,7 @@ const Characters = () => {
                 placeholder="https://example.com/full-body.jpg"
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="bio">人物传记</Label>
               <Textarea
@@ -313,10 +351,10 @@ const Characters = () => {
               />
             </div>
           </div>
-          
+
           <DialogFooter>
             <Button type="submit" onClick={handleSaveCharacter}>
-              {isEditMode ? '更新角色' : '创建角色'}
+              {isEditMode ? "更新角色" : "创建角色"}
             </Button>
           </DialogFooter>
         </DialogContent>

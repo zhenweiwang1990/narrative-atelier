@@ -1,82 +1,81 @@
-
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { 
-  BookOpen, 
-  Users, 
-  MapPin, 
-  GitBranch, 
-  Settings, 
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import {
+  BookOpen,
+  Users,
+  MapPin,
+  GitBranch,
+  Settings,
   Menu,
   Save,
   Upload,
   Download,
-  Database
-} from 'lucide-react';
-import { 
-  Sidebar, 
-  SidebarContent, 
+  Database,
+} from "lucide-react";
+import {
+  Sidebar,
+  SidebarContent,
   SidebarTrigger,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuItem,
-  SidebarMenuButton
-} from '@/components/ui/sidebar';
-import { useStory } from './Layout';
+  SidebarMenuButton,
+} from "@/components/ui/sidebar";
+import { useStory } from "./Layout";
 
 export function AppSidebar() {
   const location = useLocation();
   const { story, handleSave, handleImport } = useStory();
-  
+
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const menuItems = [
     {
-      title: "故事",
+      title: "剧情",
       icon: BookOpen,
-      path: "/"
+      path: "/",
     },
     {
       title: "角色",
       icon: Users,
-      path: "/characters"
+      path: "/characters",
     },
     {
-      title: "场景",
+      title: "地点",
       icon: MapPin,
-      path: "/locations"
+      path: "/locations",
     },
     {
       title: "全局变量",
       icon: Database,
-      path: "/global-values"
+      path: "/global-values",
     },
     {
       title: "流程",
       icon: GitBranch,
-      path: "/flow"
+      path: "/flow",
     },
     {
       title: "设置",
       icon: Settings,
-      path: "/settings"
-    }
+      path: "/settings",
+    },
   ];
 
   const handleExport = () => {
     if (!story) return;
-    
+
     // 创建JSON blob并触发下载
     const content = JSON.stringify(story, null, 2);
-    const blob = new Blob([content], { type: 'application/json' });
+    const blob = new Blob([content], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
+
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `${story.title || 'narrative-atelier'}.json`;
+    a.download = `${story.title || "narrative-atelier"}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -98,11 +97,13 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <Link 
+                  <Link
                     to={item.path}
                     className={cn(
                       "flex items-center gap-3 text-sm py-2",
-                      location.pathname === item.path ? "text-primary font-medium" : "text-muted-foreground"
+                      location.pathname === item.path
+                        ? "text-primary font-medium"
+                        : "text-muted-foreground"
                     )}
                   >
                     <SidebarMenuButton className="w-full justify-start">
@@ -122,7 +123,7 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <div className="w-full">
-                  <SidebarMenuButton 
+                  <SidebarMenuButton
                     onClick={handleSave}
                     className="w-full justify-start"
                   >
@@ -133,17 +134,17 @@ export function AppSidebar() {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <div className="w-full">
-                  <SidebarMenuButton 
+                  <SidebarMenuButton
                     onClick={triggerImport}
                     className="w-full justify-start"
                   >
                     <Upload className="h-4 w-4" />
                     <span>导入</span>
                   </SidebarMenuButton>
-                  <input 
-                    type="file" 
+                  <input
+                    type="file"
                     ref={fileInputRef}
-                    accept=".json" 
+                    accept=".json"
                     className="hidden"
                     onChange={handleImport}
                   />
@@ -151,7 +152,7 @@ export function AppSidebar() {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <div className="w-full">
-                  <SidebarMenuButton 
+                  <SidebarMenuButton
                     onClick={handleExport}
                     className="w-full justify-start"
                   >
@@ -174,4 +175,4 @@ export function AppSidebar() {
       </div>
     </Sidebar>
   );
-};
+}

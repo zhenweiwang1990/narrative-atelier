@@ -1,11 +1,10 @@
-
-import { useState } from 'react';
-import { Accordion } from '@/components/ui/accordion';
-import { useStory } from './Layout';
-import { ElementContainer } from './elements/ElementContainer';
-import { useElementManagement } from '@/hooks/useElementManagement';
-import ElementTypeButtons from './elements/ElementTypeButtons';
-import EmptyElementsState from './elements/EmptyElementsState';
+import { useState } from "react";
+import { Accordion } from "@/components/ui/accordion";
+import { useStory } from "./Layout";
+import { ElementContainer } from "./elements/ElementContainer";
+import { useElementManagement } from "@/hooks/useElementManagement";
+import ElementTypeButtons from "./elements/ElementTypeButtons";
+import EmptyElementsState from "./elements/EmptyElementsState";
 
 interface ElementEditorProps {
   sceneId: string;
@@ -13,9 +12,13 @@ interface ElementEditorProps {
   onSelectElement?: (id: string) => void;
 }
 
-const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementEditorProps) => {
+const ElementEditor = ({
+  sceneId,
+  selectedElementId,
+  onSelectElement,
+}: ElementEditorProps) => {
   const { story, setStory } = useStory();
-  
+
   const {
     elements,
     addElement,
@@ -27,9 +30,9 @@ const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementE
     deleteChoiceOption,
     updateChoiceOption,
     validateTimeLimit,
-    validateKeySequence
+    validateKeySequence,
   } = useElementManagement(sceneId, story, setStory);
-  
+
   // 处理添加元素
   const handleAddElement = (type: any) => {
     const newElementId = addElement(type);
@@ -38,31 +41,31 @@ const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementE
       onSelectElement(newElementId);
     }
   };
-  
+
   // 处理删除元素
   const handleDeleteElement = (id: string) => {
     const deletedId = deleteElement(id);
     // 如果删除的元素正在被选中，则清除选择
     if (selectedElementId === deletedId && onSelectElement) {
-      onSelectElement('');
+      onSelectElement("");
     }
   };
 
   if (!story) return null;
 
-  // 从故事中获取全局变量
+  // 从剧情中获取全局变量
   const globalValues = story.globalValues || [];
 
   return (
     <div className="space-y-3">
       <ElementTypeButtons onAddElement={handleAddElement} />
-      
+
       <div className="space-y-2 overflow-y-auto h-[calc(100vh-14rem)]">
         {elements.length === 0 ? (
           <EmptyElementsState />
         ) : (
-          <Accordion 
-            type="multiple" 
+          <Accordion
+            type="multiple"
             className="space-y-2"
             value={selectedElementId ? [selectedElementId] : []}
           >

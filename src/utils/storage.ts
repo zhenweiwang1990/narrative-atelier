@@ -1,17 +1,16 @@
+import { Story } from "./types";
 
-import { Story } from './types';
-
-const STORY_STORAGE_KEY = 'interactive-story-editor';
+const STORY_STORAGE_KEY = "interactive-story-editor";
 
 // Load story from localStorage
 export const loadStory = (): Story | null => {
   try {
     const storyData = localStorage.getItem(STORY_STORAGE_KEY);
     if (!storyData) return null;
-    
+
     return JSON.parse(storyData);
   } catch (error) {
-    console.error('Failed to load story from localStorage:', error);
+    console.error("Failed to load story from localStorage:", error);
     return null;
   }
 };
@@ -21,7 +20,7 @@ export const saveStory = (story: Story): void => {
   try {
     localStorage.setItem(STORY_STORAGE_KEY, JSON.stringify(story));
   } catch (error) {
-    console.error('Failed to save story to localStorage:', error);
+    console.error("Failed to save story to localStorage:", error);
   }
 };
 
@@ -29,20 +28,20 @@ export const saveStory = (story: Story): void => {
 export const exportStory = (story: Story): void => {
   try {
     const storyJson = JSON.stringify(story, null, 2);
-    const blob = new Blob([storyJson], { type: 'application/json' });
+    const blob = new Blob([storyJson], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
+
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `${story.title.replace(/\s+/g, '_')}_story.json`;
+    a.download = `${story.title.replace(/\s+/g, "_")}_story.json`;
     document.body.appendChild(a);
     a.click();
-    
+
     // Cleanup
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   } catch (error) {
-    console.error('Failed to export story:', error);
+    console.error("Failed to export story:", error);
   }
 };
 
@@ -52,50 +51,52 @@ export const createBlankStory = (): Story => {
   const startSceneId = `scene_${Date.now()}`;
   const protagonistId = `character_${Date.now()}`;
   const locationId = `location_${Date.now()}`;
-  
+
   return {
     id: storyId,
-    title: 'Untitled Story',
-    author: 'Anonymous',
-    description: 'An interactive story.',
+    title: "新剧情",
+    author: "Anonymous",
+    description: "一个新剧情",
     characters: [
       {
         id: protagonistId,
-        name: 'Protagonist',
-        gender: 'other',
-        role: 'protagonist',
-        bio: 'The main character of the story.'
-      }
+        name: "主角",
+        gender: "other",
+        role: "protagonist",
+        bio: "剧情的主角",
+      },
     ],
     locations: [
       {
         id: locationId,
-        name: 'Starting Location',
-        description: 'The place where the story begins.',
-        scenes: [startSceneId]
-      }
+        name: "起始地点",
+        description: "剧情开始的地方.",
+        scenes: [startSceneId],
+      },
     ],
     scenes: [
       {
         id: startSceneId,
-        title: 'Beginning',
-        type: 'start',
+        title: "开始",
+        type: "start",
         locationId: locationId,
         elements: [
           {
             id: `element_${Date.now()}`,
-            type: 'narration',
+            type: "narration",
             order: 0,
-            text: 'The story begins here...'
-          }
-        ]
-      }
+            text: "剧情从这里开始...",
+          },
+        ],
+      },
     ],
-    globalValues: [] // Added empty global values array
+    globalValues: [], // Added empty global values array
   };
 };
 
 // Generate unique ID
 export const generateId = (prefix: string): string => {
-  return `${prefix}_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+  return `${prefix}_${Date.now()}_${Math.random()
+    .toString(36)
+    .substring(2, 9)}`;
 };

@@ -1,8 +1,20 @@
-
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
@@ -28,7 +40,7 @@ type ExportFormValues = z.infer<typeof exportFormSchema>;
 
 const Settings = () => {
   const { story } = useStory();
-  
+
   const generalForm = useForm<GeneralFormValues>({
     resolver: zodResolver(generalFormSchema),
     defaultValues: {
@@ -60,25 +72,26 @@ const Settings = () => {
   return (
     <div className="container mx-auto py-6">
       <h1 className="text-3xl font-bold mb-6">设置</h1>
-      
+
       <Tabs defaultValue="general" className="w-full">
         <TabsList className="mb-4">
           <TabsTrigger value="general">通用</TabsTrigger>
           <TabsTrigger value="export">导出选项</TabsTrigger>
           <TabsTrigger value="about">关于</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="general">
           <Card>
             <CardHeader>
               <CardTitle>通用设置</CardTitle>
-              <CardDescription>
-                配置应用程序的一般行为和外观。
-              </CardDescription>
+              <CardDescription>配置应用程序的一般行为和外观。</CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...generalForm}>
-                <form onSubmit={generalForm.handleSubmit(onGeneralSubmit)} className="space-y-6">
+                <form
+                  onSubmit={generalForm.handleSubmit(onGeneralSubmit)}
+                  className="space-y-6"
+                >
                   <FormField
                     control={generalForm.control}
                     name="autosave"
@@ -99,7 +112,7 @@ const Settings = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={generalForm.control}
                     name="darkMode"
@@ -120,17 +133,17 @@ const Settings = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={generalForm.control}
                     name="defaultCharacterColor"
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                         <div className="space-y-0.5">
-                          <FormLabel className="text-base">默认角色颜色</FormLabel>
-                          <FormDescription>
-                            用于新角色的颜色
-                          </FormDescription>
+                          <FormLabel className="text-base">
+                            默认角色颜色
+                          </FormLabel>
+                          <FormDescription>用于新角色的颜色</FormDescription>
                         </div>
                         <FormControl>
                           <Input
@@ -142,17 +155,17 @@ const Settings = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={generalForm.control}
                     name="defaultLocationColor"
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                         <div className="space-y-0.5">
-                          <FormLabel className="text-base">默认场景颜色</FormLabel>
-                          <FormDescription>
-                            用于新场景的颜色
-                          </FormDescription>
+                          <FormLabel className="text-base">
+                            默认场景颜色
+                          </FormLabel>
+                          <FormDescription>用于新场景的颜色</FormDescription>
                         </div>
                         <FormControl>
                           <Input
@@ -164,34 +177,37 @@ const Settings = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <Button type="submit">保存更改</Button>
                 </form>
               </Form>
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="export">
           <Card>
             <CardHeader>
               <CardTitle>导出设置</CardTitle>
-              <CardDescription>
-                配置故事导出方式
-              </CardDescription>
+              <CardDescription>配置剧情导出方式</CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...exportForm}>
-                <form onSubmit={exportForm.handleSubmit(onExportSubmit)} className="space-y-6">
+                <form
+                  onSubmit={exportForm.handleSubmit(onExportSubmit)}
+                  className="space-y-6"
+                >
                   <FormField
                     control={exportForm.control}
                     name="includeMetadata"
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                         <div className="space-y-0.5">
-                          <FormLabel className="text-base">包含元数据</FormLabel>
+                          <FormLabel className="text-base">
+                            包含元数据
+                          </FormLabel>
                           <FormDescription>
-                            导出故事时包含额外的元数据
+                            导出剧情时包含额外的元数据
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -203,7 +219,7 @@ const Settings = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={exportForm.control}
                     name="prettyPrint"
@@ -224,35 +240,33 @@ const Settings = () => {
                       </FormItem>
                     )}
                   />
-                  
+
                   <Button type="submit">保存更改</Button>
                 </form>
               </Form>
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="about">
           <Card>
             <CardHeader>
               <CardTitle>关于叙事工坊</CardTitle>
-              <CardDescription>
-                关于应用程序的信息
-              </CardDescription>
+              <CardDescription>关于应用程序的信息</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <h3 className="font-medium">版本</h3>
                 <p className="text-sm text-muted-foreground">1.0.0</p>
               </div>
-              
+
               <div>
                 <h3 className="font-medium">描述</h3>
                 <p className="text-sm text-muted-foreground">
-                  叙事工坊是一个交互式故事创作工具，旨在帮助作家创建具有丰富角色发展和场景管理的分支叙事。
+                  叙事工坊是一个交互式剧情创作工具，旨在帮助作家创建具有丰富角色发展和场景管理的分支叙事。
                 </p>
               </div>
-              
+
               <div>
                 <h3 className="font-medium">制作</h3>
                 <p className="text-sm text-muted-foreground">

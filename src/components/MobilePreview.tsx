@@ -1,13 +1,12 @@
-
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { useStory } from './Layout';
-import { ChevronRight } from 'lucide-react';
-import PreviewElement from './preview/PreviewElement';
-import SceneEnding from './preview/SceneEnding';
-import { usePreviewState } from './preview/usePreviewState';
-import ValuesDisplay from './preview/ValuesDisplay';
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useStory } from "./Layout";
+import { ChevronRight } from "lucide-react";
+import PreviewElement from "./preview/PreviewElement";
+import SceneEnding from "./preview/SceneEnding";
+import { usePreviewState } from "./preview/usePreviewState";
+import ValuesDisplay from "./preview/ValuesDisplay";
 
 interface MobilePreviewProps {
   sceneId: string;
@@ -16,9 +15,9 @@ interface MobilePreviewProps {
 
 const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
   const { story } = useStory();
-  
+
   if (!story) return null;
-  
+
   const {
     scene,
     location,
@@ -28,20 +27,20 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
     handleChoiceSelect,
     handleRevival,
     getCharacter,
-    globalValues
+    globalValues,
   } = usePreviewState(sceneId, story, onSceneChange);
-  
+
   if (!scene) return null;
-  
-  const locationBackground = location?.background || '/placeholder.svg';
-  
+
+  const locationBackground = location?.background || "/placeholder.svg";
+
   return (
     <Card className="w-full h-full border overflow-hidden flex flex-col bg-white">
-      <div 
+      <div
         className="h-[45%] bg-cover bg-center border-b"
         style={{ backgroundImage: `url(${locationBackground})` }}
       />
-      
+
       <div className="flex-1 overflow-auto">
         {isSceneEnding && currentElement ? (
           <SceneEnding scene={scene} handleRevival={handleRevival} />
@@ -49,7 +48,9 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
           <div>
             {!currentElement && location && (
               <div className="p-4 text-center">
-                <p className="text-sm text-muted-foreground mb-2">场景: {location.name || '未知'}</p>
+                <p className="text-sm text-muted-foreground mb-2">
+                  地点: {location.name || "未知"}
+                </p>
               </div>
             )}
             <PreviewElement
@@ -60,23 +61,27 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
             />
           </div>
         )}
-        
+
         {/* 添加全局变量显示 */}
         {story.globalValues && story.globalValues.length > 0 && (
           <ValuesDisplay values={globalValues} />
         )}
       </div>
-      
+
       <div className="p-3 border-t">
-        <Button 
+        <Button
           variant="secondary"
           size="sm"
           className="w-full"
           onClick={handleNext}
-          disabled={currentElement?.type === 'choice' || 
-                  currentElement?.type === 'qte' || 
-                  currentElement?.type === 'dialogueTask' ||
-                  (isSceneEnding && scene.type === 'bad-ending' && !!scene.revivalPointId)}
+          disabled={
+            currentElement?.type === "choice" ||
+            currentElement?.type === "qte" ||
+            currentElement?.type === "dialogueTask" ||
+            (isSceneEnding &&
+              scene.type === "bad-ending" &&
+              !!scene.revivalPointId)
+          }
         >
           下一步 <ChevronRight className="h-4 w-4 ml-1" />
         </Button>

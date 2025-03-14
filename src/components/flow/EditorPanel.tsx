@@ -1,9 +1,8 @@
-
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import FlowTabContent from './FlowTabContent';
-import { Scene, Story } from '@/utils/types';
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import FlowTabContent from "./FlowTabContent";
+import { Scene, Story } from "@/utils/types";
 
 interface EditorPanelProps {
   activeTab: string;
@@ -32,19 +31,35 @@ const EditorPanel = ({
   updateNextScene,
   updateRevivalPoint,
   selectedElementId,
-  setSelectedElementId
+  setSelectedElementId,
 }: EditorPanelProps) => {
   return (
     <Card className="overflow-hidden h-full">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="h-full flex flex-col"
+      >
         <div className="px-2 pt-2">
           <TabsList className="grid grid-cols-2 mb-2 h-8">
-            <TabsTrigger value="properties" disabled={!selectedSceneId} className="text-xs">Properties</TabsTrigger>
-            <TabsTrigger value="elements" disabled={!selectedSceneId} className="text-xs">Elements</TabsTrigger>
+            <TabsTrigger
+              value="properties"
+              disabled={!selectedSceneId}
+              className="text-xs"
+            >
+              属性
+            </TabsTrigger>
+            <TabsTrigger
+              value="elements"
+              disabled={!selectedSceneId}
+              className="text-xs"
+            >
+              内容
+            </TabsTrigger>
           </TabsList>
         </div>
-        
-        <FlowTabContent 
+
+        <FlowTabContent
           activeTab={activeTab}
           selectedSceneId={selectedSceneId}
           selectedScene={selectedScene}
