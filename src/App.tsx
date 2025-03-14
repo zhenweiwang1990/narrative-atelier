@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import Characters from "./pages/Characters";
 import Locations from "./pages/Locations";
 import Flow from "./pages/Flow";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/characters" element={<Characters />} />
             <Route path="/locations" element={<Locations />} />
             <Route path="/flow" element={<Flow />} />
+            <Route path="/settings" element={<Settings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
