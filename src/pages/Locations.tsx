@@ -29,14 +29,14 @@ const Locations = () => {
   
   // Form state
   const [name, setName] = useState('');
-  const [image, setImage] = useState('');
+  const [background, setBackground] = useState('');
   const [description, setDescription] = useState('');
   
   // Open dialog to add a new location
   const openAddDialog = () => {
     setEditingLocation(null);
     setName('');
-    setImage('');
+    setBackground('');
     setDescription('');
     setDialogOpen(true);
   };
@@ -45,7 +45,7 @@ const Locations = () => {
   const openEditDialog = (location: Location) => {
     setEditingLocation(location);
     setName(location.name);
-    setImage(location.image || '');
+    setBackground(location.background || '');
     setDescription(location.description);
     setDialogOpen(true);
   };
@@ -68,7 +68,7 @@ const Locations = () => {
           ? { 
               ...l, 
               name, 
-              image: image || undefined, 
+              background: background || undefined, 
               description 
             } 
           : l
@@ -88,8 +88,9 @@ const Locations = () => {
       const newLocation: Location = {
         id: generateId('location'),
         name,
-        image: image || undefined,
-        description
+        background: background || undefined,
+        description,
+        scenes: []
       };
       
       setStory({
@@ -214,14 +215,14 @@ const Locations = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="image" className="text-right">
-                  Image URL
+                <Label htmlFor="background" className="text-right">
+                  Background Image URL
                 </Label>
                 <Input
-                  id="image"
+                  id="background"
                   placeholder="https://example.com/image.jpg"
-                  value={image}
-                  onChange={(e) => setImage(e.target.value)}
+                  value={background}
+                  onChange={(e) => setBackground(e.target.value)}
                 />
               </div>
               

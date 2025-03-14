@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useStory } from '@/components/Layout';
-import { FlowEditor } from '@/components/FlowEditor';
+import FlowEditor from '@/components/FlowEditor';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, Plus } from 'lucide-react';
@@ -19,9 +19,9 @@ const Flow = () => {
     const newScene: Scene = {
       id: generateId('scene'),
       title: `New Scene ${story.scenes.length + 1}`,
-      elements: [],
-      position: { x: 250, y: 250 },
-      connections: []
+      type: 'normal',
+      locationId: '',
+      elements: []
     };
     
     setStory({
@@ -61,7 +61,7 @@ const Flow = () => {
         </Alert>
       ) : (
         <div className="h-[70vh] border rounded-md overflow-hidden">
-          <FlowEditor />
+          <FlowEditor onSceneSelect={() => {}} />
         </div>
       )}
     </div>
