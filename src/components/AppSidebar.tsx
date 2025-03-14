@@ -14,6 +14,8 @@ import {
   Download,
   Database,
   PanelLeft,
+  Plus,
+  LogOut,
 } from "lucide-react";
 import {
   Sidebar,
@@ -29,11 +31,17 @@ import {
 } from "@/components/ui/sidebar";
 import { useStory } from "./Layout";
 import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/components/ui/use-toast";
 
 export function AppSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { story, handleSave, handleImport } = useStory();
   const { state, toggleSidebar } = useSidebar();
+  const { user, userStories, addNewStory, currentStorySlug } = useAuth();
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -93,10 +101,77 @@ export function AppSidebar() {
     }
   };
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast({
+      title: "已退出登录",
+      description: "您已成功退出登录",
+    });
+    navigate("/auth");
+  };
+
+  const handleCreateStory = async () => {
+    if (addNewStory) {
+      try {
+        const newStory = await addNewStory();
+        if (newStory?.slug) {
+          navigate(`/editor/${newStory.slug}`);
+        }
+      } catch (error) {
+        console.error("创建剧情失败:", error);
+        toast({
+          title: "创建失败",
+          description: "无法创建新剧情，请稍后重试",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
   return (
     <>
       <Sidebar>
         <SidebarContent>
+          {user && (
+            <SidebarGroup>
+              <SidebarGroupLabel>我的剧情</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <div className="w-full">
+                      <SidebarMenuButton
+                        onClick={handleCreateStory}
+                        className="w-full justify-start"
+                      >
+                        <Plus className="h-4 w-4" />
+                        <span>创建新剧情</span>
+                      </SidebarMenuButton>
+                    </div>
+                  </SidebarMenuItem>
+                  
+                  {userStories?.map((userStory) => (
+                    <SidebarMenuItem key={userStory.id}>
+                      <Link
+                        to={`/editor/${userStory.slug}`}
+                        className={cn(
+                          "flex items-center gap-3 text-sm py-2",
+                          currentStorySlug === userStory.slug
+                            ? "text-primary font-medium"
+                            : "text-muted-foreground"
+                        )}
+                      >
+                        <SidebarMenuButton className="w-full justify-start">
+                          <BookOpen className="h-4 w-4" />
+                          <span>{userStory.title}</span>
+                        </SidebarMenuButton>
+                      </Link>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          )}
+
           <SidebarGroup>
             <SidebarGroupLabel>导航</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -104,10 +179,11 @@ export function AppSidebar() {
                 {menuItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <Link
-                      to={item.path}
+                      to={currentStorySlug ? `/editor/${currentStorySlug}${item.path}` : item.path}
                       className={cn(
                         "flex items-center gap-3 text-sm py-2",
-                        location.pathname === item.path
+                        location.pathname === item.path ||
+                        location.pathname === `/editor/${currentStorySlug}${item.path}`
                           ? "text-primary font-medium"
                           : "text-muted-foreground"
                       )}
@@ -167,6 +243,19 @@ export function AppSidebar() {
                     </SidebarMenuButton>
                   </div>
                 </SidebarMenuItem>
+                {user && (
+                  <SidebarMenuItem>
+                    <div className="w-full">
+                      <SidebarMenuButton
+                        onClick={handleLogout}
+                        className="w-full justify-start text-red-500"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        <span>退出登录</span>
+                      </SidebarMenuButton>
+                    </div>
+                  </SidebarMenuItem>
+                )}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -181,12 +270,12 @@ export function AppSidebar() {
         </div>
       </Sidebar>
       
-      {/* 添加侧边栏折叠时的悬浮按钮 */}
+      {/* 修改悬浮按钮位置至左下角 */}
       {state === "collapsed" && (
         <Button
           variant="outline"
           size="icon"
-          className="fixed top-4 left-4 z-50 bg-background shadow-md"
+          className="fixed bottom-4 left-4 z-50 bg-background shadow-md"
           onClick={toggleSidebar}
         >
           <PanelLeft className="h-4 w-4" />
