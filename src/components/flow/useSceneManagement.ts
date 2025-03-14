@@ -1,7 +1,7 @@
 
 import { useCallback } from 'react';
 import { Node } from 'reactflow';
-import { Story, Scene, FlowNode } from '@/utils/types';
+import { Story, Scene } from '@/utils/types';
 import { generateId } from '@/utils/storage';
 
 export const useSceneManagement = (
@@ -53,7 +53,7 @@ export const useSceneManagement = (
         x: (nodeCount % 3) * 250,
         y: Math.floor(nodeCount / 3) * 180
       }
-    };
+    } as Node;
     
     setNodes(nodes => [...nodes, newNode]);
     setSelectedNode(newNode);

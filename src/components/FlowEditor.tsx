@@ -25,6 +25,11 @@ interface FlowEditorProps {
 const FlowEditor = ({ onSceneSelect }: FlowEditorProps) => {
   const { story, setStory } = useStory();
   
+  // Return early if there's no story
+  if (!story) {
+    return <div className="w-full h-full flex items-center justify-center">Loading story data...</div>;
+  }
+  
   const {
     nodes,
     edges,
@@ -52,7 +57,10 @@ const FlowEditor = ({ onSceneSelect }: FlowEditorProps) => {
     onSceneSelect
   );
 
-  if (!story) return null;
+  // Make sure we have nodes before rendering ReactFlow
+  if (!nodes || nodes.length === 0) {
+    return <div className="w-full h-full flex items-center justify-center">No scenes available</div>;
+  }
 
   return (
     <div className="w-full h-full border rounded-lg bg-white shadow-sm overflow-hidden">
