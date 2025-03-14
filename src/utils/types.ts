@@ -95,6 +95,7 @@ export interface Scene {
   locationId: string;
   elements: SceneElement[];
   nextSceneId?: string; // For linear scenes
+  revivalPointId?: string; // For bad-ending scenes that can restart at another point
 }
 
 // Complete Story Structure

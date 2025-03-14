@@ -8,6 +8,7 @@ export interface SceneNodeData {
   sceneType: string;
   locationName: string;
   elements: SceneElement[];
+  revivalPointId?: string;
 }
 
 // Type for the complete flow state

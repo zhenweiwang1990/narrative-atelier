@@ -23,7 +23,23 @@ export const useFlowTransformers = (
     try {
       // Create nodes from scenes
       const flowNodes = scenesToNodes(story);
-      setNodes(flowNodes);
+      
+      // Add revivalPointId to node data if it exists in the scene
+      const enhancedNodes = flowNodes.map(node => {
+        const scene = story.scenes.find(s => s.id === node.id);
+        if (scene && scene.revivalPointId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              revivalPointId: scene.revivalPointId
+            }
+          };
+        }
+        return node;
+      });
+      
+      setNodes(enhancedNodes);
 
       // Create edges from scene connections
       const flowEdges = createEdgesFromStory(story);
