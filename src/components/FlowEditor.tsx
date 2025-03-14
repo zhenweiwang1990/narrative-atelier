@@ -81,6 +81,7 @@ const FlowEditor = ({ onSceneSelect }: FlowEditorProps) => {
         <Background />
         <Controls position="bottom-right" showInteractive={false} />
         
+        {/* Only render FlowActionsPanel if a node is selected - this prevents the Children.only error */}
         {selectedNode && (
           <FlowActionsPanel
             selectedNode={selectedNode}

@@ -11,9 +11,9 @@ export const useFlowTransformers = (
   setStory: React.Dispatch<React.SetStateAction<Story | null>> | null,
   onSceneSelect: (sceneId: string) => void
 ) => {
-  // Fix the generic type parameter - remove the nested Node<> type
+  // Fix the generic type parameter
   const [nodes, setNodes, onNodesChange] = useNodesState<SceneNodeData>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge[]>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState<Node<SceneNodeData> | null>(null);
 
   // Convert scenes to nodes and connections
