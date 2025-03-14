@@ -4,15 +4,14 @@ import {
   ReactFlow, 
   Background, 
   Controls,
-  NodeTypes,
-  Panel
+  NodeTypes
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useStory } from './Layout';
 import SceneNode from './flow/SceneNode';
 import { useFlowTransformers } from './flow/useFlowTransformers';
 import { useSceneManagement } from './flow/useSceneManagement';
-import FlowActionsPanel from './flow/FlowActionsPanel';
+import FlowPanel from './flow/FlowPanel';
 import { SceneNodeData } from './flow/flowTypes';
 
 // Custom Node Types
@@ -82,16 +81,12 @@ const FlowEditor = ({ onSceneSelect }: FlowEditorProps) => {
         <Background />
         <Controls position="bottom-right" showInteractive={false} />
         
-        {/* Render action buttons separately */}
-        {selectedNode && (
-          <Panel position="top-right" className="bg-white p-1 rounded-md shadow-sm border flex space-x-1">
-            <FlowActionsPanel
-              selectedNode={selectedNode}
-              onAddScene={addScene}
-              onDeleteScene={deleteSelectedScene}
-            />
-          </Panel>
-        )}
+        {/* Render action panel separately */}
+        <FlowPanel
+          selectedNode={selectedNode}
+          onAddScene={addScene}
+          onDeleteScene={deleteSelectedScene}
+        />
       </ReactFlow>
     </div>
   );
