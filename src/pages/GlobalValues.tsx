@@ -2,13 +2,14 @@
 import React from 'react';
 import GlobalValues from '@/components/GlobalValues';
 import { useStory } from '@/components/Layout';
+import { GlobalValue } from '@/utils/types';
 
 const GlobalValuesPage: React.FC = () => {
-  const { story, updateStory } = useStory();
+  const { story, setStory } = useStory();
   
-  const handleGlobalValuesChange = (values: any[]) => {
+  const handleGlobalValuesChange = (values: GlobalValue[]) => {
     if (!story) return;
-    updateStory({
+    setStory({
       ...story,
       globalValues: values
     });
