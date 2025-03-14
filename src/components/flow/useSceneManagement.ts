@@ -3,15 +3,16 @@ import { useCallback } from 'react';
 import { Node } from 'reactflow';
 import { Story, Scene } from '@/utils/types';
 import { generateId } from '@/utils/storage';
+import { SceneNodeData } from './flowTypes';
 
 export const useSceneManagement = (
   story: Story | null,
   setStory: React.Dispatch<React.SetStateAction<Story | null>> | null,
-  nodes: Node[],
-  setNodes: React.Dispatch<React.SetStateAction<Node[]>>,
+  nodes: Node<SceneNodeData>[],
+  setNodes: React.Dispatch<React.SetStateAction<Node<SceneNodeData>[]>>,
   setEdges: React.Dispatch<React.SetStateAction<any[]>>,
-  selectedNode: Node | null,
-  setSelectedNode: React.Dispatch<React.SetStateAction<Node | null>>,
+  selectedNode: Node<SceneNodeData> | null,
+  setSelectedNode: React.Dispatch<React.SetStateAction<Node<SceneNodeData> | null>>,
   onSceneSelect: (sceneId: string) => void
 ) => {
   // Add a new scene
@@ -53,7 +54,7 @@ export const useSceneManagement = (
         x: (nodeCount % 3) * 250,
         y: Math.floor(nodeCount / 3) * 180
       }
-    } as Node;
+    } as Node<SceneNodeData>;
     
     setNodes(nodes => [...nodes, newNode]);
     setSelectedNode(newNode);

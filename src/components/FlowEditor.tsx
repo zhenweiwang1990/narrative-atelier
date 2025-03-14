@@ -1,5 +1,5 @@
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
   ReactFlow, 
   Background, 
@@ -12,6 +12,7 @@ import SceneNode from './flow/SceneNode';
 import { useFlowTransformers } from './flow/useFlowTransformers';
 import { useSceneManagement } from './flow/useSceneManagement';
 import FlowActionsPanel from './flow/FlowActionsPanel';
+import { SceneNodeData } from './flow/flowTypes';
 
 // Custom Node Types
 const nodeTypes: NodeTypes = {
