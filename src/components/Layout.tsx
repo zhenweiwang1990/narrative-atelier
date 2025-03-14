@@ -2,7 +2,6 @@
 import React, { ReactNode, useState, useEffect } from 'react';
 import { Story } from '@/utils/types';
 import { loadStory, saveStory, createBlankStory } from '@/utils/storage';
-import Navbar from './Navbar';
 import { AppSidebar } from './AppSidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
@@ -58,30 +57,29 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background text-foreground">
-        <AppSidebar />
-        <div className="flex flex-col flex-1 w-full">
-          <Navbar story={story} onImport={handleImport} onSave={handleSave} />
-          <main className="flex-1 px-3 py-3 md:px-4 md:py-4 animate-fade-up">
-            {story ? (
-              <StoryContext.Provider value={{ story, setStory }}>
-                {children}
-              </StoryContext.Provider>
-            ) : (
-              <div className="flex items-center justify-center h-[60vh]">
-                <div className="animate-pulse text-center">
-                  <p className="text-lg text-muted-foreground">Loading story data...</p>
+        <StoryContext.Provider value={{ story, setStory, handleSave, handleImport }}>
+          <AppSidebar />
+          <div className="flex flex-col flex-1 w-full">
+            <main className="flex-1 px-3 py-3 md:px-4 md:py-4 animate-fade-up">
+              {story ? (
+                children
+              ) : (
+                <div className="flex items-center justify-center h-[60vh]">
+                  <div className="animate-pulse text-center">
+                    <p className="text-lg text-muted-foreground">Loading story data...</p>
+                  </div>
                 </div>
+              )}
+            </main>
+            <footer className="py-3 border-t border-border">
+              <div className="px-3 md:px-4">
+                <p className="text-center text-xs text-muted-foreground">
+                  Narrative Atelier — Interactive Story Editor
+                </p>
               </div>
-            )}
-          </main>
-          <footer className="py-3 border-t border-border">
-            <div className="px-3 md:px-4">
-              <p className="text-center text-xs text-muted-foreground">
-                Narrative Atelier — Interactive Story Editor
-              </p>
-            </div>
-          </footer>
-        </div>
+            </footer>
+          </div>
+        </StoryContext.Provider>
       </div>
     </SidebarProvider>
   );
@@ -91,9 +89,13 @@ const Layout = ({ children }: LayoutProps) => {
 export const StoryContext = React.createContext<{
   story: Story | null;
   setStory: React.Dispatch<React.SetStateAction<Story | null>>;
+  handleSave: () => void;
+  handleImport: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }>({
   story: null,
   setStory: () => {},
+  handleSave: () => {},
+  handleImport: () => {}
 });
 
 export const useStory = () => React.useContext(StoryContext);

@@ -15,6 +15,9 @@ interface EditorPanelProps {
   updateSceneType: (newType: any) => void;
   updateSceneLocation: (locationId: string) => void;
   updateNextScene: (nextSceneId: string) => void;
+  updateRevivalPoint?: (sceneId: string) => void;
+  selectedElementId?: string;
+  setSelectedElementId?: (id: string) => void;
 }
 
 const EditorPanel = ({
@@ -26,10 +29,13 @@ const EditorPanel = ({
   updateSceneTitle,
   updateSceneType,
   updateSceneLocation,
-  updateNextScene
+  updateNextScene,
+  updateRevivalPoint,
+  selectedElementId,
+  setSelectedElementId
 }: EditorPanelProps) => {
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden h-full">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
         <div className="px-2 pt-2">
           <TabsList className="grid grid-cols-3 mb-2 h-8">
@@ -48,6 +54,9 @@ const EditorPanel = ({
           updateSceneType={updateSceneType}
           updateSceneLocation={updateSceneLocation}
           updateNextScene={updateNextScene}
+          updateRevivalPoint={updateRevivalPoint}
+          selectedElementId={selectedElementId}
+          setSelectedElementId={setSelectedElementId}
         />
       </Tabs>
     </Card>

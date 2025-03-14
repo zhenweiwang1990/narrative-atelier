@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { 
   Character, 
@@ -20,15 +19,28 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Trash2, MoveUp, MoveDown, AlignLeft, MessageSquare, Brain, ListTree, Gamepad, MessagesSquare } from 'lucide-react';
+import { Plus, Trash2, MoveUp, MoveDown, AlignLeft, MessageSquare, Brain, ListTree, Gamepad, MessagesSquare, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { generateId } from '@/utils/storage';
+import { 
+  Collapsible, 
+  CollapsibleContent, 
+  CollapsibleTrigger 
+} from '@/components/ui/collapsible';
+import { 
+  Accordion, 
+  AccordionContent, 
+  AccordionItem, 
+  AccordionTrigger 
+} from '@/components/ui/accordion';
 
 interface ElementEditorProps {
   sceneId: string;
+  selectedElementId?: string;
+  onSelectElement?: (id: string) => void;
 }
 
-const ElementEditor = ({ sceneId }: ElementEditorProps) => {
+const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementEditorProps) => {
   const { story, setStory } = useStory();
   const [elements, setElements] = useState<SceneElement[]>([]);
   
@@ -158,6 +170,11 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
     const updatedElements = [...elements, newElement];
     setElements(updatedElements as SceneElement[]);
     updateStory(updatedElements as SceneElement[]);
+    
+    // Auto-select the new element
+    if (onSelectElement) {
+      onSelectElement(newElement.id);
+    }
   };
 
   // Delete element
@@ -171,6 +188,11 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
     
     setElements(reorderedElements);
     updateStory(reorderedElements);
+    
+    // Clear selection if the deleted element was selected
+    if (selectedElementId === id && onSelectElement) {
+      onSelectElement('');
+    }
   };
 
   // Move element up
@@ -286,15 +308,15 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
     }
   };
 
-  // Get element class
-  const getElementClass = (type: ElementType) => {
+  // Get element color class
+  const getElementColorClass = (type: ElementType) => {
     switch (type) {
-      case 'narration': return 'element-narration';
-      case 'dialogue': return 'element-dialogue';
-      case 'thought': return 'element-thought';
-      case 'choice': return 'element-choice';
-      case 'qte': return 'element-qte';
-      case 'dialogueTask': return 'element-dialogueTask';
+      case 'narration': return 'bg-gray-400';
+      case 'dialogue': return 'bg-blue-400';
+      case 'thought': return 'bg-purple-400';
+      case 'choice': return 'bg-amber-400';
+      case 'qte': return 'bg-red-400';
+      case 'dialogueTask': return 'bg-green-400';
     }
   };
 
@@ -359,372 +381,389 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
             <p className="text-sm text-muted-foreground">No elements yet. Add your first scene element.</p>
           </div>
         ) : (
-          elements.map((element, index) => (
-            <Card 
-              key={element.id} 
-              className={cn("p-3 transition-all text-sm", getElementClass(element.type))}
-            >
-              <div className="flex justify-between items-start mb-2">
-                <div className="flex items-center space-x-2">
-                  {getElementIcon(element.type)}
-                  <h3 className="font-medium capitalize text-sm">{element.type}</h3>
+          <Accordion 
+            type="multiple" 
+            className="space-y-2"
+            value={selectedElementId ? [selectedElementId] : []}
+          >
+            {elements.map((element, index) => (
+              <AccordionItem 
+                key={element.id} 
+                value={element.id}
+                className={cn(
+                  "rounded-md border overflow-hidden", 
+                  selectedElementId === element.id && "ring-2 ring-primary"
+                )}
+              >
+                <div className="flex items-center space-x-2 p-2 bg-muted/20">
+                  <div 
+                    className={cn(
+                      "w-4 h-4 rounded cursor-pointer",
+                      getElementColorClass(element.type)
+                    )}
+                    onClick={() => onSelectElement && onSelectElement(element.id)}
+                  />
+                  
+                  <AccordionTrigger className="hover:no-underline py-0 flex-1">
+                    <div className="flex items-center space-x-2">
+                      {getElementIcon(element.type)}
+                      <h3 className="font-medium capitalize text-sm">{element.type}</h3>
+                    </div>
+                  </AccordionTrigger>
+                  
+                  <div className="flex items-center space-x-1">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-6 w-6" 
+                      onClick={() => moveElementUp(index)}
+                      disabled={index === 0}
+                    >
+                      <MoveUp className="h-3 w-3" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => moveElementDown(index)}
+                      disabled={index === elements.length - 1}
+                    >
+                      <MoveDown className="h-3 w-3" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-6 w-6 text-destructive"
+                      onClick={() => deleteElement(element.id)}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
                 </div>
                 
-                <div className="flex items-center space-x-1">
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="h-6 w-6" 
-                    onClick={() => moveElementUp(index)}
-                    disabled={index === 0}
-                  >
-                    <MoveUp className="h-3 w-3" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    className="h-6 w-6"
-                    onClick={() => moveElementDown(index)}
-                    disabled={index === elements.length - 1}
-                  >
-                    <MoveDown className="h-3 w-3" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    className="h-6 w-6 text-destructive"
-                    onClick={() => deleteElement(element.id)}
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
-                </div>
-              </div>
-              
-              {/* Narration Element */}
-              {element.type === 'narration' && (
-                <div className="space-y-2">
-                  <div>
-                    <Label className="text-xs">Text</Label>
-                    <Textarea
-                      value={(element as NarrationElement).text}
-                      onChange={(e) => updateElement(element.id, { text: e.target.value })}
-                      className="mt-1 text-sm"
-                      rows={2}
-                    />
-                  </div>
-                </div>
-              )}
-              
-              {/* Dialogue Element */}
-              {element.type === 'dialogue' && (
-                <div className="space-y-2">
-                  <div>
-                    <Label className="text-xs">Character</Label>
-                    <Select 
-                      value={(element as DialogueElement).characterId}
-                      onValueChange={(value) => updateElement(element.id, { characterId: value })}
-                    >
-                      <SelectTrigger className="mt-1 h-8 text-xs">
-                        <SelectValue placeholder="Select character" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {story.characters.map(character => (
-                            <SelectItem key={character.id} value={character.id}>
-                              {character.name} {character.role === 'protagonist' ? '(Protagonist)' : ''}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <Label className="text-xs">Dialogue</Label>
-                    <Textarea
-                      value={(element as DialogueElement).text}
-                      onChange={(e) => updateElement(element.id, { text: e.target.value })}
-                      className="mt-1 text-sm"
-                      rows={2}
-                    />
-                  </div>
-                </div>
-              )}
-              
-              {/* Thought Element */}
-              {element.type === 'thought' && (
-                <div className="space-y-2">
-                  <div>
-                    <Label className="text-xs">Character</Label>
-                    <Select 
-                      value={(element as ThoughtElement).characterId}
-                      onValueChange={(value) => updateElement(element.id, { characterId: value })}
-                    >
-                      <SelectTrigger className="mt-1 h-8 text-xs">
-                        <SelectValue placeholder="Select character" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {story.characters.map(character => (
-                            <SelectItem key={character.id} value={character.id}>
-                              {character.name} {character.role === 'protagonist' ? '(Protagonist)' : ''}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <Label className="text-xs">Thought</Label>
-                    <Textarea
-                      value={(element as ThoughtElement).text}
-                      onChange={(e) => updateElement(element.id, { text: e.target.value })}
-                      className="mt-1 text-sm"
-                      rows={2}
-                    />
-                  </div>
-                </div>
-              )}
-              
-              {/* Choice Element */}
-              {element.type === 'choice' && (
-                <div className="space-y-2">
-                  <div>
-                    <Label className="text-xs">Description</Label>
-                    <Textarea
-                      value={(element as ChoiceElement).text}
-                      onChange={(e) => updateElement(element.id, { text: e.target.value })}
-                      className="mt-1 text-sm"
-                      rows={2}
-                    />
-                  </div>
-                  
-                  <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <Label className="text-xs">Options</Label>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        onClick={() => addChoiceOption(element.id)}
-                        disabled={(element as ChoiceElement).options.length >= 3}
-                        className="h-6 text-xs"
-                      >
-                        <Plus className="h-3 w-3 mr-1" /> Add
-                      </Button>
-                    </div>
-                    
+                <AccordionContent className="p-3 pt-2">
+                  {/* Element content based on type */}
+                  {element.type === 'narration' && (
                     <div className="space-y-2">
-                      {(element as ChoiceElement).options.map((option, optIdx) => (
-                        <div key={option.id} className="p-2 border rounded-md bg-muted/20">
-                          <div className="flex justify-between items-start mb-1">
-                            <Label className="text-xs">Option {optIdx + 1}</Label>
-                            
-                            <Button 
-                              variant="ghost" 
-                              size="icon"
-                              className="h-5 w-5 text-destructive"
-                              onClick={() => deleteChoiceOption(element.id, option.id)}
-                              disabled={(element as ChoiceElement).options.length <= 1}
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </div>
-                          
-                          <Input
-                            value={option.text}
-                            onChange={(e) => updateChoiceOption(element.id, option.id, { text: e.target.value })}
-                            className="mb-1 h-7 text-xs"
-                            placeholder="Option text"
-                          />
-                          
-                          <div>
-                            <Label className="text-xs">Next Scene</Label>
-                            <Select 
-                              value={option.nextSceneId}
-                              onValueChange={(value) => updateChoiceOption(element.id, option.id, { nextSceneId: value })}
-                            >
-                              <SelectTrigger className="mt-1 h-7 text-xs">
-                                <SelectValue placeholder="Select next scene" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectGroup>
-                                  {story.scenes.map(scene => (
-                                    <SelectItem key={scene.id} value={scene.id}>
-                                      {scene.title} ({scene.type})
-                                    </SelectItem>
-                                  ))}
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
-                          </div>
+                      <div>
+                        <Label className="text-xs">Text</Label>
+                        <Textarea
+                          value={(element as NarrationElement).text}
+                          onChange={(e) => updateElement(element.id, { text: e.target.value })}
+                          className="mt-1 text-sm"
+                          rows={2}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  
+                  {element.type === 'dialogue' && (
+                    <div className="space-y-2">
+                      <div>
+                        <Label className="text-xs">Character</Label>
+                        <Select 
+                          value={(element as DialogueElement).characterId}
+                          onValueChange={(value) => updateElement(element.id, { characterId: value })}
+                        >
+                          <SelectTrigger className="mt-1 h-8 text-xs">
+                            <SelectValue placeholder="Select character" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              {story.characters.map(character => (
+                                <SelectItem key={character.id} value={character.id}>
+                                  {character.name} {character.role === 'protagonist' ? '(Protagonist)' : ''}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label className="text-xs">Dialogue</Label>
+                        <Textarea
+                          value={(element as DialogueElement).text}
+                          onChange={(e) => updateElement(element.id, { text: e.target.value })}
+                          className="mt-1 text-sm"
+                          rows={2}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  
+                  {element.type === 'thought' && (
+                    <div className="space-y-2">
+                      <div>
+                        <Label className="text-xs">Character</Label>
+                        <Select 
+                          value={(element as ThoughtElement).characterId}
+                          onValueChange={(value) => updateElement(element.id, { characterId: value })}
+                        >
+                          <SelectTrigger className="mt-1 h-8 text-xs">
+                            <SelectValue placeholder="Select character" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              {story.characters.map(character => (
+                                <SelectItem key={character.id} value={character.id}>
+                                  {character.name} {character.role === 'protagonist' ? '(Protagonist)' : ''}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label className="text-xs">Thought</Label>
+                        <Textarea
+                          value={(element as ThoughtElement).text}
+                          onChange={(e) => updateElement(element.id, { text: e.target.value })}
+                          className="mt-1 text-sm"
+                          rows={2}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  
+                  {element.type === 'choice' && (
+                    <div className="space-y-2">
+                      <div>
+                        <Label className="text-xs">Description</Label>
+                        <Textarea
+                          value={(element as ChoiceElement).text}
+                          onChange={(e) => updateElement(element.id, { text: e.target.value })}
+                          className="mt-1 text-sm"
+                          rows={2}
+                        />
+                      </div>
+                      
+                      <div>
+                        <div className="flex justify-between items-center mb-1">
+                          <Label className="text-xs">Options</Label>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => addChoiceOption(element.id)}
+                            disabled={(element as ChoiceElement).options.length >= 3}
+                            className="h-6 text-xs"
+                          >
+                            <Plus className="h-3 w-3 mr-1" /> Add
+                          </Button>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              {/* QTE Element */}
-              {element.type === 'qte' && (
-                <div className="space-y-2">
-                  <div>
-                    <Label className="text-xs">Description</Label>
-                    <Textarea
-                      value={(element as QteElement).description}
-                      onChange={(e) => updateElement(element.id, { description: e.target.value })}
-                      className="mt-1 text-sm"
-                      rows={2}
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <div>
-                      <Label className="text-xs">Success Scene</Label>
-                      <Select 
-                        value={(element as QteElement).successSceneId}
-                        onValueChange={(value) => updateElement(element.id, { successSceneId: value })}
-                      >
-                        <SelectTrigger className="mt-1 h-8 text-xs">
-                          <SelectValue placeholder="Select scene" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            {story.scenes.map(scene => (
-                              <SelectItem key={scene.id} value={scene.id}>
-                                {scene.title} ({scene.type})
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div>
-                      <Label className="text-xs">Failure Scene</Label>
-                      <Select 
-                        value={(element as QteElement).failureSceneId}
-                        onValueChange={(value) => updateElement(element.id, { failureSceneId: value })}
-                      >
-                        <SelectTrigger className="mt-1 h-8 text-xs">
-                          <SelectValue placeholder="Select scene" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            {story.scenes.map(scene => (
-                              <SelectItem key={scene.id} value={scene.id}>
-                                {scene.title} ({scene.type})
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              {/* Dialogue Task Element */}
-              {element.type === 'dialogueTask' && (
-                <div className="space-y-2">
-                  <div>
-                    <Label className="text-xs">Goal</Label>
-                    <Input
-                      value={(element as DialogueTaskElement).goal}
-                      onChange={(e) => updateElement(element.id, { goal: e.target.value })}
-                      className="mt-1 h-7 text-xs"
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label className="text-xs">Target Character</Label>
-                    <Select 
-                      value={(element as DialogueTaskElement).targetCharacterId}
-                      onValueChange={(value) => updateElement(element.id, { targetCharacterId: value })}
-                    >
-                      <SelectTrigger className="mt-1 h-8 text-xs">
-                        <SelectValue placeholder="Select character" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {story.characters.map(character => (
-                            <SelectItem key={character.id} value={character.id}>
-                              {character.name} {character.role === 'protagonist' ? '(Protagonist)' : ''}
-                            </SelectItem>
+                        
+                        <div className="space-y-2">
+                          {(element as ChoiceElement).options.map((option, optIdx) => (
+                            <div key={option.id} className="p-2 border rounded-md bg-muted/20">
+                              <div className="flex justify-between items-start mb-1">
+                                <Label className="text-xs">Option {optIdx + 1}</Label>
+                                
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon"
+                                  className="h-5 w-5 text-destructive"
+                                  onClick={() => deleteChoiceOption(element.id, option.id)}
+                                  disabled={(element as ChoiceElement).options.length <= 1}
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                              
+                              <Input
+                                value={option.text}
+                                onChange={(e) => updateChoiceOption(element.id, option.id, { text: e.target.value })}
+                                className="mb-1 h-7 text-xs"
+                                placeholder="Option text"
+                              />
+                              
+                              <div>
+                                <Label className="text-xs">Next Scene</Label>
+                                <Select 
+                                  value={option.nextSceneId}
+                                  onValueChange={(value) => updateChoiceOption(element.id, option.id, { nextSceneId: value })}
+                                >
+                                  <SelectTrigger className="mt-1 h-7 text-xs">
+                                    <SelectValue placeholder="Select next scene" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectGroup>
+                                      {story.scenes.map(scene => (
+                                        <SelectItem key={scene.id} value={scene.id}>
+                                          {scene.title} ({scene.type})
+                                        </SelectItem>
+                                      ))}
+                                    </SelectGroup>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
                           ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {element.type === 'qte' && (
+                    <div className="space-y-2">
+                      <div>
+                        <Label className="text-xs">Description</Label>
+                        <Textarea
+                          value={(element as QteElement).description}
+                          onChange={(e) => updateElement(element.id, { description: e.target.value })}
+                          className="mt-1 text-sm"
+                          rows={2}
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div>
+                          <Label className="text-xs">Success Scene</Label>
+                          <Select 
+                            value={(element as QteElement).successSceneId}
+                            onValueChange={(value) => updateElement(element.id, { successSceneId: value })}
+                          >
+                            <SelectTrigger className="mt-1 h-8 text-xs">
+                              <SelectValue placeholder="Select scene" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                {story.scenes.map(scene => (
+                                  <SelectItem key={scene.id} value={scene.id}>
+                                    {scene.title} ({scene.type})
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div>
+                          <Label className="text-xs">Failure Scene</Label>
+                          <Select 
+                            value={(element as QteElement).failureSceneId}
+                            onValueChange={(value) => updateElement(element.id, { failureSceneId: value })}
+                          >
+                            <SelectTrigger className="mt-1 h-8 text-xs">
+                              <SelectValue placeholder="Select scene" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                {story.scenes.map(scene => (
+                                  <SelectItem key={scene.id} value={scene.id}>
+                                    {scene.title} ({scene.type})
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {element.type === 'dialogueTask' && (
+                    <div className="space-y-2">
+                      <div>
+                        <Label className="text-xs">Goal</Label>
+                        <Input
+                          value={(element as DialogueTaskElement).goal}
+                          onChange={(e) => updateElement(element.id, { goal: e.target.value })}
+                          className="mt-1 h-7 text-xs"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-xs">Target Character</Label>
+                        <Select 
+                          value={(element as DialogueTaskElement).targetCharacterId}
+                          onValueChange={(value) => updateElement(element.id, { targetCharacterId: value })}
+                        >
+                          <SelectTrigger className="mt-1 h-8 text-xs">
+                            <SelectValue placeholder="Select character" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              {story.characters.map(character => (
+                                <SelectItem key={character.id} value={character.id}>
+                                  {character.name} {character.role === 'protagonist' ? '(Protagonist)' : ''}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                  <div>
-                    <Label className="text-xs">Opening Line</Label>
-                    <Textarea
-                      value={(element as DialogueTaskElement).openingLine || ''}
-                      onChange={(e) => updateElement(element.id, { openingLine: e.target.value })}
-                      className="mt-1 text-sm"
-                      rows={2}
-                      placeholder="What does this character say first?"
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label className="text-xs">Background</Label>
-                    <Textarea
-                      value={(element as DialogueTaskElement).background}
-                      onChange={(e) => updateElement(element.id, { background: e.target.value })}
-                      className="mt-1 text-sm"
-                      rows={2}
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <div>
-                      <Label className="text-xs">Success Scene</Label>
-                      <Select 
-                        value={(element as DialogueTaskElement).successSceneId}
-                        onValueChange={(value) => updateElement(element.id, { successSceneId: value })}
-                      >
-                        <SelectTrigger className="mt-1 h-8 text-xs">
-                          <SelectValue placeholder="Select scene" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            {story.scenes.map(scene => (
-                              <SelectItem key={scene.id} value={scene.id}>
-                                {scene.title} ({scene.type})
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
+                      <div>
+                        <Label className="text-xs">Opening Line</Label>
+                        <Textarea
+                          value={(element as DialogueTaskElement).openingLine || ''}
+                          onChange={(e) => updateElement(element.id, { openingLine: e.target.value })}
+                          className="mt-1 text-sm"
+                          rows={2}
+                          placeholder="What does this character say first?"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-xs">Background</Label>
+                        <Textarea
+                          value={(element as DialogueTaskElement).background}
+                          onChange={(e) => updateElement(element.id, { background: e.target.value })}
+                          className="mt-1 text-sm"
+                          rows={2}
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div>
+                          <Label className="text-xs">Success Scene</Label>
+                          <Select 
+                            value={(element as DialogueTaskElement).successSceneId}
+                            onValueChange={(value) => updateElement(element.id, { successSceneId: value })}
+                          >
+                            <SelectTrigger className="mt-1 h-8 text-xs">
+                              <SelectValue placeholder="Select scene" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                {story.scenes.map(scene => (
+                                  <SelectItem key={scene.id} value={scene.id}>
+                                    {scene.title} ({scene.type})
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div>
+                          <Label className="text-xs">Failure Scene</Label>
+                          <Select 
+                            value={(element as DialogueTaskElement).failureSceneId}
+                            onValueChange={(value) => updateElement(element.id, { failureSceneId: value })}
+                          >
+                            <SelectTrigger className="mt-1 h-8 text-xs">
+                              <SelectValue placeholder="Select scene" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                {story.scenes.map(scene => (
+                                  <SelectItem key={scene.id} value={scene.id}>
+                                    {scene.title} ({scene.type})
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
                     </div>
-                    
-                    <div>
-                      <Label className="text-xs">Failure Scene</Label>
-                      <Select 
-                        value={(element as DialogueTaskElement).failureSceneId}
-                        onValueChange={(value) => updateElement(element.id, { failureSceneId: value })}
-                      >
-                        <SelectTrigger className="mt-1 h-8 text-xs">
-                          <SelectValue placeholder="Select scene" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            {story.scenes.map(scene => (
-                              <SelectItem key={scene.id} value={scene.id}>
-                                {scene.title} ({scene.type})
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </Card>
-          ))
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         )}
       </div>
     </div>

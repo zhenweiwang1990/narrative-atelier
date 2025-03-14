@@ -15,6 +15,9 @@ interface FlowTabContentProps {
   updateSceneType: (newType: any) => void;
   updateSceneLocation: (locationId: string) => void;
   updateNextScene: (nextSceneId: string) => void;
+  updateRevivalPoint?: (sceneId: string) => void;
+  selectedElementId?: string;
+  setSelectedElementId?: (id: string) => void;
 }
 
 const FlowTabContent = ({
@@ -25,7 +28,10 @@ const FlowTabContent = ({
   updateSceneTitle,
   updateSceneType,
   updateSceneLocation,
-  updateNextScene
+  updateNextScene,
+  updateRevivalPoint,
+  selectedElementId,
+  setSelectedElementId
 }: FlowTabContentProps) => {
   return (
     <>
@@ -44,6 +50,7 @@ const FlowTabContent = ({
             updateSceneType={updateSceneType}
             updateSceneLocation={updateSceneLocation}
             updateNextScene={updateNextScene}
+            updateRevivalPoint={updateRevivalPoint}
             selectedSceneId={selectedSceneId || ''}
           />
         ) : (
@@ -56,7 +63,11 @@ const FlowTabContent = ({
       <TabsContent value="elements" className="data-[state=active]:flex flex-col h-full overflow-hidden">
         {selectedSceneId ? (
           <div className="p-3 h-full overflow-y-auto">
-            <ElementEditor sceneId={selectedSceneId} />
+            <ElementEditor 
+              sceneId={selectedSceneId} 
+              selectedElementId={selectedElementId}
+              onSelectElement={setSelectedElementId ? setSelectedElementId : () => {}}
+            />
           </div>
         ) : (
           <div className="text-center flex-1 flex items-center justify-center p-3 bg-muted/30 rounded-md mx-2 mb-2">

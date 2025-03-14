@@ -117,6 +117,25 @@ export const useSceneManagementHook = (story: Story | null, setStory: React.Disp
     });
   };
 
+  const updateRevivalPoint = (revivalPointId: string) => {
+    if (!story || !setStory || !selectedSceneId) return;
+    
+    const updatedScenes = story.scenes.map(scene => {
+      if (scene.id === selectedSceneId) {
+        return {
+          ...scene,
+          revivalPointId: revivalPointId || undefined
+        };
+      }
+      return scene;
+    });
+    
+    setStory({
+      ...story,
+      scenes: updatedScenes
+    });
+  };
+
   return {
     selectedSceneId,
     setSelectedSceneId,
@@ -128,6 +147,7 @@ export const useSceneManagementHook = (story: Story | null, setStory: React.Disp
     updateSceneTitle,
     updateSceneType,
     updateSceneLocation,
-    updateNextScene
+    updateNextScene,
+    updateRevivalPoint
   };
 };

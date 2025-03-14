@@ -21,9 +21,10 @@ const nodeTypes: NodeTypes = {
 
 interface FlowEditorProps {
   onSceneSelect: (sceneId: string) => void;
+  onPreviewToggle?: () => void;
 }
 
-const FlowEditor = ({ onSceneSelect }: FlowEditorProps) => {
+const FlowEditor = ({ onSceneSelect, onPreviewToggle }: FlowEditorProps) => {
   const { story, setStory } = useStory();
   
   // Return early if there's no story
@@ -86,6 +87,7 @@ const FlowEditor = ({ onSceneSelect }: FlowEditorProps) => {
           selectedNode={selectedNode}
           onAddScene={addScene}
           onDeleteScene={deleteSelectedScene}
+          onPreviewToggle={onPreviewToggle}
         />
       </ReactFlow>
     </div>

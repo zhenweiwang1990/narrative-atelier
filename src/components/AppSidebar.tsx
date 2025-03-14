@@ -8,7 +8,10 @@ import {
   MapPin, 
   GitBranch, 
   Settings, 
-  Menu 
+  Menu,
+  Save,
+  Upload,
+  Download
 } from 'lucide-react';
 import { 
   Sidebar, 
@@ -21,10 +24,14 @@ import {
   SidebarMenuItem,
   SidebarMenuButton
 } from '@/components/ui/sidebar';
+import { useStory } from './Layout';
 
 export function AppSidebar() {
   const location = useLocation();
+  const { story, handleSave, handleImport } = useStory();
   
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
   const menuItems = [
     {
       title: "Story",
@@ -53,6 +60,29 @@ export function AppSidebar() {
     }
   ];
 
+  const handleExport = () => {
+    if (!story) return;
+    
+    // Create a JSON blob and trigger download
+    const content = JSON.stringify(story, null, 2);
+    const blob = new Blob([content], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${story.title || 'narrative-atelier'}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const triggerImport = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -62,7 +92,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton>
                     <Link 
                       to={item.path}
                       className={cn(
@@ -79,6 +109,54 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Actions</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton>
+                  <button 
+                    className="flex items-center gap-3 text-sm py-2 w-full text-left text-muted-foreground"
+                    onClick={handleSave}
+                  >
+                    <Save className="h-4 w-4" />
+                    <span>Save</span>
+                  </button>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton>
+                  <button 
+                    className="flex items-center gap-3 text-sm py-2 w-full text-left text-muted-foreground"
+                    onClick={triggerImport}
+                  >
+                    <Upload className="h-4 w-4" />
+                    <span>Import</span>
+                    <input 
+                      type="file" 
+                      ref={fileInputRef}
+                      accept=".json" 
+                      className="hidden"
+                      onChange={handleImport}
+                    />
+                  </button>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton>
+                  <button 
+                    className="flex items-center gap-3 text-sm py-2 w-full text-left text-muted-foreground"
+                    onClick={handleExport}
+                  >
+                    <Download className="h-4 w-4" />
+                    <span>Export</span>
+                  </button>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
       <div className="p-3 mt-auto border-t">
         <SidebarTrigger>
@@ -90,4 +168,4 @@ export function AppSidebar() {
       </div>
     </Sidebar>
   );
-}
+};
