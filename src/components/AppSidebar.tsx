@@ -16,6 +16,7 @@ import {
   PanelLeft,
   Plus,
   LogOut,
+  HelpCircle,
 } from "lucide-react";
 import {
   Sidebar,
@@ -70,6 +71,11 @@ export function AppSidebar() {
       title: "流程",
       icon: GitBranch,
       path: "/flow",
+    },
+    {
+      title: "帮助",
+      icon: HelpCircle,
+      path: "/help",
     },
     {
       title: "设置",

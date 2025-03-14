@@ -12,6 +12,7 @@ import Locations from "./pages/Locations";
 import GlobalValues from "./pages/GlobalValues";
 import Flow from "./pages/Flow";
 import Settings from "./pages/Settings";
+import Help from "./pages/Help";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
 import { AuthProvider } from "./hooks/useAuth";
@@ -87,6 +88,13 @@ const AppWithAuth = () => (
                 </Layout>
               </ProtectedRoute>
             } />
+            <Route path="/editor/:slug/help" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Help />
+                </Layout>
+              </ProtectedRoute>
+            } />
             <Route path="/editor/:slug/settings" element={
               <ProtectedRoute>
                 <Layout>
@@ -97,37 +105,56 @@ const AppWithAuth = () => (
             
             {/* Root routes - redirect to auth if not logged in */}
             <Route path="/" element={
-              <Layout>
-                <Index />
-              </Layout>
+              <ProtectedRoute>
+                <Layout>
+                  <Index />
+                </Layout>
+              </ProtectedRoute>
             } />
             <Route path="/characters" element={
-              <Layout>
-                <Characters />
-              </Layout>
+              <ProtectedRoute>
+                <Layout>
+                  <Characters />
+                </Layout>
+              </ProtectedRoute>
             } />
             <Route path="/locations" element={
-              <Layout>
-                <Locations />
-              </Layout>
+              <ProtectedRoute>
+                <Layout>
+                  <Locations />
+                </Layout>
+              </ProtectedRoute>
             } />
             <Route path="/global-values" element={
-              <Layout>
-                <GlobalValues />
-              </Layout>
+              <ProtectedRoute>
+                <Layout>
+                  <GlobalValues />
+                </Layout>
+              </ProtectedRoute>
             } />
             <Route path="/flow" element={
-              <Layout>
-                <Flow />
-              </Layout>
+              <ProtectedRoute>
+                <Layout>
+                  <Flow />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/help" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Help />
+                </Layout>
+              </ProtectedRoute>
             } />
             <Route path="/settings" element={
-              <Layout>
-                <Settings />
-              </Layout>
+              <ProtectedRoute>
+                <Layout>
+                  <Settings />
+                </Layout>
+              </ProtectedRoute>
             } />
             
-            <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<Navigate to="/auth" replace />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>

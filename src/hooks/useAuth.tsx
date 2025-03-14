@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -28,6 +29,7 @@ interface AuthContextType {
   userStories: UserStory[];
   refreshStories: () => Promise<void>;
   addNewStory: () => Promise<UserStory | null>;
+  addSampleStory: () => Promise<UserStory | null>;
   currentStorySlug: string | null;
   setCurrentStorySlug: (slug: string | null) => void;
   currentStory: Story | null;
@@ -70,11 +72,32 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     getSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      async (event, session) => {
         setSession(session);
         setUser(session?.user || null);
+        
         if (session?.user) {
-          refreshStories();
+          await refreshStories();
+          
+          // Check if user just signed up and has no stories
+          if (event === 'SIGNED_IN') {
+            const { data: stories } = await supabase
+              .from('stories')
+              .select('id')
+              .eq('user_id', session.user.id)
+              .limit(1);
+              
+            if (!stories || stories.length === 0) {
+              // User has no stories, initialize sample story
+              const sampleStory = await addSampleStory();
+              if (sampleStory) {
+                toast({
+                  title: "示例剧情已创建",
+                  description: "我们为您准备了一个示例剧情，点击左侧菜单中的剧情即可开始探索"
+                });
+              }
+            }
+          }
         } else {
           setUserStories([]);
         }
@@ -127,6 +150,45 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return data as UserStory;
     } catch (error: any) {
       console.error('Error creating new story:', error.message);
+      return null;
+    }
+  };
+
+  const addSampleStory = async (): Promise<UserStory | null> => {
+    if (!user) return null;
+
+    try {
+      // Fetch the sample story from the public directory
+      const response = await fetch('/红衣如故.json');
+      const sampleStoryData = await response.json() as Story;
+      
+      // Prepare story content
+      const storyContent = sampleStoryData as unknown as Json;
+      
+      // Insert the sample story
+      const { data, error } = await supabase
+        .from('stories')
+        .insert({
+          title: sampleStoryData.title || "红衣如故(Demo)",
+          description: sampleStoryData.description || "示例剧情，探索交互式剧情编辑器的功能",
+          author: user.user_metadata?.full_name || "未知作者",
+          user_id: user.id,
+          content: storyContent
+        })
+        .select('id, title, description, author, created_at, updated_at, slug')
+        .single();
+
+      if (error) throw error;
+      
+      await refreshStories();
+      return data as UserStory;
+    } catch (error: any) {
+      console.error('Error creating sample story:', error.message);
+      toast({
+        title: "创建示例剧情失败",
+        description: "无法加载示例剧情，请尝试手动创建新剧情",
+        variant: "destructive"
+      });
       return null;
     }
   };
@@ -251,6 +313,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     userStories,
     refreshStories,
     addNewStory,
+    addSampleStory,
     currentStorySlug,
     setCurrentStorySlug,
     currentStory,
