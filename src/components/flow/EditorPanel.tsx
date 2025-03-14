@@ -38,8 +38,7 @@ const EditorPanel = ({
     <Card className="overflow-hidden h-full">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
         <div className="px-2 pt-2">
-          <TabsList className="grid grid-cols-3 mb-2 h-8">
-            <TabsTrigger value="flow" className="text-xs">Flow</TabsTrigger>
+          <TabsList className="grid grid-cols-2 mb-2 h-8">
             <TabsTrigger value="properties" disabled={!selectedSceneId} className="text-xs">Properties</TabsTrigger>
             <TabsTrigger value="elements" disabled={!selectedSceneId} className="text-xs">Elements</TabsTrigger>
           </TabsList>

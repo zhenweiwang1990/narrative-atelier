@@ -35,12 +35,6 @@ const FlowTabContent = ({
 }: FlowTabContentProps) => {
   return (
     <>
-      <TabsContent value="flow" className="flex-1 data-[state=active]:flex flex-col">
-        <div className="text-center flex-1 flex items-center justify-center p-3 bg-muted/30 rounded-md mx-2 mb-2">
-          <p className="text-sm text-muted-foreground">Select a scene from the flow diagram to edit its properties.</p>
-        </div>
-      </TabsContent>
-      
       <TabsContent value="properties" className="data-[state=active]:flex flex-col h-full overflow-hidden">
         {selectedScene ? (
           <ScenePropertiesPanel 

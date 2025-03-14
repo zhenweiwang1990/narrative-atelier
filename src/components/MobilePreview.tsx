@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useStory } from './Layout';
 import { Scene, SceneElement, ChoiceElement, QteElement, DialogueTaskElement, Character } from '@/utils/types';
-import { ChevronRight, Clock, Keyboard } from 'lucide-react';
+import { ChevronRight, Clock, Keyboard, RotateCcw } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 
@@ -16,26 +16,10 @@ interface MobilePreviewProps {
 const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
   const { story } = useStory();
   const [currentElementIndex, setCurrentElementIndex] = useState<number>(-1);
-  const [qteState, setQteState] = useState<{
-    active: boolean;
-    progress: number;
-    currentCharIndex: number;
-    keySequence: string;
-  }>({
-    active: false,
-    progress: 0,
-    currentCharIndex: 0,
-    keySequence: '',
-  });
   
   useEffect(() => {
-    // Reset QTE state when scene changes
-    setQteState({
-      active: false,
-      progress: 0,
-      currentCharIndex: 0,
-      keySequence: '',
-    });
+    // Reset state when scene changes
+    setCurrentElementIndex(-1);
   }, [sceneId]);
   
   if (!story) return null;
@@ -50,6 +34,14 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
   const currentElement = currentElementIndex >= 0 && currentElementIndex < sortedElements.length 
     ? sortedElements[currentElementIndex] 
     : null;
+
+  const isLastElement = currentElementIndex === sortedElements.length - 1;
+  const isSceneEnding = isLastElement && currentElement && !hasNextAction(currentElement);
+  
+  // Check if the element has next actions (choices, QTE, dialogueTask)
+  function hasNextAction(element: SceneElement): boolean {
+    return ['choice', 'qte', 'dialogueTask'].includes(element.type);
+  }
 
   const handleNext = () => {
     if (currentElementIndex < sortedElements.length - 1) {
@@ -68,42 +60,11 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
     }
   };
 
-  const startQte = (qteElement: QteElement) => {
-    setQteState({
-      active: true,
-      progress: 0,
-      currentCharIndex: 0,
-      keySequence: qteElement.keySequence || 'ABC',
-    });
-    
-    // Timer for QTE
-    const timeLimit = (qteElement.timeLimit || 3) * 1000;
-    const interval = 50; // Update progress every 50ms
-    const steps = timeLimit / interval;
-    let currentStep = 0;
-    
-    const timer = setInterval(() => {
-      currentStep++;
-      const newProgress = (currentStep / steps) * 100;
-      
-      if (newProgress >= 100) {
-        clearInterval(timer);
-        setQteState(prev => ({ ...prev, active: false }));
-      } else {
-        setQteState(prev => ({ ...prev, progress: newProgress }));
-        // Show next character every 1/N of the time (where N is keySequence length)
-        const seqLength = qteElement.keySequence?.length || 3;
-        const characterStep = Math.floor(steps / seqLength);
-        if (currentStep % characterStep === 0 && currentStep > 0) {
-          const nextCharIndex = Math.floor(currentStep / characterStep);
-          if (nextCharIndex < seqLength) {
-            setQteState(prev => ({ ...prev, currentCharIndex: nextCharIndex }));
-          }
-        }
-      }
-    }, interval);
-    
-    return () => clearInterval(timer);
+  const handleRevival = () => {
+    if (scene.revivalPointId) {
+      onSceneChange(scene.revivalPointId);
+      setCurrentElementIndex(-1);
+    }
   };
 
   // Get character for dialogue/thought
@@ -188,41 +149,19 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
       case 'qte':
         const qteElement = currentElement as QteElement;
         
-        if (!qteState.active) {
-          return (
-            <div className="p-4">
-              <p className="text-sm mb-3 font-bold text-amber-600">{qteElement.introText || 'Quick Time Event'}</p>
-              <p className="text-sm mb-4">{qteElement.description}</p>
-              <Button 
-                variant="default" 
-                size="sm" 
-                className="w-full bg-blue-600 hover:bg-blue-700"
-                onClick={() => startQte(qteElement)}
-              >
-                Start
-              </Button>
-            </div>
-          );
-        }
-        
         return (
           <div className="p-4">
-            <div className="flex justify-between mb-1">
-              <div className="flex items-center text-xs text-muted-foreground">
-                <Clock className="h-3 w-3 mr-1" />
-                <span>{qteElement.timeLimit || 3}s</span>
-              </div>
-              <div className="flex items-center text-xs text-muted-foreground">
+            <p className="text-sm mb-3 font-bold text-amber-600">{qteElement.introText || 'Quick Time Event'}</p>
+            <p className="text-sm mb-4">{qteElement.description}</p>
+            
+            <div className="flex justify-between text-xs text-muted-foreground mb-3">
+              <div className="flex items-center">
                 <Keyboard className="h-3 w-3 mr-1" />
-                <span>{qteElement.keySequence || 'ABC'}</span>
+                <span>Key Sequence: {qteElement.keySequence || 'ABC'}</span>
               </div>
-            </div>
-            
-            <Progress value={qteState.progress} className="h-2 mb-4" />
-            
-            <div className="flex justify-center items-center h-20">
-              <div className="text-3xl font-bold">
-                {qteState.keySequence.substring(0, qteState.currentCharIndex + 1)}
+              <div className="flex items-center">
+                <Clock className="h-3 w-3 mr-1" />
+                <span>Time: {qteElement.timeLimit || 3}s</span>
               </div>
             </div>
             
@@ -231,10 +170,7 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
                 variant="default" 
                 size="sm" 
                 className="bg-green-600 hover:bg-green-700"
-                onClick={() => {
-                  setQteState({ active: false, progress: 0, currentCharIndex: 0, keySequence: '' });
-                  handleChoiceSelect(qteElement.successSceneId);
-                }}
+                onClick={() => handleChoiceSelect(qteElement.successSceneId)}
               >
                 Success
               </Button>
@@ -242,10 +178,7 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
                 variant="default" 
                 size="sm" 
                 className="bg-red-600 hover:bg-red-700"
-                onClick={() => {
-                  setQteState({ active: false, progress: 0, currentCharIndex: 0, keySequence: '' });
-                  handleChoiceSelect(qteElement.failureSceneId);
-                }}
+                onClick={() => handleChoiceSelect(qteElement.failureSceneId)}
               >
                 Failure
               </Button>
@@ -302,20 +235,39 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
     }
   };
 
-  // Display transition narration after QTE or dialogue task
-  const shouldShowTransition = () => {
-    const prevElement = currentElementIndex > 0 ? sortedElements[currentElementIndex - 1] : null;
-    if (!prevElement) return false;
-    
-    if (prevElement.type === 'qte' && (prevElement as QteElement).successTransition) {
-      return true;
+  // Render the end scene message
+  const renderSceneEnding = () => {
+    if (scene.type === 'bad-ending') {
+      return (
+        <div className="p-4 text-center">
+          <p className="text-sm font-bold text-red-600 mb-3">Bad Ending</p>
+          <p className="text-sm mb-4">The story has reached a negative conclusion.</p>
+          {scene.revivalPointId && (
+            <Button 
+              variant="default"
+              size="sm"
+              className="bg-amber-600 hover:bg-amber-700"
+              onClick={handleRevival}
+            >
+              <RotateCcw className="h-4 w-4 mr-2" /> Revive from checkpoint
+            </Button>
+          )}
+        </div>
+      );
+    } else if (scene.type === 'ending') {
+      return (
+        <div className="p-4 text-center">
+          <p className="text-sm font-bold text-green-600 mb-3">Ending</p>
+          <p className="text-sm">Congratulations! You have completed this story path.</p>
+        </div>
+      );
+    } else if (!scene.nextSceneId) {
+      return (
+        <div className="p-4 text-center">
+          <p className="text-sm text-muted-foreground">End of this scene. No next scene is defined.</p>
+        </div>
+      );
     }
-    
-    if (prevElement.type === 'dialogueTask' && (prevElement as DialogueTaskElement).successTransition) {
-      return true;
-    }
-    
-    return false;
   };
 
   return (
@@ -326,7 +278,7 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
       />
       
       <div className="flex-1 overflow-auto">
-        {renderCurrentElement()}
+        {isSceneEnding && currentElement ? renderSceneEnding() : renderCurrentElement()}
       </div>
       
       <div className="p-3 border-t">
@@ -336,8 +288,9 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
           className="w-full"
           onClick={handleNext}
           disabled={currentElement?.type === 'choice' || 
-                  (currentElement?.type === 'qte' && qteState.active) || 
-                  currentElement?.type === 'dialogueTask'}
+                  currentElement?.type === 'qte' || 
+                  currentElement?.type === 'dialogueTask' ||
+                  (isSceneEnding && scene.type === 'bad-ending' && !!scene.revivalPointId)}
         >
           Next <ChevronRight className="h-4 w-4 ml-1" />
         </Button>

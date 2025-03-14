@@ -29,6 +29,13 @@ const Flow = () => {
     updateRevivalPoint
   } = useSceneManagementHook(story, setStory);
 
+  // Set default tab to 'properties' instead of 'flow'
+  React.useEffect(() => {
+    if (activeTab === 'flow') {
+      setActiveTab('properties');
+    }
+  }, [activeTab, setActiveTab]);
+
   if (!story) return null;
   
   return (

@@ -15,7 +15,8 @@ export const scenesToNodes = (story: Story): Node[] => {
         label: scene.title,
         sceneType: scene.type,
         locationName: location?.name || 'Unknown Location',
-        elements: scene.elements
+        elements: scene.elements,
+        revivalPointId: scene.revivalPointId
       } as SceneNodeData,
       position: {
         x: (index % 3) * 250,
@@ -41,6 +42,27 @@ export const createEdgesFromStory = (story: Story): Edge[] => {
         label: 'Next',
         markerEnd: {
           type: MarkerType.ArrowClosed
+        }
+      });
+    }
+    
+    // Add revival point connections with red dashed line
+    if (scene.type === 'bad-ending' && scene.revivalPointId) {
+      flowEdges.push({
+        id: `e-revival-${scene.id}-${scene.revivalPointId}`,
+        source: scene.id,
+        target: scene.revivalPointId,
+        type: 'smoothstep',
+        animated: true,
+        label: 'Revival',
+        style: { 
+          stroke: '#ef4444', 
+          strokeDasharray: '5,5',
+          strokeWidth: 2
+        },
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          color: '#ef4444'
         }
       });
     }
