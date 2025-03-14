@@ -11,7 +11,8 @@ import {
   Menu,
   Save,
   Upload,
-  Download
+  Download,
+  Database
 } from 'lucide-react';
 import { 
   Sidebar, 
@@ -47,6 +48,11 @@ export function AppSidebar() {
       title: "Locations",
       icon: MapPin,
       path: "/locations"
+    },
+    {
+      title: "Global Values",
+      icon: Database,
+      path: "/global-values"
     },
     {
       title: "Flow",

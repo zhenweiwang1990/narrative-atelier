@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Characters from "./pages/Characters";
 import Locations from "./pages/Locations";
+import GlobalValues from "./pages/GlobalValues";
 import Flow from "./pages/Flow";
 import Settings from "./pages/Settings";
 
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/characters" element={<Characters />} />
             <Route path="/locations" element={<Locations />} />
+            <Route path="/global-values" element={<GlobalValues />} />
             <Route path="/flow" element={<Flow />} />
             <Route path="/settings" element={<Settings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
