@@ -81,7 +81,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <div className="p-3 mt-auto border-t">
-        <SidebarTrigger asChild>
+        <SidebarTrigger>
           <button className="w-full flex items-center justify-between text-xs text-muted-foreground p-2 rounded-md hover:bg-muted">
             <span>Toggle Sidebar</span>
             <Menu className="h-4 w-4" />
