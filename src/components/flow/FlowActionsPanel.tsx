@@ -6,7 +6,7 @@ import { Node, useReactFlow } from 'reactflow';
 import { SceneNodeData } from './flowTypes';
 
 interface FlowActionsPanelProps {
-  selectedNode: Node<SceneNodeData>;
+  selectedNode: Node<SceneNodeData> | null;
   onAddScene: () => void;
   onDeleteScene: () => void;
 }
@@ -35,6 +35,7 @@ const FlowActionsPanel = ({
         size="icon"
         className="h-7 w-7"
         onClick={onDeleteScene}
+        disabled={!selectedNode}
         title="Delete Scene"
       >
         <Trash2 className="h-3.5 w-3.5 text-destructive" />
