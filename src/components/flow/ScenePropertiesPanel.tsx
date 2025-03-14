@@ -83,14 +83,14 @@ const ScenePropertiesPanel = ({
       <div>
         <Label htmlFor="nextScene" className="text-xs">Next Scene (Linear Flow)</Label>
         <Select 
-          value={selectedScene.nextSceneId || ""} 
-          onValueChange={updateNextScene}
+          value={selectedScene.nextSceneId || "none"} 
+          onValueChange={(value) => updateNextScene(value === "none" ? "" : value)}
         >
           <SelectTrigger id="nextScene" className="h-8 text-sm">
             <SelectValue placeholder="Select next scene" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">None (End or Choice-based)</SelectItem>
+            <SelectItem value="none">None (End or Choice-based)</SelectItem>
             {story.scenes
               .filter(scene => scene.id !== selectedSceneId)
               .map(scene => (
