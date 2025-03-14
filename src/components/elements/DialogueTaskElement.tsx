@@ -86,7 +86,7 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
   return (
     <div className="space-y-2">
       <div>
-        <Label className="text-xs">Goal</Label>
+        <Label className="text-xs">目标</Label>
         <Input
           value={element.goal}
           onChange={(e) => onUpdate(element.id, { goal: e.target.value })}
@@ -95,19 +95,19 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
       </div>
       
       <div>
-        <Label className="text-xs">Target Character</Label>
+        <Label className="text-xs">目标角色</Label>
         <Select 
           value={element.targetCharacterId}
           onValueChange={(value) => onUpdate(element.id, { targetCharacterId: value })}
         >
           <SelectTrigger className="mt-1 h-8 text-xs">
-            <SelectValue placeholder="Select character" />
+            <SelectValue placeholder="选择角色" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               {characters.map(character => (
                 <SelectItem key={character.id} value={character.id}>
-                  {character.name} {character.role === 'protagonist' ? '(Protagonist)' : ''}
+                  {character.name} {character.role === 'protagonist' ? '(主角)' : ''}
                 </SelectItem>
               ))}
             </SelectGroup>
@@ -116,18 +116,18 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
       </div>
 
       <div>
-        <Label className="text-xs">Opening Line</Label>
+        <Label className="text-xs">开场白</Label>
         <Textarea
           value={element.openingLine || ''}
           onChange={(e) => onUpdate(element.id, { openingLine: e.target.value })}
           className="mt-1 text-sm"
           rows={2}
-          placeholder="What does this character say first?"
+          placeholder="这个角色首先说什么？"
         />
       </div>
       
       <div>
-        <Label className="text-xs">Background</Label>
+        <Label className="text-xs">背景</Label>
         <Textarea
           value={element.background}
           onChange={(e) => onUpdate(element.id, { background: e.target.value })}
@@ -146,7 +146,7 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
       
       <Collapsible className="border rounded-md p-2 bg-muted/20">
         <CollapsibleTrigger className="flex items-center justify-between w-full text-xs font-medium">
-          Transition Texts <ChevronDown className="h-3 w-3" />
+          转场文本 <ChevronDown className="h-3 w-3" />
         </CollapsibleTrigger>
         <CollapsibleContent>
           <TransitionTextsSection
@@ -161,7 +161,7 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
       {globalValues.length > 0 && (
         <>
           <ValueChangesCollapsible
-            title="Success Value Changes"
+            title="成功数值变化"
             isSuccess={true}
             valueChanges={element.successValueChanges}
             globalValues={globalValues}
@@ -171,7 +171,7 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
           />
           
           <ValueChangesCollapsible
-            title="Failure Value Changes"
+            title="失败数值变化"
             isSuccess={false}
             valueChanges={element.failureValueChanges}
             globalValues={globalValues}

@@ -30,7 +30,7 @@ const CharacterCard = ({ character, onEdit, onDelete }: CharacterCardProps) => {
               ? "bg-primary/10 text-primary" 
               : "bg-muted text-muted-foreground"
           )}>
-            {character.role === 'protagonist' ? 'Protagonist' : 'Supporting'}
+            {character.role === 'protagonist' ? '主角' : '配角'}
           </span>
         </CardTitle>
       </CardHeader>
@@ -62,12 +62,12 @@ const CharacterCard = ({ character, onEdit, onDelete }: CharacterCardProps) => {
         
         <div className="p-4">
           <div className="flex items-center space-x-2 mb-2">
-            <span className="text-xs text-muted-foreground">Gender:</span>
-            <span className="text-xs capitalize">{character.gender}</span>
+            <span className="text-xs text-muted-foreground">性别：</span>
+            <span className="text-xs capitalize">{character.gender === 'male' ? '男' : character.gender === 'female' ? '女' : '其他'}</span>
           </div>
           
           <p className="text-sm text-muted-foreground line-clamp-3">
-            {character.bio || "No biography provided."}
+            {character.bio || "暂无角色简介。"}
           </p>
         </div>
       </CardContent>
@@ -80,7 +80,7 @@ const CharacterCard = ({ character, onEdit, onDelete }: CharacterCardProps) => {
           onClick={() => onEdit(character)}
         >
           <Edit className="h-4 w-4 mr-2" />
-          Edit
+          编辑
         </Button>
         <Button 
           variant="outline" 

@@ -76,7 +76,7 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
   return (
     <div className="space-y-2">
       <div>
-        <Label className="text-xs">Description</Label>
+        <Label className="text-xs">描述</Label>
         <Textarea
           value={element.text}
           onChange={(e) => onUpdate(element.id, { text: e.target.value })}
@@ -87,7 +87,7 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
       
       <div>
         <div className="flex justify-between items-center mb-1">
-          <Label className="text-xs">Options</Label>
+          <Label className="text-xs">选项</Label>
           <Button 
             variant="ghost" 
             size="sm" 
@@ -95,7 +95,7 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
             disabled={element.options.length >= 3}
             className="h-6 text-xs"
           >
-            <Plus className="h-3 w-3 mr-1" /> Add
+            <Plus className="h-3 w-3 mr-1" /> 添加
           </Button>
         </div>
         
@@ -103,7 +103,7 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
           {element.options.map((option, optIdx) => (
             <div key={option.id} className="p-2 border rounded-md bg-muted/20">
               <div className="flex justify-between items-start mb-1">
-                <Label className="text-xs">Option {optIdx + 1}</Label>
+                <Label className="text-xs">选项 {optIdx + 1}</Label>
                 
                 <Button 
                   variant="ghost" 
@@ -120,23 +120,26 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
                 value={option.text}
                 onChange={(e) => onUpdateOption(element.id, option.id, { text: e.target.value })}
                 className="mb-1 h-7 text-xs"
-                placeholder="Option text"
+                placeholder="选项文本"
               />
               
               <div>
-                <Label className="text-xs">Next Scene</Label>
+                <Label className="text-xs">下一个场景</Label>
                 <Select 
                   value={option.nextSceneId}
                   onValueChange={(value) => onUpdateOption(element.id, option.id, { nextSceneId: value })}
                 >
                   <SelectTrigger className="mt-1 h-7 text-xs">
-                    <SelectValue placeholder="Select next scene" />
+                    <SelectValue placeholder="选择下一个场景" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
                       {scenes.map(scene => (
                         <SelectItem key={scene.id} value={scene.id}>
-                          {scene.title} ({scene.type})
+                          {scene.title} ({scene.type === 'start' ? '开始' : 
+                                       scene.type === 'ending' ? '好结局' : 
+                                       scene.type === 'bad-ending' ? '坏结局' : 
+                                       '普通'})
                         </SelectItem>
                       ))}
                     </SelectGroup>
@@ -147,7 +150,7 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
               {globalValues.length > 0 && (
                 <Collapsible className="mt-2">
                   <CollapsibleTrigger className="flex items-center justify-between w-full text-xs py-1">
-                    <span className="font-medium">Value Changes</span>
+                    <span className="font-medium">数值变化</span>
                     <ChevronDown className="h-3 w-3" />
                   </CollapsibleTrigger>
                   <CollapsibleContent className="pt-2">
@@ -166,7 +169,7 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
                                   }}
                                 >
                                   <SelectTrigger className="h-7 text-xs">
-                                    <SelectValue placeholder="Select value" />
+                                    <SelectValue placeholder="选择数值" />
                                   </SelectTrigger>
                                   <SelectContent>
                                     <SelectGroup>
@@ -204,7 +207,7 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
                         })}
                       </div>
                     ) : (
-                      <p className="text-xs text-muted-foreground">No value changes defined.</p>
+                      <p className="text-xs text-muted-foreground">未定义数值变化。</p>
                     )}
                     
                     <Button
@@ -217,7 +220,7 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
                         option.valueChanges.length >= globalValues.length
                       }
                     >
-                      <Plus className="h-3 w-3 mr-1" /> Add Value Change
+                      <Plus className="h-3 w-3 mr-1" /> 添加数值变化
                     </Button>
                   </CollapsibleContent>
                 </Collapsible>

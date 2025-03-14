@@ -87,7 +87,7 @@ export const QteElement: React.FC<QteElementProps> = ({
   return (
     <div className="space-y-2">
       <div>
-        <Label className="text-xs">Description</Label>
+        <Label className="text-xs">描述</Label>
         <Textarea
           value={element.description}
           onChange={(e) => onUpdate(element.id, { description: e.target.value })}
@@ -97,18 +97,18 @@ export const QteElement: React.FC<QteElementProps> = ({
       </div>
       
       <div>
-        <Label className="text-xs">Intro Text</Label>
+        <Label className="text-xs">介绍文本</Label>
         <Input
           value={element.introText || ''}
           onChange={(e) => onUpdate(element.id, { introText: e.target.value })}
           className="mt-1 h-7 text-xs"
-          placeholder="Text shown before QTE starts"
+          placeholder="快速反应开始前显示的文本"
         />
       </div>
       
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <Label className="text-xs">Time Limit (3-6 seconds)</Label>
+          <Label className="text-xs">时间限制（3-6秒）</Label>
           <Input
             type="number"
             min={3}
@@ -122,7 +122,7 @@ export const QteElement: React.FC<QteElementProps> = ({
         </div>
         
         <div>
-          <Label className="text-xs">Key Sequence (3-6 chars)</Label>
+          <Label className="text-xs">按键序列（3-6个字符）</Label>
           <Input
             value={element.keySequence || ''}
             onChange={(e) => onUpdate(element.id, { 
@@ -145,7 +145,7 @@ export const QteElement: React.FC<QteElementProps> = ({
       
       <Collapsible className="border rounded-md p-2 bg-muted/20">
         <CollapsibleTrigger className="flex items-center justify-between w-full text-xs font-medium">
-          Transition Texts <ChevronDown className="h-3 w-3" />
+          转场文本 <ChevronDown className="h-3 w-3" />
         </CollapsibleTrigger>
         <CollapsibleContent>
           <TransitionTextsSection
@@ -160,7 +160,7 @@ export const QteElement: React.FC<QteElementProps> = ({
       {globalValues.length > 0 && (
         <>
           <ValueChangesCollapsible
-            title="Success Value Changes"
+            title="成功数值变化"
             isSuccess={true}
             valueChanges={element.successValueChanges}
             globalValues={globalValues}
@@ -170,7 +170,7 @@ export const QteElement: React.FC<QteElementProps> = ({
           />
           
           <ValueChangesCollapsible
-            title="Failure Value Changes"
+            title="失败数值变化"
             isSuccess={false}
             valueChanges={element.failureValueChanges}
             globalValues={globalValues}

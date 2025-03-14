@@ -17,7 +17,7 @@ const ElementTypeButtons: React.FC<ElementTypeButtonsProps> = ({ onAddElement })
         onClick={() => onAddElement('narration')}
         className="flex items-center text-xs h-7"
       >
-        <AlignLeft className="h-3 w-3 mr-1" /> Narration
+        <AlignLeft className="h-3 w-3 mr-1" /> 旁白
       </Button>
       <Button 
         variant="outline" 
@@ -25,7 +25,7 @@ const ElementTypeButtons: React.FC<ElementTypeButtonsProps> = ({ onAddElement })
         onClick={() => onAddElement('dialogue')}
         className="flex items-center text-xs h-7"
       >
-        <MessageSquare className="h-3 w-3 mr-1" /> Dialogue
+        <MessageSquare className="h-3 w-3 mr-1" /> 对话
       </Button>
       <Button 
         variant="outline" 
@@ -33,7 +33,7 @@ const ElementTypeButtons: React.FC<ElementTypeButtonsProps> = ({ onAddElement })
         onClick={() => onAddElement('thought')}
         className="flex items-center text-xs h-7"
       >
-        <Brain className="h-3 w-3 mr-1" /> Thought
+        <Brain className="h-3 w-3 mr-1" /> 思考
       </Button>
       <Button 
         variant="outline" 
@@ -41,7 +41,7 @@ const ElementTypeButtons: React.FC<ElementTypeButtonsProps> = ({ onAddElement })
         onClick={() => onAddElement('choice')}
         className="flex items-center text-xs h-7"
       >
-        <ListTree className="h-3 w-3 mr-1" /> Choice
+        <ListTree className="h-3 w-3 mr-1" /> 选择
       </Button>
       <Button 
         variant="outline" 
@@ -49,7 +49,7 @@ const ElementTypeButtons: React.FC<ElementTypeButtonsProps> = ({ onAddElement })
         onClick={() => onAddElement('qte')}
         className="flex items-center text-xs h-7"
       >
-        <Gamepad className="h-3 w-3 mr-1" /> QTE
+        <Gamepad className="h-3 w-3 mr-1" /> 快速反应
       </Button>
       <Button 
         variant="outline" 
@@ -57,7 +57,7 @@ const ElementTypeButtons: React.FC<ElementTypeButtonsProps> = ({ onAddElement })
         onClick={() => onAddElement('dialogueTask')}
         className="flex items-center text-xs h-7"
       >
-        <MessagesSquare className="h-3 w-3 mr-1" /> Dialogue Task
+        <MessagesSquare className="h-3 w-3 mr-1" /> 对话任务
       </Button>
     </div>
   );

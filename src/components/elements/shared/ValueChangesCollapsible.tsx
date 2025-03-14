@@ -1,8 +1,7 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { GlobalValue, ValueChange } from '@/utils/types';
-import { ChevronDown, Plus } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import ValueChangesSection from './ValueChangesSection';
 
@@ -39,16 +38,6 @@ const ValueChangesCollapsible: React.FC<ValueChangesCollapsibleProps> = ({
           onUpdateValueChange={onUpdateValueChange}
           onRemoveValueChange={onRemoveValueChange}
         />
-        
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onAddValueChange(isSuccess)}
-          className="mt-2 h-7 text-xs w-full"
-          disabled={valueChanges.length >= globalValues.length}
-        >
-          <Plus className="h-3 w-3 mr-1" /> 添加值变化
-        </Button>
       </CollapsibleContent>
     </Collapsible>
   );

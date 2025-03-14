@@ -38,7 +38,7 @@ const ScenePropertiesPanel = ({
   return (
     <div className="p-3 space-y-3 flex-1 overflow-y-auto">
       <div>
-        <Label htmlFor="title" className="text-xs">Title</Label>
+        <Label htmlFor="title" className="text-xs">标题</Label>
         <Input
           id="title"
           value={selectedScene.title}
@@ -48,31 +48,31 @@ const ScenePropertiesPanel = ({
       </div>
       
       <div>
-        <Label htmlFor="type" className="text-xs">Scene Type</Label>
+        <Label htmlFor="type" className="text-xs">场景类型</Label>
         <Select 
           value={selectedScene.type} 
           onValueChange={(value: SceneType) => updateSceneType(value)}
         >
           <SelectTrigger id="type" className="h-8 text-sm">
-            <SelectValue placeholder="Select type" />
+            <SelectValue placeholder="选择类型" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="start">Start</SelectItem>
-            <SelectItem value="normal">Normal</SelectItem>
-            <SelectItem value="ending">Good Ending</SelectItem>
-            <SelectItem value="bad-ending">Bad Ending</SelectItem>
+            <SelectItem value="start">开始</SelectItem>
+            <SelectItem value="normal">普通</SelectItem>
+            <SelectItem value="ending">好结局</SelectItem>
+            <SelectItem value="bad-ending">坏结局</SelectItem>
           </SelectContent>
         </Select>
       </div>
       
       <div>
-        <Label htmlFor="location" className="text-xs">Location</Label>
+        <Label htmlFor="location" className="text-xs">位置</Label>
         <Select 
           value={selectedScene.locationId} 
           onValueChange={updateSceneLocation}
         >
           <SelectTrigger id="location" className="h-8 text-sm">
-            <SelectValue placeholder="Select location" />
+            <SelectValue placeholder="选择位置" />
           </SelectTrigger>
           <SelectContent>
             {story.locations.map(location => (
@@ -86,21 +86,24 @@ const ScenePropertiesPanel = ({
       
       {!isEndingType && (
         <div>
-          <Label htmlFor="nextScene" className="text-xs">Next Scene (Linear Flow)</Label>
+          <Label htmlFor="nextScene" className="text-xs">下一个场景（线性流程）</Label>
           <Select 
             value={selectedScene.nextSceneId || "none"} 
             onValueChange={(value) => updateNextScene(value === "none" ? "" : value)}
           >
             <SelectTrigger id="nextScene" className="h-8 text-sm">
-              <SelectValue placeholder="Select next scene" />
+              <SelectValue placeholder="选择下一个场景" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="none">None (End or Choice-based)</SelectItem>
+              <SelectItem value="none">无（结束或基于选择）</SelectItem>
               {story.scenes
                 .filter(scene => scene.id !== selectedSceneId)
                 .map(scene => (
                   <SelectItem key={scene.id} value={scene.id}>
-                    {scene.title} ({scene.type})
+                    {scene.title} ({scene.type === 'start' ? '开始' : 
+                                 scene.type === 'ending' ? '好结局' : 
+                                 scene.type === 'bad-ending' ? '坏结局' : 
+                                 '普通'})
                   </SelectItem>
                 ))
               }
@@ -112,22 +115,24 @@ const ScenePropertiesPanel = ({
       {selectedScene.type === 'bad-ending' && updateRevivalPoint && (
         <div>
           <Label htmlFor="revivalPoint" className="text-xs flex items-center">
-            <RotateCcw className="h-3 w-3 mr-1 text-red-500" /> Revival Point
+            <RotateCcw className="h-3 w-3 mr-1 text-red-500" /> 复活点
           </Label>
           <Select 
             value={selectedScene.revivalPointId || "none"} 
             onValueChange={(value) => updateRevivalPoint(value === "none" ? "" : value)}
           >
             <SelectTrigger id="revivalPoint" className="h-8 text-sm">
-              <SelectValue placeholder="Select revival point" />
+              <SelectValue placeholder="选择复活点" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="none">None</SelectItem>
+              <SelectItem value="none">无</SelectItem>
               {story.scenes
                 .filter(scene => scene.id !== selectedSceneId && scene.type !== 'bad-ending')
                 .map(scene => (
                   <SelectItem key={scene.id} value={scene.id}>
-                    {scene.title} ({scene.type})
+                    {scene.title} ({scene.type === 'start' ? '开始' : 
+                                 scene.type === 'ending' ? '好结局' : 
+                                 '普通'})
                   </SelectItem>
                 ))
               }
@@ -138,7 +143,7 @@ const ScenePropertiesPanel = ({
 
       <div className="flex items-center gap-1 text-xs text-muted-foreground mt-2">
         <Edit className="h-3 w-3" /> 
-        <span>Set scene connections in the diagram, or switch to the Elements tab.</span>
+        <span>在图表中设置场景连接，或切换到元素选项卡。</span>
       </div>
     </div>
   );

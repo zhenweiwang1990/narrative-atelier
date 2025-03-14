@@ -13,7 +13,7 @@ export const NarrationElement: React.FC<NarrationElementProps> = ({ element, onU
   return (
     <div className="space-y-2">
       <div>
-        <Label className="text-xs">Text</Label>
+        <Label className="text-xs">文本</Label>
         <Textarea
           value={element.text}
           onChange={(e) => onUpdate(element.id, { text: e.target.value })}

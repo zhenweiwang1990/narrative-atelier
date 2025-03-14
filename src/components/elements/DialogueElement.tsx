@@ -15,19 +15,19 @@ export const DialogueElement: React.FC<DialogueElementProps> = ({ element, chara
   return (
     <div className="space-y-2">
       <div>
-        <Label className="text-xs">Character</Label>
+        <Label className="text-xs">角色</Label>
         <Select 
           value={element.characterId}
           onValueChange={(value) => onUpdate(element.id, { characterId: value })}
         >
           <SelectTrigger className="mt-1 h-8 text-xs">
-            <SelectValue placeholder="Select character" />
+            <SelectValue placeholder="选择角色" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               {characters.map(character => (
                 <SelectItem key={character.id} value={character.id}>
-                  {character.name} {character.role === 'protagonist' ? '(Protagonist)' : ''}
+                  {character.name} {character.role === 'protagonist' ? '(主角)' : ''}
                 </SelectItem>
               ))}
             </SelectGroup>
@@ -36,7 +36,7 @@ export const DialogueElement: React.FC<DialogueElementProps> = ({ element, chara
       </div>
       
       <div>
-        <Label className="text-xs">Dialogue</Label>
+        <Label className="text-xs">对话</Label>
         <Textarea
           value={element.text}
           onChange={(e) => onUpdate(element.id, { text: e.target.value })}
