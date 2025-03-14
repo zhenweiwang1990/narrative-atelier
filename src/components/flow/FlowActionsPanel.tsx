@@ -2,7 +2,7 @@
 import React from 'react';
 import { Panel } from 'reactflow';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, ZoomIn, ZoomOut, FitScreen } from 'lucide-react';
+import { Plus, Trash2, ZoomIn, ZoomOut, Maximize } from 'lucide-react';
 import { Node, useReactFlow } from 'reactflow';
 
 interface FlowActionsPanelProps {
@@ -70,7 +70,7 @@ const FlowActionsPanel = ({
         onClick={() => fitView()}
         title="Fit View"
       >
-        <FitScreen className="h-3.5 w-3.5" />
+        <Maximize className="h-3.5 w-3.5" />
       </Button>
     </Panel>
   );

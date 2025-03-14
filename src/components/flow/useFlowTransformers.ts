@@ -41,7 +41,7 @@ export const useFlowTransformers = (
           x: (index % 3) * 250,
           y: Math.floor(index / 3) * 180
         }
-      };
+      } as Node;
     });
 
     setNodes(flowNodes);

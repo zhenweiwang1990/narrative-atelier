@@ -33,7 +33,9 @@ const FlowEditor = ({ onSceneSelect }: FlowEditorProps) => {
     onNodesChange,
     onEdgesChange,
     onConnect,
-    onNodeClick
+    onNodeClick,
+    setNodes,
+    setEdges
   } = useFlowTransformers(story, setStory, onSceneSelect);
 
   const {
