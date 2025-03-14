@@ -7,7 +7,18 @@ import {
   ChoiceOption,
   Story
 } from '@/utils/types';
-import { generateId } from '@/utils/storage';
+import { 
+  createNewElement,
+  addOptionToChoice,
+  deleteOptionFromChoice,
+  updateOptionInChoice,
+  validateTimeLimit,
+  validateKeySequence,
+  reorderElements,
+  moveElementUp as moveUp,
+  moveElementDown as moveDown,
+  updateElement as updateElementUtil
+} from './element-utils';
 
 export const useElementManagement = (
   sceneId: string,
@@ -55,96 +66,7 @@ export const useElementManagement = (
   const addElement = (type: ElementType) => {
     if (!story) return;
     
-    const currentScene = story.scenes.find(scene => scene.id === sceneId);
-    if (!currentScene) return;
-    
-    const newOrder = elements.length > 0 
-      ? Math.max(...elements.map(e => e.order)) + 1 
-      : 0;
-    
-    let newElement: SceneElement;
-    
-    switch (type) {
-      case 'narration':
-        newElement = {
-          id: generateId('narration'),
-          type: 'narration',
-          order: newOrder,
-          text: 'Enter narration text here...'
-        } as SceneElement;
-        break;
-        
-      case 'dialogue':
-        newElement = {
-          id: generateId('dialogue'),
-          type: 'dialogue',
-          order: newOrder,
-          characterId: story.characters[0]?.id || '',
-          text: 'Enter dialogue text here...'
-        } as SceneElement;
-        break;
-        
-      case 'thought':
-        newElement = {
-          id: generateId('thought'),
-          type: 'thought',
-          order: newOrder,
-          characterId: story.characters.find(c => c.role === 'protagonist')?.id || story.characters[0]?.id || '',
-          text: 'Enter thought text here...'
-        } as SceneElement;
-        break;
-        
-      case 'choice':
-        newElement = {
-          id: generateId('choice'),
-          type: 'choice',
-          order: newOrder,
-          text: 'Enter choice description here...',
-          options: [
-            {
-              id: generateId('option'),
-              text: 'Option 1',
-              nextSceneId: ''
-            }
-          ]
-        } as SceneElement;
-        break;
-        
-      case 'qte':
-        newElement = {
-          id: generateId('qte'),
-          type: 'qte',
-          order: newOrder,
-          description: 'Enter QTE description here...',
-          introText: 'Get ready...',
-          timeLimit: 3,
-          keySequence: 'ABC',
-          successSceneId: '',
-          failureSceneId: '',
-          successTransition: 'You succeeded!',
-          failureTransition: 'You failed!'
-        } as SceneElement;
-        break;
-        
-      case 'dialogueTask':
-        newElement = {
-          id: generateId('dialogueTask'),
-          type: 'dialogueTask',
-          order: newOrder,
-          goal: 'Enter dialogue goal here...',
-          targetCharacterId: story.characters.find(c => c.role !== 'protagonist')?.id || '',
-          background: 'Enter background information here...',
-          openingLine: 'Enter the opening line from this character...',
-          successSceneId: '',
-          failureSceneId: '',
-          successTransition: 'The conversation went well.',
-          failureTransition: 'The conversation did not go as planned.'
-        } as SceneElement;
-        break;
-        
-      default:
-        return;
-    }
+    const newElement = createNewElement(type, story, elements.length);
     
     const updatedElements = [...elements, newElement];
     setElements(updatedElements as SceneElement[]);
@@ -157,10 +79,7 @@ export const useElementManagement = (
   const deleteElement = (id: string) => {
     const updatedElements = elements.filter(e => e.id !== id);
     // Reorder remaining elements
-    const reorderedElements = updatedElements.map((elem, index) => ({
-      ...elem,
-      order: index
-    })) as SceneElement[];
+    const reorderedElements = reorderElements(updatedElements);
     
     setElements(reorderedElements);
     updateStory(reorderedElements);
@@ -170,49 +89,21 @@ export const useElementManagement = (
 
   // Move element up
   const moveElementUp = (index: number) => {
-    if (index <= 0) return;
-    
-    const newElements = [...elements];
-    
-    // Swap order property
-    const temp = newElements[index].order;
-    newElements[index].order = newElements[index - 1].order;
-    newElements[index - 1].order = temp;
-    
-    // Swap positions in array
-    [newElements[index], newElements[index - 1]] = [newElements[index - 1], newElements[index]];
-    
+    const newElements = moveUp(elements, index);
     setElements([...newElements] as SceneElement[]);
     updateStory([...newElements] as SceneElement[]);
   };
 
   // Move element down
   const moveElementDown = (index: number) => {
-    if (index >= elements.length - 1) return;
-    
-    const newElements = [...elements];
-    
-    // Swap order property
-    const temp = newElements[index].order;
-    newElements[index].order = newElements[index + 1].order;
-    newElements[index + 1].order = temp;
-    
-    // Swap positions in array
-    [newElements[index], newElements[index + 1]] = [newElements[index + 1], newElements[index]];
-    
+    const newElements = moveDown(elements, index);
     setElements([...newElements] as SceneElement[]);
     updateStory([...newElements] as SceneElement[]);
   };
 
   // Update element
   const updateElement = (id: string, updatedElement: Partial<SceneElement>) => {
-    const newElements = elements.map(elem => {
-      if (elem.id === id) {
-        return { ...elem, ...updatedElement };
-      }
-      return elem;
-    });
-    
+    const newElements = updateElementUtil(elements, id, updatedElement);
     setElements([...newElements] as SceneElement[]);
     updateStory([...newElements] as SceneElement[]);
   };
@@ -222,30 +113,16 @@ export const useElementManagement = (
     const element = elements.find(e => e.id === elementId) as ChoiceElement;
     if (!element || element.type !== 'choice') return;
     
-    const newOption: ChoiceOption = {
-      id: generateId('option'),
-      text: `Option ${element.options.length + 1}`,
-      nextSceneId: ''
-    };
-    
-    const updatedElement: ChoiceElement = {
-      ...element,
-      options: [...element.options, newOption]
-    };
-    
+    const updatedElement = addOptionToChoice(element);
     updateElement(elementId, updatedElement);
   };
 
   // Delete choice option
   const deleteChoiceOption = (elementId: string, optionId: string) => {
     const element = elements.find(e => e.id === elementId) as ChoiceElement;
-    if (!element || element.type !== 'choice' || element.options.length <= 1) return;
+    if (!element || element.type !== 'choice') return;
     
-    const updatedElement: ChoiceElement = {
-      ...element,
-      options: element.options.filter(opt => opt.id !== optionId)
-    };
-    
+    const updatedElement = deleteOptionFromChoice(element, optionId);
     updateElement(elementId, updatedElement);
   };
 
@@ -254,33 +131,8 @@ export const useElementManagement = (
     const element = elements.find(e => e.id === elementId) as ChoiceElement;
     if (!element || element.type !== 'choice') return;
     
-    const updatedOptions = element.options.map(opt => {
-      if (opt.id === optionId) {
-        return { ...opt, ...updates };
-      }
-      return opt;
-    });
-    
-    const updatedElement: ChoiceElement = {
-      ...element,
-      options: updatedOptions
-    };
-    
+    const updatedElement = updateOptionInChoice(element, optionId, updates);
     updateElement(elementId, updatedElement);
-  };
-
-  // Validate QTE time limit (3-6 seconds)
-  const validateTimeLimit = (value: number): number => {
-    if (value < 3) return 3;
-    if (value > 6) return 6;
-    return value;
-  };
-
-  // Validate QTE key sequence (3-6 chars)
-  const validateKeySequence = (value: string): string => {
-    if (value.length < 3) return value.padEnd(3, 'A');
-    if (value.length > 6) return value.substring(0, 6);
-    return value;
   };
 
   return {
