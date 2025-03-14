@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   ReactFlow, 
   Background, 
@@ -80,11 +80,13 @@ const FlowEditor = ({ onSceneSelect }: FlowEditorProps) => {
         <Background />
         <Controls position="bottom-right" showInteractive={false} />
         
-        <FlowActionsPanel
-          selectedNode={selectedNode}
-          onAddScene={addScene}
-          onDeleteScene={deleteSelectedScene}
-        />
+        {selectedNode && (
+          <FlowActionsPanel
+            selectedNode={selectedNode}
+            onAddScene={addScene}
+            onDeleteScene={deleteSelectedScene}
+          />
+        )}
       </ReactFlow>
     </div>
   );

@@ -1,11 +1,12 @@
 
 import { useCallback } from 'react';
-import { Node, Edge, Connection, addEdge } from 'reactflow';
+import { Node, Edge, Connection, addEdge, MarkerType } from 'reactflow';
 import { Story } from '@/utils/types';
+import { SceneNodeData } from './flowTypes';
 
 export const useNodeInteractions = (
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>,
-  setSelectedNode: React.Dispatch<React.SetStateAction<Node | null>>,
+  setSelectedNode: React.Dispatch<React.SetStateAction<Node<SceneNodeData> | null>>,
   story: Story | null,
   setStory: React.Dispatch<React.SetStateAction<Story | null>> | null,
   onSceneSelect: (sceneId: string) => void
@@ -49,7 +50,7 @@ export const useNodeInteractions = (
   );
 
   // Handle node selection
-  const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
+  const onNodeClick = useCallback((_: React.MouseEvent, node: Node<SceneNodeData>) => {
     setSelectedNode(node);
     // Call the parent's scene select handler
     onSceneSelect(node.id);
@@ -60,6 +61,3 @@ export const useNodeInteractions = (
     onNodeClick
   };
 };
-
-// Need to import MarkerType
-import { MarkerType } from 'reactflow';

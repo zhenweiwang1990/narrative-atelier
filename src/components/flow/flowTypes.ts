@@ -12,7 +12,7 @@ export interface SceneNodeData {
 
 // Type for the complete flow state
 export interface FlowState {
-  nodes: Node[];
+  nodes: Node<SceneNodeData>[];
   edges: Edge[];
-  selectedNode: Node | null;
+  selectedNode: Node<SceneNodeData> | null;
 }

@@ -4,15 +4,16 @@ import { Node, Edge, useNodesState, useEdgesState } from 'reactflow';
 import { Story } from '@/utils/types';
 import { scenesToNodes, createEdgesFromStory } from './transformUtils';
 import { useNodeInteractions } from './useNodeInteractions';
+import { SceneNodeData } from './flowTypes';
 
 export const useFlowTransformers = (
   story: Story | null,
   setStory: React.Dispatch<React.SetStateAction<Story | null>> | null,
   onSceneSelect: (sceneId: string) => void
 ) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node[]>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node<SceneNodeData>[]>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge[]>([]);
-  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const [selectedNode, setSelectedNode] = useState<Node<SceneNodeData> | null>(null);
 
   // Convert scenes to nodes and connections
   useEffect(() => {
@@ -21,7 +22,7 @@ export const useFlowTransformers = (
     try {
       // Create nodes from scenes
       const flowNodes = scenesToNodes(story);
-      setNodes(flowNodes as Node[]);
+      setNodes(flowNodes as Node<SceneNodeData>[]);
 
       // Create edges from scene connections
       const flowEdges = createEdgesFromStory(story);
