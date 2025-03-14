@@ -8,6 +8,7 @@ import { AlertCircle } from 'lucide-react';
 import { useSceneManagementHook } from '@/hooks/useSceneManagementHook';
 import EditorPanel from '@/components/flow/EditorPanel';
 import FloatingMobilePreview from '@/components/flow/FloatingMobilePreview';
+import GlobalValues from '@/components/GlobalValues';
 
 const Flow = () => {
   const { story, setStory } = useStory();
@@ -36,10 +37,26 @@ const Flow = () => {
     }
   }, [activeTab, setActiveTab]);
 
+  // Handler for global values update
+  const handleGlobalValuesChange = (updatedValues) => {
+    if (!story || !setStory) return;
+    
+    setStory({
+      ...story,
+      globalValues: updatedValues
+    });
+  };
+
   if (!story) return null;
   
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col">
+    <div className="h-[calc(100vh-4rem)] flex flex-col space-y-3">
+      {/* Global Values Section */}
+      <GlobalValues 
+        values={story.globalValues || []} 
+        onChange={handleGlobalValuesChange} 
+      />
+      
       {story.scenes.length === 0 ? (
         <Alert variant="default" className="bg-amber-50 text-amber-600 border-amber-200">
           <AlertCircle className="h-4 w-4" />

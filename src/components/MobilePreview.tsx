@@ -7,6 +7,7 @@ import { ChevronRight } from 'lucide-react';
 import PreviewElement from './preview/PreviewElement';
 import SceneEnding from './preview/SceneEnding';
 import { usePreviewState } from './preview/usePreviewState';
+import ValuesDisplay from './preview/ValuesDisplay';
 
 interface MobilePreviewProps {
   sceneId: string;
@@ -26,7 +27,8 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
     handleNext,
     handleChoiceSelect,
     handleRevival,
-    getCharacter
+    getCharacter,
+    globalValues
   } = usePreviewState(sceneId, story, onSceneChange);
   
   if (!scene) return null;
@@ -57,6 +59,11 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
               getCharacter={getCharacter}
             />
           </div>
+        )}
+        
+        {/* Add global values display */}
+        {story.globalValues && story.globalValues.length > 0 && (
+          <ValuesDisplay values={globalValues} />
         )}
       </div>
       

@@ -6,7 +6,8 @@ import {
   SceneElement, 
   ElementType,
   ChoiceOption,
-  ChoiceElement
+  ChoiceElement,
+  GlobalValue
 } from '@/utils/types';
 import { useStory } from './Layout';
 import { Button } from '@/components/ui/button';
@@ -300,6 +301,9 @@ const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementE
 
   if (!story) return null;
 
+  // Get global values from story
+  const globalValues: GlobalValue[] = story.globalValues || [];
+
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap gap-1">
@@ -373,6 +377,7 @@ const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementE
                 selectedElementId={selectedElementId}
                 characters={story.characters}
                 scenes={story.scenes}
+                globalValues={globalValues}
                 onSelect={onSelectElement ? onSelectElement : () => {}}
                 onMoveUp={moveElementUp}
                 onMoveDown={moveElementDown}

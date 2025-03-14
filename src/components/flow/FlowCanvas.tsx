@@ -28,6 +28,9 @@ interface FlowCanvasProps {
   onAddScene: () => void;
   onDeleteScene: () => void;
   onPreviewToggle?: () => void;
+  onAutoArrange?: () => void;
+  edgeOptions?: any;
+  revivalEdgeOptions?: any;
 }
 
 const FlowCanvas: React.FC<FlowCanvasProps> = ({
@@ -41,7 +44,10 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   selectedNode,
   onAddScene,
   onDeleteScene,
-  onPreviewToggle
+  onPreviewToggle,
+  onAutoArrange,
+  edgeOptions,
+  revivalEdgeOptions
 }) => {
   return (
     <ReactFlow
@@ -52,6 +58,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       onConnect={onConnect}
       onNodeClick={onNodeClick}
       nodeTypes={nodeTypes}
+      defaultEdgeOptions={edgeOptions}
       fitView
       minZoom={0.5}
       maxZoom={2}
@@ -65,6 +72,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
         onAddScene={onAddScene}
         onDeleteScene={onDeleteScene}
         onPreviewToggle={onPreviewToggle}
+        onAutoArrange={onAutoArrange}
       />
     </ReactFlow>
   );

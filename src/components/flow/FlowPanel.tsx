@@ -1,52 +1,70 @@
 
 import React from 'react';
-import { Node } from 'reactflow';
+import { Panel } from 'reactflow';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, Smartphone } from 'lucide-react';
+import { Plus, Trash, Eye, LayoutGrid } from 'lucide-react';
 import { SceneNodeData } from './flowTypes';
+import { Node } from 'reactflow';
 
 interface FlowPanelProps {
   selectedNode: Node<SceneNodeData> | null;
   onAddScene: () => void;
   onDeleteScene: () => void;
   onPreviewToggle?: () => void;
+  onAutoArrange?: () => void;
 }
 
-const FlowPanel = ({ selectedNode, onAddScene, onDeleteScene, onPreviewToggle }: FlowPanelProps) => {
+const FlowPanel: React.FC<FlowPanelProps> = ({
+  selectedNode,
+  onAddScene,
+  onDeleteScene,
+  onPreviewToggle,
+  onAutoArrange
+}) => {
   return (
-    <div className="absolute top-2 left-2 p-2 bg-background/80 backdrop-blur-sm rounded-md border shadow-sm z-10">
-      <div className="flex items-center space-x-2">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={onAddScene}
-          className="text-xs h-8"
-        >
-          <Plus className="h-4 w-4 mr-1" /> Add Scene
-        </Button>
-        
-        <Button 
-          variant="outline" 
-          size="sm" 
+    <Panel position="top-left" className="bg-white p-2 rounded-md shadow-sm flex items-center gap-2">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={onAddScene}
+        className="h-8 text-xs"
+      >
+        <Plus className="h-4 w-4 mr-1" /> Add Scene
+      </Button>
+      
+      {selectedNode && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 text-xs text-destructive border-destructive hover:bg-destructive/10"
           onClick={onDeleteScene}
-          disabled={!selectedNode}
-          className="text-xs h-8"
         >
-          <Trash2 className="h-4 w-4 mr-1" /> Delete Scene
+          <Trash className="h-4 w-4 mr-1" /> Delete Scene
         </Button>
-        
-        {onPreviewToggle && (
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={onPreviewToggle}
-            className="text-xs h-8"
-          >
-            <Smartphone className="h-4 w-4 mr-1" /> Toggle Preview
-          </Button>
-        )}
-      </div>
-    </div>
+      )}
+      
+      {onPreviewToggle && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 text-xs"
+          onClick={onPreviewToggle}
+        >
+          <Eye className="h-4 w-4 mr-1" /> Toggle Preview
+        </Button>
+      )}
+      
+      {onAutoArrange && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 text-xs"
+          onClick={onAutoArrange}
+        >
+          <LayoutGrid className="h-4 w-4 mr-1" /> Auto Arrange
+        </Button>
+      )}
+    </Panel>
   );
 };
 

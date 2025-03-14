@@ -1,12 +1,23 @@
 
 import { useState, useEffect } from 'react';
-import { Scene, Character, SceneElement, Story } from '@/utils/types';
+import { Scene, Character, SceneElement, Story, GlobalValue, ValueChange, ChoiceElement, QteElement, DialogueTaskElement } from '@/utils/types';
 
 export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (sceneId: string) => void) => {
   const [currentElementIndex, setCurrentElementIndex] = useState<number>(-1);
+  const [globalValues, setGlobalValues] = useState<GlobalValue[]>([]);
   
+  // Initialize global values on first load
   useEffect(() => {
-    // Reset state when scene changes
+    if (story.globalValues) {
+      setGlobalValues(story.globalValues.map(value => ({
+        ...value,
+        currentValue: value.initialValue
+      })));
+    }
+  }, [story.globalValues]);
+  
+  // Reset element index when scene changes
+  useEffect(() => {
     setCurrentElementIndex(-1);
   }, [sceneId]);
   
@@ -24,7 +35,8 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
       handleNext: () => {},
       handleChoiceSelect: () => {},
       handleRevival: () => {},
-      getCharacter: () => undefined
+      getCharacter: () => undefined,
+      globalValues: []
     };
   }
   
@@ -42,6 +54,25 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
     return ['choice', 'qte', 'dialogueTask'].includes(element.type);
   }
 
+  // Update global values based on value changes
+  const applyValueChanges = (changes?: ValueChange[]) => {
+    if (!changes || changes.length === 0) return;
+    
+    setGlobalValues(prevValues => 
+      prevValues.map(value => {
+        const change = changes.find(c => c.valueId === value.id);
+        if (change) {
+          const currentVal = value.currentValue !== undefined ? value.currentValue : value.initialValue;
+          return {
+            ...value,
+            currentValue: currentVal + change.change
+          };
+        }
+        return value;
+      })
+    );
+  };
+
   const handleNext = () => {
     if (currentElementIndex < sortedElements.length - 1) {
       setCurrentElementIndex(currentElementIndex + 1);
@@ -52,10 +83,33 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
     }
   };
 
-  const handleChoiceSelect = (nextSceneId: string) => {
+  const handleChoiceSelect = (nextSceneId: string, valueChanges?: ValueChange[]) => {
+    // Apply value changes if any
+    applyValueChanges(valueChanges);
+    
     if (nextSceneId) {
       onSceneChange(nextSceneId);
       setCurrentElementIndex(-1);
+    }
+  };
+
+  const handleQteResult = (success: boolean, element: QteElement) => {
+    if (success) {
+      applyValueChanges(element.successValueChanges);
+      handleChoiceSelect(element.successSceneId);
+    } else {
+      applyValueChanges(element.failureValueChanges);
+      handleChoiceSelect(element.failureSceneId);
+    }
+  };
+
+  const handleDialogueTaskResult = (success: boolean, element: DialogueTaskElement) => {
+    if (success) {
+      applyValueChanges(element.successValueChanges);
+      handleChoiceSelect(element.successSceneId);
+    } else {
+      applyValueChanges(element.failureValueChanges);
+      handleChoiceSelect(element.failureSceneId);
     }
   };
 
@@ -81,7 +135,10 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
     sortedElements,
     handleNext,
     handleChoiceSelect,
+    handleQteResult,
+    handleDialogueTaskResult,
     handleRevival,
-    getCharacter
+    getCharacter,
+    globalValues
   };
 };

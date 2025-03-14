@@ -3,12 +3,12 @@ import React from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Clock, Keyboard } from 'lucide-react';
-import { SceneElement, ChoiceElement, QteElement, DialogueTaskElement, Character } from '@/utils/types';
+import { SceneElement, ChoiceElement, QteElement, DialogueTaskElement, Character, ValueChange } from '@/utils/types';
 
 interface PreviewElementProps {
   currentElement: SceneElement | null;
   handleNext: () => void;
-  handleChoiceSelect: (nextSceneId: string) => void;
+  handleChoiceSelect: (nextSceneId: string, valueChanges?: ValueChange[]) => void;
   getCharacter: (characterId: string) => Character | undefined;
 }
 
@@ -81,7 +81,7 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
                 variant="outline" 
                 size="sm" 
                 className="w-full justify-start text-left h-auto py-2 text-sm"
-                onClick={() => handleChoiceSelect(option.nextSceneId)}
+                onClick={() => handleChoiceSelect(option.nextSceneId, option.valueChanges)}
               >
                 {option.text}
               </Button>
@@ -114,7 +114,7 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
               variant="default" 
               size="sm" 
               className="bg-green-600 hover:bg-green-700"
-              onClick={() => handleChoiceSelect(qteElement.successSceneId)}
+              onClick={() => handleChoiceSelect(qteElement.successSceneId, qteElement.successValueChanges)}
             >
               Success
             </Button>
@@ -122,7 +122,7 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
               variant="default" 
               size="sm" 
               className="bg-red-600 hover:bg-red-700"
-              onClick={() => handleChoiceSelect(qteElement.failureSceneId)}
+              onClick={() => handleChoiceSelect(qteElement.failureSceneId, qteElement.failureValueChanges)}
             >
               Failure
             </Button>
@@ -161,7 +161,7 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
               variant="default" 
               size="sm" 
               className="bg-green-600 hover:bg-green-700 flex-1"
-              onClick={() => handleChoiceSelect(taskElement.successSceneId)}
+              onClick={() => handleChoiceSelect(taskElement.successSceneId, taskElement.successValueChanges)}
             >
               Success
             </Button>
@@ -169,7 +169,7 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
               variant="default" 
               size="sm" 
               className="bg-red-600 hover:bg-red-700 flex-1"
-              onClick={() => handleChoiceSelect(taskElement.failureSceneId)}
+              onClick={() => handleChoiceSelect(taskElement.failureSceneId, taskElement.failureValueChanges)}
             >
               Failure
             </Button>

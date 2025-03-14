@@ -22,6 +22,20 @@ export interface Location {
   scenes: string[]; // IDs of associated scenes
 }
 
+// Global Value Type
+export interface GlobalValue {
+  id: string;
+  name: string;
+  initialValue: number;
+  currentValue?: number; // Used in preview
+}
+
+// ValueChange for elements that can modify global values
+export interface ValueChange {
+  valueId: string;
+  change: number; // Can be positive or negative
+}
+
 // Scene Element Types
 export type ElementType = 'narration' | 'dialogue' | 'thought' | 'choice' | 'qte' | 'dialogueTask';
 
@@ -52,6 +66,7 @@ export interface ChoiceOption {
   id: string;
   text: string;
   nextSceneId: string;
+  valueChanges?: ValueChange[]; // New field for global value changes
 }
 
 export interface ChoiceElement extends BaseElement {
@@ -70,6 +85,8 @@ export interface QteElement extends BaseElement {
   failureSceneId: string;
   successTransition?: string; // Narration text for success transition
   failureTransition?: string; // Narration text for failure transition
+  successValueChanges?: ValueChange[]; // New field for success value changes
+  failureValueChanges?: ValueChange[]; // New field for failure value changes
 }
 
 export interface DialogueTaskElement extends BaseElement {
@@ -82,6 +99,8 @@ export interface DialogueTaskElement extends BaseElement {
   failureSceneId: string;
   successTransition?: string; // Narration text for success transition
   failureTransition?: string; // Narration text for failure transition
+  successValueChanges?: ValueChange[]; // New field for success value changes
+  failureValueChanges?: ValueChange[]; // New field for failure value changes
 }
 
 export type SceneElement = 
@@ -114,6 +133,7 @@ export interface Story {
   characters: Character[];
   locations: Location[];
   scenes: Scene[];
+  globalValues: GlobalValue[]; // New field for global values
 }
 
 // Flow Node Types for React Flow
