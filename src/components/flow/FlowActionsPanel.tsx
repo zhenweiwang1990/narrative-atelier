@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Panel } from 'reactflow';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2, ZoomIn, ZoomOut, Maximize } from 'lucide-react';
 import { Node, useReactFlow } from 'reactflow';
@@ -20,7 +19,7 @@ const FlowActionsPanel = ({
   const { zoomIn, zoomOut, fitView } = useReactFlow();
 
   return (
-    <Panel position="top-right" className="bg-white p-1 rounded-md shadow-sm border flex space-x-1">
+    <>
       <Button 
         variant="outline" 
         size="icon" 
@@ -72,7 +71,7 @@ const FlowActionsPanel = ({
       >
         <Maximize className="h-3.5 w-3.5" />
       </Button>
-    </Panel>
+    </>
   );
 };
 

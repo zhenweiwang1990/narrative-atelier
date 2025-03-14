@@ -4,7 +4,8 @@ import {
   ReactFlow, 
   Background, 
   Controls,
-  NodeTypes
+  NodeTypes,
+  Panel
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useStory } from './Layout';
@@ -81,13 +82,15 @@ const FlowEditor = ({ onSceneSelect }: FlowEditorProps) => {
         <Background />
         <Controls position="bottom-right" showInteractive={false} />
         
-        {/* Only render FlowActionsPanel if a node is selected - this prevents the Children.only error */}
+        {/* Render action buttons separately */}
         {selectedNode && (
-          <FlowActionsPanel
-            selectedNode={selectedNode}
-            onAddScene={addScene}
-            onDeleteScene={deleteSelectedScene}
-          />
+          <Panel position="top-right" className="bg-white p-1 rounded-md shadow-sm border flex space-x-1">
+            <FlowActionsPanel
+              selectedNode={selectedNode}
+              onAddScene={addScene}
+              onDeleteScene={deleteSelectedScene}
+            />
+          </Panel>
         )}
       </ReactFlow>
     </div>
