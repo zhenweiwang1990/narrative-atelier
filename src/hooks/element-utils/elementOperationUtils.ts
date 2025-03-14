@@ -44,14 +44,14 @@ export const moveElementDown = (elements: SceneElement[], index: number): SceneE
 };
 
 // Update an element with new properties
-export const updateElement = (
+export const updateElement = <T extends SceneElement>(
   elements: SceneElement[],
   id: string, 
-  updatedElement: Partial<SceneElement>
+  updatedElement: Partial<T>
 ): SceneElement[] => {
   return elements.map(elem => {
     if (elem.id === id) {
-      return { ...elem, ...updatedElement };
+      return { ...elem, ...updatedElement } as SceneElement;
     }
     return elem;
   });
