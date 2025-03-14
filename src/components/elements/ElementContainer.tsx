@@ -19,7 +19,8 @@ import {
   DialogueTaskElement as DialogueTaskElementType,
   ChoiceOption,
   Character,
-  Scene
+  Scene,
+  GlobalValue
 } from '@/utils/types';
 
 interface ElementContainerProps {
@@ -29,6 +30,7 @@ interface ElementContainerProps {
   selectedElementId?: string;
   characters: Character[];
   scenes: Scene[];
+  globalValues: GlobalValue[];
   onSelect: (id: string) => void;
   onMoveUp: (index: number) => void;
   onMoveDown: (index: number) => void;
@@ -50,6 +52,7 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
   selectedElementId,
   characters,
   scenes,
+  globalValues,
   onSelect,
   onMoveUp,
   onMoveDown,
@@ -108,6 +111,7 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
           <ChoiceElement 
             element={element as ChoiceElementType}
             scenes={scenes}
+            globalValues={globalValues}
             onUpdate={onUpdate}
             onAddOption={onAddChoiceOption}
             onDeleteOption={onDeleteChoiceOption}
@@ -119,6 +123,7 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
           <QteElement 
             element={element as QteElementType}
             scenes={scenes}
+            globalValues={globalValues}
             onUpdate={onUpdate}
             validateTimeLimit={validateTimeLimit}
             validateKeySequence={validateKeySequence}
@@ -130,6 +135,7 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
             element={element as DialogueTaskElementType}
             characters={characters}
             scenes={scenes}
+            globalValues={globalValues}
             onUpdate={onUpdate}
           />
         )}

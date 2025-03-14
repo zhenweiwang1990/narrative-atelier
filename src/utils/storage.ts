@@ -90,7 +90,8 @@ export const createBlankStory = (): Story => {
           }
         ]
       }
-    ]
+    ],
+    globalValues: [] // Added empty global values array
   };
 };
 
