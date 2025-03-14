@@ -92,18 +92,18 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton>
-                    <Link 
-                      to={item.path}
-                      className={cn(
-                        "flex items-center gap-3 text-sm py-2",
-                        location.pathname === item.path ? "text-primary font-medium" : "text-muted-foreground"
-                      )}
-                    >
+                  <Link 
+                    to={item.path}
+                    className={cn(
+                      "flex items-center gap-3 text-sm py-2",
+                      location.pathname === item.path ? "text-primary font-medium" : "text-muted-foreground"
+                    )}
+                  >
+                    <SidebarMenuButton className="w-full justify-start">
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
+                    </SidebarMenuButton>
+                  </Link>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -115,44 +115,44 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <button 
-                    className="flex items-center gap-3 text-sm py-2 w-full text-left text-muted-foreground"
+                <div className="w-full">
+                  <SidebarMenuButton 
                     onClick={handleSave}
+                    className="w-full justify-start"
                   >
                     <Save className="h-4 w-4" />
                     <span>Save</span>
-                  </button>
-                </SidebarMenuButton>
+                  </SidebarMenuButton>
+                </div>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <button 
-                    className="flex items-center gap-3 text-sm py-2 w-full text-left text-muted-foreground"
+                <div className="w-full">
+                  <SidebarMenuButton 
                     onClick={triggerImport}
+                    className="w-full justify-start"
                   >
                     <Upload className="h-4 w-4" />
                     <span>Import</span>
-                    <input 
-                      type="file" 
-                      ref={fileInputRef}
-                      accept=".json" 
-                      className="hidden"
-                      onChange={handleImport}
-                    />
-                  </button>
-                </SidebarMenuButton>
+                  </SidebarMenuButton>
+                  <input 
+                    type="file" 
+                    ref={fileInputRef}
+                    accept=".json" 
+                    className="hidden"
+                    onChange={handleImport}
+                  />
+                </div>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <button 
-                    className="flex items-center gap-3 text-sm py-2 w-full text-left text-muted-foreground"
+                <div className="w-full">
+                  <SidebarMenuButton 
                     onClick={handleExport}
+                    className="w-full justify-start"
                   >
                     <Download className="h-4 w-4" />
                     <span>Export</span>
-                  </button>
-                </SidebarMenuButton>
+                  </SidebarMenuButton>
+                </div>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
