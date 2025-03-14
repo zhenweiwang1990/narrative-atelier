@@ -155,8 +155,8 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
     }
     
     const updatedElements = [...elements, newElement];
-    setElements(updatedElements);
-    updateStory(updatedElements);
+    setElements(updatedElements as SceneElement[]);
+    updateStory(updatedElements as SceneElement[]);
   };
 
   // Delete element
@@ -186,8 +186,8 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
     // Swap positions in array
     [newElements[index], newElements[index - 1]] = [newElements[index - 1], newElements[index]];
     
-    setElements(newElements);
-    updateStory(newElements);
+    setElements([...newElements] as SceneElement[]);
+    updateStory([...newElements] as SceneElement[]);
   };
 
   // Move element down
@@ -204,8 +204,8 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
     // Swap positions in array
     [newElements[index], newElements[index + 1]] = [newElements[index + 1], newElements[index]];
     
-    setElements(newElements);
-    updateStory(newElements);
+    setElements([...newElements] as SceneElement[]);
+    updateStory([...newElements] as SceneElement[]);
   };
 
   // Update element
@@ -217,8 +217,8 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
       return elem;
     });
     
-    setElements(newElements);
-    updateStory(newElements);
+    setElements([...newElements] as SceneElement[]);
+    updateStory([...newElements] as SceneElement[]);
   };
 
   // Add choice option
