@@ -53,12 +53,12 @@ const LocationCard = ({ location, onEdit, onDelete }: LocationCardProps) => {
         
         <div className="p-4">
           <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-            {location.description || "No description provided."}
+            {location.description || "未提供描述。"}
           </p>
           
           <div className="flex flex-wrap gap-2 mt-2">
             <Badge variant="outline" className="flex items-center">
-              <span className="text-xs">{location.scenes.length} scenes</span>
+              <span className="text-xs">{location.scenes.length} 个分支</span>
             </Badge>
           </div>
         </div>
@@ -72,7 +72,7 @@ const LocationCard = ({ location, onEdit, onDelete }: LocationCardProps) => {
           onClick={() => onEdit(location)}
         >
           <Edit className="h-4 w-4 mr-2" />
-          Edit
+          编辑
         </Button>
         <Button 
           variant="outline" 

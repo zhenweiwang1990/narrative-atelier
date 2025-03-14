@@ -29,7 +29,7 @@ const App = () => (
             <Route path="/global-values" element={<GlobalValues />} />
             <Route path="/flow" element={<Flow />} />
             <Route path="/settings" element={<Settings />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            {/* 在捕获所有"*"路由之上添加所有自定义路由 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>

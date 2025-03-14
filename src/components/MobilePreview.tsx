@@ -49,7 +49,7 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
           <div>
             {!currentElement && location && (
               <div className="p-4 text-center">
-                <p className="text-sm text-muted-foreground mb-2">Location: {location.name || 'Unknown'}</p>
+                <p className="text-sm text-muted-foreground mb-2">场景: {location.name || '未知'}</p>
               </div>
             )}
             <PreviewElement
@@ -61,7 +61,7 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
           </div>
         )}
         
-        {/* Add global values display */}
+        {/* 添加全局变量显示 */}
         {story.globalValues && story.globalValues.length > 0 && (
           <ValuesDisplay values={globalValues} />
         )}
@@ -78,7 +78,7 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
                   currentElement?.type === 'dialogueTask' ||
                   (isSceneEnding && scene.type === 'bad-ending' && !!scene.revivalPointId)}
         >
-          Next <ChevronRight className="h-4 w-4 ml-1" />
+          下一步 <ChevronRight className="h-4 w-4 ml-1" />
         </Button>
       </div>
     </Card>

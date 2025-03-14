@@ -19,23 +19,23 @@ const TransitionTextsSection: React.FC<TransitionTextsSectionProps> = ({
   return (
     <div className="pt-2 space-y-2">
       <div>
-        <Label className="text-xs">Success Transition</Label>
+        <Label className="text-xs">成功转场文本</Label>
         <Textarea
           value={successTransition}
           onChange={(e) => onUpdateSuccess(e.target.value)}
           className="mt-1 text-sm"
           rows={2}
-          placeholder="Narration after success"
+          placeholder="成功后的叙述"
         />
       </div>
       <div>
-        <Label className="text-xs">Failure Transition</Label>
+        <Label className="text-xs">失败转场文本</Label>
         <Textarea
           value={failureTransition}
           onChange={(e) => onUpdateFailure(e.target.value)}
           className="mt-1 text-sm"
           rows={2}
-          placeholder="Narration after failure"
+          placeholder="失败后的叙述"
         />
       </div>
     </div>

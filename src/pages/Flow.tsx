@@ -28,7 +28,7 @@ const Flow = () => {
     updateRevivalPoint
   } = useSceneManagementHook(story, setStory);
 
-  // Set default tab to 'properties' instead of 'flow'
+  // 将默认标签设置为"properties"而不是"flow"
   React.useEffect(() => {
     if (activeTab === 'flow') {
       setActiveTab('properties');
@@ -43,7 +43,7 @@ const Flow = () => {
         <Alert variant="default" className="bg-amber-50 text-amber-600 border-amber-200">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            You don't have any scenes yet. Add a scene to get started.
+            您还没有任何分支。添加一个分支开始。
           </AlertDescription>
         </Alert>
       ) : (

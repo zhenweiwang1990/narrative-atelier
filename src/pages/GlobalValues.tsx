@@ -17,10 +17,10 @@ const GlobalValuesPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
-      <h1 className="text-2xl font-bold mb-6">Global Values</h1>
+      <h1 className="text-2xl font-bold mb-6">全局变量</h1>
       <p className="text-muted-foreground mb-6">
-        Global values can be used to track numerical values across scenes in your story.
-        These values can change based on user choices and can affect story progression.
+        全局变量可用于跟踪故事中各场景之间的数值变化。
+        这些值可以根据用户选择而改变，并会影响故事进展。
       </p>
       
       <GlobalValues

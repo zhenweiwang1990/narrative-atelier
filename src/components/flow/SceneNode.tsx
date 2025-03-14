@@ -17,11 +17,11 @@ interface SceneNodeProps {
 }
 
 const SceneNode = ({ data, selected }: SceneNodeProps) => {
-  // Generate element indicators as color blocks
+  // 生成元素指示器为颜色块
   const renderElementIndicators = () => {
     if (!data.elements || data.elements.length === 0) return null;
 
-    // Sort elements by order
+    // 按顺序排序元素
     const sortedElements = [...data.elements].sort((a, b) => a.order - b.order);
     
     return (
@@ -74,11 +74,16 @@ const SceneNode = ({ data, selected }: SceneNodeProps) => {
           </div>
         )}
         
-        <div className="text-[10px] text-muted-foreground capitalize mt-1">{data.sceneType}</div>
+        <div className="text-[10px] text-muted-foreground capitalize mt-1">
+          {data.sceneType === 'start' ? '开始' : 
+           data.sceneType === 'ending' ? '结局' : 
+           data.sceneType === 'bad-ending' ? '坏结局' : 
+           '普通'}
+        </div>
         
         {data.sceneType === 'bad-ending' && data.revivalPointId && (
           <div className="flex items-center text-[10px] text-red-500 mt-1">
-            <RotateCcw className="h-3 w-3 mr-1" /> Revival Point
+            <RotateCcw className="h-3 w-3 mr-1" /> 复活点
           </div>
         )}
         

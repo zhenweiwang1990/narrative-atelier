@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { 
   Card, 
@@ -44,30 +45,30 @@ const Index = () => {
 
   if (!story) return null;
 
-  // Project statistics
+  // 项目统计数据
   const stats = [
-    { name: 'Characters', value: story.characters.length, icon: <Users className="h-4 w-4" />, path: '/characters' },
-    { name: 'Locations', value: story.locations.length, icon: <MapPin className="h-4 w-4" />, path: '/locations' },
-    { name: 'Scenes', value: story.scenes.length, icon: <Network className="h-4 w-4" />, path: '/flow' }
+    { name: '角色', value: story.characters.length, icon: <Users className="h-4 w-4" />, path: '/characters' },
+    { name: '场景', value: story.locations.length, icon: <MapPin className="h-4 w-4" />, path: '/locations' },
+    { name: '分支', value: story.scenes.length, icon: <Network className="h-4 w-4" />, path: '/flow' }
   ];
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Story Overview</h1>
+        <h1 className="text-3xl font-bold tracking-tight">故事概览</h1>
         <p className="text-muted-foreground">
-          Manage your interactive story elements and narrative flow.
+          管理您的互动故事元素和叙事流程。
         </p>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Story Info Card */}
+        {/* 故事信息卡片 */}
         <Card className="md:col-span-2 h-full">
           <CardHeader>
             <div className="flex justify-between items-start">
               <div>
-                <CardTitle>Story Details</CardTitle>
-                <CardDescription>Basic information about your story</CardDescription>
+                <CardTitle>故事详情</CardTitle>
+                <CardDescription>关于您故事的基本信息</CardDescription>
               </div>
               
               {!isEditing ? (
@@ -76,7 +77,7 @@ const Index = () => {
                 </Button>
               ) : (
                 <Button variant="default" size="sm" onClick={handleSave}>
-                  <Save className="h-4 w-4 mr-2" /> Save
+                  <Save className="h-4 w-4 mr-2" /> 保存
                 </Button>
               )}
             </div>
@@ -86,7 +87,7 @@ const Index = () => {
             {isEditing ? (
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="title">Title</Label>
+                  <Label htmlFor="title">标题</Label>
                   <Input 
                     id="title" 
                     value={title} 
@@ -96,7 +97,7 @@ const Index = () => {
                 </div>
                 
                 <div>
-                  <Label htmlFor="author">Author</Label>
+                  <Label htmlFor="author">作者</Label>
                   <Input 
                     id="author" 
                     value={author} 
@@ -106,7 +107,7 @@ const Index = () => {
                 </div>
                 
                 <div>
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">描述</Label>
                   <Textarea 
                     id="description" 
                     value={description} 
@@ -119,17 +120,17 @@ const Index = () => {
             ) : (
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-sm font-medium text-muted-foreground">Title</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground">标题</h3>
                   <p className="mt-1">{story.title}</p>
                 </div>
                 
                 <div>
-                  <h3 className="text-sm font-medium text-muted-foreground">Author</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground">作者</h3>
                   <p className="mt-1">{story.author}</p>
                 </div>
                 
                 <div>
-                  <h3 className="text-sm font-medium text-muted-foreground">Description</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground">描述</h3>
                   <p className="mt-1 whitespace-pre-wrap">{story.description}</p>
                 </div>
               </div>
@@ -137,12 +138,12 @@ const Index = () => {
           </CardContent>
         </Card>
         
-        {/* Stats and Quick Actions */}
+        {/* 统计和快速操作 */}
         <div className="space-y-6">
-          {/* Stats */}
+          {/* 统计 */}
           <Card>
             <CardHeader>
-              <CardTitle>Statistics</CardTitle>
+              <CardTitle>统计</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -161,25 +162,25 @@ const Index = () => {
             </CardContent>
           </Card>
           
-          {/* Quick Actions */}
+          {/* 快速操作 */}
           <Card>
             <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
+              <CardTitle>快速操作</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               <Button variant="outline" asChild className="w-full justify-start">
                 <Link to="/characters">
-                  <Users className="h-4 w-4 mr-2" /> Manage Characters
+                  <Users className="h-4 w-4 mr-2" /> 管理角色
                 </Link>
               </Button>
               <Button variant="outline" asChild className="w-full justify-start">
                 <Link to="/locations">
-                  <MapPin className="h-4 w-4 mr-2" /> Manage Locations
+                  <MapPin className="h-4 w-4 mr-2" /> 管理场景
                 </Link>
               </Button>
               <Button variant="outline" asChild className="w-full justify-start">
                 <Link to="/flow">
-                  <Network className="h-4 w-4 mr-2" /> Edit Scene Flow
+                  <Network className="h-4 w-4 mr-2" /> 编辑剧情流程
                 </Link>
               </Button>
             </CardContent>
@@ -187,11 +188,11 @@ const Index = () => {
         </div>
       </div>
       
-      {/* Recent Activity or Project Guide */}
+      {/* 使用指南 */}
       <Card>
         <CardHeader>
-          <CardTitle>Quick Guide</CardTitle>
-          <CardDescription>How to create your interactive story</CardDescription>
+          <CardTitle>快速指南</CardTitle>
+          <CardDescription>如何创建您的互动故事</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -200,10 +201,10 @@ const Index = () => {
                 <div className="mr-2 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
                   1
                 </div>
-                <h3 className="font-medium">Create Characters</h3>
+                <h3 className="font-medium">创建角色</h3>
               </div>
               <p className="text-sm text-muted-foreground">
-                Define your protagonist and supporting characters with names, portraits, and backstories.
+                定义您的主角和配角，设置姓名、肖像和背景故事。
               </p>
             </div>
             
@@ -212,10 +213,10 @@ const Index = () => {
                 <div className="mr-2 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
                   2
                 </div>
-                <h3 className="font-medium">Design Locations</h3>
+                <h3 className="font-medium">设计场景</h3>
               </div>
               <p className="text-sm text-muted-foreground">
-                Create the places where your story unfolds, complete with descriptions and background images.
+                创建故事发生的地点，包括描述和背景图片。
               </p>
             </div>
             
@@ -224,10 +225,10 @@ const Index = () => {
                 <div className="mr-2 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
                   3
                 </div>
-                <h3 className="font-medium">Build Scenes</h3>
+                <h3 className="font-medium">构建分支</h3>
               </div>
               <p className="text-sm text-muted-foreground">
-                Design scenes with narration, dialogue, choices, and interactive elements to create your branching narrative.
+                设计包含旁白、对话、选择和互动元素的场景，创建您的分支叙事。
               </p>
             </div>
           </div>
@@ -235,7 +236,7 @@ const Index = () => {
         <CardFooter>
           <Button variant="outline" asChild className="w-full">
             <Link to="/characters">
-              <BookText className="h-4 w-4 mr-2" /> Start Creating
+              <BookText className="h-4 w-4 mr-2" /> 开始创作
             </Link>
           </Button>
         </CardFooter>

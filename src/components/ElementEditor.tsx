@@ -30,19 +30,19 @@ const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementE
     validateKeySequence
   } = useElementManagement(sceneId, story, setStory);
   
-  // Handle adding an element
+  // 处理添加元素
   const handleAddElement = (type: any) => {
     const newElementId = addElement(type);
-    // Auto-select the new element
+    // 自动选择新元素
     if (onSelectElement && newElementId) {
       onSelectElement(newElementId);
     }
   };
   
-  // Handle deleting an element
+  // 处理删除元素
   const handleDeleteElement = (id: string) => {
     const deletedId = deleteElement(id);
-    // Clear selection if the deleted element was selected
+    // 如果删除的元素正在被选中，则清除选择
     if (selectedElementId === deletedId && onSelectElement) {
       onSelectElement('');
     }
@@ -50,7 +50,7 @@ const ElementEditor = ({ sceneId, selectedElementId, onSelectElement }: ElementE
 
   if (!story) return null;
 
-  // Get global values from story
+  // 从故事中获取全局变量
   const globalValues = story.globalValues || [];
 
   return (

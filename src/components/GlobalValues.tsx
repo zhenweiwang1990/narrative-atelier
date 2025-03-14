@@ -17,7 +17,7 @@ const GlobalValues: React.FC<GlobalValuesProps> = ({ values, onChange }) => {
   const addValue = () => {
     const newValue: GlobalValue = {
       id: generateId('value'),
-      name: `Value ${values.length + 1}`,
+      name: `变量 ${values.length + 1}`,
       initialValue: 0
     };
     onChange([...values, newValue]);
@@ -37,27 +37,27 @@ const GlobalValues: React.FC<GlobalValuesProps> = ({ values, onChange }) => {
   return (
     <Card className="p-4 space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium">Global Values</h3>
+        <h3 className="text-lg font-medium">全局变量</h3>
         <Button 
           variant="outline" 
           size="sm" 
           onClick={addValue}
           className="h-8 text-xs flex items-center"
         >
-          <Plus className="h-3.5 w-3.5 mr-1" /> Add Value
+          <Plus className="h-3.5 w-3.5 mr-1" /> 添加变量
         </Button>
       </div>
 
       {values.length === 0 ? (
         <div className="text-center py-4 text-sm text-muted-foreground">
-          No global values defined yet. Add a value to track progress across scenes.
+          尚未定义全局变量。添加一个变量来跟踪场景之间的进度。
         </div>
       ) : (
         <div className="space-y-3">
           {values.map(value => (
             <div key={value.id} className="flex gap-2 items-start">
               <div className="flex-1">
-                <Label htmlFor={`value-name-${value.id}`} className="text-xs">Name</Label>
+                <Label htmlFor={`value-name-${value.id}`} className="text-xs">名称</Label>
                 <Input
                   id={`value-name-${value.id}`}
                   value={value.name}
@@ -66,7 +66,7 @@ const GlobalValues: React.FC<GlobalValuesProps> = ({ values, onChange }) => {
                 />
               </div>
               <div className="w-24">
-                <Label htmlFor={`value-initial-${value.id}`} className="text-xs">Initial Value</Label>
+                <Label htmlFor={`value-initial-${value.id}`} className="text-xs">初始值</Label>
                 <Input
                   id={`value-initial-${value.id}`}
                   type="number"

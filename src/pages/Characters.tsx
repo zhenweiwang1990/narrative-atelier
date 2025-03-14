@@ -28,16 +28,16 @@ const Characters = () => {
     fullBody: ''
   });
 
-  // Get selected character for editing
+  // 获取选中的角色用于编辑
   const selectedCharacter = story?.characters.find(c => c.id === selectedCharacterId) || null;
 
-  // Filter characters based on search query
+  // 根据搜索查询过滤角色
   const filteredCharacters = story?.characters.filter(character =>
     character.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     character.bio.toLowerCase().includes(searchQuery.toLowerCase())
   ) || [];
 
-  // Open dialog for creating a character
+  // 打开创建角色对话框
   const handleOpenCreateDialog = () => {
     setIsEditMode(false);
     setFormData({
@@ -51,7 +51,7 @@ const Characters = () => {
     setIsDialogOpen(true);
   };
 
-  // Open dialog for editing a character
+  // 打开编辑角色对话框
   const handleOpenEditDialog = (character: Character) => {
     setIsEditMode(true);
     setSelectedCharacterId(character.id);
@@ -66,23 +66,23 @@ const Characters = () => {
     setIsDialogOpen(true);
   };
 
-  // Handle form input changes
+  // 处理表单输入变化
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Handle select changes
+  // 处理选择变化
   const handleSelectChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Handle character creation or update
+  // 处理角色创建或更新
   const handleSaveCharacter = () => {
     if (!story || !setStory) return;
 
     if (isEditMode && selectedCharacterId) {
-      // Update existing character
+      // 更新现有角色
       const updatedCharacters = story.characters.map(character => {
         if (character.id === selectedCharacterId) {
           return {
@@ -98,10 +98,10 @@ const Characters = () => {
         characters: updatedCharacters
       });
     } else {
-      // Create new character
+      // 创建新角色
       const newCharacter: Character = {
         id: generateId('character'),
-        name: formData.name || 'New Character',
+        name: formData.name || '新角色',
         gender: formData.gender as CharacterGender || 'male',
         role: formData.role as CharacterRole || 'supporting',
         bio: formData.bio || '',
@@ -118,7 +118,7 @@ const Characters = () => {
     setIsDialogOpen(false);
   };
 
-  // Handle character deletion
+  // 处理角色删除
   const handleDeleteCharacter = (characterId: string) => {
     if (!story || !setStory) return;
 
@@ -134,14 +134,14 @@ const Characters = () => {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Characters</h1>
+          <h1 className="text-2xl font-bold tracking-tight">角色</h1>
           <p className="text-sm text-muted-foreground">
-            Manage your story's characters and their attributes.
+            管理您故事中的角色及其属性。
           </p>
         </div>
 
         <Button size="sm" onClick={handleOpenCreateDialog}>
-          <Plus className="h-4 w-4 mr-2" /> Add Character
+          <Plus className="h-4 w-4 mr-2" /> 添加角色
         </Button>
       </div>
 
@@ -149,7 +149,7 @@ const Characters = () => {
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search characters..."
+            placeholder="搜索角色..."
             className="pl-9 h-9"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -162,18 +162,18 @@ const Characters = () => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[40px]"></TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Gender</TableHead>
-              <TableHead className="hidden md:table-cell">Bio</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>名称</TableHead>
+              <TableHead>角色</TableHead>
+              <TableHead>性别</TableHead>
+              <TableHead className="hidden md:table-cell">简介</TableHead>
+              <TableHead className="text-right">操作</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredCharacters.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center h-32 text-muted-foreground">
-                  No characters found. Add your first character to get started.
+                  未找到角色。添加您的第一个角色以开始。
                 </TableCell>
               </TableRow>
             ) : (
@@ -193,8 +193,10 @@ const Characters = () => {
                     )}
                   </TableCell>
                   <TableCell className="font-medium">{character.name}</TableCell>
-                  <TableCell className="capitalize">{character.role}</TableCell>
-                  <TableCell className="capitalize">{character.gender}</TableCell>
+                  <TableCell className="capitalize">{character.role === 'protagonist' ? '主角' : '配角'}</TableCell>
+                  <TableCell className="capitalize">
+                    {character.gender === 'male' ? '男' : character.gender === 'female' ? '女' : '其他'}
+                  </TableCell>
                   <TableCell className="hidden md:table-cell text-muted-foreground text-sm truncate max-w-[300px]">
                     {character.bio}
                   </TableCell>
@@ -226,13 +228,13 @@ const Characters = () => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[525px]">
           <DialogHeader>
-            <DialogTitle>{isEditMode ? 'Edit Character' : 'Create Character'}</DialogTitle>
+            <DialogTitle>{isEditMode ? '编辑角色' : '创建角色'}</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4 py-2">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">名称</Label>
                 <Input
                   id="name"
                   name="name"
@@ -242,17 +244,17 @@ const Characters = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="role">Role</Label>
+                <Label htmlFor="role">角色类型</Label>
                 <Select
                   value={formData.role}
                   onValueChange={(value) => handleSelectChange('role', value)}
                 >
                   <SelectTrigger id="role">
-                    <SelectValue placeholder="Select role" />
+                    <SelectValue placeholder="选择角色类型" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="protagonist">Protagonist</SelectItem>
-                    <SelectItem value="supporting">Supporting</SelectItem>
+                    <SelectItem value="protagonist">主角</SelectItem>
+                    <SelectItem value="supporting">配角</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -260,24 +262,24 @@ const Characters = () => {
             
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="gender">Gender</Label>
+                <Label htmlFor="gender">性别</Label>
                 <Select
                   value={formData.gender}
                   onValueChange={(value) => handleSelectChange('gender', value)}
                 >
                   <SelectTrigger id="gender">
-                    <SelectValue placeholder="Select gender" />
+                    <SelectValue placeholder="选择性别" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    <SelectItem value="male">男</SelectItem>
+                    <SelectItem value="female">女</SelectItem>
+                    <SelectItem value="other">其他</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="portrait">Portrait URL</Label>
+                <Label htmlFor="portrait">头像URL</Label>
                 <Input
                   id="portrait"
                   name="portrait"
@@ -289,7 +291,7 @@ const Characters = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="fullBody">Full Body Image URL</Label>
+              <Label htmlFor="fullBody">全身像URL</Label>
               <Input
                 id="fullBody"
                 name="fullBody"
@@ -300,21 +302,21 @@ const Characters = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="bio">Biography</Label>
+              <Label htmlFor="bio">人物传记</Label>
               <Textarea
                 id="bio"
                 name="bio"
                 value={formData.bio}
                 onChange={handleInputChange}
                 rows={4}
-                placeholder="Character background and personality..."
+                placeholder="角色背景和个性描述..."
               />
             </div>
           </div>
           
           <DialogFooter>
             <Button type="submit" onClick={handleSaveCharacter}>
-              {isEditMode ? 'Update Character' : 'Create Character'}
+              {isEditMode ? '更新角色' : '创建角色'}
             </Button>
           </DialogFooter>
         </DialogContent>

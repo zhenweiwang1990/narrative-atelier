@@ -47,7 +47,7 @@ const ValueChangesCollapsible: React.FC<ValueChangesCollapsibleProps> = ({
           className="mt-2 h-7 text-xs w-full"
           disabled={valueChanges.length >= globalValues.length}
         >
-          <Plus className="h-3 w-3 mr-1" /> Add Value Change
+          <Plus className="h-3 w-3 mr-1" /> 添加值变化
         </Button>
       </CollapsibleContent>
     </Collapsible>

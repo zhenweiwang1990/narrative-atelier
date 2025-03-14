@@ -38,7 +38,7 @@ const ValueChangesSection: React.FC<ValueChangesSectionProps> = ({
                   }}
                 >
                   <SelectTrigger className="h-7 text-xs">
-                    <SelectValue placeholder="Select value" />
+                    <SelectValue placeholder="选择变量" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
@@ -75,7 +75,7 @@ const ValueChangesSection: React.FC<ValueChangesSectionProps> = ({
           ))}
         </div>
       ) : (
-        <p className="text-xs text-muted-foreground">No value changes defined.</p>
+        <p className="text-xs text-muted-foreground">未定义值变化。</p>
       )}
     </div>
   );

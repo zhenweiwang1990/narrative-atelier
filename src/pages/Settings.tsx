@@ -48,32 +48,32 @@ const Settings = () => {
   });
 
   const onGeneralSubmit = (data: GeneralFormValues) => {
-    console.log("General settings updated:", data);
-    // Here you would save the settings to local storage or context
+    console.log("通用设置已更新:", data);
+    // 这里你会将设置保存到本地存储或上下文中
   };
 
   const onExportSubmit = (data: ExportFormValues) => {
-    console.log("Export settings updated:", data);
-    // Here you would save the export settings
+    console.log("导出设置已更新:", data);
+    // 这里你会保存导出设置
   };
 
   return (
     <div className="container mx-auto py-6">
-      <h1 className="text-3xl font-bold mb-6">Settings</h1>
+      <h1 className="text-3xl font-bold mb-6">设置</h1>
       
       <Tabs defaultValue="general" className="w-full">
         <TabsList className="mb-4">
-          <TabsTrigger value="general">General</TabsTrigger>
-          <TabsTrigger value="export">Export Options</TabsTrigger>
-          <TabsTrigger value="about">About</TabsTrigger>
+          <TabsTrigger value="general">通用</TabsTrigger>
+          <TabsTrigger value="export">导出选项</TabsTrigger>
+          <TabsTrigger value="about">关于</TabsTrigger>
         </TabsList>
         
         <TabsContent value="general">
           <Card>
             <CardHeader>
-              <CardTitle>General Settings</CardTitle>
+              <CardTitle>通用设置</CardTitle>
               <CardDescription>
-                Configure the application's general behavior and appearance.
+                配置应用程序的一般行为和外观。
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -85,9 +85,9 @@ const Settings = () => {
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                         <div className="space-y-0.5">
-                          <FormLabel className="text-base">Autosave</FormLabel>
+                          <FormLabel className="text-base">自动保存</FormLabel>
                           <FormDescription>
-                            Automatically save changes as you work
+                            随着您的工作自动保存更改
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -106,9 +106,9 @@ const Settings = () => {
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                         <div className="space-y-0.5">
-                          <FormLabel className="text-base">Dark Mode</FormLabel>
+                          <FormLabel className="text-base">黑暗模式</FormLabel>
                           <FormDescription>
-                            Use dark theme for the application
+                            使用应用程序的黑暗主题
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -127,9 +127,9 @@ const Settings = () => {
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                         <div className="space-y-0.5">
-                          <FormLabel className="text-base">Default Character Color</FormLabel>
+                          <FormLabel className="text-base">默认角色颜色</FormLabel>
                           <FormDescription>
-                            Color used for new characters
+                            用于新角色的颜色
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -149,9 +149,9 @@ const Settings = () => {
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                         <div className="space-y-0.5">
-                          <FormLabel className="text-base">Default Location Color</FormLabel>
+                          <FormLabel className="text-base">默认场景颜色</FormLabel>
                           <FormDescription>
-                            Color used for new locations
+                            用于新场景的颜色
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -165,7 +165,7 @@ const Settings = () => {
                     )}
                   />
                   
-                  <Button type="submit">Save Changes</Button>
+                  <Button type="submit">保存更改</Button>
                 </form>
               </Form>
             </CardContent>
@@ -175,9 +175,9 @@ const Settings = () => {
         <TabsContent value="export">
           <Card>
             <CardHeader>
-              <CardTitle>Export Settings</CardTitle>
+              <CardTitle>导出设置</CardTitle>
               <CardDescription>
-                Configure how your story is exported
+                配置故事导出方式
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -189,9 +189,9 @@ const Settings = () => {
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                         <div className="space-y-0.5">
-                          <FormLabel className="text-base">Include Metadata</FormLabel>
+                          <FormLabel className="text-base">包含元数据</FormLabel>
                           <FormDescription>
-                            Export additional metadata with your story
+                            导出故事时包含额外的元数据
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -210,9 +210,9 @@ const Settings = () => {
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                         <div className="space-y-0.5">
-                          <FormLabel className="text-base">Pretty Print</FormLabel>
+                          <FormLabel className="text-base">美化打印</FormLabel>
                           <FormDescription>
-                            Format the JSON file to be human-readable
+                            格式化JSON文件使其易于阅读
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -225,7 +225,7 @@ const Settings = () => {
                     )}
                   />
                   
-                  <Button type="submit">Save Changes</Button>
+                  <Button type="submit">保存更改</Button>
                 </form>
               </Form>
             </CardContent>
@@ -235,29 +235,28 @@ const Settings = () => {
         <TabsContent value="about">
           <Card>
             <CardHeader>
-              <CardTitle>About Narrative Atelier</CardTitle>
+              <CardTitle>关于叙事工坊</CardTitle>
               <CardDescription>
-                Information about the application
+                关于应用程序的信息
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <h3 className="font-medium">Version</h3>
+                <h3 className="font-medium">版本</h3>
                 <p className="text-sm text-muted-foreground">1.0.0</p>
               </div>
               
               <div>
-                <h3 className="font-medium">Description</h3>
+                <h3 className="font-medium">描述</h3>
                 <p className="text-sm text-muted-foreground">
-                  Narrative Atelier is an interactive story authoring tool designed to help writers 
-                  create branching narratives with rich character development and scene management.
+                  叙事工坊是一个交互式故事创作工具，旨在帮助作家创建具有丰富角色发展和场景管理的分支叙事。
                 </p>
               </div>
               
               <div>
-                <h3 className="font-medium">Credits</h3>
+                <h3 className="font-medium">制作</h3>
                 <p className="text-sm text-muted-foreground">
-                  Created with React, Tailwind CSS, and shadcn/ui components.
+                  使用React、Tailwind CSS和shadcn/ui组件创建。
                 </p>
               </div>
             </CardContent>

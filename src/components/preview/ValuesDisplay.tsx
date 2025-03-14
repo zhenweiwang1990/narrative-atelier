@@ -11,7 +11,7 @@ const ValuesDisplay: React.FC<ValuesDisplayProps> = ({ values }) => {
 
   return (
     <div className="p-2 border-t">
-      <p className="text-xs font-medium mb-1 text-muted-foreground">Current Values:</p>
+      <p className="text-xs font-medium mb-1 text-muted-foreground">当前值:</p>
       <div className="flex flex-wrap gap-2">
         {values.map(value => (
           <div key={value.id} className="border rounded-md px-2 py-0.5 text-xs flex items-center">

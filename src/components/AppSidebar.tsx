@@ -35,32 +35,32 @@ export function AppSidebar() {
 
   const menuItems = [
     {
-      title: "Story",
+      title: "故事",
       icon: BookOpen,
       path: "/"
     },
     {
-      title: "Characters",
+      title: "角色",
       icon: Users,
       path: "/characters"
     },
     {
-      title: "Locations",
+      title: "场景",
       icon: MapPin,
       path: "/locations"
     },
     {
-      title: "Global Values",
+      title: "全局变量",
       icon: Database,
       path: "/global-values"
     },
     {
-      title: "Flow",
+      title: "流程",
       icon: GitBranch,
       path: "/flow"
     },
     {
-      title: "Settings",
+      title: "设置",
       icon: Settings,
       path: "/settings"
     }
@@ -69,7 +69,7 @@ export function AppSidebar() {
   const handleExport = () => {
     if (!story) return;
     
-    // Create a JSON blob and trigger download
+    // 创建JSON blob并触发下载
     const content = JSON.stringify(story, null, 2);
     const blob = new Blob([content], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -93,7 +93,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel>导航</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
@@ -117,7 +117,7 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Actions</SidebarGroupLabel>
+          <SidebarGroupLabel>操作</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
@@ -127,7 +127,7 @@ export function AppSidebar() {
                     className="w-full justify-start"
                   >
                     <Save className="h-4 w-4" />
-                    <span>Save</span>
+                    <span>保存</span>
                   </SidebarMenuButton>
                 </div>
               </SidebarMenuItem>
@@ -138,7 +138,7 @@ export function AppSidebar() {
                     className="w-full justify-start"
                   >
                     <Upload className="h-4 w-4" />
-                    <span>Import</span>
+                    <span>导入</span>
                   </SidebarMenuButton>
                   <input 
                     type="file" 
@@ -156,7 +156,7 @@ export function AppSidebar() {
                     className="w-full justify-start"
                   >
                     <Download className="h-4 w-4" />
-                    <span>Export</span>
+                    <span>导出</span>
                   </SidebarMenuButton>
                 </div>
               </SidebarMenuItem>
@@ -167,7 +167,7 @@ export function AppSidebar() {
       <div className="p-3 mt-auto border-t">
         <SidebarTrigger>
           <button className="w-full flex items-center justify-between text-xs text-muted-foreground p-2 rounded-md hover:bg-muted">
-            <span>Toggle Sidebar</span>
+            <span>切换侧边栏</span>
             <Menu className="h-4 w-4" />
           </button>
         </SidebarTrigger>
