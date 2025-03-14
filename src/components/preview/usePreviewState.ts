@@ -34,6 +34,8 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
       sortedElements: [],
       handleNext: () => {},
       handleChoiceSelect: () => {},
+      handleQteResult: () => {},
+      handleDialogueTaskResult: () => {},
       handleRevival: () => {},
       getCharacter: () => undefined,
       globalValues: []

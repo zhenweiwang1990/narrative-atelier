@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { GlobalValue, ValueChange } from '@/utils/types';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Trash2 } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 
 interface ValueChangesSectionProps {
   isSuccess: boolean;
@@ -77,6 +77,16 @@ const ValueChangesSection: React.FC<ValueChangesSectionProps> = ({
       ) : (
         <p className="text-xs text-muted-foreground">未定义值变化。</p>
       )}
+      
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => onAddValueChange(isSuccess)}
+        className="mt-2 h-7 text-xs w-full"
+        disabled={valueChanges.length >= globalValues.length}
+      >
+        <Plus className="h-3 w-3 mr-1" /> 添加值变化
+      </Button>
     </div>
   );
 };
