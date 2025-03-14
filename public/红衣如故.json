@@ -1,7 +1,7 @@
 {
   "id": "story_1741992613812",
-  "title": "红衣如故(Demo)",
-  "author": "Miss AI",
+  "title": "红衣如故",
+  "author": "Miss",
   "description": "漼时宜跳下城楼的时候，再次醒来发现自己回到了离开清河郡第一次前往南辰王府的路上。",
   "characters": [
     {
@@ -42,7 +42,9 @@
       "id": "location_1741992613812",
       "name": "城楼",
       "description": "城楼上",
-      "scenes": ["scene_1741992613812"],
+      "scenes": [
+        "scene_1741992613812"
+      ],
       "background": "https://aishen-s3-1309519128.cos.ap-shanghai.myqcloud.com/moment_upload_image/01JP4GVJWBP6RTBQJF8S5BJV0K.png"
     },
     {
@@ -197,12 +199,28 @@
             {
               "id": "option_1741993382363_1q6mdge",
               "text": "跪地奉上拜师礼",
-              "nextSceneId": "scene_1741993026566_dj2a5hm"
+              "nextSceneId": "scene_1741993026566_dj2a5hm",
+              "valueChanges": [
+                {
+                  "valueId": "value_1741995321141_30638ck",
+                  "change": -2
+                }
+              ]
             },
             {
               "id": "option_1741993406698_884fa60",
               "text": "端立呈上拜师礼",
-              "nextSceneId": "scene_1741993417467_gpd9os2"
+              "nextSceneId": "scene_1741993417467_gpd9os2",
+              "valueChanges": [
+                {
+                  "valueId": "value_1741995321141_30638ck",
+                  "change": 5
+                },
+                {
+                  "valueId": "value_1741995327046_bdblzcs",
+                  "change": 3
+                }
+              ]
             }
           ]
         }
@@ -221,15 +239,66 @@
           "order": 0,
           "characterId": "character_1741992882743_9h05pmt",
           "text": "时宜，在家中被唤作十一是吗？正好我这里已有十名弟子，我便唤你十一，可好？"
+        },
+        {
+          "id": "qte_1741995574610_pqgvuyt",
+          "type": "qte",
+          "order": 1,
+          "description": "发送你的情感控制光波",
+          "introText": "准备开始...",
+          "timeLimit": 5,
+          "keySequence": "逗挑指闪眨",
+          "successSceneId": "scene_1741995884799_9b94nfs",
+          "failureSceneId": "scene_1741993026902_xpi9iz1",
+          "successTransition": "你的光波发出，周生辰一阵眩晕。",
+          "failureTransition": "你未能抓住机会释放光波。",
+          "successValueChanges": [
+            {
+              "valueId": "value_1741995321141_30638ck",
+              "change": 5
+            },
+            {
+              "valueId": "value_1741995327046_bdblzcs",
+              "change": 5
+            },
+            {
+              "valueId": "value_1741995330957_ftwl363",
+              "change": 5
+            }
+          ],
+          "failureValueChanges": [
+            {
+              "valueId": "value_1741995321141_30638ck",
+              "change": 5
+            },
+            {
+              "valueId": "value_1741995327046_bdblzcs",
+              "change": -3
+            }
+          ]
         }
       ]
     },
     {
       "id": "scene_1741993026902_xpi9iz1",
       "title": "S5",
-      "type": "normal",
-      "locationId": "location_1741992613812",
-      "elements": []
+      "type": "bad-ending",
+      "locationId": "location_1741992984166_4r8wgc4",
+      "elements": [
+        {
+          "id": "narration_1741996185763_38zalq8",
+          "type": "narration",
+          "order": 0,
+          "text": "初次见面，你蹩脚的动作，让周生辰对你产生了厌恶感。"
+        },
+        {
+          "id": "narration_1741996208140_6ep0hpp",
+          "type": "narration",
+          "order": 1,
+          "text": "从此你们形同陌路。"
+        }
+      ],
+      "revivalPointId": "scene_1741993026302_0opepxg"
     },
     {
       "id": "scene_1741993417467_gpd9os2",
@@ -251,7 +320,116 @@
           "text": "我唤你十一，可好？"
         }
       ]
+    },
+    {
+      "id": "scene_1741995884799_9b94nfs",
+      "title": "S7",
+      "type": "normal",
+      "locationId": "location_1741992984166_4r8wgc4",
+      "elements": [
+        {
+          "id": "dialogue_1741995904303_z09r5zf",
+          "type": "dialogue",
+          "order": 0,
+          "characterId": "character_1741992613812",
+          "text": "是的，叫我十一吧。（光波发送）"
+        },
+        {
+          "id": "dialogue_1741995923638_9sjf1fq",
+          "type": "dialogue",
+          "order": 1,
+          "characterId": "character_1741992882743_9h05pmt",
+          "text": "好，好，好，十一，十一。（喃喃道，心神不宁）"
+        },
+        {
+          "id": "thought_1741995957278_da5wx97",
+          "type": "thought",
+          "order": 2,
+          "characterId": "character_1741992882743_9h05pmt",
+          "text": "怎么感觉到一阵眩晕，此人似曾相识？"
+        }
+      ],
+      "nextSceneId": "scene_1741995884985_6h5bdba"
+    },
+    {
+      "id": "scene_1741995884985_6h5bdba",
+      "title": "S8",
+      "type": "normal",
+      "locationId": "location_1741992984166_4r8wgc4",
+      "elements": [
+        {
+          "id": "dialogueTask_1741996253219_ffoqxka",
+          "type": "dialogueTask",
+          "order": 0,
+          "goal": "让周生辰打消疑虑",
+          "targetCharacterId": "character_1741992882743_9h05pmt",
+          "background": "你前世穿越回来，掌握了情感控制光波特异技能，对他释放了，但决不能让他察觉到问题，每次释放逗会造成一定扰动，成功释放会让对方对你的好感度提升，但你要注意不能暴露。",
+          "openingLine": "怎么感觉你人怪怪的？",
+          "successSceneId": "scene_1741995886447_4lsy7y5",
+          "failureSceneId": "",
+          "successTransition": "周生辰便不再过问",
+          "failureTransition": "周生辰疑心更重了。",
+          "failureValueChanges": [
+            {
+              "valueId": "value_1741995321141_30638ck",
+              "change": 3
+            },
+            {
+              "valueId": "value_1741995327046_bdblzcs",
+              "change": -3
+            },
+            {
+              "valueId": "value_1741995330957_ftwl363",
+              "change": -5
+            }
+          ],
+          "successValueChanges": [
+            {
+              "valueId": "value_1741995321141_30638ck",
+              "change": 3
+            },
+            {
+              "valueId": "value_1741995327046_bdblzcs",
+              "change": 5
+            },
+            {
+              "valueId": "value_1741995330957_ftwl363",
+              "change": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene_1741995886447_4lsy7y5",
+      "title": "S9",
+      "type": "ending",
+      "locationId": "location_1741992984166_4r8wgc4",
+      "elements": [
+        {
+          "id": "narration_1741996441521_nq5b436",
+          "type": "narration",
+          "order": 0,
+          "text": "这里是示例正常结局"
+        }
+      ]
     }
   ],
-  "globalValues": []
+  "globalValues": [
+    {
+      "id": "value_1741995321141_30638ck",
+      "name": "勇气",
+      "initialValue": 0
+    },
+    {
+      "id": "value_1741995327046_bdblzcs",
+      "name": "智慧",
+      "initialValue": 0
+    },
+    {
+      "id": "value_1741995330957_ftwl363",
+      "name": "情感",
+      "initialValue": 0
+    }
+  ]
 }
