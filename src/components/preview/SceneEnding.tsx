@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
@@ -6,9 +7,14 @@ import { Scene } from "@/utils/types";
 interface SceneEndingProps {
   scene: Scene;
   handleRevival: () => void;
+  lastElementShown: boolean;
 }
 
-const SceneEnding: React.FC<SceneEndingProps> = ({ scene, handleRevival }) => {
+const SceneEnding: React.FC<SceneEndingProps> = ({ scene, handleRevival, lastElementShown }) => {
+  if (!lastElementShown) {
+    return null;
+  }
+  
   if (scene.type === "bad-ending") {
     return (
       <div className="p-4 text-center">

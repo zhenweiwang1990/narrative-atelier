@@ -5,6 +5,7 @@ import { Scene, Character, SceneElement, Story, GlobalValue, ValueChange, Choice
 export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (sceneId: string) => void) => {
   const [currentElementIndex, setCurrentElementIndex] = useState<number>(-1);
   const [globalValues, setGlobalValues] = useState<GlobalValue[]>([]);
+  const [lastElementShown, setLastElementShown] = useState<boolean>(false);
   
   // Initialize global values on first load
   useEffect(() => {
@@ -19,6 +20,7 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
   // Reset element index when scene changes
   useEffect(() => {
     setCurrentElementIndex(-1);
+    setLastElementShown(false);
   }, [sceneId]);
   
   const scene = story.scenes.find(s => s.id === sceneId);
@@ -31,6 +33,7 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
       currentElementIndex: -1,
       isLastElement: false,
       isSceneEnding: false,
+      lastElementShown: false,
       sortedElements: [],
       handleNext: () => {},
       handleChoiceSelect: () => {},
@@ -78,10 +81,15 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
   const handleNext = () => {
     if (currentElementIndex < sortedElements.length - 1) {
       setCurrentElementIndex(currentElementIndex + 1);
+      setLastElementShown(false);
     } else if (scene.nextSceneId) {
       // Move to next scene
       onSceneChange(scene.nextSceneId);
       setCurrentElementIndex(-1);
+      setLastElementShown(false);
+    } else {
+      // 已经到达场景的最后一个元素，且没有下一个场景
+      setLastElementShown(true);
     }
   };
 
@@ -92,6 +100,7 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
     if (nextSceneId) {
       onSceneChange(nextSceneId);
       setCurrentElementIndex(-1);
+      setLastElementShown(false);
     }
   };
 
@@ -119,6 +128,7 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
     if (scene.revivalPointId) {
       onSceneChange(scene.revivalPointId);
       setCurrentElementIndex(-1);
+      setLastElementShown(false);
     }
   };
 
@@ -134,6 +144,7 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
     currentElementIndex,
     isLastElement,
     isSceneEnding,
+    lastElementShown,
     sortedElements,
     handleNext,
     handleChoiceSelect,

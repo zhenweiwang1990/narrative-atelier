@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -12,6 +13,7 @@ import {
   Upload,
   Download,
   Database,
+  PanelLeft,
 } from "lucide-react";
 import {
   Sidebar,
@@ -23,12 +25,15 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { useStory } from "./Layout";
+import { Button } from "./ui/button";
 
 export function AppSidebar() {
   const location = useLocation();
   const { story, handleSave, handleImport } = useStory();
+  const { state, toggleSidebar } = useSidebar();
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -89,90 +94,104 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>导航</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <Link
-                    to={item.path}
-                    className={cn(
-                      "flex items-center gap-3 text-sm py-2",
-                      location.pathname === item.path
-                        ? "text-primary font-medium"
-                        : "text-muted-foreground"
-                    )}
-                  >
-                    <SidebarMenuButton className="w-full justify-start">
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                    </SidebarMenuButton>
-                  </Link>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+    <>
+      <Sidebar>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>导航</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {menuItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <Link
+                      to={item.path}
+                      className={cn(
+                        "flex items-center gap-3 text-sm py-2",
+                        location.pathname === item.path
+                          ? "text-primary font-medium"
+                          : "text-muted-foreground"
+                      )}
+                    >
+                      <SidebarMenuButton className="w-full justify-start">
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>操作</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <div className="w-full">
-                  <SidebarMenuButton
-                    onClick={handleSave}
-                    className="w-full justify-start"
-                  >
-                    <Save className="h-4 w-4" />
-                    <span>保存</span>
-                  </SidebarMenuButton>
-                </div>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <div className="w-full">
-                  <SidebarMenuButton
-                    onClick={triggerImport}
-                    className="w-full justify-start"
-                  >
-                    <Upload className="h-4 w-4" />
-                    <span>导入</span>
-                  </SidebarMenuButton>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    accept=".json"
-                    className="hidden"
-                    onChange={handleImport}
-                  />
-                </div>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <div className="w-full">
-                  <SidebarMenuButton
-                    onClick={handleExport}
-                    className="w-full justify-start"
-                  >
-                    <Download className="h-4 w-4" />
-                    <span>导出</span>
-                  </SidebarMenuButton>
-                </div>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      <div className="p-3 mt-auto border-t">
-        <SidebarTrigger>
-          <button className="w-full flex items-center justify-between text-xs text-muted-foreground p-2 rounded-md hover:bg-muted">
-            <span>切换侧边栏</span>
-            <Menu className="h-4 w-4" />
-          </button>
-        </SidebarTrigger>
-      </div>
-    </Sidebar>
+          <SidebarGroup>
+            <SidebarGroupLabel>操作</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <div className="w-full">
+                    <SidebarMenuButton
+                      onClick={handleSave}
+                      className="w-full justify-start"
+                    >
+                      <Save className="h-4 w-4" />
+                      <span>保存</span>
+                    </SidebarMenuButton>
+                  </div>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <div className="w-full">
+                    <SidebarMenuButton
+                      onClick={triggerImport}
+                      className="w-full justify-start"
+                    >
+                      <Upload className="h-4 w-4" />
+                      <span>导入</span>
+                    </SidebarMenuButton>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      accept=".json"
+                      className="hidden"
+                      onChange={handleImport}
+                    />
+                  </div>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <div className="w-full">
+                    <SidebarMenuButton
+                      onClick={handleExport}
+                      className="w-full justify-start"
+                    >
+                      <Download className="h-4 w-4" />
+                      <span>导出</span>
+                    </SidebarMenuButton>
+                  </div>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+        <div className="p-3 mt-auto border-t">
+          <SidebarTrigger>
+            <button className="w-full flex items-center justify-between text-xs text-muted-foreground p-2 rounded-md hover:bg-muted">
+              <span>切换侧边栏</span>
+              <Menu className="h-4 w-4" />
+            </button>
+          </SidebarTrigger>
+        </div>
+      </Sidebar>
+      
+      {/* 添加侧边栏折叠时的悬浮按钮 */}
+      {state === "collapsed" && (
+        <Button
+          variant="outline"
+          size="icon"
+          className="fixed top-4 left-4 z-50 bg-background shadow-md"
+          onClick={toggleSidebar}
+        >
+          <PanelLeft className="h-4 w-4" />
+        </Button>
+      )}
+    </>
   );
 }

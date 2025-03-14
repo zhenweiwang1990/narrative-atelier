@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,7 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
     handleRevival,
     getCharacter,
     globalValues,
+    lastElementShown
   } = usePreviewState(sceneId, story, onSceneChange);
 
   if (!scene) return null;
@@ -42,25 +44,26 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
       />
 
       <div className="flex-1 overflow-auto">
-        {isSceneEnding && currentElement ? (
-          <SceneEnding scene={scene} handleRevival={handleRevival} />
-        ) : (
-          <div>
-            {!currentElement && location && (
-              <div className="p-4 text-center">
-                <p className="text-sm text-muted-foreground mb-2">
-                  地点: {location.name || "未知"}
-                </p>
-              </div>
-            )}
-            <PreviewElement
-              currentElement={currentElement}
-              handleNext={handleNext}
-              handleChoiceSelect={handleChoiceSelect}
-              getCharacter={getCharacter}
-            />
-          </div>
-        )}
+        <div>
+          {!currentElement && location && (
+            <div className="p-4 text-center">
+              <p className="text-sm text-muted-foreground mb-2">
+                地点: {location.name || "未知"}
+              </p>
+            </div>
+          )}
+          <PreviewElement
+            currentElement={currentElement}
+            handleNext={handleNext}
+            handleChoiceSelect={handleChoiceSelect}
+            getCharacter={getCharacter}
+          />
+          <SceneEnding 
+            scene={scene} 
+            handleRevival={handleRevival} 
+            lastElementShown={lastElementShown}
+          />
+        </div>
 
         {/* 添加全局变量显示 */}
         {story.globalValues && story.globalValues.length > 0 && (
