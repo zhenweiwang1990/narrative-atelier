@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/components/ui/use-toast';
-import { FaGoogle } from 'react-icons/fa';
+import { Mail } from 'lucide-react';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -161,7 +161,7 @@ const Auth = () => {
                     className="w-full flex items-center gap-2"
                     onClick={handleGoogleSignIn}
                   >
-                    <FaGoogle />
+                    <Mail size={16} />
                     <span>Google 登录</span>
                   </Button>
                 </CardFooter>
@@ -232,7 +232,7 @@ const Auth = () => {
                     className="w-full flex items-center gap-2"
                     onClick={handleGoogleSignIn}
                   >
-                    <FaGoogle />
+                    <Mail size={16} />
                     <span>Google 注册</span>
                   </Button>
                 </CardFooter>
