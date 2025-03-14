@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -6,6 +5,7 @@ import { Session, User } from '@supabase/supabase-js';
 import { loadStory, createBlankStory } from '@/utils/storage';
 import { Story } from '@/utils/types';
 import { toast } from '@/components/ui/use-toast';
+import { Json } from '@/integrations/supabase/types';
 
 export interface UserStory {
   id: string;
@@ -107,6 +107,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const blankStory = createBlankStory();
       
+      const storyContent = blankStory as unknown as Json;
+      
       const { data, error } = await supabase
         .from('stories')
         .insert({
@@ -114,7 +116,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           description: blankStory.description,
           author: blankStory.author,
           user_id: user.id,
-          content: blankStory
+          content: storyContent
         })
         .select('id, title, description, author, created_at, updated_at, slug')
         .single();
@@ -133,10 +135,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (!user) return;
 
     try {
+      const storyContent = story as unknown as Json;
+      
       const { error } = await supabase
         .from('stories')
         .update({ 
-          content: story,
+          content: storyContent,
           title: story.title,
           description: story.description,
           author: story.author
@@ -176,7 +180,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (error) throw error;
       
       if (data && data.content) {
-        return data.content as Story;
+        return data.content as unknown as Story;
       }
       
       return null;
