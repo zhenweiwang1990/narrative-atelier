@@ -1,6 +1,19 @@
 
 import { useCallback, useEffect, useState } from 'react';
-import { ReactFlow, Background, Controls, MiniMap, Node, Edge, Connection, addEdge, Panel, useNodesState, useEdgesState, NodeTypes } from 'reactflow';
+import {
+  ReactFlow, 
+  Background, 
+  Controls, 
+  MiniMap, 
+  Node, 
+  Edge, 
+  Connection, 
+  addEdge, 
+  Panel,
+  useNodesState, 
+  useEdgesState, 
+  NodeTypes
+} from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useStory } from './Layout';
 import { generateId } from '@/utils/storage';

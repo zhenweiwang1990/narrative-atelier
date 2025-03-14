@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { 
   Card, 
@@ -13,7 +12,7 @@ import {
   BookText, 
   Users, 
   MapPin, 
-  FlowChart, 
+  Network, 
   Edit, 
   Save 
 } from 'lucide-react';
@@ -49,7 +48,7 @@ const Index = () => {
   const stats = [
     { name: 'Characters', value: story.characters.length, icon: <Users className="h-4 w-4" />, path: '/characters' },
     { name: 'Locations', value: story.locations.length, icon: <MapPin className="h-4 w-4" />, path: '/locations' },
-    { name: 'Scenes', value: story.scenes.length, icon: <FlowChart className="h-4 w-4" />, path: '/flow' }
+    { name: 'Scenes', value: story.scenes.length, icon: <Network className="h-4 w-4" />, path: '/flow' }
   ];
 
   return (
@@ -180,7 +179,7 @@ const Index = () => {
               </Button>
               <Button variant="outline" asChild className="w-full justify-start">
                 <Link to="/flow">
-                  <FlowChart className="h-4 w-4 mr-2" /> Edit Scene Flow
+                  <Network className="h-4 w-4 mr-2" /> Edit Scene Flow
                 </Link>
               </Button>
             </CardContent>

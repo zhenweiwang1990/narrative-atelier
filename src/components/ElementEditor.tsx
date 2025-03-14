@@ -87,7 +87,7 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
           type: 'narration',
           order: newOrder,
           text: 'Enter narration text here...'
-        };
+        } as NarrationElement;
         break;
         
       case 'dialogue':
@@ -97,7 +97,7 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
           order: newOrder,
           characterId: story.characters[0]?.id || '',
           text: 'Enter dialogue text here...'
-        };
+        } as DialogueElement;
         break;
         
       case 'thought':
@@ -107,7 +107,7 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
           order: newOrder,
           characterId: story.characters.find(c => c.role === 'protagonist')?.id || story.characters[0]?.id || '',
           text: 'Enter thought text here...'
-        };
+        } as ThoughtElement;
         break;
         
       case 'choice':
@@ -123,7 +123,7 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
               nextSceneId: ''
             }
           ]
-        };
+        } as ChoiceElement;
         break;
         
       case 'qte':
@@ -134,7 +134,7 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
           description: 'Enter QTE description here...',
           successSceneId: '',
           failureSceneId: ''
-        };
+        } as QteElement;
         break;
         
       case 'dialogueTask':
@@ -147,7 +147,7 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
           background: 'Enter background information here...',
           successSceneId: '',
           failureSceneId: ''
-        };
+        } as DialogueTaskElement;
         break;
         
       default:
@@ -166,7 +166,7 @@ const ElementEditor = ({ sceneId }: ElementEditorProps) => {
     const reorderedElements = updatedElements.map((elem, index) => ({
       ...elem,
       order: index
-    }));
+    })) as SceneElement[];
     
     setElements(reorderedElements);
     updateStory(reorderedElements);

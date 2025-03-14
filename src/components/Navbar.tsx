@@ -1,11 +1,10 @@
-
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   BookText, 
   Users, 
   MapPin, 
-  FlowChart, 
+  Network, 
   Download, 
   Upload, 
   Save, 
@@ -59,7 +58,7 @@ const Navbar = ({ story, onImport, onSave }: NavbarProps) => {
     { path: '/', name: 'Overview', icon: <BookText className="w-5 h-5" /> },
     { path: '/characters', name: 'Characters', icon: <Users className="w-5 h-5" /> },
     { path: '/locations', name: 'Locations', icon: <MapPin className="w-5 h-5" /> },
-    { path: '/flow', name: 'Scene Flow', icon: <FlowChart className="w-5 h-5" /> },
+    { path: '/flow', name: 'Scene Flow', icon: <Network className="w-5 h-5" /> },
   ];
 
   return (

@@ -1,5 +1,5 @@
 
-import { ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import { Story } from '@/utils/types';
 import { loadStory, saveStory, createBlankStory } from '@/utils/storage';
 import Navbar from './Navbar';
