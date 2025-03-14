@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useStory } from '@/components/Layout';
-import FlowEditor from '@/components/FlowEditor';
+import FlowEditor from '@/components/flow/FlowEditor';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { AlertCircle } from 'lucide-react';
