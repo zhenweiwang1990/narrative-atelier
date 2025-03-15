@@ -1,11 +1,13 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Scene, GlobalValue } from '@/utils/types';
 import SceneSelectSection from './SceneSelectSection';
 import TransitionTextsSection from './TransitionTextsSection';
 import ValueChangesCollapsible from './ValueChangesCollapsible';
 import AiStoryDialog from './AiStoryDialog';
 import { toast } from 'sonner';
+import { useOutcomeHandling } from '@/hooks/useOutcomeHandling';
+import SingleOutcomeSection from './SingleOutcomeSection';
 
 interface OutcomeSectionProps {
   scenes: Scene[];
@@ -48,15 +50,14 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
   showFailureOnly = false,
   elementId = ''
 }) => {
-  const [aiDialogOpen, setAiDialogOpen] = useState(false);
-  const [aiDialogType, setAiDialogType] = useState<'branch' | 'ending'>('branch');
-  const [isSuccess, setIsSuccess] = useState(true);
-
-  const handleOpenAiDialog = (type: 'branch' | 'ending', success: boolean) => {
-    setAiDialogType(type);
-    setIsSuccess(success);
-    setAiDialogOpen(true);
-  };
+  const {
+    aiDialogOpen,
+    setAiDialogOpen,
+    aiDialogType,
+    isSuccess,
+    handleOpenAiDialog,
+    getAiButtonsVisibility
+  } = useOutcomeHandling(elementId);
 
   const handleAiStorySubmit = (prompt: string, convergenceSceneId?: string, endingType?: 'normal' | 'bad') => {
     toast.promise(
@@ -79,42 +80,24 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
     });
   };
   
-  // For showing just one column when in the success/failure specific layouts
-  const showSingleColumn = showSuccessOnly || showFailureOnly;
-  
-  // When showing success only
+  // Show single outcome section based on the mode
   if (showSuccessOnly) {
     return (
       <div className="space-y-2">
-        <SceneSelectSection
-          successSceneId={successSceneId}
-          failureSceneId=""
-          scenes={scenes}
-          onUpdateSuccessScene={updateSuccessSceneId}
-          onUpdateFailureScene={() => {}}
-          showSingleColumn={true}
-          onOpenAiDialog={handleOpenAiDialog}
-          // Only show AI buttons when no scene is selected
-          showSuccessAiButtons={!successSceneId}
-          showFailureAiButtons={false}
-        />
-        
-        <TransitionTextsSection
-          successTransition={successTransition}
-          failureTransition=""
-          onUpdateSuccess={updateSuccessTransition}
-          onUpdateFailure={() => {}}
-          showSingleColumn={true}
-        />
-        
-        <ValueChangesCollapsible
-          title="成功数值变化"
+        <SingleOutcomeSection
           isSuccess={true}
+          sceneId={successSceneId}
+          transition={successTransition}
           valueChanges={successValueChanges}
+          scenes={scenes}
           globalValues={globalValues}
-          onAddValueChange={(isSuccess) => addValueChange(isSuccess, globalValues)}
-          onUpdateValueChange={updateValueChange}
-          onRemoveValueChange={removeValueChange}
+          updateSceneId={updateSuccessSceneId}
+          updateTransition={updateSuccessTransition}
+          addValueChange={addValueChange}
+          updateValueChange={updateValueChange}
+          removeValueChange={removeValueChange}
+          onOpenAiDialog={handleOpenAiDialog}
+          showAiButtons={getAiButtonsVisibility(successSceneId)}
         />
 
         <AiStoryDialog 
@@ -129,39 +112,23 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
     );
   }
   
-  // When showing failure only
   if (showFailureOnly) {
     return (
       <div className="space-y-2">
-        <SceneSelectSection
-          successSceneId=""
-          failureSceneId={failureSceneId}
-          scenes={scenes}
-          onUpdateSuccessScene={() => {}}
-          onUpdateFailureScene={updateFailureSceneId}
-          showSingleColumn={true}
-          onOpenAiDialog={handleOpenAiDialog}
-          // Only show AI buttons when no scene is selected
-          showSuccessAiButtons={false}
-          showFailureAiButtons={!failureSceneId}
-        />
-        
-        <TransitionTextsSection
-          successTransition=""
-          failureTransition={failureTransition}
-          onUpdateSuccess={() => {}}
-          onUpdateFailure={updateFailureTransition}
-          showSingleColumn={true}
-        />
-        
-        <ValueChangesCollapsible
-          title="失败数值变化"
+        <SingleOutcomeSection
           isSuccess={false}
+          sceneId={failureSceneId}
+          transition={failureTransition}
           valueChanges={failureValueChanges}
+          scenes={scenes}
           globalValues={globalValues}
-          onAddValueChange={(isSuccess) => addValueChange(isSuccess, globalValues)}
-          onUpdateValueChange={updateValueChange}
-          onRemoveValueChange={removeValueChange}
+          updateSceneId={updateFailureSceneId}
+          updateTransition={updateFailureTransition}
+          addValueChange={addValueChange}
+          updateValueChange={updateValueChange}
+          removeValueChange={removeValueChange}
+          onOpenAiDialog={handleOpenAiDialog}
+          showAiButtons={getAiButtonsVisibility(failureSceneId)}
         />
 
         <AiStoryDialog 
@@ -185,11 +152,10 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
         scenes={scenes}
         onUpdateSuccessScene={updateSuccessSceneId}
         onUpdateFailureScene={updateFailureSceneId}
-        showSingleColumn={showSingleColumn}
+        showSingleColumn={false}
         onOpenAiDialog={handleOpenAiDialog}
-        // Only show AI buttons when no scene is selected
-        showSuccessAiButtons={!successSceneId}
-        showFailureAiButtons={!failureSceneId}
+        showSuccessAiButtons={getAiButtonsVisibility(successSceneId)}
+        showFailureAiButtons={getAiButtonsVisibility(failureSceneId)}
       />
       
       <TransitionTextsSection
@@ -197,7 +163,7 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
         failureTransition={failureTransition}
         onUpdateSuccess={updateSuccessTransition}
         onUpdateFailure={updateFailureTransition}
-        showSingleColumn={showSingleColumn}
+        showSingleColumn={false}
       />
       
       <div className="grid grid-cols-2 gap-2">
@@ -206,7 +172,7 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
           isSuccess={true}
           valueChanges={successValueChanges}
           globalValues={globalValues}
-          onAddValueChange={(isSuccess) => addValueChange(isSuccess, globalValues)}
+          onAddValueChange={addValueChange}
           onUpdateValueChange={updateValueChange}
           onRemoveValueChange={removeValueChange}
         />
@@ -216,7 +182,7 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
           isSuccess={false}
           valueChanges={failureValueChanges}
           globalValues={globalValues}
-          onAddValueChange={(isSuccess) => addValueChange(isSuccess, globalValues)}
+          onAddValueChange={addValueChange}
           onUpdateValueChange={updateValueChange}
           onRemoveValueChange={removeValueChange}
         />
