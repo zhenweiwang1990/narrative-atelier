@@ -16,8 +16,16 @@ const SuccessFailureSection: React.FC<SuccessFailureSectionProps> = ({
   isSuccess = true
 }) => {
   return (
-    <Card className={`p-2 ${isSuccess ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'} shadow-none`}>
-      <Label className={`text-xs font-medium block mb-2 ${isSuccess ? 'text-green-700' : 'text-red-700'}`}>
+    <Card className={`p-2 ${
+      isSuccess 
+        ? 'border-green-200 bg-green-50 dark:bg-green-950/30 dark:border-green-800' 
+        : 'border-red-200 bg-red-50 dark:bg-red-950/30 dark:border-red-800'
+    } shadow-none`}>
+      <Label className={`text-xs font-medium block mb-2 ${
+        isSuccess 
+          ? 'text-green-700 dark:text-green-400' 
+          : 'text-red-700 dark:text-red-400'
+      }`}>
         {title}
       </Label>
       <div className="space-y-2">
