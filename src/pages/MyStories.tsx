@@ -11,7 +11,8 @@ import {
   StoryCard, 
   EditStoryDialog, 
   EmptyStoryState,
-  StoriesLoadingState 
+  StoriesLoadingState,
+  StoriesErrorState
 } from '@/components/stories';
 
 export default function MyStories() {
@@ -19,8 +20,34 @@ export default function MyStories() {
   const { user, userStories, refreshStories, addNewStory } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [selectedStory, setSelectedStory] = useState<UserStory | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
+
+  // Fetch stories when component mounts
+  useEffect(() => {
+    loadStories();
+  }, [user]);
+  
+  // Function to load stories
+  const loadStories = async () => {
+    setIsInitialLoading(true);
+    setLoadError(null);
+    
+    try {
+      if (user) {
+        await refreshStories();
+      }
+    } catch (error: any) {
+      console.error('Error loading stories:', error);
+      setLoadError(error.message || '加载剧情数据失败');
+    } finally {
+      // Always end loading state after a reasonable timeout
+      setTimeout(() => {
+        setIsInitialLoading(false);
+      }, 1000);
+    }
+  };
 
   // Check initial loading state when component mounts
   useEffect(() => {
@@ -31,7 +58,7 @@ export default function MyStories() {
     // Set a timeout to prevent infinite loading state
     const timer = setTimeout(() => {
       setIsInitialLoading(false);
-    }, 5000);
+    }, 3000);
     
     return () => clearTimeout(timer);
   }, [user, userStories]);
@@ -129,6 +156,11 @@ export default function MyStories() {
   if (isInitialLoading) {
     return <StoriesLoadingState />;
   }
+  
+  // Show error state if there was an error loading stories
+  if (loadError) {
+    return <StoriesErrorState onRetry={loadStories} errorMessage={loadError} />;
+  }
 
   return (
     <div className="container mx-auto py-6">
@@ -149,14 +181,14 @@ export default function MyStories() {
         </Button>
       </div>
 
-      {userStories?.length === 0 ? (
+      {!userStories || userStories.length === 0 ? (
         <EmptyStoryState 
           onCreate={handleCreateStory} 
           isLoading={isLoading} 
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {userStories?.map((story) => (
+          {userStories.map((story) => (
             <StoryCard
               key={story.id}
               story={story}

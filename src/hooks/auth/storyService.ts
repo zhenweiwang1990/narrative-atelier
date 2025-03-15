@@ -118,12 +118,13 @@ export const saveStory = async (story: Story, slug: string, userId: string): Pro
 
 export const loadStory = async (slug: string, userId: string): Promise<Story | null> => {
   try {
+    // Using maybeSingle() instead of single() to avoid errors when no data is found
     const { data, error } = await supabase
       .from('stories')
       .select('content')
       .eq('slug', slug)
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
     

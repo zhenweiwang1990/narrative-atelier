@@ -40,12 +40,17 @@ const Layout = ({ children }: LayoutProps) => {
         setCurrentStorySlug(urlSlug);
         
         if (user) {
-          // Try to load from database
-          const dbStory = await loadStoryFromDatabase(urlSlug);
-          if (dbStory) {
-            setStory(dbStory);
-            setCurrentStory(dbStory);
-            return;
+          try {
+            // Try to load from database
+            const dbStory = await loadStoryFromDatabase(urlSlug);
+            if (dbStory) {
+              setStory(dbStory);
+              setCurrentStory(dbStory);
+              return;
+            }
+          } catch (error) {
+            console.error("Failed to load story from database:", error);
+            // Continue with fallback options rather than getting stuck
           }
         }
       } 

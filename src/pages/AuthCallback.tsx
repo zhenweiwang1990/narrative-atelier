@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from '@/components/ui/use-toast';
 
 const AuthCallback = () => {
   const navigate = useNavigate();
@@ -17,22 +18,41 @@ const AuthCallback = () => {
         if (error) {
           console.error('Error in auth callback:', error);
           setError(error.message);
+          toast({
+            title: "登录失败",
+            description: error.message,
+            variant: "destructive"
+          });
           navigate('/auth', { replace: true });
           return;
         }
         
         // If we have a session, navigate to my-stories
         if (data.session) {
-          console.log('Session found, redirecting to home');
-          navigate('/my-stories', { replace: true });
+          console.log('Session found, redirecting to my-stories');
+          
+          // Short delay before redirecting to ensure auth state is properly set
+          setTimeout(() => {
+            navigate('/my-stories', { replace: true });
+          }, 500);
         } else {
           // If no session found, redirect to auth
           console.log('No session found, redirecting to auth');
+          toast({
+            title: "登录失败",
+            description: "未找到有效的登录会话",
+            variant: "destructive"
+          });
           navigate('/auth', { replace: true });
         }
       } catch (err) {
         console.error('Unexpected error during auth callback:', err);
-        setError('An unexpected error occurred');
+        setError('发生意外错误，请重试');
+        toast({
+          title: "登录失败",
+          description: "发生意外错误，请重试",
+          variant: "destructive"
+        });
         navigate('/auth', { replace: true });
       }
     };
