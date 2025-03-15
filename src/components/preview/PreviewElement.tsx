@@ -37,23 +37,23 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
 
   switch (currentElement.type) {
     case "narration":
-      return <NarrationPreview element={currentElement} />;
+      return <NarrationPreview element={currentElement as any} />;
 
     case "dialogue":
-      return <DialoguePreview element={currentElement} getCharacter={getCharacter} />;
+      return <DialoguePreview element={currentElement as any} getCharacter={getCharacter} />;
 
     case "thought":
-      return <ThoughtPreview element={currentElement} getCharacter={getCharacter} />;
+      return <ThoughtPreview element={currentElement as any} getCharacter={getCharacter} />;
 
     case "choice":
-      return <ChoicePreview element={currentElement} handleChoiceSelect={handleChoiceSelect} />;
+      return <ChoicePreview element={currentElement as any} handleChoiceSelect={handleChoiceSelect} />;
 
     case "qte":
-      return <QtePreview element={currentElement} handleChoiceSelect={handleChoiceSelect} />;
+      return <QtePreview element={currentElement as any} handleChoiceSelect={handleChoiceSelect} />;
 
     case "dialogueTask":
       return <DialogueTaskPreview 
-               element={currentElement} 
+               element={currentElement as any} 
                getCharacter={getCharacter}
                handleChoiceSelect={handleChoiceSelect} 
              />;

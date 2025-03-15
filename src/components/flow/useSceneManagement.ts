@@ -32,7 +32,11 @@ export const useSceneManagement = (
           `Bad Ending ${story.scenes.filter(s => s.type === 'bad-ending').length + 1}`,
       type: type,
       locationId: story.locations[0]?.id || '',
-      elements: []
+      elements: [],
+      position: { // Add the required position property
+        x: (nodeCount % 3) * 250,
+        y: Math.floor(nodeCount / 3) * 180
+      }
     };
     
     // Add to story

@@ -63,7 +63,7 @@ const DialogueTaskFields: React.FC<DialogueTaskFieldsProps> = ({
       <div>
         <Label className="text-xs">背景</Label>
         <Textarea
-          value={element.background}
+          value={element.background || ''}
           onChange={(e) => onUpdate(element.id, { background: e.target.value })}
           className="mt-1 text-sm"
           rows={2}

@@ -72,12 +72,12 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
   const isExpanded = selectedElementId === element.id;
 
   // Create a dummy story object with the minimum required properties for QteElement
-  // This is a temporary solution until we can properly pass the story from higher up
   const dummyStory: Story = {
     id: '',
     title: '',
-    author: '', // Add the missing required field
-    description: '', // Add the missing required field
+    author: '',
+    description: '',
+    type: 'interactive', // Add required type property
     scenes: scenes,
     characters: characters,
     globalValues: globalValues,

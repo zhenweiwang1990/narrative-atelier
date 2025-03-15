@@ -58,6 +58,7 @@ export const createBlankStory = (): Story => {
     title: "新剧情",
     author: "Anonymous",
     description: "一个新剧情",
+    type: "interactive", // Add the required type property
     characters: [
       {
         id: protagonistId,
@@ -81,6 +82,7 @@ export const createBlankStory = (): Story => {
         title: "开始",
         type: "start",
         locationId: locationId,
+        position: { x: 100, y: 100 }, // Add the required position property
         elements: [
           {
             id: `element_${Date.now()}`,

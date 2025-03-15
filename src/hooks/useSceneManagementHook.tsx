@@ -23,7 +23,11 @@ export const useSceneManagementHook = (story: Story | null, setStory: React.Disp
           `Bad Ending ${story.scenes.filter(s => s.type === 'bad-ending').length + 1}`,
       type: type,
       locationId: story.locations[0]?.id || '',
-      elements: []
+      elements: [],
+      position: { // Add the required position property
+        x: Math.random() * 500,
+        y: Math.random() * 300
+      }
     };
     
     setStory({

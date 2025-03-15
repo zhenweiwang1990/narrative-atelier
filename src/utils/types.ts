@@ -61,6 +61,7 @@ export interface SceneElement {
   openingLine?: string;
   introText?: string;
   targetCharacterId?: string;
+  background?: string;
 }
 
 export interface ChoiceOption {
@@ -153,4 +154,6 @@ export interface DialogueTaskElement extends SceneElement {
   openingLine: string;
   success: ElementOutcome;
   failure: ElementOutcome;
+  targetCharacterId: string;
+  background?: string;
 }

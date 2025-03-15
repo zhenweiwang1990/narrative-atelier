@@ -10,7 +10,7 @@ import { DialogueTaskElement } from "@/components/elements/DialogueTaskElement";
 
 interface ElementEditorProps {
   element: SceneElement;
-  story: Story; // Changed from 'any' to 'Story'
+  story: Story;
   updateElement: (id: string, updates: Partial<SceneElement>) => void;
   addChoiceOption: (elementId: string) => void;
   deleteChoiceOption: (elementId: string, optionId: string) => void;
@@ -44,7 +44,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     case "narration":
       return (
         <NarrationElement 
-          element={element}
+          element={element as any}
           onUpdate={handleUpdate}
         />
       );
@@ -52,7 +52,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     case "dialogue":
       return (
         <DialogueElement 
-          element={element}
+          element={element as any}
           characters={story?.characters || []}
           onUpdate={handleUpdate}
         />
@@ -61,7 +61,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     case "thought":
       return (
         <ThoughtElement 
-          element={element}
+          element={element as any}
           characters={story?.characters || []}
           onUpdate={handleUpdate}
         />
@@ -70,7 +70,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     case "choice":
       return (
         <ChoiceElement 
-          element={element}
+          element={element as any}
           scenes={story?.scenes || []}
           globalValues={story?.globalValues || []}
           onUpdate={handleUpdate}
@@ -83,10 +83,10 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     case "qte":
       return (
         <QteElement 
-          element={element}
+          element={element as any}
           scenes={story?.scenes || []}
           globalValues={story?.globalValues || []}
-          story={story} // Pass the full story object to QteElement
+          story={story}
           onUpdate={handleUpdate}
           validateTimeLimit={validateTimeLimit}
           validateKeySequence={validateKeySequence}
@@ -96,7 +96,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     case "dialogueTask":
       return (
         <DialogueTaskElement 
-          element={element}
+          element={element as any}
           characters={story?.characters || []}
           scenes={story?.scenes || []}
           globalValues={story?.globalValues || []}
