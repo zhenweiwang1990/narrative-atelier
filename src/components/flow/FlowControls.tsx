@@ -1,33 +1,41 @@
 
-import React from 'react';
-import { Controls, ControlButton } from 'reactflow';
-import { ZoomIn, ZoomOut, Maximize } from 'lucide-react';
+import { MinusIcon, PlusIcon } from "lucide-react";
+import { useReactFlow, Panel } from "reactflow";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-interface FlowControlsProps {
-  showInteractive?: boolean;
-  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-}
+export const FlowControls = () => {
+  const { zoomIn, zoomOut, fitView } = useReactFlow();
 
-const FlowControls: React.FC<FlowControlsProps> = ({ 
-  showInteractive = false, 
-  position = 'bottom-right' 
-}) => {
   return (
-    <Controls 
-      position={position} 
-      showInteractive={showInteractive}
-    >
-      <ControlButton onClick={() => {}} title="Zoom In">
-        <ZoomIn size={14} />
-      </ControlButton>
-      <ControlButton onClick={() => {}} title="Zoom Out">
-        <ZoomOut size={14} />
-      </ControlButton>
-      <ControlButton onClick={() => {}} title="Fit View">
-        <Maximize size={14} />
-      </ControlButton>
-    </Controls>
+    <Panel position="bottom-right" className="flex gap-1">
+      <Button
+        size="icon"
+        variant="outline"
+        className="size-8 bg-background border-border shadow-sm dark:bg-zinc-900 dark:border-zinc-800"
+        onClick={() => zoomOut()}
+      >
+        <MinusIcon className="size-4" />
+      </Button>
+      <Button
+        size="icon"
+        variant="outline"
+        className="size-8 bg-background border-border shadow-sm dark:bg-zinc-900 dark:border-zinc-800"
+        onClick={() => zoomIn()}
+      >
+        <PlusIcon className="size-4" />
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        className={cn(
+          "h-8 bg-background border-border shadow-sm dark:bg-zinc-900 dark:border-zinc-800",
+          "hover:bg-background/80 dark:hover:bg-zinc-900/80"
+        )}
+        onClick={() => fitView({ padding: 0.1 })}
+      >
+        自适应
+      </Button>
+    </Panel>
   );
 };
-
-export default FlowControls;

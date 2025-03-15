@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Trash2 } from "lucide-react";
+import { Trash2, Wand } from "lucide-react";
 import { ChoiceOption as ChoiceOptionType, Scene, GlobalValue } from "@/utils/types";
 import ValueChangeEditor from "./ValueChangeEditor";
 import AiStoryDialog from "../shared/AiStoryDialog";
@@ -128,6 +129,38 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
             </SelectGroup>
           </SelectContent>
         </Select>
+
+        {/* Add AI buttons when no scene is selected */}
+        {option.nextSceneId === "none" || !option.nextSceneId ? (
+          <div className="flex gap-1 mt-1">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="gap-1 text-xs flex-1 text-blue-600"
+              onClick={() => {
+                setAiDialogType('branch');
+                setAiDialogOpen(true);
+              }}
+            >
+              <Wand className="h-3 w-3" />
+              AI 写支线
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="gap-1 text-xs flex-1 text-purple-600"
+              onClick={() => {
+                setAiDialogType('ending');
+                setAiDialogOpen(true);
+              }}
+            >
+              <Wand className="h-3 w-3" />
+              AI 写结局
+            </Button>
+          </div>
+        ) : null}
       </div>
 
       <ValueChangeEditor
