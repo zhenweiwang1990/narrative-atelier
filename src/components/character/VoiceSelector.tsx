@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Label } from "@/components/ui/label";
 import {
@@ -10,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Play, Square } from "lucide-react";
-import { VOICE_SAMPLES } from "@/hooks/character/useCharacterForm";
+import { VOICE_SAMPLES } from "@/hooks/character/voiceSamples";
 
 interface VoiceSelectorProps {
   selectedVoice: string;
