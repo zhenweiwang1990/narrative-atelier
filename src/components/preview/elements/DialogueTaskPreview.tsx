@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { DialogueTaskElement, Character, ValueChange } from "@/utils/types";
+import { MessageSquare } from "lucide-react";
 
 interface DialogueTaskPreviewProps {
   element: DialogueTaskElement;
@@ -18,31 +19,36 @@ const DialogueTaskPreview: React.FC<DialogueTaskPreviewProps> = ({
   const targetCharacter = getCharacter(element.targetCharacterId);
   
   return (
-    <div className="p-4">
-      <p className="text-sm mb-2 font-bold text-green-600">Dialogue Task</p>
-      <p className="text-sm mb-1">Goal: {element.goal}</p>
+    <div className="p-4 bg-indigo-50 dark:bg-indigo-950/40 rounded-md border border-indigo-200 dark:border-indigo-800 my-2 animate-fade-in">
+      <div className="flex items-center mb-2">
+        <MessageSquare className="h-4 w-4 text-indigo-600 mr-2" />
+        <p className="text-xs font-medium text-indigo-600 dark:text-indigo-400">对话任务</p>
+      </div>
+      <p className="text-sm mb-1 bg-white dark:bg-indigo-950/60 p-2 rounded-md border border-indigo-100 dark:border-indigo-900">
+        <span className="font-semibold text-indigo-700 dark:text-indigo-300">目标:</span> {element.goal}
+      </p>
 
-      <div className="flex items-center my-2">
-        <Avatar className="h-8 w-8 mr-2">
+      <div className="flex items-center my-2 bg-indigo-100/50 dark:bg-indigo-900/30 p-2 rounded-md">
+        <Avatar className="h-8 w-8 mr-2 border border-indigo-200 dark:border-indigo-700">
           {targetCharacter?.portrait ? (
             <AvatarImage
               src={targetCharacter.portrait}
               alt={targetCharacter.name}
             />
           ) : (
-            <AvatarFallback>
+            <AvatarFallback className="bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
               {targetCharacter?.name?.charAt(0) || "?"}
             </AvatarFallback>
           )}
         </Avatar>
-        <p className="text-xs mb-3 text-muted-foreground">
-          With: {targetCharacter?.name || "Unknown Character"}
+        <p className="text-xs text-muted-foreground">
+          与 <span className="font-medium text-foreground">{targetCharacter?.name || "Unknown Character"}</span> 交谈
         </p>
       </div>
 
       {element.openingLine && (
-        <div className="mb-3 p-2 bg-muted/20 rounded-md">
-          <p className="text-xs font-medium">
+        <div className="mb-3 p-2 bg-white dark:bg-indigo-950/50 rounded-md border border-indigo-100 dark:border-indigo-900">
+          <p className="text-xs font-medium text-indigo-700 dark:text-indigo-300">
             {targetCharacter?.name || "Character"}:
           </p>
           <p className="text-sm">{element.openingLine}</p>
@@ -53,7 +59,7 @@ const DialogueTaskPreview: React.FC<DialogueTaskPreviewProps> = ({
         <Button
           variant="default"
           size="sm"
-          className="bg-green-600 hover:bg-green-700 flex-1"
+          className="bg-green-600 hover:bg-green-700 text-white flex-1"
           onClick={() =>
             handleChoiceSelect(
               element.success.sceneId,
@@ -66,7 +72,7 @@ const DialogueTaskPreview: React.FC<DialogueTaskPreviewProps> = ({
         <Button
           variant="default"
           size="sm"
-          className="bg-red-600 hover:bg-red-700 flex-1"
+          className="bg-red-600 hover:bg-red-700 text-white flex-1"
           onClick={() =>
             handleChoiceSelect(
               element.failure.sceneId,
