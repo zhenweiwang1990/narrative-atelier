@@ -20,7 +20,8 @@ const Layout = ({ children }: LayoutProps) => {
     loading, 
     error,
     handleSave, 
-    handleImport, 
+    handleImport,
+    handleExport,
     createNewStory, 
     deleteStory 
   } = useStoryManagement();
@@ -35,6 +36,7 @@ const Layout = ({ children }: LayoutProps) => {
           setStories,
           handleSave, 
           handleImport,
+          handleExport,
           createNewStory,
           deleteStory,
           loading,

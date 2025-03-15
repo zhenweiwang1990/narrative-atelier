@@ -13,35 +13,8 @@ import {
 import { toast } from "sonner";
 
 export const SidebarActions = () => {
-  const { story, handleSave, handleImport } = useStory();
+  const { story, handleSave, handleImport, handleExport } = useStory();
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleExport = () => {
-    if (!story) {
-      toast.error('没有可导出的剧情');
-      return;
-    }
-
-    try {
-      // 创建JSON blob并触发下载
-      const content = JSON.stringify(story, null, 2);
-      const blob = new Blob([content], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${story.title || "narrative-atelier"}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      toast.success('导出剧情成功');
-    } catch (error) {
-      console.error('Failed to export story:', error);
-      toast.error('导出剧情失败');
-    }
-  };
 
   const triggerImport = () => {
     if (fileInputRef.current) {

@@ -9,6 +9,7 @@ interface StoryContextType {
   setStories: React.Dispatch<React.SetStateAction<Story[]>>;
   handleSave: () => Promise<boolean>;
   handleImport: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleExport: () => void;
   createNewStory: (title: string) => void;
   deleteStory: (storyId: string) => void;
   loading: boolean;
@@ -23,6 +24,7 @@ export const StoryContext = createContext<StoryContextType>({
   setStories: () => {},
   handleSave: async () => false,
   handleImport: () => {},
+  handleExport: () => {},
   createNewStory: () => {},
   deleteStory: () => {},
   loading: false,
