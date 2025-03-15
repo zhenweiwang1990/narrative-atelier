@@ -85,10 +85,15 @@ const MobilePreview = ({
   return (
     <Card className="MobilePreview-container w-full h-full border overflow-hidden flex flex-col bg-white dark:bg-card">
       <div className="relative w-full flex-1 overflow-hidden">
-        {/* Background image as fixed layer */}
-        <div
-          className="absolute inset-0 w-full h-full bg-cover bg-center -z-10 opacity-70"
-          style={{ backgroundImage: `url(${locationBackground})` }}
+        {/* Background image container with fixed size and proper positioning */}
+        <div 
+          className="absolute inset-0 w-full h-full bg-center bg-no-repeat -z-10"
+          style={{ 
+            backgroundImage: `url(${locationBackground})`,
+            backgroundSize: 'cover',
+            opacity: 0.7,
+            maxHeight: 'calc(100% - 60px)' // Ensures it doesn't overlap with bottom controls
+          }}
         />
         
         <div className="relative z-10 flex flex-col h-full">
@@ -120,7 +125,7 @@ const MobilePreview = ({
             )}
           </div>
 
-          <div className="p-3 border-t bg-background/80 flex items-center gap-2">
+          <div className="p-3 border-t bg-background/80 flex items-center gap-2 z-20">
             <Button
               variant="secondary"
               size="sm"

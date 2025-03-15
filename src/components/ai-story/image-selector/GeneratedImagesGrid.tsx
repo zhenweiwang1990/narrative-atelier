@@ -20,25 +20,23 @@ const GeneratedImagesGrid: React.FC<GeneratedImagesGridProps> = ({
   aspectRatio
 }) => {
   return (
-    <div className="grid grid-cols-2 gap-2 max-h-[400px] overflow-y-auto">
+    <div className="grid grid-cols-2 gap-2 max-h-[400px] overflow-y-auto p-1">
       {generatedImages.map((imageUrl, index) => (
         <div 
           key={index}
           className={`relative cursor-pointer rounded-md overflow-hidden transition-all ${
             selectedGeneratedImage === imageUrl ? 'ring-2 ring-primary' : ''
           }`}
-          style={{ maxHeight: '100px' }} // Limit height of each preview item
         >
-          <AspectRatio ratio={aspectRatio}>
-            <div className="w-full h-full max-h-[100px] overflow-hidden">
-              <img 
-                src={imageUrl} 
-                alt={`生成图${index + 1}`} 
-                className="w-full h-full object-cover"
-                onClick={() => onSelectImage(imageUrl)}
-              />
-            </div>
-          </AspectRatio>
+          <div className="w-full max-h-[100px] overflow-hidden">
+            <img 
+              src={imageUrl} 
+              alt={`生成图${index + 1}`} 
+              className="w-full h-full object-cover"
+              style={{ maxHeight: '100px' }}
+              onClick={() => onSelectImage(imageUrl)}
+            />
+          </div>
           
           <Button
             variant="secondary"

@@ -80,7 +80,7 @@ const FloatingMobilePreview = ({
         />
 
         {!minimized && (
-          <div className="h-[calc(100%-35px)]">
+          <div className="h-[calc(100%-35px)] overflow-hidden">
             {selectedSceneId ? (
               <MobilePreview
                 sceneId={selectedSceneId}
