@@ -1,12 +1,12 @@
 
 import React, { useState } from "react";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardFooter } from "./ui/card";
 import { Character } from "@/utils/types";
-import { toast } from "sonner";
-import CharacterImage from "./character/CharacterImage";
-import CharacterBadges from "./character/CharacterBadges";
+import CharacterCardImage from "./character/CharacterCardImage";
+import CharacterCardInfo from "./character/CharacterCardInfo";
 import CharacterCardFooter from "./character/CharacterCardFooter";
 import CharacterImageDialogs from "./character/CharacterImageDialogs";
+import CharacterImageActions from "./character/CharacterImageActions";
 
 interface CharacterCardProps {
   character: Character;
@@ -36,6 +36,7 @@ const CharacterCard = ({
   const [isFullBodyImageSelectorOpen, setIsFullBodyImageSelectorOpen] = useState(false);
   const [isGeneratingFullBody, setIsGeneratingFullBody] = useState(false);
   
+  // Handle image selection
   const handleProfileImageSelected = (imageUrl: string) => {
     if (onImageChange) {
       onImageChange(imageUrl, 'profilePicture');
@@ -48,26 +49,12 @@ const CharacterCard = ({
     }
   };
   
-  const handleGenerateFullBody = () => {
-    if (!character.profilePicture) {
-      toast.error("请先设置角色形象照片");
-      return;
-    }
-    
-    setIsGeneratingFullBody(true);
-    
-    // TODO: Call server API to remove background and generate full body image
-    // Mock implementation with timeout
-    setTimeout(() => {
-      if (onImageChange) {
-        // For now, we'll just use the same image as a mock result
-        // In real implementation, this would be the processed image with background removed
-        onImageChange(character.profilePicture!, 'fullBody');
-        toast.success("立绘生成成功");
-      }
-      setIsGeneratingFullBody(false);
-    }, 1500);
-  };
+  // Get image processing actions
+  const { handleGenerateFullBody } = CharacterImageActions({
+    profilePicture: character.profilePicture,
+    onImageChange: onImageChange || (() => {}),
+    setIsGeneratingFullBody
+  });
   
   return (
     <>
@@ -78,30 +65,19 @@ const CharacterCard = ({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <CharacterImage 
-          profilePicture={character.profilePicture}
+        <CharacterCardImage 
+          character={character}
           isEditing={isEditing}
           isHovered={isHovered}
           isSelected={isSelected}
           onSelect={onSelect}
+          isGeneratingFullBody={isGeneratingFullBody}
           onOpenProfileImageSelector={() => setIsProfileImageSelectorOpen(true)}
           onOpenFullBodyImageSelector={() => setIsFullBodyImageSelectorOpen(true)}
           onGenerateFullBody={handleGenerateFullBody}
-          isGeneratingFullBody={isGeneratingFullBody}
-          fullBody={character.fullBody}
         />
 
-        <CardHeader className="p-3">
-          <CardTitle className="text-base truncate">{character.name}</CardTitle>
-        </CardHeader>
-        
-        <CardContent className="p-3 pt-0">
-          <CharacterBadges 
-            role={character.role} 
-            gender={character.gender} 
-          />
-          <p className="text-sm text-muted-foreground line-clamp-2">{character.bio}</p>
-        </CardContent>
+        <CharacterCardInfo character={character} />
         
         <CardFooter className="p-0">
           <CharacterCardFooter 
