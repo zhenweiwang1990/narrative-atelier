@@ -15,6 +15,8 @@ import 'reactflow/dist/style.css';
 import { SceneNodeData } from './flowTypes';
 import FlowControls from './FlowControls';
 import FlowPanel from './FlowPanel';
+import { SceneFilterOption } from './FlowEditor';
+import FlowFilterPanel from './FlowFilterPanel';
 
 interface FlowCanvasProps {
   nodes: Node<SceneNodeData>[];
@@ -31,6 +33,8 @@ interface FlowCanvasProps {
   onAutoArrange?: () => void;
   edgeOptions?: any;
   revivalEdgeOptions?: any;
+  filterOption: SceneFilterOption;
+  onFilterChange: (option: SceneFilterOption) => void;
 }
 
 const FlowCanvas: React.FC<FlowCanvasProps> = ({
@@ -47,7 +51,9 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   onPreviewToggle,
   onAutoArrange,
   edgeOptions,
-  revivalEdgeOptions
+  revivalEdgeOptions,
+  filterOption,
+  onFilterChange
 }) => {
   return (
     <ReactFlow
@@ -73,6 +79,11 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
         onDeleteScene={onDeleteScene}
         onPreviewToggle={onPreviewToggle}
         onAutoArrange={onAutoArrange}
+      />
+      
+      <FlowFilterPanel 
+        filterOption={filterOption}
+        onFilterChange={onFilterChange}
       />
     </ReactFlow>
   );

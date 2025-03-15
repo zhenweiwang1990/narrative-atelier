@@ -1,5 +1,5 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { NodeTypes, Connection, MarkerType } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useStory } from '../Layout';
@@ -40,6 +40,9 @@ const revivalEdgeOptions = {
     color: '#d32f2f',
   },
 };
+
+// Filter options for scene display
+export type SceneFilterOption = 'all' | 'endings' | 'incomplete';
 
 interface FlowEditorProps {
   onSceneSelect: (sceneId: string) => void;
@@ -89,6 +92,7 @@ const getLayoutedElements = (nodes, edges, direction = 'TB') => {
 
 const FlowEditor = ({ onSceneSelect, onPreviewToggle, onAddSceneWithType }: FlowEditorProps) => {
   const { story, setStory } = useStory();
+  const [filterOption, setFilterOption] = useState<SceneFilterOption>('all');
   
   // Return early if there's no story
   if (!story) {
@@ -105,7 +109,8 @@ const FlowEditor = ({ onSceneSelect, onPreviewToggle, onAddSceneWithType }: Flow
     onConnect,
     onNodeClick: baseOnNodeClick,
     setNodes,
-    setEdges
+    setEdges,
+    transformScenesToNodes
   } = useFlowTransformers(story.scenes);
 
   const {
@@ -121,6 +126,22 @@ const FlowEditor = ({ onSceneSelect, onPreviewToggle, onAddSceneWithType }: Flow
     setSelectedNode, 
     onSceneSelect
   );
+
+  // Filter nodes based on the selected filter option
+  const getFilteredNodes = useCallback(() => {
+    if (filterOption === 'all') {
+      return nodes;
+    }
+    
+    return nodes.filter(node => {
+      if (filterOption === 'endings') {
+        return node.data.sceneType === 'ending' || node.data.sceneType === 'bad-ending';
+      } else if (filterOption === 'incomplete') {
+        return node.data.sceneType === 'normal' && !node.data.hasNextScene;
+      }
+      return true;
+    });
+  }, [nodes, filterOption]);
 
   // Custom node click handler that calls both the base handler and the scene select callback
   const onNodeClick = useCallback((event, node) => {
@@ -145,15 +166,23 @@ const FlowEditor = ({ onSceneSelect, onPreviewToggle, onAddSceneWithType }: Flow
     }
   }, [onAddSceneWithType, addScene]);
 
+  // Handler for changing filter option
+  const handleFilterChange = useCallback((option: SceneFilterOption) => {
+    setFilterOption(option);
+  }, []);
+
   // Make sure we have nodes before rendering ReactFlow
   if (!nodes || nodes.length === 0) {
     return <FlowEmptyState />;
   }
 
+  // Get filtered nodes based on current filter option
+  const filteredNodes = getFilteredNodes();
+
   return (
     <div className="w-full h-full border rounded-lg bg-white shadow-sm overflow-hidden">
       <FlowCanvas
-        nodes={nodes}
+        nodes={filteredNodes}
         edges={edges}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
@@ -167,6 +196,8 @@ const FlowEditor = ({ onSceneSelect, onPreviewToggle, onAddSceneWithType }: Flow
         onAutoArrange={handleAutoArrange}
         edgeOptions={edgeOptions}
         revivalEdgeOptions={revivalEdgeOptions}
+        filterOption={filterOption}
+        onFilterChange={handleFilterChange}
       />
     </div>
   );
