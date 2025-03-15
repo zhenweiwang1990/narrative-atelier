@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
@@ -14,6 +14,10 @@ import {
   Download,
   Database,
   PanelLeft,
+  Plus,
+  ChevronDown,
+  FileEdit,
+  Trash2,
 } from "lucide-react";
 import {
   Sidebar,
@@ -29,11 +33,32 @@ import {
 } from "@/components/ui/sidebar";
 import { useStory } from "./Layout";
 import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "./ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { Input } from "./ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./ui/dialog";
+import { generateId } from "@/utils/storage";
 
 export function AppSidebar() {
   const location = useLocation();
-  const { story, handleSave, handleImport } = useStory();
+  const { story, setStory, stories, setStories, handleSave, handleImport, createNewStory, deleteStory } = useStory();
   const { state, toggleSidebar } = useSidebar();
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
+  const [newStoryTitle, setNewStoryTitle] = useState("");
+  const [currentStoryId, setCurrentStoryId] = useState("");
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -93,10 +118,114 @@ export function AppSidebar() {
     }
   };
 
+  const handleCreateStory = () => {
+    if (newStoryTitle.trim()) {
+      createNewStory(newStoryTitle.trim());
+      setNewStoryTitle("");
+      setIsCreateDialogOpen(false);
+    }
+  };
+
+  const handleRenameStory = () => {
+    if (newStoryTitle.trim() && story) {
+      const updatedStory = { ...story, title: newStoryTitle.trim() };
+      setStory(updatedStory);
+      
+      // Update in stories array
+      if (stories) {
+        const updatedStories = stories.map(s => 
+          s.id === updatedStory.id ? updatedStory : s
+        );
+        setStories(updatedStories);
+      }
+      
+      handleSave();
+      setNewStoryTitle("");
+      setIsRenameDialogOpen(false);
+    }
+  };
+
+  const openRenameDialog = () => {
+    if (story) {
+      setNewStoryTitle(story.title);
+      setIsRenameDialogOpen(true);
+    }
+  };
+
+  const handleStoryChange = (storyId: string) => {
+    if (stories) {
+      const selectedStory = stories.find(s => s.id === storyId);
+      if (selectedStory) {
+        setStory(selectedStory);
+      }
+    }
+  };
+
+  const handleDeleteStory = () => {
+    if (story) {
+      deleteStory(story.id);
+    }
+  };
+
   return (
     <>
       <Sidebar>
         <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel className="flex justify-between items-center">
+              <span>当前剧情</span>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-5 w-5"
+                onClick={() => setIsCreateDialogOpen(true)}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <div className="mb-2 flex items-center">
+                <Select
+                  value={story?.id}
+                  onValueChange={handleStoryChange}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="选择剧情" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {stories?.map((s) => (
+                      <SelectItem key={s.id} value={s.id}>
+                        {s.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="ml-1">
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={openRenameDialog}>
+                      <FileEdit className="h-4 w-4 mr-2" />
+                      <span>重命名</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={handleDeleteStory}
+                      disabled={stories?.length === 1}
+                      className="text-destructive focus:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      <span>删除</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </SidebarGroupContent>
+          </SidebarGroup>
+
           <SidebarGroup>
             <SidebarGroupLabel>导航</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -181,17 +310,65 @@ export function AppSidebar() {
         </div>
       </Sidebar>
       
-      {/* 添加侧边栏折叠时的悬浮按钮 */}
+      {/* 添加侧边栏折叠时的悬浮按钮，放在左下角 */}
       {state === "collapsed" && (
         <Button
           variant="outline"
           size="icon"
-          className="fixed top-4 left-4 z-50 bg-background shadow-md"
+          className="fixed bottom-4 left-4 z-50 bg-background shadow-md"
           onClick={toggleSidebar}
         >
           <PanelLeft className="h-4 w-4" />
         </Button>
       )}
+
+      {/* 创建新剧情的对话框 */}
+      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>创建新剧情</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <Input
+              placeholder="输入剧情名称"
+              value={newStoryTitle}
+              onChange={(e) => setNewStoryTitle(e.target.value)}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+              取消
+            </Button>
+            <Button onClick={handleCreateStory}>
+              创建
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* 重命名剧情的对话框 */}
+      <Dialog open={isRenameDialogOpen} onOpenChange={setIsRenameDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>重命名剧情</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <Input
+              placeholder="输入新名称"
+              value={newStoryTitle}
+              onChange={(e) => setNewStoryTitle(e.target.value)}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsRenameDialogOpen(false)}>
+              取消
+            </Button>
+            <Button onClick={handleRenameStory}>
+              保存
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
