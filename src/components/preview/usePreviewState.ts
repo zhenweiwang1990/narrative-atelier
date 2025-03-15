@@ -36,6 +36,7 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
       lastElementShown: false,
       sortedElements: [],
       handleNext: () => {},
+      handlePrevious: () => {},
       handleChoiceSelect: () => {},
       handleQteResult: () => {},
       handleDialogueTaskResult: () => {},
@@ -90,6 +91,13 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
     } else {
       // 已经到达场景的最后一个元素，且没有下一个场景
       setLastElementShown(true);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentElementIndex > 0) {
+      setCurrentElementIndex(currentElementIndex - 1);
+      setLastElementShown(false);
     }
   };
 
@@ -154,6 +162,7 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
     lastElementShown,
     sortedElements,
     handleNext,
+    handlePrevious,
     handleChoiceSelect,
     handleQteResult,
     handleDialogueTaskResult,

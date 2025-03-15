@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useStory } from "./Layout";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import PreviewElement from "./preview/PreviewElement";
 import SceneEnding from "./preview/SceneEnding";
 import { usePreviewState } from "./preview/usePreviewState";
@@ -29,8 +29,10 @@ const MobilePreview = ({
     scene,
     location,
     currentElement,
+    currentElementIndex,
     isSceneEnding,
     handleNext,
+    handlePrevious,
     handleChoiceSelect,
     handleRevival,
     getCharacter,
@@ -92,7 +94,21 @@ const MobilePreview = ({
         )}
       </div>
 
-      <div className="p-3 border-t flex items-center">
+      <div className="p-3 border-t flex items-center gap-2">
+        <Button
+          variant="secondary"
+          size="sm"
+          className="flex-1"
+          onClick={handlePrevious}
+          disabled={
+            currentElementIndex <= 0 ||
+            currentElement?.type === "choice" ||
+            currentElement?.type === "qte" ||
+            currentElement?.type === "dialogueTask"
+          }
+        >
+          <ChevronLeft className="h-4 w-4 mr-1" /> 上一步
+        </Button>
         <Button
           variant="secondary"
           size="sm"
