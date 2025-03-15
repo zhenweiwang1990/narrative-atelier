@@ -208,7 +208,8 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
           valueChanges={failureValueChanges}
           globalValues={globalValues}
           onAddValueChange={(isSuccess) => addValueChange(isSuccess, globalValues)}
-          onUpdateValueChange={removeValueChange}
+          onUpdateValueChange={updateValueChange}
+          onRemoveValueChange={removeValueChange}
         />
       </div>
 
