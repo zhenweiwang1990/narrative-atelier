@@ -5,6 +5,7 @@ import GlobalValuesModificationsTable from "@/components/GlobalValuesModificatio
 import { useStory } from "@/components/Layout";
 import { GlobalValue, Story } from "@/utils/types";
 import { ValueModification } from "@/components/globalValues/types";
+import { toast } from "sonner";
 
 const GlobalValuesPage: React.FC = () => {
   const { story, setStory } = useStory();
@@ -43,8 +44,22 @@ const GlobalValuesPage: React.FC = () => {
           (vc: any) => vc.valueId === modification.valueId
         );
         
-        if (valueChangeIndex >= 0) {
+        if (modification.toRemove) {
+          // Remove the value change
+          if (valueChangeIndex >= 0) {
+            option.valueChanges.splice(valueChangeIndex, 1);
+            toast.success("已删除值变更");
+          }
+        } else if (valueChangeIndex >= 0) {
+          // Update existing value change
           option.valueChanges[valueChangeIndex].change = modification.valueChange;
+        } else {
+          // Add new value change
+          option.valueChanges.push({
+            valueId: modification.valueId,
+            change: modification.valueChange
+          });
+          toast.success("已添加新的值变更");
         }
       }
     } else if ((element.type === 'qte' || element.type === 'dialogueTask')) {
@@ -59,8 +74,22 @@ const GlobalValuesPage: React.FC = () => {
           (vc: any) => vc.valueId === modification.valueId
         );
         
-        if (valueChangeIndex >= 0) {
+        if (modification.toRemove) {
+          // Remove the value change
+          if (valueChangeIndex >= 0) {
+            outcomeElement.success.valueChanges.splice(valueChangeIndex, 1);
+            toast.success("已删除值变更");
+          }
+        } else if (valueChangeIndex >= 0) {
+          // Update existing value change
           outcomeElement.success.valueChanges[valueChangeIndex].change = modification.valueChange;
+        } else {
+          // Add new value change
+          outcomeElement.success.valueChanges.push({
+            valueId: modification.valueId,
+            change: modification.valueChange
+          });
+          toast.success("已添加新的值变更");
         }
       } else if (modification.outcomeType === 'failure' && outcomeElement.failure) {
         if (!outcomeElement.failure.valueChanges) {
@@ -71,8 +100,22 @@ const GlobalValuesPage: React.FC = () => {
           (vc: any) => vc.valueId === modification.valueId
         );
         
-        if (valueChangeIndex >= 0) {
+        if (modification.toRemove) {
+          // Remove the value change
+          if (valueChangeIndex >= 0) {
+            outcomeElement.failure.valueChanges.splice(valueChangeIndex, 1);
+            toast.success("已删除值变更");
+          }
+        } else if (valueChangeIndex >= 0) {
+          // Update existing value change
           outcomeElement.failure.valueChanges[valueChangeIndex].change = modification.valueChange;
+        } else {
+          // Add new value change
+          outcomeElement.failure.valueChanges.push({
+            valueId: modification.valueId,
+            change: modification.valueChange
+          });
+          toast.success("已添加新的值变更");
         }
       }
     }
@@ -96,7 +139,7 @@ const GlobalValuesPage: React.FC = () => {
       <div className="mt-8">
         <h2 className="text-xl font-bold mb-4">变量变更一览表</h2>
         <p className="text-muted-foreground mb-4">
-          此表格显示了所有场景元素中的变量变更，你可以直接编辑变更值。
+          此表格显示了所有场景元素中的变量变更，你可以添加、编辑或删除变更值。
         </p>
         
         <GlobalValuesModificationsTable 

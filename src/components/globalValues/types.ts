@@ -22,6 +22,7 @@ export interface ValueModification {
   valueId: string;
   valueChange: number;
   choiceOptionId?: string;
+  toRemove?: boolean;
 }
 
 export interface GlobalValuesModificationsTableProps {

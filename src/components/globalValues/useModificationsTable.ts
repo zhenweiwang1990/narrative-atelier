@@ -1,7 +1,7 @@
 
 import { useMemo, useState } from "react";
 import { ValueModification } from "./types";
-import { extractValueModifications } from "./tableUtils";
+import { extractValueModifications, getAllPossibleOptions } from "./tableUtils";
 import { Story } from "@/utils/types";
 
 interface ModificationGroup {
@@ -25,6 +25,39 @@ export const useModificationsTable = (
   const groupedModifications = useMemo(() => {
     const groupedData: Record<string, ModificationGroup> = {};
     
+    if (story) {
+      // Get all possible options/outcomes, including those without value changes
+      const allOptions = getAllPossibleOptions(story);
+      
+      // First populate with all possible options/outcomes
+      allOptions.forEach(option => {
+        const elementKey = `${option.sceneId}-${option.elementId}`;
+        
+        let optionKey = '';
+        if (option.outcomeType === 'choice' && option.choiceOptionId) {
+          optionKey = option.choiceOptionId;
+        } else {
+          optionKey = `${option.elementId}-${option.outcomeType}`;
+        }
+        
+        // Initialize first level group if it doesn't exist
+        if (!groupedData[elementKey]) {
+          groupedData[elementKey] = {
+            items: [],
+            subgroups: {}
+          };
+        }
+        
+        // Initialize second level group if it doesn't exist
+        if (!groupedData[elementKey].subgroups[optionKey]) {
+          groupedData[elementKey].subgroups[optionKey] = {
+            items: []
+          };
+        }
+      });
+    }
+    
+    // Then add the actual modifications
     valueModifications.forEach(modification => {
       // First level group key: elementId
       const elementKey = `${modification.sceneId}-${modification.elementId}`;
@@ -60,7 +93,7 @@ export const useModificationsTable = (
     });
     
     return groupedData;
-  }, [valueModifications]);
+  }, [valueModifications, story]);
   
   // Function to get display value for a modification
   const getDisplayValue = (modification: ValueModification): number => {
@@ -86,10 +119,67 @@ export const useModificationsTable = (
     onModificationUpdate(updatedModification);
   };
   
+  const handleAddValueChange = (
+    sceneId: string, 
+    elementId: string, 
+    elementIndex: number,
+    elementType: string,
+    elementTitle: string,
+    sceneTitle: string,
+    outcomeType: 'choice' | 'success' | 'failure',
+    optionOrOutcome: string,
+    choiceOptionId?: string
+  ) => {
+    if (!story || !story.globalValues.length) return;
+    
+    // Find a global value that hasn't been used for this option/outcome
+    const existingModifications = Object.values(groupedModifications)
+      .flatMap(group => Object.values(group.subgroups))
+      .flatMap(subgroup => subgroup.items)
+      .filter(mod => 
+        mod.elementId === elementId && 
+        mod.outcomeType === outcomeType && 
+        mod.choiceOptionId === choiceOptionId
+      );
+    
+    const usedValueIds = new Set(existingModifications.map(mod => mod.valueId));
+    const availableValue = story.globalValues.find(value => !usedValueIds.has(value.id));
+    
+    if (!availableValue) return; // No unused values
+    
+    const newModification: ValueModification = {
+      sceneId,
+      sceneTitle,
+      elementId,
+      elementIndex,
+      elementType,
+      elementTitle,
+      optionOrOutcome,
+      outcomeType,
+      valueId: availableValue.id,
+      valueChange: 0,
+      choiceOptionId
+    };
+    
+    onModificationUpdate(newModification);
+  };
+  
+  const handleRemoveValueChange = (modification: ValueModification) => {
+    // Create a new modification with a special flag to indicate removal
+    const removalModification = {
+      ...modification,
+      toRemove: true
+    };
+    
+    onModificationUpdate(removalModification as ValueModification);
+  };
+  
   return {
     valueModifications,
     groupedModifications,
     handleValueChange,
+    handleAddValueChange,
+    handleRemoveValueChange,
     getDisplayValue,
     isEmpty: valueModifications.length === 0
   };

@@ -35,7 +35,7 @@ const GlobalValues: React.FC<GlobalValuesProps> = ({ values, onChange }) => {
   };
 
   return (
-    <Card className="p-4 space-y-4">
+    <Card className="p-4 space-y-4 max-w-[300px]">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-medium">全局变量</h3>
         <Button 

@@ -20,6 +20,72 @@ export const getValueName = (story: Story | null, valueId: string): string => {
   return value ? value.name : valueId;
 };
 
+// Process story data to get all possible options/outcomes, including those without value changes
+export const getAllPossibleOptions = (story: Story | null): Partial<ValueModification>[] => {
+  if (!story) return [];
+  
+  const allOptions: Partial<ValueModification>[] = [];
+  
+  story.scenes.forEach(scene => {
+    // Sort elements by order
+    const sortedElements = [...scene.elements].sort((a, b) => a.order - b.order);
+    
+    sortedElements.forEach((element, index) => {
+      const elementTitle = getElementContentPreview(element);
+      
+      if (element.type === 'choice') {
+        const choiceElement = element as any;
+        
+        choiceElement.options.forEach((option: any) => {
+          allOptions.push({
+            sceneId: scene.id,
+            sceneTitle: scene.title,
+            elementId: element.id,
+            elementIndex: index,
+            elementType: element.type,
+            elementTitle,
+            optionOrOutcome: option.text,
+            outcomeType: 'choice',
+            choiceOptionId: option.id
+          });
+        });
+      } else if (element.type === 'qte' || element.type === 'dialogueTask') {
+        const outcomeElement = element as any;
+        
+        // Add success outcome
+        if (outcomeElement.success) {
+          allOptions.push({
+            sceneId: scene.id,
+            sceneTitle: scene.title,
+            elementId: element.id,
+            elementIndex: index,
+            elementType: element.type,
+            elementTitle,
+            optionOrOutcome: '成功',
+            outcomeType: 'success'
+          });
+        }
+        
+        // Add failure outcome
+        if (outcomeElement.failure) {
+          allOptions.push({
+            sceneId: scene.id,
+            sceneTitle: scene.title,
+            elementId: element.id,
+            elementIndex: index,
+            elementType: element.type,
+            elementTitle,
+            optionOrOutcome: '失败',
+            outcomeType: 'failure'
+          });
+        }
+      }
+    });
+  });
+  
+  return allOptions;
+};
+
 // Process story data to get all value modifications
 export const extractValueModifications = (story: Story | null): ValueModification[] => {
   if (!story) return [];
