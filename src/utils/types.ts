@@ -1,3 +1,4 @@
+
 export type StoryType = 'interactive' | 'linear' | 'branching';
 
 export interface Story {
@@ -10,7 +11,22 @@ export interface Story {
   characters: Character[];
   locations: Location[];
   globalValues: GlobalValue[];
-  coverPhoto?: string; // 添加封面照片字段
+  coverPhoto?: string;
+  protagonistName?: string;
+  protagonistGender?: string;
+  orientation?: 'hetero' | 'yuri' | 'yaoi' | 'none';
+  tags?: string[];
+  chapters?: Chapter[];
+}
+
+export interface Chapter {
+  id: string;
+  title: string;
+  originalContent: string;
+  mainStoryContent?: string;
+  markedContent?: string;
+  isProcessed: boolean;
+  isConverted: boolean;
 }
 
 export interface Scene {
