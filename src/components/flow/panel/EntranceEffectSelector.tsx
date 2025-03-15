@@ -34,10 +34,10 @@ const EntranceEffectSelector: React.FC<EntranceEffectSelectorProps> = ({
         defaultValue={effect || "fade"}
         onValueChange={(value) => updateEffect(value)}
       >
-        <SelectTrigger id="entranceEffect">
+        <SelectTrigger id="entranceEffect" className="h-9">
           <SelectValue placeholder="选择入场特效" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="z-[200]">
           {entranceEffects.map((effect) => (
             <SelectItem key={effect.id} value={effect.id}>{effect.label}</SelectItem>
           ))}

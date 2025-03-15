@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -41,7 +42,7 @@ const EditorPanel = ({
   updateEndingName,
 }: EditorPanelProps) => {
   return (
-    <Card className="overflow-hidden h-full">
+    <Card className="overflow-hidden h-full max-w-[500px]">
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}

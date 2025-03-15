@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useStory } from "@/components/Layout";
 import FlowEditor from "@/components/flow/FlowEditor";
@@ -121,7 +122,7 @@ const Flow = () => {
           </AlertDescription>
         </Alert>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-[1fr,600px] gap-3 h-full">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr,auto] gap-3 h-full">
           <div className="border rounded-md overflow-hidden h-full">
             <FlowEditor
               onSceneSelect={handleSceneSelect}
@@ -130,7 +131,7 @@ const Flow = () => {
             />
           </div>
 
-          <div className="h-full w-full max-w-[600px]">
+          <div className="h-full w-full max-w-[500px]">
             <EditorPanel
               activeTab={activeTab}
               setActiveTab={setActiveTab}
