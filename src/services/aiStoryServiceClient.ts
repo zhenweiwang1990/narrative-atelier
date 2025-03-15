@@ -47,14 +47,16 @@ export const handleAiStoryGeneration = async ({
     // Get the result from the promise
     const result = await toastPromise;
     
-    // Check that result is not null before accessing its properties
+    // Check that result is not null or undefined before accessing its properties
     if (result && typeof result === 'object' && 'success' in result) {
       if (result.success && onSuccess) {
         onSuccess();
       }
+      
+      return result;
     }
     
-    return result;
+    return { success: false, message: "无响应" };
   } catch (error) {
     console.error("AI story generation error:", error);
     toast.error("生成故事时出错");

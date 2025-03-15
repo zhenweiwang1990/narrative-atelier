@@ -74,6 +74,8 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
   const dummyStory: Story = {
     id: '',
     title: '',
+    author: '', // Add the missing required field
+    description: '', // Add the missing required field
     scenes: scenes,
     characters: characters,
     globalValues: globalValues,
