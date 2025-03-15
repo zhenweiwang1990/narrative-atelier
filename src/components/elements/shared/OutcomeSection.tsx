@@ -1,9 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Scene, GlobalValue } from '@/utils/types';
 import SceneSelectSection from './SceneSelectSection';
 import TransitionTextsSection from './TransitionTextsSection';
 import ValueChangesCollapsible from './ValueChangesCollapsible';
+import AiStoryDialog from './AiStoryDialog';
+import { toast } from 'sonner';
 
 interface OutcomeSectionProps {
   scenes: Scene[];
@@ -23,6 +25,7 @@ interface OutcomeSectionProps {
   removeValueChange: (isSuccess: boolean, valueId: string) => void;
   showSuccessOnly?: boolean;
   showFailureOnly?: boolean;
+  elementId?: string;
 }
 
 const OutcomeSection: React.FC<OutcomeSectionProps> = ({
@@ -42,8 +45,40 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
   updateValueChange,
   removeValueChange,
   showSuccessOnly = false,
-  showFailureOnly = false
+  showFailureOnly = false,
+  elementId = ''
 }) => {
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
+  const [aiDialogType, setAiDialogType] = useState<'branch' | 'ending'>('branch');
+  const [isSuccess, setIsSuccess] = useState(true);
+
+  const handleOpenAiDialog = (type: 'branch' | 'ending', success: boolean) => {
+    setAiDialogType(type);
+    setIsSuccess(success);
+    setAiDialogOpen(true);
+  };
+
+  const handleAiStorySubmit = (prompt: string, convergenceSceneId?: string, endingType?: 'normal' | 'bad') => {
+    toast.promise(
+      new Promise((resolve) => setTimeout(resolve, 1500)), 
+      {
+        loading: aiDialogType === 'branch' ? '正在生成支线...' : '正在生成结局...',
+        success: aiDialogType === 'branch' ? 'AI 支线生成成功！' : 'AI 结局生成成功！',
+        error: '生成失败，请重试。',
+      }
+    );
+
+    console.log('AI Story Request for Element Outcome:', {
+      type: aiDialogType,
+      isSuccess,
+      elementId,
+      prompt,
+      convergenceSceneId,
+      endingType,
+      outcomeType: isSuccess ? 'success' : 'failure'
+    });
+  };
+  
   // For showing just one column when in the success/failure specific layouts
   const showSingleColumn = showSuccessOnly || showFailureOnly;
   
@@ -58,6 +93,7 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
           onUpdateSuccessScene={updateSuccessSceneId}
           onUpdateFailureScene={() => {}}
           showSingleColumn={true}
+          onOpenAiDialog={handleOpenAiDialog}
         />
         
         <TransitionTextsSection
@@ -77,6 +113,15 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
           onUpdateValueChange={updateValueChange}
           onRemoveValueChange={removeValueChange}
         />
+
+        <AiStoryDialog 
+          isOpen={aiDialogOpen}
+          onClose={() => setAiDialogOpen(false)}
+          onSubmit={handleAiStorySubmit}
+          type={aiDialogType}
+          scenes={scenes}
+          showConvergenceSelector={aiDialogType === 'branch'}
+        />
       </div>
     );
   }
@@ -92,6 +137,7 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
           onUpdateSuccessScene={() => {}}
           onUpdateFailureScene={updateFailureSceneId}
           showSingleColumn={true}
+          onOpenAiDialog={handleOpenAiDialog}
         />
         
         <TransitionTextsSection
@@ -111,6 +157,15 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
           onUpdateValueChange={updateValueChange}
           onRemoveValueChange={removeValueChange}
         />
+
+        <AiStoryDialog 
+          isOpen={aiDialogOpen}
+          onClose={() => setAiDialogOpen(false)}
+          onSubmit={handleAiStorySubmit}
+          type={aiDialogType}
+          scenes={scenes}
+          showConvergenceSelector={aiDialogType === 'branch'}
+        />
       </div>
     );
   }
@@ -125,6 +180,7 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
         onUpdateSuccessScene={updateSuccessSceneId}
         onUpdateFailureScene={updateFailureSceneId}
         showSingleColumn={showSingleColumn}
+        onOpenAiDialog={handleOpenAiDialog}
       />
       
       <TransitionTextsSection
@@ -152,10 +208,18 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
           valueChanges={failureValueChanges}
           globalValues={globalValues}
           onAddValueChange={(isSuccess) => addValueChange(isSuccess, globalValues)}
-          onUpdateValueChange={updateValueChange}
-          onRemoveValueChange={removeValueChange}
+          onUpdateValueChange={removeValueChange}
         />
       </div>
+
+      <AiStoryDialog 
+        isOpen={aiDialogOpen}
+        onClose={() => setAiDialogOpen(false)}
+        onSubmit={handleAiStorySubmit}
+        type={aiDialogType}
+        scenes={scenes}
+        showConvergenceSelector={aiDialogType === 'branch'}
+      />
     </div>
   );
 };

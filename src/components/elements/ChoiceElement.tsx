@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -12,8 +12,6 @@ import {
 } from "@/utils/types";
 import { Plus } from "lucide-react";
 import ChoiceOption from "./choice/ChoiceOption";
-import AiStoryDialog from "./shared/AiStoryDialog";
-import { toast } from "sonner";
 
 interface ChoiceElementProps {
   element: ChoiceElementType;
@@ -38,10 +36,6 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
   onDeleteOption,
   onUpdateOption,
 }) => {
-  const [aiDialogOpen, setAiDialogOpen] = useState(false);
-  const [aiDialogType, setAiDialogType] = useState<'branch' | 'ending'>('branch');
-  const [currentOptionId, setCurrentOptionId] = useState<string | null>(null);
-
   const addValueChange = (optionId: string) => {
     const option = element.options.find((o) => o.id === optionId);
     if (!option) return;
@@ -93,32 +87,6 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
     });
   };
 
-  const handleOpenAiDialog = (type: 'branch' | 'ending', optionId: string) => {
-    setAiDialogType(type);
-    setCurrentOptionId(optionId);
-    setAiDialogOpen(true);
-  };
-
-  const handleAiStorySubmit = (prompt: string, convergenceSceneId?: string, endingType?: 'normal' | 'bad') => {
-    toast.promise(
-      new Promise((resolve) => setTimeout(resolve, 1500)), 
-      {
-        loading: aiDialogType === 'branch' ? '正在生成支线...' : '正在生成结局...',
-        success: aiDialogType === 'branch' ? 'AI 支线生成成功！' : 'AI 结局生成成功！',
-        error: '生成失败，请重试。',
-      }
-    );
-
-    console.log('AI Story Request for Choice Option:', {
-      type: aiDialogType,
-      optionId: currentOptionId,
-      prompt,
-      convergenceSceneId,
-      endingType,
-      elementId: element.id
-    });
-  };
-
   return (
     <div className="space-y-2">
       <div>
@@ -158,21 +126,11 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
               onAddValueChange={addValueChange}
               onUpdateValueChange={updateValueChange}
               onRemoveValueChange={removeValueChange}
-              onOpenAiDialog={handleOpenAiDialog}
               disableDelete={element.options.length <= 1}
             />
           ))}
         </div>
       </div>
-
-      <AiStoryDialog 
-        isOpen={aiDialogOpen}
-        onClose={() => setAiDialogOpen(false)}
-        onSubmit={handleAiStorySubmit}
-        type={aiDialogType}
-        scenes={scenes}
-        showConvergenceSelector={aiDialogType === 'branch'}
-      />
     </div>
   );
 };

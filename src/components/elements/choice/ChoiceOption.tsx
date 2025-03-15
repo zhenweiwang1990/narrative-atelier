@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,8 @@ import {
 import { Trash2 } from "lucide-react";
 import { ChoiceOption as ChoiceOptionType, Scene, GlobalValue } from "@/utils/types";
 import ValueChangeEditor from "./ValueChangeEditor";
+import AiStoryDialog from "../shared/AiStoryDialog";
+import { toast } from "sonner";
 
 interface ChoiceOptionProps {
   option: ChoiceOptionType;
@@ -25,7 +27,6 @@ interface ChoiceOptionProps {
   onAddValueChange: (optionId: string) => void;
   onUpdateValueChange: (optionId: string, valueId: string, change: number) => void;
   onRemoveValueChange: (optionId: string, valueId: string) => void;
-  onOpenAiDialog: (type: 'branch' | 'ending', optionId: string) => void;
   disableDelete: boolean;
 }
 
@@ -39,9 +40,42 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
   onAddValueChange,
   onUpdateValueChange,
   onRemoveValueChange,
-  onOpenAiDialog,
   disableDelete
 }) => {
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
+  const [aiDialogType, setAiDialogType] = useState<'branch' | 'ending'>('branch');
+
+  const handleSceneChange = (value: string) => {
+    if (value === "ai-branch") {
+      setAiDialogType('branch');
+      setAiDialogOpen(true);
+    } else if (value === "ai-ending") {
+      setAiDialogType('ending');
+      setAiDialogOpen(true);
+    } else {
+      onUpdateOption(option.id, { nextSceneId: value });
+    }
+  };
+
+  const handleAiStorySubmit = (prompt: string, convergenceSceneId?: string, endingType?: 'normal' | 'bad') => {
+    toast.promise(
+      new Promise((resolve) => setTimeout(resolve, 1500)), 
+      {
+        loading: aiDialogType === 'branch' ? '正在生成支线...' : '正在生成结局...',
+        success: aiDialogType === 'branch' ? 'AI 支线生成成功！' : 'AI 结局生成成功！',
+        error: '生成失败，请重试。',
+      }
+    );
+
+    console.log('AI Story Request for Choice Option:', {
+      type: aiDialogType,
+      optionId: option.id,
+      prompt,
+      convergenceSceneId,
+      endingType
+    });
+  };
+
   return (
     <div className="p-2 border rounded-md bg-muted/20">
       <div className="flex justify-between items-start mb-1">
@@ -68,14 +102,17 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
       <div>
         <Label className="text-xs">下一个场景</Label>
         <Select
-          value={option.nextSceneId}
-          onValueChange={(value) => onUpdateOption(option.id, { nextSceneId: value })}
+          value={option.nextSceneId || "none"}
+          onValueChange={handleSceneChange}
         >
           <SelectTrigger className="mt-1 h-7 text-xs">
             <SelectValue placeholder="选择下一个场景" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
+              <SelectItem value="none">不指定</SelectItem>
+              <SelectItem value="ai-branch" className="text-blue-600">AI 写支线</SelectItem>
+              <SelectItem value="ai-ending" className="text-purple-600">AI 写结局</SelectItem>
               {scenes.map((scene) => (
                 <SelectItem key={scene.id} value={scene.id}>
                   {scene.title} (
@@ -94,25 +131,6 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
         </Select>
       </div>
 
-      <div className="flex gap-2 mt-2">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="w-full text-xs"
-          onClick={() => onOpenAiDialog('branch', option.id)}
-        >
-          AI 写支线
-        </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="w-full text-xs"
-          onClick={() => onOpenAiDialog('ending', option.id)}
-        >
-          AI 写结局
-        </Button>
-      </div>
-
       <ValueChangeEditor
         optionId={option.id}
         valueChanges={option.valueChanges}
@@ -120,6 +138,15 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
         onAddValueChange={onAddValueChange}
         onUpdateValueChange={onUpdateValueChange}
         onRemoveValueChange={onRemoveValueChange}
+      />
+
+      <AiStoryDialog 
+        isOpen={aiDialogOpen}
+        onClose={() => setAiDialogOpen(false)}
+        onSubmit={handleAiStorySubmit}
+        type={aiDialogType}
+        scenes={scenes}
+        showConvergenceSelector={aiDialogType === 'branch'}
       />
     </div>
   );

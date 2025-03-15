@@ -18,6 +18,7 @@ interface SceneSelectSectionProps {
   onUpdateSuccessScene: (sceneId: string) => void;
   onUpdateFailureScene: (sceneId: string) => void;
   showSingleColumn?: boolean;
+  onOpenAiDialog?: (type: 'branch' | 'ending', isSuccess: boolean) => void;
 }
 
 const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
@@ -26,7 +27,8 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
   scenes,
   onUpdateSuccessScene,
   onUpdateFailureScene,
-  showSingleColumn = false
+  showSingleColumn = false,
+  onOpenAiDialog
 }) => {
   // If showing a single column, only render the relevant selector
   if (showSingleColumn) {
@@ -34,13 +36,23 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
       return (
         <div>
           <Label className="text-xs">成功场景</Label>
-          <Select value={successSceneId || "none"} onValueChange={onUpdateSuccessScene}>
+          <Select value={successSceneId || "none"} onValueChange={(value) => {
+            if (value === "ai-branch") {
+              onOpenAiDialog && onOpenAiDialog('branch', true);
+            } else if (value === "ai-ending") {
+              onOpenAiDialog && onOpenAiDialog('ending', true);
+            } else {
+              onUpdateSuccessScene(value);
+            }
+          }}>
             <SelectTrigger className="mt-1 h-8 text-xs">
               <SelectValue placeholder="选择场景" />
             </SelectTrigger>
             <SelectContent position="popper" className="z-[100]">
               <SelectGroup>
                 <SelectItem value="none">不指定</SelectItem>
+                <SelectItem value="ai-branch" className="text-blue-600">AI 写支线</SelectItem>
+                <SelectItem value="ai-ending" className="text-purple-600">AI 写结局</SelectItem>
                 {scenes.map((scene) => (
                   <SelectItem key={scene.id} value={scene.id}>
                     {scene.title} (
@@ -63,13 +75,23 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
       return (
         <div>
           <Label className="text-xs">失败场景</Label>
-          <Select value={failureSceneId || "none"} onValueChange={onUpdateFailureScene}>
+          <Select value={failureSceneId || "none"} onValueChange={(value) => {
+            if (value === "ai-branch") {
+              onOpenAiDialog && onOpenAiDialog('branch', false);
+            } else if (value === "ai-ending") {
+              onOpenAiDialog && onOpenAiDialog('ending', false);
+            } else {
+              onUpdateFailureScene(value);
+            }
+          }}>
             <SelectTrigger className="mt-1 h-8 text-xs">
               <SelectValue placeholder="选择场景" />
             </SelectTrigger>
             <SelectContent position="popper" className="z-[100]">
               <SelectGroup>
                 <SelectItem value="none">不指定</SelectItem>
+                <SelectItem value="ai-branch" className="text-blue-600">AI 写支线</SelectItem>
+                <SelectItem value="ai-ending" className="text-purple-600">AI 写结局</SelectItem>
                 {scenes.map((scene) => (
                   <SelectItem key={scene.id} value={scene.id}>
                     {scene.title} (
@@ -98,13 +120,23 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
       <div>
         <Label className="text-xs">成功场景</Label>
-        <Select value={successSceneId || "none"} onValueChange={onUpdateSuccessScene}>
+        <Select value={successSceneId || "none"} onValueChange={(value) => {
+          if (value === "ai-branch") {
+            onOpenAiDialog && onOpenAiDialog('branch', true);
+          } else if (value === "ai-ending") {
+            onOpenAiDialog && onOpenAiDialog('ending', true);
+          } else {
+            onUpdateSuccessScene(value);
+          }
+        }}>
           <SelectTrigger className="mt-1 h-8 text-xs">
             <SelectValue placeholder="选择场景" />
           </SelectTrigger>
           <SelectContent position="popper" className="z-[100]">
             <SelectGroup>
               <SelectItem value="none">不指定</SelectItem>
+              <SelectItem value="ai-branch" className="text-blue-600">AI 写支线</SelectItem>
+              <SelectItem value="ai-ending" className="text-purple-600">AI 写结局</SelectItem>
               {scenes.map((scene) => (
                 <SelectItem key={scene.id} value={scene.id}>
                   {scene.title} (
@@ -125,13 +157,23 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
 
       <div>
         <Label className="text-xs">失败场景</Label>
-        <Select value={failureSceneId || "none"} onValueChange={onUpdateFailureScene}>
+        <Select value={failureSceneId || "none"} onValueChange={(value) => {
+          if (value === "ai-branch") {
+            onOpenAiDialog && onOpenAiDialog('branch', false);
+          } else if (value === "ai-ending") {
+            onOpenAiDialog && onOpenAiDialog('ending', false);
+          } else {
+            onUpdateFailureScene(value);
+          }
+        }}>
           <SelectTrigger className="mt-1 h-8 text-xs">
             <SelectValue placeholder="选择场景" />
           </SelectTrigger>
           <SelectContent position="popper" className="z-[100]">
             <SelectGroup>
               <SelectItem value="none">不指定</SelectItem>
+              <SelectItem value="ai-branch" className="text-blue-600">AI 写支线</SelectItem>
+              <SelectItem value="ai-ending" className="text-purple-600">AI 写结局</SelectItem>
               {scenes.map((scene) => (
                 <SelectItem key={scene.id} value={scene.id}>
                   {scene.title} (
