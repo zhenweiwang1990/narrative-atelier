@@ -29,26 +29,26 @@ export const useEditorElementAddition = ({
     const currentElement = elements.find(e => e.id === currentElementId);
     if (!currentElement) return;
     
-    // Calculate the order for the new element
+    // Calculate the order for the new element and shift necessary elements
     let newOrder: number;
     
     if (position === 'before') {
-      // If adding before, use the current element's order
+      // When adding before, the new element takes the current element's position
       newOrder = currentElement.order;
       
-      // Shift the current element and all elements after it
+      // Shift the current element and all elements with equal or higher order
       elements.forEach(el => {
         if (el.order >= newOrder) {
           updateElement(el.id, { order: el.order + 1 });
         }
       });
     } else { // position === 'after'
-      // If adding after, use the next order after current element
+      // When adding after, place the new element immediately after the current one
       newOrder = currentElement.order + 1;
       
-      // Shift all elements that have order greater than the new order
+      // Shift all elements with order greater than the current element's order
       elements.forEach(el => {
-        if (el.order >= newOrder) {
+        if (el.order > currentElement.order) {
           updateElement(el.id, { order: el.order + 1 });
         }
       });
