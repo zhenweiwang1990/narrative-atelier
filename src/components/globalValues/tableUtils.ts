@@ -30,7 +30,7 @@ export const getAllPossibleOptions = (story: Story | null): Partial<ValueModific
     // Get elements that can have value changes (choice, qte, dialogueTask)
     const relevantElements = scene.elements.filter(
       element => ['choice', 'qte', 'dialogueTask'].includes(element.type)
-    ).sort((a, b) => a.order - b.order);
+    );
     
     relevantElements.forEach((element, index) => {
       const elementTitle = getElementContentPreview(element);
@@ -125,10 +125,8 @@ export const extractValueModifications = (story: Story | null): ValueModificatio
   const modifications: ValueModification[] = [];
   
   story.scenes.forEach(scene => {
-    // Sort elements by order
-    const sortedElements = [...scene.elements].sort((a, b) => a.order - b.order);
-    
-    sortedElements.forEach((element, index) => {
+    // We use the array index directly instead of sorting by order
+    scene.elements.forEach((element, index) => {
       if (element.type === 'choice') {
         const choiceElement = element as ChoiceElement;
         

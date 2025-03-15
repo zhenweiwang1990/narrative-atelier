@@ -24,16 +24,14 @@ const SceneNode = ({ data, selected }: SceneNodeProps) => {
   // Check if this scene is incomplete (normal type without next scene)
   const isIncomplete = data.sceneType === "normal" && !data.hasNextScene;
   
-  // 生成元素指示器为颜色块
+  // Generate element indicators as color blocks
   const renderElementIndicators = () => {
     if (!data.elements || data.elements.length === 0) return null;
 
-    // 按顺序排序元素
-    const sortedElements = [...data.elements].sort((a, b) => a.order - b.order);
-
+    // Use elements in their natural array order
     return (
       <div className="flex flex-wrap gap-1 mt-1">
-        {sortedElements.map((element) => {
+        {data.elements.map((element) => {
           let label = '';
           switch(element.type) {
             case 'narration': label = '旁'; break;

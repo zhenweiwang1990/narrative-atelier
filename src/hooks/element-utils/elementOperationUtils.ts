@@ -1,24 +1,14 @@
 
 import { SceneElement } from '@/utils/types';
 
-// Reorder elements
-export const reorderElements = (elements: SceneElement[]): SceneElement[] => {
-  return elements.map((elem, index) => ({
-    ...elem,
-    order: index
-  }));
-};
+// No need for reordering elements anymore since we use array indices
+// Instead, we provide a function that returns a new array to ensure we don't mutate the original
 
-// Move element up in the order
+// Move element up in the array
 export const moveElementUp = (elements: SceneElement[], index: number): SceneElement[] => {
   if (index <= 0) return elements;
   
-  const newElements = [...elements].sort((a, b) => a.order - b.order);
-  
-  // Swap order property
-  const temp = newElements[index].order;
-  newElements[index].order = newElements[index - 1].order;
-  newElements[index - 1].order = temp;
+  const newElements = [...elements];
   
   // Swap positions in array
   [newElements[index], newElements[index - 1]] = [newElements[index - 1], newElements[index]];
@@ -26,16 +16,11 @@ export const moveElementUp = (elements: SceneElement[], index: number): SceneEle
   return newElements;
 };
 
-// Move element down in the order
+// Move element down in the array
 export const moveElementDown = (elements: SceneElement[], index: number): SceneElement[] => {
   if (index >= elements.length - 1) return elements;
   
-  const newElements = [...elements].sort((a, b) => a.order - b.order);
-  
-  // Swap order property
-  const temp = newElements[index].order;
-  newElements[index].order = newElements[index + 1].order;
-  newElements[index + 1].order = temp;
+  const newElements = [...elements];
   
   // Swap positions in array
   [newElements[index], newElements[index + 1]] = [newElements[index + 1], newElements[index]];
@@ -50,17 +35,10 @@ export const updateElement = <T extends SceneElement>(
   updatedElement: Partial<T>
 ): SceneElement[] => {
   // Create a new array with the updated element
-  const updatedElements = elements.map(elem => {
+  return elements.map(elem => {
     if (elem.id === id) {
       return { ...elem, ...updatedElement } as SceneElement;
     }
     return elem;
   });
-  
-  // If the order property was updated, make sure to re-sort
-  if (updatedElement.hasOwnProperty('order')) {
-    return updatedElements.sort((a, b) => a.order - b.order);
-  }
-  
-  return updatedElements;
 };

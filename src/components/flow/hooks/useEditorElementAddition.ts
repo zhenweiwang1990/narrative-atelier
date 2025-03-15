@@ -7,7 +7,7 @@ interface UseEditorElementAdditionProps {
   currentElementId: string | null;
   currentElementIndex: number;
   elements: any[];
-  addElement: (type: ElementType, order?: number) => string | null;
+  addElement: (type: ElementType, position?: number) => string | null;
   updateElement: (id: string, updates: any) => void;
   onClose: () => void;
 }
@@ -25,40 +25,13 @@ export const useEditorElementAddition = ({
   const handleAddElement = (type: ElementType, position: 'before' | 'after') => {
     if (!currentElementId || currentElementIndex === -1) return;
     
-    // Get the current element
-    const currentElement = elements.find(e => e.id === currentElementId);
-    if (!currentElement) return;
+    // Calculate the position to insert the new element
+    const insertPosition = position === 'before' 
+      ? currentElementIndex 
+      : currentElementIndex + 1;
     
-    // Create a sorted array of all elements
-    const sortedElements = [...elements].sort((a, b) => a.order - b.order);
-    
-    // Calculate the new order and update existing elements' orders
-    let newOrder: number;
-    
-    if (position === 'before') {
-      // For 'before', use the current element's order
-      newOrder = currentElement.order;
-      
-      // Update orders of all elements with order >= newOrder
-      for (const el of sortedElements) {
-        if (el.order >= newOrder) {
-          updateElement(el.id, { order: el.order + 1 });
-        }
-      }
-    } else { // position === 'after'
-      // For 'after', use order immediately after the current element
-      newOrder = currentElement.order + 1;
-      
-      // Update orders of all elements with order > currentElement.order
-      for (const el of sortedElements) {
-        if (el.order > currentElement.order) {
-          updateElement(el.id, { order: el.order + 1 });
-        }
-      }
-    }
-    
-    // Add the new element with the calculated order
-    const newElementId = addElement(type, newOrder);
+    // Add the new element at the calculated position
+    const newElementId = addElement(type, insertPosition);
     
     // Auto-select the new element
     if (newElementId && onClose) {

@@ -3,13 +3,12 @@ import { ElementType, Story, SceneElement, ElementOutcome } from '@/utils/types'
 import { generateId } from '@/utils/storage';
 
 // Helper to create a new element of specified type
-export const createNewElement = (type: ElementType, story: Story, order: number): Partial<SceneElement> => {
+export const createNewElement = (type: ElementType, story: Story): Partial<SceneElement> => {
   const elementId = generateId('element');
   
   const baseElement = {
     id: elementId,
-    type,
-    order
+    type
   };
   
   switch (type) {

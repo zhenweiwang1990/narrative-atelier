@@ -44,23 +44,33 @@ export const getCurrentStoryId = (): string | null => {
   }
 };
 
-// Add a migration function for the new ElementOutcome structure
+// Add a migration function for the new ElementOutcome structure and to remove order field
 export const migrateStoryElementsToNewFormat = (story: Story): Story => {
   // Create a deep copy to avoid mutating the original
   const updatedStory = JSON.parse(JSON.stringify(story));
   
   // Update all scenes' elements
   updatedStory.scenes.forEach((scene: Scene) => {
-    scene.elements.forEach((element: SceneElement) => {
+    // Sort elements by order field before removing it
+    if (scene.elements && scene.elements.length > 0 && 'order' in scene.elements[0]) {
+      scene.elements.sort((a: any, b: any) => a.order - b.order);
+    }
+    
+    // Then remove the order field from each element
+    scene.elements = scene.elements.map((element: any) => {
+      // Create a new element without the order field
+      const { order, ...elementWithoutOrder } = element;
+      
+      // Process QTE elements for outcome structure
       if (element.type === 'qte') {
-        const qteElement = element as any; // Use any to access legacy properties
+        const qteElement = elementWithoutOrder;
         
         // Migrate success outcome
-        if (qteElement.successSceneId !== undefined || qteElement.successTransition !== undefined || qteElement.successValueChanges !== undefined) {
+        if (element.successSceneId !== undefined || element.successTransition !== undefined || element.successValueChanges !== undefined) {
           qteElement.success = {
-            sceneId: qteElement.successSceneId || '',
-            transition: qteElement.successTransition || '',
-            valueChanges: qteElement.successValueChanges || []
+            sceneId: element.successSceneId || '',
+            transition: element.successTransition || '',
+            valueChanges: element.successValueChanges || []
           };
           
           // Clean up legacy properties
@@ -75,11 +85,11 @@ export const migrateStoryElementsToNewFormat = (story: Story): Story => {
         }
         
         // Migrate failure outcome
-        if (qteElement.failureSceneId !== undefined || qteElement.failureTransition !== undefined || qteElement.failureValueChanges !== undefined) {
+        if (element.failureSceneId !== undefined || element.failureTransition !== undefined || element.failureValueChanges !== undefined) {
           qteElement.failure = {
-            sceneId: qteElement.failureSceneId || '',
-            transition: qteElement.failureTransition || '',
-            valueChanges: qteElement.failureValueChanges || []
+            sceneId: element.failureSceneId || '',
+            transition: element.failureTransition || '',
+            valueChanges: element.failureValueChanges || []
           };
           
           // Clean up legacy properties
@@ -94,15 +104,16 @@ export const migrateStoryElementsToNewFormat = (story: Story): Story => {
         }
       }
       
+      // Process DialogueTask elements for outcome structure
       if (element.type === 'dialogueTask') {
-        const dialogueElement = element as any; // Use any to access legacy properties
+        const dialogueElement = elementWithoutOrder;
         
         // Migrate success outcome
-        if (dialogueElement.successSceneId !== undefined || dialogueElement.successTransition !== undefined || dialogueElement.successValueChanges !== undefined) {
+        if (element.successSceneId !== undefined || element.successTransition !== undefined || element.successValueChanges !== undefined) {
           dialogueElement.success = {
-            sceneId: dialogueElement.successSceneId || '',
-            transition: dialogueElement.successTransition || '',
-            valueChanges: dialogueElement.successValueChanges || []
+            sceneId: element.successSceneId || '',
+            transition: element.successTransition || '',
+            valueChanges: element.successValueChanges || []
           };
           
           // Clean up legacy properties
@@ -117,11 +128,11 @@ export const migrateStoryElementsToNewFormat = (story: Story): Story => {
         }
         
         // Migrate failure outcome
-        if (dialogueElement.failureSceneId !== undefined || dialogueElement.failureTransition !== undefined || dialogueElement.failureValueChanges !== undefined) {
+        if (element.failureSceneId !== undefined || element.failureTransition !== undefined || element.failureValueChanges !== undefined) {
           dialogueElement.failure = {
-            sceneId: dialogueElement.failureSceneId || '',
-            transition: dialogueElement.failureTransition || '',
-            valueChanges: dialogueElement.failureValueChanges || []
+            sceneId: element.failureSceneId || '',
+            transition: element.failureTransition || '',
+            valueChanges: element.failureValueChanges || []
           };
           
           // Clean up legacy properties
@@ -135,6 +146,8 @@ export const migrateStoryElementsToNewFormat = (story: Story): Story => {
           dialogueElement.failure = { sceneId: '' };
         }
       }
+      
+      return elementWithoutOrder;
     });
   });
   

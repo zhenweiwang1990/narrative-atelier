@@ -14,7 +14,8 @@ import {
   updateOptionInChoice,
   validateTimeLimit,
   validateKeySequence,
-  reorderElements as reorderElementsUtil,
+  moveElementUp as moveElementUpUtil,
+  moveElementDown as moveElementDownUtil,
   updateElement as updateElementUtil
 } from './element-utils';
 
@@ -31,9 +32,8 @@ export const useElementManagement = (
     
     const currentScene = story.scenes.find(scene => scene.id === sceneId);
     if (currentScene) {
-      // Sort elements by order
-      const sortedElements = [...currentScene.elements].sort((a, b) => a.order - b.order);
-      setElements(sortedElements);
+      // No longer need to sort by order, just use array as is
+      setElements([...currentScene.elements]);
     }
   }, [story, sceneId]);
 
@@ -41,14 +41,11 @@ export const useElementManagement = (
   const updateStory = (updatedElements: SceneElement[]) => {
     if (!story || !setStory) return;
     
-    // Sort by order before saving
-    const sortedElements = [...updatedElements].sort((a, b) => a.order - b.order);
-    
     const updatedScenes = story.scenes.map(scene => {
       if (scene.id === sceneId) {
         return {
           ...scene,
-          elements: sortedElements
+          elements: updatedElements
         };
       }
       return scene;
@@ -60,21 +57,32 @@ export const useElementManagement = (
     });
   };
 
-  // Add new element with optional specific order
-  const addElement = (type: ElementType, order?: number) => {
+  // Add new element with optional specific position index
+  const addElement = (type: ElementType, position?: number) => {
     if (!story) return null;
     
-    const newOrder = order !== undefined ? order : elements.length;
-    const newElement = createNewElement(type, story, newOrder);
+    // Create new element without order field
+    const newElement = createNewElement(type, story) as SceneElement;
     
-    // Add the new element to our local state
-    const updatedElements = [...elements, newElement];
+    let updatedElements;
+    
+    if (position !== undefined) {
+      // Insert at specific position
+      updatedElements = [
+        ...elements.slice(0, position),
+        newElement,
+        ...elements.slice(position)
+      ];
+    } else {
+      // Add at the end
+      updatedElements = [...elements, newElement];
+    }
     
     // Call updateStory immediately to ensure the story state is updated
-    updateStory(updatedElements as SceneElement[]);
+    updateStory(updatedElements);
     
     // Update our local state after
-    setElements(updatedElements as SceneElement[]);
+    setElements(updatedElements);
     
     return newElement.id;
   };
@@ -82,35 +90,57 @@ export const useElementManagement = (
   // Delete element
   const deleteElement = (id: string) => {
     const updatedElements = elements.filter(e => e.id !== id);
-    // Reorder remaining elements
-    const reorderedElements = reorderElementsUtil(updatedElements);
     
     // Update story first
-    updateStory(reorderedElements);
+    updateStory(updatedElements);
     
     // Then update local state
-    setElements(reorderedElements);
+    setElements(updatedElements);
     
     return id;
   };
 
   // Reorder elements using drag and drop
   const reorderElements = (sourceIndex: number, destinationIndex: number) => {
+    if (sourceIndex === destinationIndex) return;
+    
     const result = Array.from(elements);
     const [removed] = result.splice(sourceIndex, 1);
     result.splice(destinationIndex, 0, removed);
     
-    // Update order properties
-    const reorderedElements = result.map((element, index) => ({
-      ...element,
-      order: index
-    }));
-    
     // Update story first
-    updateStory(reorderedElements);
+    updateStory(result);
     
     // Then update local state
-    setElements(reorderedElements);
+    setElements(result);
+  };
+
+  // Move element up (swap with previous element)
+  const moveElementUp = (id: string) => {
+    const index = elements.findIndex(e => e.id === id);
+    if (index <= 0) return;
+    
+    const updatedElements = moveElementUpUtil(elements, index);
+    
+    // Update story first
+    updateStory(updatedElements);
+    
+    // Then update local state
+    setElements(updatedElements);
+  };
+
+  // Move element down (swap with next element)
+  const moveElementDown = (id: string) => {
+    const index = elements.findIndex(e => e.id === id);
+    if (index >= elements.length - 1) return;
+    
+    const updatedElements = moveElementDownUtil(elements, index);
+    
+    // Update story first
+    updateStory(updatedElements);
+    
+    // Then update local state
+    setElements(updatedElements);
   };
 
   // Update element
@@ -156,6 +186,8 @@ export const useElementManagement = (
     addElement,
     deleteElement,
     reorderElements,
+    moveElementUp,
+    moveElementDown,
     updateElement,
     addChoiceOption,
     deleteChoiceOption,

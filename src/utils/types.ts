@@ -49,7 +49,7 @@ export type ElementType = 'narration' | 'dialogue' | 'thought' | 'choice' | 'qte
 export interface BaseElement {
   id: string;
   type: ElementType;
-  order: number;
+  // order field removed as requested
 }
 
 export interface NarrationElement extends BaseElement {
