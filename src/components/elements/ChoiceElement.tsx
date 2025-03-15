@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -18,12 +18,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Trash2, ChevronDown } from "lucide-react";
+import { Plus, Trash2, ChevronDown, GitBranch, BookText } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import AiStoryDialog from "./shared/AiStoryDialog";
+import { toast } from "sonner";
 
 interface ChoiceElementProps {
   element: ChoiceElementType;
@@ -48,6 +50,10 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
   onDeleteOption,
   onUpdateOption,
 }) => {
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
+  const [aiDialogType, setAiDialogType] = useState<'branch' | 'ending'>('branch');
+  const [currentOptionId, setCurrentOptionId] = useState<string | null>(null);
+
   const addValueChange = (optionId: string) => {
     const option = element.options.find((o) => o.id === optionId);
     if (!option) return;
@@ -96,6 +102,31 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
 
     onUpdateOption(element.id, optionId, {
       valueChanges: updatedChanges,
+    });
+  };
+
+  const handleOpenAiDialog = (type: 'branch' | 'ending', optionId: string) => {
+    setAiDialogType(type);
+    setCurrentOptionId(optionId);
+    setAiDialogOpen(true);
+  };
+
+  const handleAiStorySubmit = (prompt: string, convergenceSceneId?: string) => {
+    toast.promise(
+      new Promise((resolve) => setTimeout(resolve, 1500)), 
+      {
+        loading: aiDialogType === 'branch' ? '正在生成支线...' : '正在生成结局...',
+        success: aiDialogType === 'branch' ? 'AI 支线生成成功！' : 'AI 结局生成成功！',
+        error: '生成失败，请重试。',
+      }
+    );
+
+    console.log('AI Story Request for Choice Option:', {
+      type: aiDialogType,
+      optionId: currentOptionId,
+      prompt,
+      convergenceSceneId,
+      elementId: element.id
     });
   };
 
@@ -184,6 +215,27 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
                     </SelectGroup>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="flex gap-2 mt-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full text-xs flex items-center gap-1"
+                  onClick={() => handleOpenAiDialog('branch', option.id)}
+                >
+                  <GitBranch className="h-3.5 w-3.5" />
+                  AI 写支线
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full text-xs flex items-center gap-1"
+                  onClick={() => handleOpenAiDialog('ending', option.id)}
+                >
+                  <BookText className="h-3.5 w-3.5" />
+                  AI 写结局
+                </Button>
               </div>
 
               {globalValues.length > 0 && (
@@ -290,6 +342,15 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
           ))}
         </div>
       </div>
+
+      <AiStoryDialog 
+        isOpen={aiDialogOpen}
+        onClose={() => setAiDialogOpen(false)}
+        onSubmit={handleAiStorySubmit}
+        type={aiDialogType}
+        scenes={scenes}
+        showConvergenceSelector={aiDialogType === 'branch'}
+      />
     </div>
   );
 };
