@@ -42,9 +42,7 @@
       "id": "location_1741992613812",
       "name": "城楼",
       "description": "城楼上",
-      "scenes": [
-        "scene_1741992613812"
-      ],
+      "scenes": ["scene_1741992613812"],
       "background": "https://aishen-s3-1309519128.cos.ap-shanghai.myqcloud.com/moment_upload_image/01JP4GVJWBP6RTBQJF8S5BJV0K.png"
     },
     {
@@ -248,34 +246,38 @@
           "introText": "准备开始...",
           "timeLimit": 5,
           "keySequence": "逗挑指闪眨",
-          "successSceneId": "scene_1741995884799_9b94nfs",
-          "failureSceneId": "scene_1741993026902_xpi9iz1",
-          "successTransition": "你的光波发出，周生辰一阵眩晕。",
-          "failureTransition": "你未能抓住机会释放光波。",
-          "successValueChanges": [
-            {
-              "valueId": "value_1741995321141_30638ck",
-              "change": 5
-            },
-            {
-              "valueId": "value_1741995327046_bdblzcs",
-              "change": 5
-            },
-            {
-              "valueId": "value_1741995330957_ftwl363",
-              "change": 5
-            }
-          ],
-          "failureValueChanges": [
-            {
-              "valueId": "value_1741995321141_30638ck",
-              "change": 5
-            },
-            {
-              "valueId": "value_1741995327046_bdblzcs",
-              "change": -3
-            }
-          ]
+          "success": {
+            "sceneId": "scene_1741995884799_9b94nfs",
+            "transition": "你的光波发出，周生辰一阵眩晕。",
+            "valueChanges": [
+              {
+                "valueId": "value_1741995321141_30638ck",
+                "change": 5
+              },
+              {
+                "valueId": "value_1741995327046_bdblzcs",
+                "change": 5
+              },
+              {
+                "valueId": "value_1741995330957_ftwl363",
+                "change": 5
+              }
+            ]
+          },
+          "failure": {
+            "sceneId": "scene_1741993026902_xpi9iz1",
+            "transition": "你未能抓住机会释放光波。",
+            "valueChanges": [
+              {
+                "valueId": "value_1741995321141_30638ck",
+                "change": 5
+              },
+              {
+                "valueId": "value_1741995327046_bdblzcs",
+                "change": -3
+              }
+            ]
+          }
         }
       ]
     },
@@ -365,38 +367,42 @@
           "targetCharacterId": "character_1741992882743_9h05pmt",
           "background": "你前世穿越回来，掌握了情感控制光波特异技能，对他释放了，但决不能让他察觉到问题，每次释放逗会造成一定扰动，成功释放会让对方对你的好感度提升，但你要注意不能暴露。",
           "openingLine": "怎么感觉你人怪怪的？",
-          "successSceneId": "scene_1741995886447_4lsy7y5",
-          "failureSceneId": "",
-          "successTransition": "周生辰便不再过问",
-          "failureTransition": "周生辰疑心更重了。",
-          "failureValueChanges": [
-            {
-              "valueId": "value_1741995321141_30638ck",
-              "change": 3
-            },
-            {
-              "valueId": "value_1741995327046_bdblzcs",
-              "change": -3
-            },
-            {
-              "valueId": "value_1741995330957_ftwl363",
-              "change": -5
-            }
-          ],
-          "successValueChanges": [
-            {
-              "valueId": "value_1741995321141_30638ck",
-              "change": 3
-            },
-            {
-              "valueId": "value_1741995327046_bdblzcs",
-              "change": 5
-            },
-            {
-              "valueId": "value_1741995330957_ftwl363",
-              "change": 5
-            }
-          ]
+
+          "success": {
+            "sceneId": "scene_1741995886447_4lsy7y5",
+            "transition": "周生辰便不再过问",
+            "valueChanges": [
+              {
+                "valueId": "value_1741995321141_30638ck",
+                "change": 3
+              },
+              {
+                "valueId": "value_1741995327046_bdblzcs",
+                "change": 5
+              },
+              {
+                "valueId": "value_1741995330957_ftwl363",
+                "change": 5
+              }
+            ]
+          },
+          "failure": {
+            "transition": "周生辰疑心更重了。",
+            "valueChanges": [
+              {
+                "valueId": "value_1741995321141_30638ck",
+                "change": 3
+              },
+              {
+                "valueId": "value_1741995327046_bdblzcs",
+                "change": -3
+              },
+              {
+                "valueId": "value_1741995330957_ftwl363",
+                "change": -5
+              }
+            ]
+          }
         }
       ]
     },
