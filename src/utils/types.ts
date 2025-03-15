@@ -1,25 +1,13 @@
-
-export type StoryType = 'interactive' | 'linear' | 'branching';
-export type SceneType = 'start' | 'normal' | 'branching' | 'ending' | 'bad-ending' | 'convergence';
-export type ElementType = 'narration' | 'dialogue' | 'thought' | 'choice' | 'qte' | 'dialogueTask';
-export type CharacterGender = 'male' | 'female' | 'other';
-export type CharacterRole = 'protagonist' | 'supporting';
-
 export interface Story {
   id: string;
   title: string;
   author: string;
   description: string;
-  type: StoryType;
-  scenes: Scene[];
+  type: 'interactive' | 'linear';
   characters: Character[];
   locations: Location[];
+  scenes: Scene[];
   globalValues: GlobalValue[];
-  coverPhoto?: string;
-  protagonistName?: string;
-  protagonistGender?: string;
-  orientation?: 'hetero' | 'yuri' | 'yaoi' | 'none';
-  tags?: string[];
   chapters?: Chapter[];
 }
 
@@ -33,88 +21,44 @@ export interface Chapter {
   isConverted: boolean;
 }
 
-export interface Scene {
-  id: string;
-  title: string;
-  type: SceneType;
-  elements: SceneElement[];
-  position: { x: number; y: number };
-  description?: string;
-  convergenceTarget?: string;
-  locationId?: string;
-  nextSceneId?: string;
-  revivalPointId?: string;
-}
-
-export interface SceneElement {
-  id: string;
-  type: ElementType;
-  text?: string;
-  characterId?: string;
-  options?: ChoiceOption[];
-  description?: string;
-  timeLimit?: number;
-  keySequence?: string;
-  success?: ElementOutcome;
-  failure?: ElementOutcome;
-  goal?: string;
-  openingLine?: string;
-  introText?: string;
-  targetCharacterId?: string;
-  background?: string;
-}
-
-export interface ChoiceOption {
-  id: string;
-  text: string;
-  target?: string;
-  nextSceneId?: string;
-  sceneTarget?: string;
-  outcome?: 'success' | 'failure';
-  valueChanges?: ValueChange[];
-}
-
 export interface Character {
   id: string;
   name: string;
-  description?: string;
-  gender?: CharacterGender;
-  role?: CharacterRole;
-  bio?: string;
-  portrait?: string;
-  fullBody?: string;
-  image?: string;
+  gender: string;
+  role: string;
+  bio: string;
+  profilePicture?: string;
 }
 
 export interface Location {
   id: string;
   name: string;
   description: string;
-  image?: string;
+  scenes: string[];
   background?: string;
-  scenes?: string[];
 }
 
-export interface GlobalValue {
+export type SceneType = 'normal' | 'start' | 'bad-ending';
+
+export interface Scene {
   id: string;
-  name: string;
-  type: 'number' | 'boolean' | 'text';
-  initialValue: any;
-  currentValue?: any;
+  title: string;
+  type: SceneType;
+  locationId: string;
+  elements: SceneElement[];
+  nextSceneId?: string;
+  revivalPointId?: string;
+  position: { x: number; y: number };
 }
 
-export interface ValueChange {
-  valueId: string;
-  change: number;
+export interface SceneElement {
+  id: string;
+  type: ElementType;
+  order?: number;
 }
 
-export interface ElementOutcome {
-  sceneId?: string;
-  transition?: string;
-  valueChanges?: ValueChange[];
-}
+export type ElementType = 'narration' | 'dialogue' | 'thought' | 'choice' | 'qte' | 'dialogueTask';
 
-// Element-specific interfaces
 export interface NarrationElement extends SceneElement {
   type: 'narration';
   text: string;
@@ -122,38 +66,63 @@ export interface NarrationElement extends SceneElement {
 
 export interface DialogueElement extends SceneElement {
   type: 'dialogue';
-  text: string;
   characterId: string;
+  text: string;
 }
 
 export interface ThoughtElement extends SceneElement {
   type: 'thought';
-  text: string;
   characterId: string;
+  text: string;
 }
 
 export interface ChoiceElement extends SceneElement {
   type: 'choice';
-  text: string;
+  question: string;
   options: ChoiceOption[];
+}
+
+export interface ChoiceOption {
+  id: string;
+  text: string;
+  nextSceneId?: string;
+  valueChanges?: ValueChange[];
 }
 
 export interface QteElement extends SceneElement {
   type: 'qte';
   description: string;
-  timeLimit: number;
   keySequence: string;
+  timeLimit: number;
+  introText?: string;
   success: ElementOutcome;
   failure: ElementOutcome;
 }
 
+export interface ElementOutcome {
+  sceneId?: string;
+  valueChanges?: ValueChange[];
+}
+
+export interface GlobalValue {
+  id: string;
+  name: string;
+  description: string;
+  initialValue: number;
+  currentValue?: number;
+}
+
+export interface ValueChange {
+  valueId: string;
+  change: number;
+}
+
 export interface DialogueTaskElement extends SceneElement {
   type: 'dialogueTask';
-  characterId: string;
   goal: string;
-  openingLine: string;
+  targetCharacterId: string;
+  openingLine?: string;
+  background?: string; // Added missing background property
   success: ElementOutcome;
   failure: ElementOutcome;
-  targetCharacterId: string;
-  background?: string;
 }

@@ -37,23 +37,23 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
 
   switch (currentElement.type) {
     case "narration":
-      return <NarrationPreview element={currentElement as any} />;
+      return <NarrationPreview element={currentElement as any} />; // Using type assertion to fix TypeScript error
 
     case "dialogue":
-      return <DialoguePreview element={currentElement as any} getCharacter={getCharacter} />;
+      return <DialoguePreview element={currentElement as any} getCharacter={getCharacter} />; // Using type assertion to fix TypeScript error
 
     case "thought":
-      return <ThoughtPreview element={currentElement as any} getCharacter={getCharacter} />;
+      return <ThoughtPreview element={currentElement as any} getCharacter={getCharacter} />; // Using type assertion to fix TypeScript error
 
     case "choice":
-      return <ChoicePreview element={currentElement as any} handleChoiceSelect={handleChoiceSelect} />;
+      return <ChoicePreview element={currentElement as any} handleChoiceSelect={handleChoiceSelect} />; // Using type assertion to fix TypeScript error
 
     case "qte":
-      return <QtePreview element={currentElement as any} handleChoiceSelect={handleChoiceSelect} />;
+      return <QtePreview element={currentElement as any} handleChoiceSelect={handleChoiceSelect} />; // Using type assertion to fix TypeScript error
 
     case "dialogueTask":
       return <DialogueTaskPreview 
-               element={currentElement as any} 
+               element={currentElement as any} // Using type assertion to fix TypeScript error
                getCharacter={getCharacter}
                handleChoiceSelect={handleChoiceSelect} 
              />;

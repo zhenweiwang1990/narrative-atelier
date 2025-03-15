@@ -1,4 +1,3 @@
-
 import { Story } from "./types";
 
 const STORY_STORAGE_KEY = "interactive-story-editor";
@@ -82,7 +81,7 @@ export const createBlankStory = (): Story => {
         title: "开始",
         type: "start",
         locationId: locationId,
-        position: { x: 100, y: 100 }, // Add the required position property
+        position: { x: 100, y: 100 }, // This is already correct
         elements: [
           {
             id: `element_${Date.now()}`,

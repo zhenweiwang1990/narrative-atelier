@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AccordionContent, AccordionItem } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
@@ -72,16 +71,16 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
   const isExpanded = selectedElementId === element.id;
 
   // Create a dummy story object with the minimum required properties for QteElement
-  const dummyStory: Story = {
-    id: '',
-    title: '',
-    author: '',
-    description: '',
-    type: 'interactive', // Add required type property
-    scenes: scenes,
-    characters: characters,
-    globalValues: globalValues,
-    locations: []
+  const mockStory: Story = {
+    id: 'story-1',
+    title: 'Test Story',
+    author: 'Test Author',
+    description: 'A test story',
+    scenes: [],
+    characters: [],
+    globalValues: [],
+    locations: [],
+    type: 'interactive', // Added required type property
   };
 
   return (
@@ -147,7 +146,7 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
             element={element as QteElementType}
             scenes={scenes}
             globalValues={globalValues}
-            story={dummyStory} // Pass the dummy story object to QteElement
+            story={mockStory} // Pass the dummy story object to QteElement
             onUpdate={onUpdate}
             validateTimeLimit={validateTimeLimit}
             validateKeySequence={validateKeySequence}

@@ -44,7 +44,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     case "narration":
       return (
         <NarrationElement 
-          element={element as any}
+          element={element as any} // Using type assertion to fix TypeScript error
           onUpdate={handleUpdate}
         />
       );
@@ -52,7 +52,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     case "dialogue":
       return (
         <DialogueElement 
-          element={element as any}
+          element={element as any} // Using type assertion to fix TypeScript error
           characters={story?.characters || []}
           onUpdate={handleUpdate}
         />
@@ -61,7 +61,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     case "thought":
       return (
         <ThoughtElement 
-          element={element as any}
+          element={element as any} // Using type assertion to fix TypeScript error
           characters={story?.characters || []}
           onUpdate={handleUpdate}
         />
@@ -70,7 +70,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     case "choice":
       return (
         <ChoiceElement 
-          element={element as any}
+          element={element as any} // Using type assertion to fix TypeScript error
           scenes={story?.scenes || []}
           globalValues={story?.globalValues || []}
           onUpdate={handleUpdate}
@@ -83,7 +83,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     case "qte":
       return (
         <QteElement 
-          element={element as any}
+          element={element as any} // Using type assertion to fix TypeScript error
           scenes={story?.scenes || []}
           globalValues={story?.globalValues || []}
           story={story}
@@ -96,7 +96,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     case "dialogueTask":
       return (
         <DialogueTaskElement 
-          element={element as any}
+          element={element as any} // Using type assertion to fix TypeScript error
           characters={story?.characters || []}
           scenes={story?.scenes || []}
           globalValues={story?.globalValues || []}

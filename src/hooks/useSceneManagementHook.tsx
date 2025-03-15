@@ -1,161 +1,60 @@
-
 import { useState } from 'react';
-import { SceneType, Story, Scene } from '@/utils/types';
-import { useToast } from '@/components/ui/use-toast';
-import { generateId } from '@/utils/storage';
+import { Scene, SceneType, Story } from '@/utils/types';
+import { useStory } from '@/components/Layout';
 
-export const useSceneManagementHook = (story: Story | null, setStory: React.Dispatch<React.SetStateAction<Story | null>> | null) => {
+interface UseSceneManagementHook {
+  selectedScene: Scene | undefined;
+  selectScene: (sceneId: string) => void;
+  createScene: (type?: SceneType) => void;
+  updateScene: (id: string, updates: Partial<Scene>) => void;
+  deleteScene: (id: string) => void;
+}
+
+export const useSceneManagementHook = (): UseSceneManagementHook => {
+  const { story, setStory, selectedLocation } = useStory();
   const [selectedSceneId, setSelectedSceneId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<string>("flow");
-  const { toast } = useToast();
-  
+
   const selectedScene = story?.scenes.find(scene => scene.id === selectedSceneId);
 
-  const handleAddScene = (type: SceneType = 'normal') => {
-    if (!story || !setStory) return;
-    
-    const newScene: Scene = {
-      id: generateId('scene'),
-      title: type === 'normal' ? 
-        `New Scene ${story.scenes.length + 1}` : 
-        type === 'ending' ? 
-          `Normal Ending ${story.scenes.filter(s => s.type === 'ending').length + 1}` :
-          `Bad Ending ${story.scenes.filter(s => s.type === 'bad-ending').length + 1}`,
-      type: type,
-      locationId: story.locations[0]?.id || '',
-      elements: [],
-      position: { // Add the required position property
-        x: Math.random() * 500,
-        y: Math.random() * 300
-      }
-    };
-    
-    setStory({
-      ...story,
-      scenes: [...story.scenes, newScene]
-    });
-    
-    toast({
-      title: "Scene added",
-      description: `${newScene.title} has been added to your story.`
-    });
-    
-    setSelectedSceneId(newScene.id);
-    setActiveTab("properties");
-  };
-
-  const handleSceneSelect = (sceneId: string) => {
+  const selectScene = (sceneId: string) => {
     setSelectedSceneId(sceneId);
-    setActiveTab("properties");
   };
 
-  const updateSceneTitle = (newTitle: string) => {
-    if (!story || !setStory || !selectedSceneId) return;
-    
-    const updatedScenes = story.scenes.map(scene => {
-      if (scene.id === selectedSceneId) {
-        return {
-          ...scene,
-          title: newTitle
-        };
-      }
-      return scene;
-    });
-    
-    setStory({
-      ...story,
-      scenes: updatedScenes
-    });
+  const createScene = (type: SceneType = 'normal'): Scene => {
+    const newId = `scene_${Date.now()}`;
+    return {
+      id: newId,
+      title: '新场景',
+      type: type,
+      locationId: selectedLocation?.id || '',
+      elements: [],
+      position: { x: 100, y: 100 }, // Added required position property
+    };
   };
 
-  const updateSceneType = (newType: SceneType) => {
-    if (!story || !setStory || !selectedSceneId) return;
-    
-    const updatedScenes = story.scenes.map(scene => {
-      if (scene.id === selectedSceneId) {
-        return {
-          ...scene,
-          type: newType
-        };
-      }
-      return scene;
-    });
-    
-    setStory({
-      ...story,
-      scenes: updatedScenes
-    });
+  const updateScene = (id: string, updates: Partial<Scene>) => {
+    if (!story || !setStory) return;
+
+    const updatedScenes = story.scenes.map(scene =>
+      scene.id === id ? { ...scene, ...updates } : scene
+    );
+
+    setStory({ ...story, scenes: updatedScenes });
   };
 
-  const updateSceneLocation = (locationId: string) => {
-    if (!story || !setStory || !selectedSceneId) return;
-    
-    const updatedScenes = story.scenes.map(scene => {
-      if (scene.id === selectedSceneId) {
-        return {
-          ...scene,
-          locationId
-        };
-      }
-      return scene;
-    });
-    
-    setStory({
-      ...story,
-      scenes: updatedScenes
-    });
-  };
+  const deleteScene = (id: string) => {
+    if (!story || !setStory) return;
 
-  const updateNextScene = (nextSceneId: string) => {
-    if (!story || !setStory || !selectedSceneId) return;
-    
-    const updatedScenes = story.scenes.map(scene => {
-      if (scene.id === selectedSceneId) {
-        return {
-          ...scene,
-          nextSceneId: nextSceneId || undefined
-        };
-      }
-      return scene;
-    });
-    
-    setStory({
-      ...story,
-      scenes: updatedScenes
-    });
-  };
+    const updatedScenes = story.scenes.filter(scene => scene.id !== id);
 
-  const updateRevivalPoint = (revivalPointId: string) => {
-    if (!story || !setStory || !selectedSceneId) return;
-    
-    const updatedScenes = story.scenes.map(scene => {
-      if (scene.id === selectedSceneId) {
-        return {
-          ...scene,
-          revivalPointId: revivalPointId || undefined
-        };
-      }
-      return scene;
-    });
-    
-    setStory({
-      ...story,
-      scenes: updatedScenes
-    });
+    setStory({ ...story, scenes: updatedScenes });
   };
 
   return {
-    selectedSceneId,
-    setSelectedSceneId,
-    activeTab,
-    setActiveTab,
     selectedScene,
-    handleAddScene,
-    handleSceneSelect,
-    updateSceneTitle,
-    updateSceneType,
-    updateSceneLocation,
-    updateNextScene,
-    updateRevivalPoint
+    selectScene,
+    createScene,
+    updateScene,
+    deleteScene,
   };
 };
