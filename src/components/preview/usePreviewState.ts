@@ -101,26 +101,49 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
       onSceneChange(nextSceneId);
       setCurrentElementIndex(-1);
       setLastElementShown(false);
+    } else {
+      // If no nextSceneId is set, just move to the next element like a regular step
+      handleNext();
     }
   };
 
   const handleQteResult = (success: boolean, element: QteElement) => {
     if (success) {
       applyValueChanges(element.successValueChanges);
-      handleChoiceSelect(element.successSceneId);
+      if (element.successSceneId) {
+        handleChoiceSelect(element.successSceneId);
+      } else {
+        // If no success scene is set, treat as regular next step
+        handleNext();
+      }
     } else {
       applyValueChanges(element.failureValueChanges);
-      handleChoiceSelect(element.failureSceneId);
+      if (element.failureSceneId) {
+        handleChoiceSelect(element.failureSceneId);
+      } else {
+        // If no failure scene is set, treat as regular next step
+        handleNext();
+      }
     }
   };
 
   const handleDialogueTaskResult = (success: boolean, element: DialogueTaskElement) => {
     if (success) {
       applyValueChanges(element.successValueChanges);
-      handleChoiceSelect(element.successSceneId);
+      if (element.successSceneId) {
+        handleChoiceSelect(element.successSceneId);
+      } else {
+        // If no success scene is set, treat as regular next step
+        handleNext();
+      }
     } else {
       applyValueChanges(element.failureValueChanges);
-      handleChoiceSelect(element.failureSceneId);
+      if (element.failureSceneId) {
+        handleChoiceSelect(element.failureSceneId);
+      } else {
+        // If no failure scene is set, treat as regular next step
+        handleNext();
+      }
     }
   };
 

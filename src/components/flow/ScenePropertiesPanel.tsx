@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
 
 interface ScenePropertiesPanelProps {
   selectedScene: Scene;
@@ -34,6 +37,9 @@ const ScenePropertiesPanel = ({
 }: ScenePropertiesPanelProps) => {
   const isEndingType =
     selectedScene.type === "ending" || selectedScene.type === "bad-ending";
+  
+  // Determine if we should show locations as buttons
+  const showLocationsAsButtons = story.locations.length < 6;
 
   return (
     <div className="p-3 space-y-3 flex-1 overflow-y-auto">
@@ -50,44 +56,69 @@ const ScenePropertiesPanel = ({
       </div>
 
       <div>
-        <Label htmlFor="type" className="text-xs">
+        <Label className="text-xs block mb-2">
           场景类型
         </Label>
-        <Select
-          value={selectedScene.type}
+        <RadioGroup 
+          value={selectedScene.type} 
           onValueChange={(value: SceneType) => updateSceneType(value)}
+          className="flex flex-wrap gap-2"
         >
-          <SelectTrigger id="type" className="h-8 text-sm">
-            <SelectValue placeholder="选择类型" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="start">开始</SelectItem>
-            <SelectItem value="normal">普通</SelectItem>
-            <SelectItem value="ending">正常结局</SelectItem>
-            <SelectItem value="bad-ending">异常结局</SelectItem>
-          </SelectContent>
-        </Select>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="start" id="type-start" />
+            <Label htmlFor="type-start" className="text-sm cursor-pointer">开始</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="normal" id="type-normal" />
+            <Label htmlFor="type-normal" className="text-sm cursor-pointer">普通</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="ending" id="type-ending" />
+            <Label htmlFor="type-ending" className="text-sm cursor-pointer">正常结局</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="bad-ending" id="type-bad-ending" />
+            <Label htmlFor="type-bad-ending" className="text-sm cursor-pointer">异常结局</Label>
+          </div>
+        </RadioGroup>
       </div>
 
       <div>
-        <Label htmlFor="location" className="text-xs">
+        <Label htmlFor="location" className="text-xs block mb-2">
           位置
         </Label>
-        <Select
-          value={selectedScene.locationId}
-          onValueChange={updateSceneLocation}
-        >
-          <SelectTrigger id="location" className="h-8 text-sm">
-            <SelectValue placeholder="选择位置" />
-          </SelectTrigger>
-          <SelectContent>
+        
+        {showLocationsAsButtons ? (
+          <div className="flex flex-wrap gap-2">
             {story.locations.map((location) => (
-              <SelectItem key={location.id} value={location.id}>
+              <Button
+                key={location.id}
+                size="sm"
+                variant={selectedScene.locationId === location.id ? "default" : "outline"}
+                className="text-xs h-7"
+                onClick={() => updateSceneLocation(location.id)}
+              >
                 {location.name}
-              </SelectItem>
+              </Button>
             ))}
-          </SelectContent>
-        </Select>
+          </div>
+        ) : (
+          <Select
+            value={selectedScene.locationId}
+            onValueChange={updateSceneLocation}
+          >
+            <SelectTrigger id="location" className="h-8 text-sm">
+              <SelectValue placeholder="选择位置" />
+            </SelectTrigger>
+            <SelectContent>
+              {story.locations.map((location) => (
+                <SelectItem key={location.id} value={location.id}>
+                  {location.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
       {!isEndingType && (

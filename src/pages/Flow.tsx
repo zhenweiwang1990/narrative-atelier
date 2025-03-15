@@ -7,6 +7,7 @@ import { AlertCircle } from 'lucide-react';
 import { useSceneManagementHook } from '@/hooks/useSceneManagementHook';
 import EditorPanel from '@/components/flow/EditorPanel';
 import FloatingMobilePreview from '@/components/flow/FloatingMobilePreview';
+import { SceneType } from '@/utils/types';
 
 const Flow = () => {
   const { story, setStory } = useStory();
@@ -35,6 +36,11 @@ const Flow = () => {
     }
   }, [activeTab, setActiveTab]);
 
+  // Handle scene addition with type
+  const handleAddSceneWithType = (type?: SceneType) => {
+    handleAddScene(type || 'normal');
+  };
+
   if (!story) return null;
   
   return (
@@ -52,6 +58,7 @@ const Flow = () => {
             <FlowEditor 
               onSceneSelect={handleSceneSelect} 
               onPreviewToggle={() => setIsPreviewOpen(!isPreviewOpen)}
+              onAddSceneWithType={handleAddSceneWithType}
             />
           </div>
           

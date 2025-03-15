@@ -11,13 +11,17 @@ export const useSceneManagementHook = (story: Story | null, setStory: React.Disp
   
   const selectedScene = story?.scenes.find(scene => scene.id === selectedSceneId);
 
-  const handleAddScene = () => {
+  const handleAddScene = (type: SceneType = 'normal') => {
     if (!story || !setStory) return;
     
     const newScene: Scene = {
       id: generateId('scene'),
-      title: `New Scene ${story.scenes.length + 1}`,
-      type: 'normal',
+      title: type === 'normal' ? 
+        `New Scene ${story.scenes.length + 1}` : 
+        type === 'ending' ? 
+          `Normal Ending ${story.scenes.filter(s => s.type === 'ending').length + 1}` :
+          `Bad Ending ${story.scenes.filter(s => s.type === 'bad-ending').length + 1}`,
+      type: type,
       locationId: story.locations[0]?.id || '',
       elements: []
     };

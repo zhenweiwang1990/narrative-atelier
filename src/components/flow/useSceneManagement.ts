@@ -1,7 +1,7 @@
 
 import { useCallback } from 'react';
 import { Node } from 'reactflow';
-import { Story, Scene } from '@/utils/types';
+import { Story, Scene, SceneType } from '@/utils/types';
 import { generateId } from '@/utils/storage';
 import { SceneNodeData } from './flowTypes';
 
@@ -16,17 +16,21 @@ export const useSceneManagement = (
   onSceneSelect: (sceneId: string) => void
 ) => {
   // Add a new scene
-  const addScene = useCallback(() => {
+  const addScene = useCallback((type: SceneType = 'normal') => {
     if (!story || !setStory) return;
     
     const newSceneId = generateId('scene');
     const nodeCount = nodes.length;
     
-    // Create a new scene
+    // Create a new scene with the specified type
     const newScene: Scene = {
       id: newSceneId,
-      title: `New Scene ${nodeCount + 1}`,
-      type: 'normal',
+      title: type === 'normal' ? 
+        `New Scene ${nodeCount + 1}` : 
+        type === 'ending' ? 
+          `Normal Ending ${story.scenes.filter(s => s.type === 'ending').length + 1}` :
+          `Bad Ending ${story.scenes.filter(s => s.type === 'bad-ending').length + 1}`,
+      type: type,
       locationId: story.locations[0]?.id || '',
       elements: []
     };

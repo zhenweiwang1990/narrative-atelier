@@ -10,6 +10,7 @@ import FlowCanvas from './FlowCanvas';
 import FlowEmptyState from './FlowEmptyState';
 import FlowLoadingState from './FlowLoadingState';
 import dagre from 'dagre';
+import { SceneType } from '@/utils/types';
 
 // Custom Node Types
 const nodeTypes: NodeTypes = {
@@ -42,6 +43,7 @@ const revivalEdgeOptions = {
 interface FlowEditorProps {
   onSceneSelect: (sceneId: string) => void;
   onPreviewToggle?: () => void;
+  onAddSceneWithType?: (type?: SceneType) => void;
 }
 
 // Auto-layout function using dagre
@@ -84,7 +86,7 @@ const getLayoutedElements = (nodes, edges, direction = 'TB') => {
   return { nodes: layoutedNodes, edges };
 };
 
-const FlowEditor = ({ onSceneSelect, onPreviewToggle }: FlowEditorProps) => {
+const FlowEditor = ({ onSceneSelect, onPreviewToggle, onAddSceneWithType }: FlowEditorProps) => {
   const { story, setStory } = useStory();
   
   // Return early if there's no story
@@ -127,6 +129,15 @@ const FlowEditor = ({ onSceneSelect, onPreviewToggle }: FlowEditorProps) => {
     setNodes(layoutedNodes);
   }, [nodes, edges, setNodes]);
 
+  // Handler for adding scenes with specific type
+  const handleAddScene = useCallback((type?: SceneType) => {
+    if (onAddSceneWithType) {
+      onAddSceneWithType(type);
+    } else {
+      addScene(type);
+    }
+  }, [onAddSceneWithType, addScene]);
+
   // Make sure we have nodes before rendering ReactFlow
   if (!nodes || nodes.length === 0) {
     return <FlowEmptyState />;
@@ -143,7 +154,7 @@ const FlowEditor = ({ onSceneSelect, onPreviewToggle }: FlowEditorProps) => {
         onConnect={onConnect}
         onNodeClick={onNodeClick}
         selectedNode={selectedNode}
-        onAddScene={addScene}
+        onAddScene={handleAddScene}
         onDeleteScene={deleteSelectedScene}
         onPreviewToggle={onPreviewToggle}
         onAutoArrange={handleAutoArrange}
