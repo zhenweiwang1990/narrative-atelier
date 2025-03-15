@@ -43,6 +43,10 @@ const FloatingMobilePreview = ({
     setCurrentElementId(elementId);
   };
 
+  // Get the current scene title
+  const selectedScene = selectedSceneId ? story?.scenes.find(s => s.id === selectedSceneId) : null;
+  const sceneTitle = selectedScene?.title;
+
   if (!isOpen) return null;
 
   const previewHeight = minimized ? "40px" : "625px"; // 500px * 1.25 = 625px
@@ -64,6 +68,7 @@ const FloatingMobilePreview = ({
       >
         <FloatingPreviewHeader
           title="手机预览"
+          sceneTitle={sceneTitle}
           minimized={minimized}
           onToggleMinimize={() => setMinimized(!minimized)}
           onClose={onToggle}

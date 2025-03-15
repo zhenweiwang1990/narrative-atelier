@@ -5,6 +5,7 @@ import { MapPin, X, Minimize, Maximize } from "lucide-react";
 
 interface FloatingPreviewHeaderProps {
   title: string;
+  sceneTitle?: string; // Added sceneTitle prop
   minimized: boolean;
   onToggleMinimize: () => void;
   onClose: () => void;
@@ -13,6 +14,7 @@ interface FloatingPreviewHeaderProps {
 
 const FloatingPreviewHeader: React.FC<FloatingPreviewHeaderProps> = ({
   title,
+  sceneTitle,
   minimized,
   onToggleMinimize,
   onClose,
@@ -24,7 +26,14 @@ const FloatingPreviewHeader: React.FC<FloatingPreviewHeaderProps> = ({
       onMouseDown={onMouseDown}
     >
       <MapPin className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
-      <h3 className="text-sm font-medium flex-1">{title}</h3>
+      <h3 className="text-sm font-medium flex-1">
+        {title}
+        {sceneTitle && (
+          <span className="text-xs font-normal text-muted-foreground ml-2">
+            {sceneTitle}
+          </span>
+        )}
+      </h3>
 
       <div className="flex items-center space-x-1">
         <Button
