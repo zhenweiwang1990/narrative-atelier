@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { getValueName } from "./tableUtils";
 import { getElementColorClass, getElementTypeLabel } from "../flow/editor/ElementTypeUtils";
+import { ElementType } from "@/utils/types";
 
 const GlobalValuesModificationsGroupTable: React.FC<GlobalValuesModificationsTableProps> = ({ 
   story, 
@@ -73,7 +74,7 @@ const GlobalValuesModificationsGroupTable: React.FC<GlobalValuesModificationsTab
           id: elementMods[0].elementId,
           index: elementMods[0].elementIndex,
           title: elementMods[0].elementTitle,
-          type: elementMods[0].elementType,
+          type: elementMods[0].elementType as ElementType,
           outcomes
         };
       });
