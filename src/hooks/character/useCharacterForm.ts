@@ -16,6 +16,7 @@ export const useCharacterForm = () => {
     bio: "",
     profilePicture: "",
     fullBody: "",
+    voice: "",
   });
 
   // 获取选中的角色用于编辑
@@ -32,6 +33,7 @@ export const useCharacterForm = () => {
       bio: "",
       profilePicture: "",
       fullBody: "",
+      voice: "",
     });
     setIsDialogOpen(true);
   };
@@ -47,6 +49,7 @@ export const useCharacterForm = () => {
       bio: character.bio,
       profilePicture: character.profilePicture || "",
       fullBody: character.fullBody || "",
+      voice: character.voice || "",
     });
     setIsDialogOpen(true);
   };
@@ -99,6 +102,7 @@ export const useCharacterForm = () => {
         bio: formData.bio || "",
         profilePicture: formData.profilePicture || undefined,
         fullBody: formData.fullBody || undefined,
+        voice: formData.voice || undefined,
       };
 
       setStory({

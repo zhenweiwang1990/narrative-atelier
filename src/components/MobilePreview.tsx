@@ -84,64 +84,67 @@ const MobilePreview = ({
 
   return (
     <Card className="MobilePreview-container w-full h-full border overflow-hidden flex flex-col bg-white dark:bg-card">
-      <AspectRatio ratio={9/16} className="w-full">
+      <div className="relative w-full flex-1 overflow-hidden">
+        {/* Background image as fixed layer */}
         <div
-          className="h-full bg-cover bg-center border-b"
+          className="absolute inset-0 w-full h-full bg-cover bg-center -z-10 opacity-70"
           style={{ backgroundImage: `url(${locationBackground})` }}
         />
-      </AspectRatio>
-
-      <div className="flex-1 overflow-auto">
-        <div>
-          {!currentElement && location && (
-            <div className="p-4 text-center">
-              <p className="text-sm text-muted-foreground mb-2">
-                地点: {location.name || "未知"}
-              </p>
+        
+        <div className="relative z-10 flex flex-col h-full">
+          <div className="flex-1 overflow-auto p-4">
+            {!currentElement && location && (
+              <div className="text-center mb-4 bg-background/70 p-2 rounded-md">
+                <p className="text-sm text-foreground">
+                  地点: {location.name || "未知"}
+                </p>
+              </div>
+            )}
+            <div className="bg-background/70 rounded-md p-3">
+              <PreviewElement
+                currentElement={currentElement}
+                handleNext={handleNext}
+                handleChoiceSelect={handleChoiceSelect}
+                getCharacter={getCharacter}
+              />
+              <SceneEnding 
+                scene={scene} 
+                handleRevival={handleRevival} 
+                lastElementShown={lastElementShown}
+              />
             </div>
-          )}
-          <PreviewElement
-            currentElement={currentElement}
-            handleNext={handleNext}
-            handleChoiceSelect={handleChoiceSelect}
-            getCharacter={getCharacter}
-          />
-          <SceneEnding 
-            scene={scene} 
-            handleRevival={handleRevival} 
-            lastElementShown={lastElementShown}
-          />
+
+            {/* 添加全局变量显示 */}
+            {story.globalValues && story.globalValues.length > 0 && (
+              <ValuesDisplay values={globalValues} />
+            )}
+          </div>
+
+          <div className="p-3 border-t bg-background/80 flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              className="flex-1"
+              onClick={handlePrevious}
+              disabled={currentElementIndex <= 0}
+            >
+              <ChevronLeft className="h-4 w-4 mr-1" /> 上一步
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="flex-1"
+              onClick={handleNext}
+              disabled={
+                (lastElementShown &&
+                  scene.type === "bad-ending" &&
+                  !!scene.revivalPointId)
+              }
+            >
+              下一步 <ChevronRight className="h-4 w-4 ml-1" />
+            </Button>
+          </div>
         </div>
-
-        {/* 添加全局变量显示 */}
-        {story.globalValues && story.globalValues.length > 0 && (
-          <ValuesDisplay values={globalValues} />
-        )}
-      </div>
-
-      <div className="p-3 border-t flex items-center gap-2">
-        <Button
-          variant="secondary"
-          size="sm"
-          className="flex-1"
-          onClick={handlePrevious}
-          disabled={currentElementIndex <= 0}
-        >
-          <ChevronLeft className="h-4 w-4 mr-1" /> 上一步
-        </Button>
-        <Button
-          variant="secondary"
-          size="sm"
-          className="flex-1"
-          onClick={handleNext}
-          disabled={
-            (lastElementShown &&
-              scene.type === "bad-ending" &&
-              !!scene.revivalPointId)
-          }
-        >
-          下一步 <ChevronRight className="h-4 w-4 ml-1" />
-        </Button>
       </div>
     </Card>
   );

@@ -21,6 +21,20 @@ import {
 import { Character } from "@/utils/types";
 import CharacterCard from "../CharacterCard";
 
+// 模拟的角色音色列表
+const MOCK_VOICES = [
+  { id: "aria", name: "Aria", gender: "female" },
+  { id: "roger", name: "Roger", gender: "male" },
+  { id: "sarah", name: "Sarah", gender: "female" },
+  { id: "george", name: "George", gender: "male" },
+  { id: "laura", name: "Laura", gender: "female" },
+  { id: "callum", name: "Callum", gender: "male" },
+  { id: "river", name: "River", gender: "other" },
+  { id: "liam", name: "Liam", gender: "male" },
+  { id: "charlotte", name: "Charlotte", gender: "female" },
+  { id: "daniel", name: "Daniel", gender: "male" },
+];
+
 interface CharacterDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -44,6 +58,11 @@ const CharacterDialog: React.FC<CharacterDialogProps> = ({
   onImageChange,
   onSave,
 }) => {
+  // 基于角色性别筛选音色
+  const filteredVoices = formData.gender 
+    ? MOCK_VOICES.filter(voice => voice.gender === formData.gender || voice.gender === 'other')
+    : MOCK_VOICES;
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[525px]">
@@ -93,6 +112,27 @@ const CharacterDialog: React.FC<CharacterDialogProps> = ({
                 <SelectItem value="male">男</SelectItem>
                 <SelectItem value="female">女</SelectItem>
                 <SelectItem value="other">其他</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* 新增音色选择 */}
+          <div className="space-y-2">
+            <Label htmlFor="voice">音色</Label>
+            <Select
+              value={formData.voice || ""}
+              onValueChange={(value) => onSelectChange("voice", value)}
+            >
+              <SelectTrigger id="voice">
+                <SelectValue placeholder="选择角色音色" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">默认音色</SelectItem>
+                {filteredVoices.map(voice => (
+                  <SelectItem key={voice.id} value={voice.id}>
+                    {voice.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

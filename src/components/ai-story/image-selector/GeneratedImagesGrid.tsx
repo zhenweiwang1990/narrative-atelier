@@ -27,14 +27,17 @@ const GeneratedImagesGrid: React.FC<GeneratedImagesGridProps> = ({
           className={`relative cursor-pointer rounded-md overflow-hidden transition-all ${
             selectedGeneratedImage === imageUrl ? 'ring-2 ring-primary' : ''
           }`}
+          style={{ maxHeight: '100px' }} // Limit height of each preview item
         >
           <AspectRatio ratio={aspectRatio}>
-            <img 
-              src={imageUrl} 
-              alt={`生成图${index + 1}`} 
-              className="w-full h-full object-cover"
-              onClick={() => onSelectImage(imageUrl)}
-            />
+            <div className="w-full h-full max-h-[100px] overflow-hidden">
+              <img 
+                src={imageUrl} 
+                alt={`生成图${index + 1}`} 
+                className="w-full h-full object-cover"
+                onClick={() => onSelectImage(imageUrl)}
+              />
+            </div>
           </AspectRatio>
           
           <Button

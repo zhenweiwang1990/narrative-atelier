@@ -38,6 +38,7 @@ export interface Character {
   bio: string;
   profilePicture?: string;
   fullBody?: string;
+  voice?: string; // 新增的角色音色属性
 }
 
 export interface Location {
