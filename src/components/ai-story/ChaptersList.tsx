@@ -36,6 +36,17 @@ const ChaptersList: React.FC<ChaptersListProps> = ({ story, setStory }) => {
     handleMergeToStory
   } = useChaptersManagement(story, setStory);
   
+  // Wrapper functions to convert Promise<string|number> to Promise<void>
+  const processWithAI = async (chapterId: string): Promise<void> => {
+    await handleAIProcess(chapterId);
+    return;
+  };
+
+  const markToServer = async (chapterId: string): Promise<void> => {
+    await handleMarkingToServer(chapterId);
+    return;
+  };
+  
   return (
     <>
       <Card className="h-full">
@@ -69,8 +80,8 @@ const ChaptersList: React.FC<ChaptersListProps> = ({ story, setStory }) => {
                     key={chapter.id}
                     chapter={chapter}
                     onChapterChange={handleChapterChange}
-                    onAIProcess={handleAIProcess}
-                    onMarkingToServer={handleMarkingToServer}
+                    onAIProcess={processWithAI}
+                    onMarkingToServer={markToServer}
                   />
                 ))}
               </Accordion>

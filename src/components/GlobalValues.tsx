@@ -18,6 +18,7 @@ const GlobalValues: React.FC<GlobalValuesProps> = ({ values, onChange }) => {
     const newValue: GlobalValue = {
       id: generateId('value'),
       name: `变量 ${values.length + 1}`,
+      type: 'number',
       initialValue: 0
     };
     onChange([...values, newValue]);

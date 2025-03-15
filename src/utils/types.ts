@@ -1,5 +1,9 @@
 
 export type StoryType = 'interactive' | 'linear' | 'branching';
+export type SceneType = 'start' | 'normal' | 'branching' | 'ending' | 'bad-ending' | 'convergence';
+export type ElementType = 'narration' | 'dialogue' | 'thought' | 'choice' | 'qte' | 'dialogueTask';
+export type CharacterGender = 'male' | 'female' | 'other';
+export type CharacterRole = 'protagonist' | 'supporting';
 
 export interface Story {
   id: string;
@@ -31,43 +35,53 @@ export interface Chapter {
 
 export interface Scene {
   id: string;
-  name: string;
-  type: 'normal' | 'branching' | 'ending' | 'bad-ending' | 'convergence';
+  title: string;
+  type: SceneType;
   elements: SceneElement[];
   position: { x: number; y: number };
   description?: string;
   convergenceTarget?: string;
+  locationId?: string;
+  nextSceneId?: string;
+  revivalPointId?: string;
 }
 
 export interface SceneElement {
   id: string;
-  type: 'narration' | 'dialogue' | 'thought' | 'choice' | 'qte' | 'dialogueTask';
+  type: ElementType;
   text?: string;
   characterId?: string;
   options?: ChoiceOption[];
   description?: string;
   timeLimit?: number;
   keySequence?: string;
-  successTarget?: string;
-  failureTarget?: string;
+  success?: ElementOutcome;
+  failure?: ElementOutcome;
   goal?: string;
   openingLine?: string;
-  successTargetScene?: string;
-  failureTargetScene?: string;
+  introText?: string;
+  targetCharacterId?: string;
 }
 
 export interface ChoiceOption {
   id: string;
   text: string;
-  target: string;
-  outcome?: 'success' | 'failure';
+  target?: string;
+  nextSceneId?: string;
   sceneTarget?: string;
+  outcome?: 'success' | 'failure';
+  valueChanges?: ValueChange[];
 }
 
 export interface Character {
   id: string;
   name: string;
-  description: string;
+  description?: string;
+  gender?: CharacterGender;
+  role?: CharacterRole;
+  bio?: string;
+  portrait?: string;
+  fullBody?: string;
   image?: string;
 }
 
@@ -76,6 +90,8 @@ export interface Location {
   name: string;
   description: string;
   image?: string;
+  background?: string;
+  scenes?: string[];
 }
 
 export interface GlobalValue {
@@ -83,4 +99,58 @@ export interface GlobalValue {
   name: string;
   type: 'number' | 'boolean' | 'text';
   initialValue: any;
+  currentValue?: any;
+}
+
+export interface ValueChange {
+  valueId: string;
+  change: number;
+}
+
+export interface ElementOutcome {
+  sceneId?: string;
+  transition?: string;
+  valueChanges?: ValueChange[];
+}
+
+// Element-specific interfaces
+export interface NarrationElement extends SceneElement {
+  type: 'narration';
+  text: string;
+}
+
+export interface DialogueElement extends SceneElement {
+  type: 'dialogue';
+  text: string;
+  characterId: string;
+}
+
+export interface ThoughtElement extends SceneElement {
+  type: 'thought';
+  text: string;
+  characterId: string;
+}
+
+export interface ChoiceElement extends SceneElement {
+  type: 'choice';
+  text: string;
+  options: ChoiceOption[];
+}
+
+export interface QteElement extends SceneElement {
+  type: 'qte';
+  description: string;
+  timeLimit: number;
+  keySequence: string;
+  success: ElementOutcome;
+  failure: ElementOutcome;
+}
+
+export interface DialogueTaskElement extends SceneElement {
+  type: 'dialogueTask';
+  characterId: string;
+  goal: string;
+  openingLine: string;
+  success: ElementOutcome;
+  failure: ElementOutcome;
 }
