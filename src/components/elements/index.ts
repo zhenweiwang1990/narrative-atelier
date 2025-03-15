@@ -10,3 +10,6 @@ export * from './ElementHeader';
 export * from './qte/QteFields';
 export * from './dialogueTask/DialogueTaskFields';
 export * from './shared/OutcomeSection';
+export * from './choice/ChoiceOption';
+export * from './choice/ValueChangeEditor';
+
