@@ -1,5 +1,5 @@
 
-import { ElementType, Story, SceneElement, ElementOutcome } from '@/utils/types';
+import { ElementType, Story, SceneElement, ElementOutcome, QteElement, DialogueTaskElement, NarrationElement, DialogueElement, ThoughtElement, ChoiceElement } from '@/utils/types';
 import { generateId } from '@/utils/storage';
 
 // Helper to create a new element of specified type
@@ -16,7 +16,8 @@ export const createNewElement = (type: ElementType, story: Story): Partial<Scene
       return {
         ...baseElement,
         text: '在这里输入场景描述...'
-      };
+      } as Partial<NarrationElement>;
+      
     case 'dialogue':
       // Select the first character or empty if none exist
       const dialogueCharacter = story.characters.length > 0 ? story.characters[0].id : '';
@@ -24,7 +25,8 @@ export const createNewElement = (type: ElementType, story: Story): Partial<Scene
         ...baseElement,
         characterId: dialogueCharacter,
         text: '在这里输入对话...'
-      };
+      } as Partial<DialogueElement>;
+      
     case 'thought':
       // Select the first character or empty if none exist
       const thoughtCharacter = story.characters.length > 0 ? story.characters[0].id : '';
@@ -32,7 +34,8 @@ export const createNewElement = (type: ElementType, story: Story): Partial<Scene
         ...baseElement,
         characterId: thoughtCharacter,
         text: '在这里输入角色的内心想法...'
-      };
+      } as Partial<ThoughtElement>;
+      
     case 'choice':
       return {
         ...baseElement,
@@ -49,7 +52,8 @@ export const createNewElement = (type: ElementType, story: Story): Partial<Scene
             nextSceneId: ''
           }
         ]
-      };
+      } as Partial<ChoiceElement>;
+      
     case 'qte':
       const defaultSuccess: ElementOutcome = {
         sceneId: '',
@@ -70,7 +74,8 @@ export const createNewElement = (type: ElementType, story: Story): Partial<Scene
         keySequence: 'ABC',
         success: defaultSuccess,
         failure: defaultFailure
-      };
+      } as Partial<QteElement>;
+      
     case 'dialogueTask':
       const targetCharacter = story.characters.length > 0 ? story.characters[0].id : '';
       const taskSuccess: ElementOutcome = {
@@ -92,7 +97,8 @@ export const createNewElement = (type: ElementType, story: Story): Partial<Scene
         openingLine: '目标角色的第一句话...',
         success: taskSuccess,
         failure: taskFailure
-      };
+      } as Partial<DialogueTaskElement>;
+      
     default:
       return baseElement;
   }

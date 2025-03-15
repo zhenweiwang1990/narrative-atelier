@@ -154,6 +154,7 @@ export function useChaptersManagement(story: Story, setStory: (story: Story) => 
     });
   };
   
+  // Modified to return void instead of Promise<string|number>
   const handleAIProcess = async (chapterId: string): Promise<void> => {
     const chapter = chapters.find(c => c.id === chapterId);
     if (!chapter || !chapter.originalContent) {
@@ -161,7 +162,7 @@ export function useChaptersManagement(story: Story, setStory: (story: Story) => 
       return;
     }
     
-    return toast.promise(
+    await toast.promise(
       (async () => {
         try {
           const result = await handleAiStoryGeneration({
@@ -200,6 +201,7 @@ export function useChaptersManagement(story: Story, setStory: (story: Story) => 
     );
   };
   
+  // Modified to return void instead of Promise<string|number>
   const handleMarkingToServer = async (chapterId: string): Promise<void> => {
     const chapter = chapters.find(c => c.id === chapterId);
     if (!chapter || !chapter.markedContent && !chapter.mainStoryContent) {
@@ -209,7 +211,7 @@ export function useChaptersManagement(story: Story, setStory: (story: Story) => 
     
     const contentToConvert = chapter.markedContent || chapter.mainStoryContent;
     
-    return toast.promise(
+    await toast.promise(
       (async () => {
         try {
           // 模拟服务器处理时间

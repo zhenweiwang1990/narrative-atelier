@@ -4,6 +4,17 @@ import { toast } from 'sonner';
 import { handleAiStoryGeneration } from '@/services/aiStoryServiceClient';
 import { Story } from '@/utils/types';
 
+// Extend the options type to include outcomeType
+interface AiStoryGenerationOptions {
+  prompt: string;
+  type: 'branch' | 'ending';
+  elementId?: string;
+  outcomeType?: 'success' | 'failure';
+  convergenceSceneId?: string;
+  story: Story;
+  onSuccess?: () => void;
+}
+
 export const useQteAiDialog = (
   elementId: string,
   story: Story | null
@@ -39,7 +50,7 @@ export const useQteAiDialog = (
           // Close dialog on success
           setAiDialogOpen(false);
         }
-      });
+      } as AiStoryGenerationOptions);
 
       setIsGenerating(false);
       return result;

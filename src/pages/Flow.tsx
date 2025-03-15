@@ -47,6 +47,37 @@ const Flow = () => {
     handleAddScene(type || 'normal');
   };
 
+  // Create adapter functions to match the expected signatures
+  const handleUpdateSceneTitle = (newTitle: string) => {
+    if (selectedSceneId) {
+      updateSceneTitle(selectedSceneId, newTitle);
+    }
+  };
+
+  const handleUpdateSceneType = (newType: SceneType) => {
+    if (selectedSceneId) {
+      updateSceneType(selectedSceneId, newType);
+    }
+  };
+
+  const handleUpdateSceneLocation = (locationId: string) => {
+    if (selectedSceneId) {
+      updateSceneLocation(selectedSceneId, locationId);
+    }
+  };
+
+  const handleUpdateNextScene = (nextSceneId: string) => {
+    if (selectedSceneId) {
+      updateNextScene(selectedSceneId, nextSceneId);
+    }
+  };
+
+  const handleUpdateRevivalPoint = (revivalPointId: string) => {
+    if (selectedSceneId) {
+      updateRevivalPoint(selectedSceneId, revivalPointId);
+    }
+  };
+
   if (!story) return null;
   
   return (
@@ -75,11 +106,11 @@ const Flow = () => {
               selectedSceneId={selectedSceneId}
               selectedScene={selectedScene}
               story={story}
-              updateSceneTitle={updateSceneTitle}
-              updateSceneType={updateSceneType}
-              updateSceneLocation={updateSceneLocation}
-              updateNextScene={updateNextScene}
-              updateRevivalPoint={updateRevivalPoint}
+              updateSceneTitle={handleUpdateSceneTitle}
+              updateSceneType={handleUpdateSceneType}
+              updateSceneLocation={handleUpdateSceneLocation}
+              updateNextScene={handleUpdateNextScene}
+              updateRevivalPoint={handleUpdateRevivalPoint}
               selectedElementId={selectedElementId}
               setSelectedElementId={setSelectedElementId}
             />

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useStory } from "@/components/Layout";
 import { useElementManagement } from "@/hooks/useElementManagement";
@@ -7,6 +8,7 @@ import EditorContent from "./editor/EditorContent";
 import { useEditorElementAddition } from "./hooks/useEditorElementAddition";
 import { toast } from "sonner";
 import { handleAiStoryGeneration } from "@/services/aiStoryServiceClient";
+import { QteElement } from "@/utils/types";
 
 interface FloatingElementEditorProps {
   sceneId: string;
@@ -96,11 +98,12 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
               });
               break;
             case "qte":
+              // Type assertion to cast to QteElement
               updateElement(currentElement.id, { 
                 description: "AI 生成的 QTE 描述将在这里显示",
                 keySequence: "SPACE",
                 timeLimit: 5
-              });
+              } as Partial<QteElement>);
               break;
             // Add other element types as needed
           }
