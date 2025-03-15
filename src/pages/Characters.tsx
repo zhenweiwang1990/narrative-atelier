@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { useStory } from "@/contexts/StoryContext";
+import { useStory } from "@/components/Layout";
 import { useCharacterForm } from "@/hooks/character/useCharacterForm";
 import CharacterHeader from "@/components/character/CharacterHeader";
 import CharacterSearchBar from "@/components/character/CharacterSearchBar";

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useStory } from '@/contexts/StoryContext';
+import { useStory } from '@/components/Layout';
 import FlowEditor from '@/components/flow/FlowEditor';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';

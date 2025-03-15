@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { useStory } from "@/contexts/StoryContext";
+import { useStory } from "@/components/Layout";
 import { useLocationForm } from "@/hooks/location/useLocationForm";
 import LocationHeader from "@/components/location/LocationHeader";
 import LocationSearchBar from "@/components/location/LocationSearchBar";
