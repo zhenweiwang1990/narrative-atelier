@@ -1,4 +1,3 @@
-
 import React, { useCallback } from 'react';
 import { NodeTypes, Connection, MarkerType } from 'reactflow';
 import 'reactflow/dist/style.css';
@@ -14,7 +13,7 @@ import { SceneType } from '@/utils/types';
 
 // Custom Node Types
 const nodeTypes: NodeTypes = {
-  scene: SceneNode
+  sceneNode: SceneNode
 };
 
 // Edge settings for the graph
@@ -105,7 +104,7 @@ const FlowEditor = ({ onSceneSelect, onPreviewToggle, onAddSceneWithType }: Flow
     onNodeClick,
     setNodes,
     setEdges
-  } = useFlowTransformers(story, setStory, onSceneSelect);
+  } = useFlowTransformers(story.scenes);
 
   const {
     addScene,
