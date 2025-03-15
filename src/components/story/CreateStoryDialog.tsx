@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -163,6 +162,8 @@ const CreateStoryDialog: React.FC<CreateStoryDialogProps> = ({
         <SimpleIdeaDialog
           isOpen={showIdeaDialog}
           onClose={() => setShowIdeaDialog(false)}
+          story={story}
+          setStory={setStory}
         />
       )}
     </>
