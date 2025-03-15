@@ -4,10 +4,10 @@ import { ArrowLeft, ArrowRight, ListChecks, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import TextMarkerContextMenu from "@/components/ai-story/chapters/TextMarkerContextMenu";
 
 interface ChapterData {
   id: string;
@@ -127,17 +127,18 @@ const InteractionMarking = () => {
                     </Button>
                   </div>
                   
-                  <Textarea
+                  <TextMarkerContextMenu
                     value={chapter.content}
-                    onChange={(e) => handleChapterContentChange(index, e.target.value)}
+                    onChange={(newContent) => handleChapterContentChange(index, newContent)}
                     className="h-[50vh] resize-none"
                   />
                   
                   <div className="text-xs text-muted-foreground p-3 bg-muted/20 rounded-md">
                     <p className="font-medium mb-1">标注格式：</p>
-                    <p>- 选项：【选择：选项内容】</p>
-                    <p>- QTE：【QTE：描述内容】</p>
-                    <p>- 对话任务：【对话：任务内容】</p>
+                    <p>- 分隔场景：{"<-s->"}</p>
+                    <p>- 选项：文本末尾使用 {"<<选项1||选项2>>"}</p>
+                    <p>- QTE：使用 {"<<QTE1 START>>"} 和 {"<<QTE1 END>>"} 包围QTE内容</p>
+                    <p>- 对话任务：使用 {"<<DialogueTask START>>"} 和 {"<<DialogueTask END>>"} 包围对话任务内容</p>
                   </div>
                 </div>
               </TabsContent>

@@ -1,10 +1,8 @@
-
 import React from 'react';
 import { Chapter } from '@/utils/types';
 import { Check, AlertTriangle } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { RefreshCw, Save } from "lucide-react";
 import {
@@ -12,6 +10,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import TextMarkerContextMenu from './TextMarkerContextMenu';
 
 interface ChapterItemProps {
   chapter: Chapter;
@@ -69,10 +68,10 @@ const ChapterItem: React.FC<ChapterItemProps> = ({
           </TabsList>
 
           <TabsContent value="original" className="space-y-4">
-            <Textarea
+            <TextMarkerContextMenu
               rows={10}
               value={chapter.originalContent}
-              onChange={(e) => onChapterChange(chapter.id, 'originalContent', e.target.value)}
+              onChange={(value) => onChapterChange(chapter.id, 'originalContent', value)}
               className="w-full resize-none"
               placeholder="输入章节内容..."
             />
@@ -89,22 +88,32 @@ const ChapterItem: React.FC<ChapterItemProps> = ({
           </TabsContent>
 
           <TabsContent value="mainStory" className="space-y-4">
-            <Textarea
+            <TextMarkerContextMenu
               rows={10}
               value={chapter.mainStoryContent || ''}
-              onChange={(e) => onChapterChange(chapter.id, 'mainStoryContent', e.target.value)}
+              onChange={(value) => onChapterChange(chapter.id, 'mainStoryContent', value)}
               className="w-full resize-none"
               placeholder="AI 处理后的主线剧情会显示在这里..."
             />
+            
+            <div className="flex justify-end">
+              <Button 
+                onClick={() => onAIProcess(chapter.id)}
+                disabled={!chapter.originalContent}
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                重新处理
+              </Button>
+            </div>
           </TabsContent>
 
           <TabsContent value="interaction" className="space-y-4">
             <InteractionMarkingGuide />
             
-            <Textarea
+            <TextMarkerContextMenu
               rows={10}
               value={chapter.markedContent || chapter.mainStoryContent || ''}
-              onChange={(e) => onChapterChange(chapter.id, 'markedContent', e.target.value)}
+              onChange={(value) => onChapterChange(chapter.id, 'markedContent', value)}
               className="w-full resize-none"
               placeholder="在这里添加互动标记..."
             />
@@ -123,6 +132,16 @@ const ChapterItem: React.FC<ChapterItemProps> = ({
           <TabsContent value="preview" className="space-y-4">
             <div className="border rounded-md p-4 bg-muted/20">
               <ChapterPreview content={chapter.markedContent || chapter.mainStoryContent || ''} />
+            </div>
+            
+            <div className="flex justify-end">
+              <Button 
+                onClick={() => onMarkingToServer(chapter.id)}
+                disabled={!chapter.markedContent && !chapter.mainStoryContent}
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                重新转换
+              </Button>
             </div>
           </TabsContent>
         </Tabs>
