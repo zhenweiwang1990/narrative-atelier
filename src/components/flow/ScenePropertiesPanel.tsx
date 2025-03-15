@@ -2,7 +2,8 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Edit, RotateCcw } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Edit, RotateCcw, AlertCircle } from "lucide-react";
 import { Scene, SceneType, Story } from "@/utils/types";
 import {
   Select,
@@ -40,9 +41,37 @@ const ScenePropertiesPanel = ({
   
   // Determine if we should show locations as buttons
   const showLocationsAsButtons = story.locations.length < 6;
+  
+  // Check if this scene is incomplete (normal type without next scene or connections)
+  const hasNextSceneConnection = 
+    selectedScene.nextSceneId || 
+    isEndingType ||
+    selectedScene.elements.some(element => {
+      if (element.type === "choice") {
+        return element.options.some(option => option.nextSceneId);
+      }
+      if (element.type === "qte") {
+        return element.successSceneId || element.failureSceneId;
+      }
+      if (element.type === "dialogueTask") {
+        return element.successSceneId || element.failureSceneId;
+      }
+      return false;
+    });
+  
+  const isIncomplete = selectedScene.type === "normal" && !hasNextSceneConnection;
 
   return (
     <div className="p-3 space-y-3 flex-1 overflow-y-auto">
+      {isIncomplete && (
+        <Alert variant="warning" className="bg-amber-50 border-amber-200 text-amber-800">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="text-xs">
+            此场景处于未完待续状态，没有指定后续场景。
+          </AlertDescription>
+        </Alert>
+      )}
+      
       <div>
         <Label htmlFor="title" className="text-xs">
           标题

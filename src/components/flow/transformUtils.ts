@@ -8,6 +8,24 @@ export const scenesToNodes = (story: Story): Node[] => {
   return story.scenes.map((scene, index) => {
     const location = story.locations.find(loc => loc.id === scene.locationId);
     
+    // Determine if this scene has any next scene connections
+    const hasNextScene = 
+      scene.nextSceneId !== undefined && scene.nextSceneId !== "" || 
+      scene.type === "ending" ||
+      scene.type === "bad-ending" ||
+      scene.elements.some(element => {
+        if (element.type === "choice") {
+          return element.options.some(option => option.nextSceneId);
+        }
+        if (element.type === "qte") {
+          return element.successSceneId || element.failureSceneId;
+        }
+        if (element.type === "dialogueTask") {
+          return element.successSceneId || element.failureSceneId;
+        }
+        return false;
+      });
+    
     return {
       id: scene.id,
       type: 'scene',
@@ -16,7 +34,9 @@ export const scenesToNodes = (story: Story): Node[] => {
         sceneType: scene.type,
         locationName: location?.name || 'Unknown Location',
         elements: scene.elements,
-        revivalPointId: scene.revivalPointId
+        revivalPointId: scene.revivalPointId,
+        nextSceneId: scene.nextSceneId,
+        hasNextScene: hasNextScene
       } as SceneNodeData,
       position: {
         x: (index % 3) * 250,

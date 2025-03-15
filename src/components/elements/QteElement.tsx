@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -84,6 +83,14 @@ export const QteElement: React.FC<QteElementProps> = ({
     }
   };
   
+  const handleSceneSelection = (isSuccess: boolean, sceneId: string) => {
+    if (sceneId === "none") {
+      onUpdate(element.id, isSuccess ? { successSceneId: "" } : { failureSceneId: "" });
+    } else {
+      onUpdate(element.id, isSuccess ? { successSceneId: sceneId } : { failureSceneId: sceneId });
+    }
+  };
+  
   return (
     <div className="space-y-2">
       <div>
@@ -139,8 +146,8 @@ export const QteElement: React.FC<QteElementProps> = ({
         successSceneId={element.successSceneId}
         failureSceneId={element.failureSceneId}
         scenes={scenes}
-        onUpdateSuccessScene={(value) => onUpdate(element.id, { successSceneId: value })}
-        onUpdateFailureScene={(value) => onUpdate(element.id, { failureSceneId: value })}
+        onUpdateSuccessScene={(value) => handleSceneSelection(true, value)}
+        onUpdateFailureScene={(value) => handleSceneSelection(false, value)}
       />
       
       <Collapsible className="border rounded-md p-2 bg-muted/20">

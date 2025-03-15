@@ -1,19 +1,21 @@
 
 import { Node, Edge } from 'reactflow';
-import { SceneElement } from '@/utils/types';
+import { SceneElement, SceneType } from '@/utils/types';
 
-// Define a type for the scene node data
 export interface SceneNodeData {
   label: string;
-  sceneType: string;
-  locationName: string;
-  elements: SceneElement[];
+  sceneType: SceneType;
+  locationName?: string;
+  elements?: SceneElement[];
   revivalPointId?: string;
+  nextSceneId?: string;
+  hasNextScene?: boolean;
 }
 
-// Type for the complete flow state
-export interface FlowState {
-  nodes: Node<SceneNodeData>[];
-  edges: Edge[];
-  selectedNode: Node<SceneNodeData> | null;
+export interface SceneNode extends Node {
+  data: SceneNodeData;
+}
+
+export interface SceneEdge extends Edge {
+  data?: any;
 }

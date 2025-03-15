@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { Scene } from "@/utils/types";
@@ -29,12 +30,13 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
       <div>
         <Label className="text-xs">成功场景</Label>
-        <Select value={successSceneId} onValueChange={onUpdateSuccessScene}>
+        <Select value={successSceneId || "none"} onValueChange={onUpdateSuccessScene}>
           <SelectTrigger className="mt-1 h-8 text-xs">
             <SelectValue placeholder="选择场景" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
+              <SelectItem value="none">不指定</SelectItem>
               {scenes.map((scene) => (
                 <SelectItem key={scene.id} value={scene.id}>
                   {scene.title} (
@@ -55,12 +57,13 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
 
       <div>
         <Label className="text-xs">失败场景</Label>
-        <Select value={failureSceneId} onValueChange={onUpdateFailureScene}>
+        <Select value={failureSceneId || "none"} onValueChange={onUpdateFailureScene}>
           <SelectTrigger className="mt-1 h-8 text-xs">
             <SelectValue placeholder="选择场景" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
+              <SelectItem value="none">不指定</SelectItem>
               {scenes.map((scene) => (
                 <SelectItem key={scene.id} value={scene.id}>
                   {scene.title} (

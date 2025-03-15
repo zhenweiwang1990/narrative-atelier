@@ -1,8 +1,10 @@
+
 import React from "react";
 import { cn } from "@/lib/utils";
 import { SceneElement } from "@/utils/types";
 import { Handle, Position } from "reactflow";
-import { MapPin, RotateCcw } from "lucide-react";
+import { MapPin, RotateCcw, AlertCircle } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface SceneNodeProps {
   data: {
@@ -11,11 +13,16 @@ interface SceneNodeProps {
     locationName?: string;
     elements?: SceneElement[];
     revivalPointId?: string;
+    nextSceneId?: string;
+    hasNextScene?: boolean;
   };
   selected: boolean;
 }
 
 const SceneNode = ({ data, selected }: SceneNodeProps) => {
+  // Check if this scene is incomplete (normal type without next scene)
+  const isIncomplete = data.sceneType === "normal" && !data.hasNextScene;
+  
   // 生成元素指示器为颜色块
   const renderElementIndicators = () => {
     if (!data.elements || data.elements.length === 0) return null;
@@ -67,7 +74,24 @@ const SceneNode = ({ data, selected }: SceneNodeProps) => {
           selected && "ring-2 ring-primary"
         )}
       >
-        <div className="font-medium text-sm">{data.label}</div>
+        <div className="font-medium text-sm relative">
+          {data.label}
+          
+          {isIncomplete && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="absolute -right-1 -top-1 bg-amber-400 rounded-full w-4 h-4 flex items-center justify-center">
+                    <AlertCircle className="h-3 w-3 text-white" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-xs">未完待续</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
 
         {data.locationName && (
           <div className="flex items-center text-[10px] text-muted-foreground mt-1">
