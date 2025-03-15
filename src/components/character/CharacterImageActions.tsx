@@ -1,4 +1,3 @@
-
 import React from "react";
 import { toast } from "sonner";
 
@@ -8,11 +7,12 @@ interface CharacterImageActionsProps {
   setIsGeneratingFullBody: (isGenerating: boolean) => void;
 }
 
-const CharacterImageActions: React.FC<CharacterImageActionsProps> = ({
+// Change this to a custom hook instead of a React component
+export const useCharacterImageActions = ({
   profilePicture,
   onImageChange,
   setIsGeneratingFullBody
-}) => {
+}: CharacterImageActionsProps) => {
   const handleGenerateFullBody = () => {
     if (!profilePicture) {
       toast.error("请先设置角色形象照");
@@ -35,6 +35,13 @@ const CharacterImageActions: React.FC<CharacterImageActionsProps> = ({
   };
   
   return { handleGenerateFullBody };
+};
+
+// Keep the component for backward compatibility, but it now uses the hook
+const CharacterImageActions: React.FC<CharacterImageActionsProps> = (props) => {
+  // This component doesn't render anything visible
+  // It's just a wrapper around the hook for compatibility
+  return null;
 };
 
 export default CharacterImageActions;

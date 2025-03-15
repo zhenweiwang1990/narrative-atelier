@@ -6,7 +6,7 @@ import CharacterCardImage from "./character/CharacterCardImage";
 import CharacterCardInfo from "./character/CharacterCardInfo";
 import CharacterCardFooter from "./character/CharacterCardFooter";
 import CharacterImageDialogs from "./character/CharacterImageDialogs";
-import CharacterImageActions from "./character/CharacterImageActions";
+import { useCharacterImageActions } from "./character/CharacterImageActions";
 
 interface CharacterCardProps {
   character: Character;
@@ -49,8 +49,8 @@ const CharacterCard = ({
     }
   };
   
-  // Get image processing actions
-  const { handleGenerateFullBody } = CharacterImageActions({
+  // Get image processing actions using the new hook
+  const { handleGenerateFullBody } = useCharacterImageActions({
     profilePicture: character.profilePicture,
     onImageChange: onImageChange || (() => {}),
     setIsGeneratingFullBody
