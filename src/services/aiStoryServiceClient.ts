@@ -49,7 +49,7 @@ export const handleAiStoryGeneration = async ({
     
     // Check that result is not null or undefined before accessing its properties
     if (result && typeof result === 'object' && 'success' in result) {
-      if (result.success && onSuccess) {
+      if (result && 'success' in result && result.success && onSuccess) {
         onSuccess();
       }
       

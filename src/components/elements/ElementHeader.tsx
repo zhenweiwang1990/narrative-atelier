@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ElementType, SceneElement } from '@/utils/types';
-import { AlignLeft, MessageSquare, Brain, ListTree, Gamepad, MessagesSquare, ChevronDown, Trash2 } from 'lucide-react';
+import { AlignLeft, MessageSquare, Brain, ListTree, Gamepad, MessagesSquare, ChevronDown, Trash2, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ElementHeaderProps {
@@ -11,6 +11,7 @@ interface ElementHeaderProps {
   totalElements: number;
   onSelect: (id: string) => void;
   onDelete: (id: string) => void;
+  onAiGenerate?: (id: string) => void;
   isDragging?: boolean;
   dragHandleProps?: any;
   isExpanded?: boolean;
@@ -79,6 +80,7 @@ export const ElementHeader: React.FC<ElementHeaderProps> = ({
   element,
   onSelect,
   onDelete,
+  onAiGenerate,
   isDragging,
   dragHandleProps,
   isExpanded
@@ -109,6 +111,21 @@ export const ElementHeader: React.FC<ElementHeaderProps> = ({
           {getElementContentPreview(element)}
         </p>
       </div>
+      
+      {onAiGenerate && (
+        <Button 
+          variant="ghost" 
+          size="icon"
+          className="h-6 w-6 text-purple-500 shrink-0"
+          onClick={(e) => {
+            e.stopPropagation();
+            onAiGenerate(element.id);
+          }}
+          title="AI 生成内容"
+        >
+          <Sparkles className="h-3 w-3" />
+        </Button>
+      )}
       
       <Button 
         variant="ghost" 

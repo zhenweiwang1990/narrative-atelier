@@ -35,6 +35,7 @@ interface ElementContainerProps {
   onSelect: (id: string) => void;
   onDelete: (id: string) => void;
   onUpdate: (id: string, updatedElement: Partial<SceneElement>) => void;
+  onAiGenerate?: (id: string) => void;
   // Choice-specific handlers
   onAddChoiceOption: (elementId: string) => void;
   onDeleteChoiceOption: (elementId: string, optionId: string) => void;
@@ -58,6 +59,7 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
   onSelect,
   onDelete,
   onUpdate,
+  onAiGenerate,
   onAddChoiceOption,
   onDeleteChoiceOption,
   onUpdateChoiceOption,
@@ -98,6 +100,7 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
         totalElements={totalElements}
         onSelect={onSelect}
         onDelete={onDelete}
+        onAiGenerate={onAiGenerate}
         dragHandleProps={dragHandleProps}
         isDragging={isDragging}
         isExpanded={isExpanded}
