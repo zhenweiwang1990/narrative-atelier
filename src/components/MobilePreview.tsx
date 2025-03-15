@@ -100,12 +100,7 @@ const MobilePreview = ({
           size="sm"
           className="flex-1"
           onClick={handlePrevious}
-          disabled={
-            currentElementIndex <= 0 ||
-            currentElement?.type === "choice" ||
-            currentElement?.type === "qte" ||
-            currentElement?.type === "dialogueTask"
-          }
+          disabled={currentElementIndex <= 0}
         >
           <ChevronLeft className="h-4 w-4 mr-1" /> 上一步
         </Button>
@@ -115,9 +110,6 @@ const MobilePreview = ({
           className="flex-1"
           onClick={handleNext}
           disabled={
-            currentElement?.type === "choice" ||
-            currentElement?.type === "qte" ||
-            currentElement?.type === "dialogueTask" ||
             (lastElementShown &&
               scene.type === "bad-ending" &&
               !!scene.revivalPointId)
