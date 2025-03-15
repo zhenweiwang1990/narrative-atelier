@@ -1,8 +1,12 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, X, Minimize, Maximize } from "lucide-react";
 import MobilePreview from "@/components/MobilePreview";
+import FloatingElementEditor from "./FloatingElementEditor";
+import { useStory } from "@/components/Layout";
+import { useElementManagement } from "@/hooks/useElementManagement";
 
 interface FloatingMobilePreviewProps {
   selectedSceneId: string | null;
@@ -24,7 +28,16 @@ const FloatingMobilePreview = ({
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [minimized, setMinimized] = useState(false);
+  const [currentElementId, setCurrentElementId] = useState<string | null>(null);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
+  const { story } = useStory();
+
+  const { validateTimeLimit, validateKeySequence } = useElementManagement(
+    selectedSceneId || "", 
+    story, 
+    null
+  );
 
   // Handle mouse down for drag start
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -82,69 +95,93 @@ const FloatingMobilePreview = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const handleElementSelect = (elementId: string) => {
+    setCurrentElementId(elementId);
+    setIsEditorOpen(true);
+  };
+
+  const handleEditorClose = () => {
+    setIsEditorOpen(false);
+  };
+
   if (!isOpen) return null;
 
   return (
-    <Card
-      ref={previewRef}
-      className={cn(
-        "fixed shadow-lg border rounded-md overflow-hidden z-50",
-        minimized ? "w-64 h-10" : "w-72 h-[500px]"
-      )}
-      style={{
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-        transition: isDragging ? "none" : "height 0.3s ease",
-      }}
-    >
-      <div
-        className="px-3 py-2 border-b bg-muted/50 flex items-center cursor-move"
-        onMouseDown={handleMouseDown}
+    <>
+      <Card
+        ref={previewRef}
+        className={cn(
+          "fixed shadow-lg border rounded-md overflow-hidden z-50",
+          minimized ? "w-64 h-10" : "w-72 h-[500px]"
+        )}
+        style={{
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          transition: isDragging ? "none" : "height 0.3s ease",
+        }}
       >
-        <MapPin className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
-        <h3 className="text-sm font-medium flex-1">手机预览</h3>
+        <div
+          className="px-3 py-2 border-b bg-muted/50 flex items-center cursor-move"
+          onMouseDown={handleMouseDown}
+        >
+          <MapPin className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
+          <h3 className="text-sm font-medium flex-1">手机预览</h3>
 
-        <div className="flex items-center space-x-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6"
-            onClick={() => setMinimized(!minimized)}
-          >
-            {minimized ? (
-              <Maximize className="h-3 w-3" />
+          <div className="flex items-center space-x-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              onClick={() => setMinimized(!minimized)}
+            >
+              {minimized ? (
+                <Maximize className="h-3 w-3" />
+              ) : (
+                <Minimize className="h-3 w-3" />
+              )}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              onClick={onToggle}
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </div>
+        </div>
+
+        {!minimized && (
+          <div className="h-[calc(100%-35px)]">
+            {selectedSceneId ? (
+              <MobilePreview
+                sceneId={selectedSceneId}
+                onSceneChange={setSelectedSceneId}
+                onElementSelect={handleElementSelect}
+              />
             ) : (
-              <Minimize className="h-3 w-3" />
+              <div className="h-full flex items-center justify-center p-4 text-center">
+                <p className="text-sm text-muted-foreground">
+                  选择一个场景来预览
+                </p>
+              </div>
             )}
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6"
-            onClick={onToggle}
-          >
-            <X className="h-3 w-3" />
-          </Button>
-        </div>
-      </div>
+          </div>
+        )}
+      </Card>
 
-      {!minimized && (
-        <div className="h-[calc(100%-35px)]">
-          {selectedSceneId ? (
-            <MobilePreview
-              sceneId={selectedSceneId}
-              onSceneChange={setSelectedSceneId}
-            />
-          ) : (
-            <div className="h-full flex items-center justify-center p-4 text-center">
-              <p className="text-sm text-muted-foreground">
-                选择一个场景来预览
-              </p>
-            </div>
-          )}
-        </div>
+      {selectedSceneId && currentElementId && (
+        <FloatingElementEditor
+          sceneId={selectedSceneId}
+          currentElementId={currentElementId}
+          position={position}
+          onClose={handleEditorClose}
+          isOpen={isEditorOpen}
+          validateTimeLimit={validateTimeLimit}
+          validateKeySequence={validateKeySequence}
+        />
       )}
-    </Card>
+    </>
   );
 };
 

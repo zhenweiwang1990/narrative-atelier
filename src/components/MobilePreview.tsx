@@ -1,21 +1,28 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useStory } from "./Layout";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, PencilLine } from "lucide-react";
 import PreviewElement from "./preview/PreviewElement";
 import SceneEnding from "./preview/SceneEnding";
 import { usePreviewState } from "./preview/usePreviewState";
 import ValuesDisplay from "./preview/ValuesDisplay";
+import { SceneElement } from "@/utils/types";
 
 interface MobilePreviewProps {
   sceneId: string;
   onSceneChange: (sceneId: string) => void;
+  onElementSelect?: (elementId: string) => void;
 }
 
-const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
+const MobilePreview = ({ 
+  sceneId, 
+  onSceneChange, 
+  onElementSelect 
+}: MobilePreviewProps) => {
   const { story } = useStory();
+  const [currentElementId, setCurrentElementId] = useState<string | null>(null);
 
   if (!story) return null;
 
@@ -32,9 +39,27 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
     lastElementShown
   } = usePreviewState(sceneId, story, onSceneChange);
 
+  // Update currentElementId whenever currentElement changes
+  useEffect(() => {
+    if (currentElement) {
+      setCurrentElementId(currentElement.id);
+      if (onElementSelect) {
+        onElementSelect(currentElement.id);
+      }
+    } else {
+      setCurrentElementId(null);
+    }
+  }, [currentElement, onElementSelect]);
+
   if (!scene) return null;
 
   const locationBackground = location?.background || "/placeholder.svg";
+
+  const handleEditClick = () => {
+    if (currentElement && onElementSelect) {
+      onElementSelect(currentElement.id);
+    }
+  };
 
   return (
     <Card className="w-full h-full border overflow-hidden flex flex-col bg-white">
@@ -71,11 +96,11 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
         )}
       </div>
 
-      <div className="p-3 border-t">
+      <div className="p-3 border-t flex items-center space-x-2">
         <Button
           variant="secondary"
           size="sm"
-          className="w-full"
+          className="flex-1"
           onClick={handleNext}
           disabled={
             currentElement?.type === "choice" ||
@@ -88,6 +113,16 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
         >
           下一步 <ChevronRight className="h-4 w-4 ml-1" />
         </Button>
+        
+        {currentElement && onElementSelect && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleEditClick}
+          >
+            <PencilLine className="h-4 w-4 mr-1" /> 编辑
+          </Button>
+        )}
       </div>
     </Card>
   );
