@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useLocation } from "react-router-dom";
 import {
@@ -33,7 +32,7 @@ export function AppSidebar() {
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${story.title || "narrative-atelier"}.json`;
+    a.download = `${story.title || "Miss AI 剧情编辑器"}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -51,15 +50,15 @@ export function AppSidebar() {
       <Sidebar>
         <SidebarContent>
           {user && (
-            <SidebarStories 
+            <SidebarStories
               userStories={userStories}
               currentStorySlug={currentStorySlug}
               onCreateStory={addNewStory}
             />
           )}
 
-          <SidebarNavigation 
-            currentStorySlug={currentStorySlug} 
+          <SidebarNavigation
+            currentStorySlug={currentStorySlug}
             currentPath={location.pathname}
           />
 
@@ -81,10 +80,10 @@ export function AppSidebar() {
           </SidebarTrigger>
         </div>
       </Sidebar>
-      
-      <SidebarCollapseButton 
-        sidebarState={state} 
-        toggleSidebar={toggleSidebar} 
+
+      <SidebarCollapseButton
+        sidebarState={state}
+        toggleSidebar={toggleSidebar}
       />
     </>
   );

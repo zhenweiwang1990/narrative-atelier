@@ -50,7 +50,7 @@ const ElementEditor = ({
       onSelectElement("");
     }
   };
-
+  剧情;
   if (!story) return null;
 
   // 从剧情中获取全局变量

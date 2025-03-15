@@ -1,8 +1,22 @@
-
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowRight, Book, Pen, User, MapPin, GitBranch, Database, Settings } from 'lucide-react';
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  ArrowRight,
+  Book,
+  Pen,
+  User,
+  MapPin,
+  GitBranch,
+  Database,
+  Settings,
+} from "lucide-react";
 
 const Help = () => {
   return (
@@ -10,7 +24,7 @@ const Help = () => {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">使用帮助</h1>
         <p className="text-muted-foreground mt-2">
-          Narrative Atelier 交互式剧情编辑器的详细使用指南和功能介绍
+          Miss AI 互动剧情编辑器的详细使用指南和功能介绍
         </p>
       </div>
 
@@ -25,14 +39,17 @@ const Help = () => {
         <TabsContent value="getting-started" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>欢迎使用 Narrative Atelier</CardTitle>
+              <CardTitle>欢迎使用Miss AI 互动剧情编辑器</CardTitle>
               <CardDescription>交互式剧情编辑器入门指南</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <h3 className="text-lg font-semibold">什么是 Narrative Atelier？</h3>
+                <h3 className="text-lg font-semibold">
+                  什么是Miss AI 互动剧情编辑器？
+                </h3>
                 <p>
-                  Narrative Atelier 是一款专为创作互动式剧情设计的编辑工具，您可以创建具有分支选择、角色对话和场景切换的沉浸式故事体验。
+                  Miss AI 互动剧情编辑器
+                  是一款专为创作互动式剧情设计的编辑工具，您可以创建具有分支选择、角色对话和场景切换的沉浸式故事体验。
                 </p>
               </div>
 
@@ -49,7 +66,9 @@ const Help = () => {
                   </li>
                   <li className="flex items-start">
                     <span className="mr-2">3.</span>
-                    <span>使用各个功能模块（剧情、角色、地点、流程等）编辑您的交互式剧情</span>
+                    <span>
+                      使用各个功能模块（剧情、角色、地点、流程等）编辑您的交互式剧情
+                    </span>
                   </li>
                   <li className="flex items-start">
                     <span className="mr-2">4.</span>
@@ -57,7 +76,9 @@ const Help = () => {
                   </li>
                   <li className="flex items-start">
                     <span className="mr-2">5.</span>
-                    <span>通过导出功能将剧情导出为 JSON 文件，以便后续使用或共享</span>
+                    <span>
+                      通过导出功能将剧情导出为 JSON 文件，以便后续使用或共享
+                    </span>
                   </li>
                 </ol>
               </div>
@@ -110,7 +131,9 @@ const Help = () => {
           <Card>
             <CardHeader>
               <CardTitle>功能模块详解</CardTitle>
-              <CardDescription>详细了解 Narrative Atelier 的各个功能模块</CardDescription>
+              <CardDescription>
+                详细了解Miss AI 互动剧情编辑器的各个功能模块
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
@@ -121,12 +144,26 @@ const Help = () => {
                 <div className="pl-8 space-y-3">
                   <p>剧情是交互式故事的核心部分，包含以下元素：</p>
                   <ul className="list-disc list-inside space-y-2">
-                    <li><span className="font-medium">对话 (Dialogue)：</span>角色之间的对话内容</li>
-                    <li><span className="font-medium">旁白 (Narration)：</span>剧情背景描述和场景说明</li>
-                    <li><span className="font-medium">内心独白 (Thought)：</span>角色的内心想法</li>
-                    <li><span className="font-medium">选项 (Choice)：</span>读者可以做出的选择，影响剧情走向</li>
+                    <li>
+                      <span className="font-medium">对话 (Dialogue)：</span>
+                      角色之间的对话内容
+                    </li>
+                    <li>
+                      <span className="font-medium">旁白 (Narration)：</span>
+                      剧情背景描述和场景说明
+                    </li>
+                    <li>
+                      <span className="font-medium">内心独白 (Thought)：</span>
+                      角色的内心想法
+                    </li>
+                    <li>
+                      <span className="font-medium">选项 (Choice)：</span>
+                      读者可以做出的选择，影响剧情走向
+                    </li>
                   </ul>
-                  <p>在剧情编辑页面，您可以通过添加、删除和排序这些元素来构建您的故事。</p>
+                  <p>
+                    在剧情编辑页面，您可以通过添加、删除和排序这些元素来构建您的故事。
+                  </p>
                 </div>
               </div>
 
@@ -202,7 +239,9 @@ const Help = () => {
           <Card>
             <CardHeader>
               <CardTitle>高级技巧</CardTitle>
-              <CardDescription>掌握这些技巧，创作更加精彩的互动剧情</CardDescription>
+              <CardDescription>
+                掌握这些技巧，创作更加精彩的互动剧情
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
@@ -283,7 +322,9 @@ const Help = () => {
               </div>
 
               <div className="space-y-2 py-4">
-                <h3 className="font-semibold">如何给剧情添加背景音乐或音效？</h3>
+                <h3 className="font-semibold">
+                  如何给剧情添加背景音乐或音效？
+                </h3>
                 <p>
                   目前版本暂不支持直接添加音频。您可以在旁白或对话元素中添加描述性文字，
                   说明此时应该播放什么音乐或音效，作为后续制作的参考。
@@ -309,7 +350,8 @@ const Help = () => {
               <div className="space-y-2 pt-4">
                 <h3 className="font-semibold">我可以在手机上使用吗？</h3>
                 <p>
-                  Narrative Atelier 支持响应式设计，可以在手机上使用，但为了获得最佳体验，
+                  Miss AI 互动剧情编辑器
+                  支持响应式设计，可以在手机上使用，但为了获得最佳体验，
                   我们建议使用平板电脑或电脑等更大屏幕的设备进行剧情编辑。
                 </p>
               </div>
