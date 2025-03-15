@@ -53,26 +53,35 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
   const handleAddElement = (type: ElementType, position: 'before' | 'after') => {
     if (!currentElement || currentElementIndex === -1) return;
     
+    // Sort elements by order to ensure we have the correct sequence
+    const sortedElements = [...elements].sort((a, b) => a.order - b.order);
+    
     // Calculate the order for the new element
-    let newOrder = currentElement.order;
+    let newOrder: number;
+    
     if (position === 'after') {
-      newOrder += 1;
-      // Shift all elements after this one
-      elements.forEach(el => {
-        if (el.order > currentElement.order) {
+      // If adding after, use the next available order number
+      newOrder = currentElement.order + 1;
+      
+      // Shift all elements that have order greater than or equal to the new order
+      sortedElements.forEach(el => {
+        if (el.order >= newOrder) {
           updateElement(el.id, { order: el.order + 1 });
         }
       });
-    } else {
-      // Shift current and all elements after it
-      elements.forEach(el => {
-        if (el.order >= currentElement.order) {
+    } else { // position === 'before'
+      // If adding before, use the current element's order
+      newOrder = currentElement.order;
+      
+      // Shift the current element and all elements after it
+      sortedElements.forEach(el => {
+        if (el.order >= newOrder) {
           updateElement(el.id, { order: el.order + 1 });
         }
       });
     }
     
-    // Add the new element
+    // Add the new element with the calculated order
     const newElementId = addElement(type, newOrder);
     
     // Auto-scroll to the new element in the preview (if we have onClose callback)
