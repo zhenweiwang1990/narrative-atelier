@@ -14,6 +14,7 @@ import {
   SidebarActions,
   SidebarToggle 
 } from "./sidebar";
+import { SidebarMusicLibrary } from "./sidebar/SidebarMusicLibrary";
 import { ThemeToggle } from "./theme/ThemeToggle";
 
 export function AppSidebar() {
@@ -23,6 +24,8 @@ export function AppSidebar() {
         <SidebarContent>
           <SidebarStoryManager />
           <SidebarNavigation />
+          <SidebarSeparator />
+          <SidebarMusicLibrary />
           <SidebarActions />
           <div className="mt-auto">
             <SidebarSeparator />

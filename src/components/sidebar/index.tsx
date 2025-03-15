@@ -1,8 +1,6 @@
 
-import React from "react";
-import { SidebarStoryManager } from "./SidebarStoryManager";
-import { SidebarNavigation } from "./SidebarNavigation";
-import { SidebarActions } from "./SidebarActions";
-import { SidebarToggle } from "./SidebarToggle";
-
-export { SidebarStoryManager, SidebarNavigation, SidebarActions, SidebarToggle };
+export * from './SidebarStoryManager';
+export * from './SidebarNavigation';
+export * from './SidebarActions';
+export * from './SidebarToggle';
+export * from './SidebarMusicLibrary';
