@@ -100,6 +100,15 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
             } 
           });
           window.dispatchEvent(selectEvent);
+          
+          // Also dispatch an event to trigger preview of this element
+          const previewEvent = new CustomEvent('previewElement', {
+            detail: {
+              elementId: newElementId,
+              sceneId: sceneId
+            }
+          });
+          window.dispatchEvent(previewEvent);
         }
       }, 50); // Increased timeout to ensure state updates complete
     }

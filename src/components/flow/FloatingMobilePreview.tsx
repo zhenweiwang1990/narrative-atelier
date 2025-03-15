@@ -46,9 +46,11 @@ const FloatingMobilePreview = ({
     };
 
     window.addEventListener('selectElement', handleSelectElement as EventListener);
+    window.addEventListener('previewElement', handleSelectElement as EventListener);
     
     return () => {
       window.removeEventListener('selectElement', handleSelectElement as EventListener);
+      window.removeEventListener('previewElement', handleSelectElement as EventListener);
     };
   }, []);
 

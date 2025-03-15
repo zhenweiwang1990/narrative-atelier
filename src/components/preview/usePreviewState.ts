@@ -42,7 +42,8 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
       handleDialogueTaskResult: () => {},
       handleRevival: () => {},
       getCharacter: () => undefined,
-      globalValues: []
+      globalValues: [],
+      setCurrentElementIndex: () => {}
     };
   }
   
@@ -168,6 +169,7 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
     handleDialogueTaskResult,
     handleRevival,
     getCharacter,
-    globalValues
+    globalValues,
+    setCurrentElementIndex
   };
 };

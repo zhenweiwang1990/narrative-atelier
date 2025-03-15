@@ -37,7 +37,9 @@ const MobilePreview = ({
     handleRevival,
     getCharacter,
     globalValues,
-    lastElementShown
+    lastElementShown,
+    setCurrentElementIndex,
+    sortedElements
   } = usePreviewState(sceneId, story, onSceneChange);
 
   // Update currentElementId whenever currentElement changes
@@ -54,6 +56,26 @@ const MobilePreview = ({
       onElementSelect(null); // Signal to show scene properties
     }
   }, [sceneId, currentElement, onElementSelect]);
+
+  // Listen for previewElement events
+  useEffect(() => {
+    const handlePreviewElement = (event: CustomEvent) => {
+      if (event.detail && event.detail.elementId && event.detail.sceneId === sceneId) {
+        // Find the index of the element to preview
+        const elementIndex = sortedElements.findIndex(el => el.id === event.detail.elementId);
+        if (elementIndex !== -1) {
+          // Set the current element index to show the requested element
+          setCurrentElementIndex(elementIndex);
+        }
+      }
+    };
+
+    window.addEventListener('previewElement', handlePreviewElement as EventListener);
+    
+    return () => {
+      window.removeEventListener('previewElement', handlePreviewElement as EventListener);
+    };
+  }, [sceneId, sortedElements, setCurrentElementIndex]);
 
   if (!scene) return null;
 
