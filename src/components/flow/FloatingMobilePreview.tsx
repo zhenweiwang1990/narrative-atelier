@@ -22,14 +22,13 @@ const FloatingMobilePreview = ({
   onToggle,
 }: FloatingMobilePreviewProps) => {
   const [position, setPosition] = useState({
-    x: window.innerWidth - 320,
+    x: window.innerWidth - 600, // Adjusted for wider combined width
     y: 80,
   });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [minimized, setMinimized] = useState(false);
   const [currentElementId, setCurrentElementId] = useState<string | null>(null);
-  const [isEditorOpen, setIsEditorOpen] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
   const { story } = useStory();
 
@@ -57,7 +56,7 @@ const FloatingMobilePreview = ({
       if (isDragging) {
         const newX = Math.max(
           0,
-          Math.min(window.innerWidth - 300, e.clientX - dragOffset.x)
+          Math.min(window.innerWidth - 600, e.clientX - dragOffset.x) // Adjusted for wider combined width
         );
         const newY = Math.max(
           0,
@@ -86,7 +85,7 @@ const FloatingMobilePreview = ({
   useEffect(() => {
     const handleResize = () => {
       setPosition((prev) => ({
-        x: Math.min(prev.x, window.innerWidth - 300),
+        x: Math.min(prev.x, window.innerWidth - 600), // Adjusted for wider combined width
         y: Math.min(prev.y, window.innerHeight - 100),
       }));
     };
@@ -97,14 +96,12 @@ const FloatingMobilePreview = ({
 
   const handleElementSelect = (elementId: string) => {
     setCurrentElementId(elementId);
-    setIsEditorOpen(true);
-  };
-
-  const handleEditorClose = () => {
-    setIsEditorOpen(false);
   };
 
   if (!isOpen) return null;
+
+  // Calculate preview height (125% of original)
+  const previewHeight = minimized ? "40px" : "625px"; // 500px * 1.25 = 625px
 
   return (
     <>
@@ -112,11 +109,12 @@ const FloatingMobilePreview = ({
         ref={previewRef}
         className={cn(
           "fixed shadow-lg border rounded-md overflow-hidden z-50",
-          minimized ? "w-64 h-10" : "w-72 h-[500px]"
+          minimized ? "w-64 h-10" : "w-72"
         )}
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
+          height: previewHeight,
           transition: isDragging ? "none" : "height 0.3s ease",
         }}
       >
@@ -170,15 +168,16 @@ const FloatingMobilePreview = ({
         )}
       </Card>
 
-      {selectedSceneId && currentElementId && (
+      {selectedSceneId && (
         <FloatingElementEditor
           sceneId={selectedSceneId}
           currentElementId={currentElementId}
           position={position}
-          onClose={handleEditorClose}
-          isOpen={isEditorOpen}
+          onClose={() => {}}
+          isOpen={true}
           validateTimeLimit={validateTimeLimit}
           validateKeySequence={validateKeySequence}
+          showSceneProperties={!currentElementId}
         />
       )}
     </>

@@ -30,14 +30,14 @@ const PreviewPanel = ({ selectedSceneId, setSelectedSceneId }: PreviewPanelProps
   };
 
   return (
-    <>
-      <Card className="overflow-hidden">
+    <div className="flex space-x-4">
+      <Card className="overflow-hidden" style={{ width: '40%' }}>
         <div className="px-3 py-2 border-b bg-muted/20 flex items-center">
           <MapPin className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
           <h3 className="text-sm font-medium">Mobile Preview</h3>
         </div>
         
-        <div className="h-[calc(100%-35px)]">
+        <div className="h-[calc(100%-35px)]" style={{ height: '625px' }}>
           {selectedSceneId ? (
             <MobilePreview 
               sceneId={selectedSceneId} 
@@ -53,31 +53,20 @@ const PreviewPanel = ({ selectedSceneId, setSelectedSceneId }: PreviewPanelProps
       </Card>
 
       {selectedSceneId && (
-        <Sheet open={isEditorOpen} onOpenChange={setIsEditorOpen}>
-          <SheetContent side="right" className="w-[450px] sm:w-[450px] p-0 overflow-y-auto">
-            {currentElementId && (
-              <div className="h-full p-0">
-                <div className="px-3 py-2 border-b bg-muted/20 flex items-center">
-                  <MapPin className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
-                  <h3 className="text-sm font-medium">编辑元素</h3>
-                </div>
-                <div className="p-4">
-                  <FloatingElementEditor
-                    sceneId={selectedSceneId}
-                    currentElementId={currentElementId}
-                    position={{ x: 0, y: 0 }}
-                    onClose={() => setIsEditorOpen(false)}
-                    isOpen={true}
-                    validateTimeLimit={validateTimeLimit}
-                    validateKeySequence={validateKeySequence}
-                  />
-                </div>
-              </div>
-            )}
-          </SheetContent>
-        </Sheet>
+        <div style={{ width: '60%' }}>
+          <FloatingElementEditor
+            sceneId={selectedSceneId}
+            currentElementId={currentElementId}
+            position={{ x: 0, y: 0 }}
+            onClose={() => setIsEditorOpen(false)}
+            isOpen={true}
+            validateTimeLimit={validateTimeLimit}
+            validateKeySequence={validateKeySequence}
+            showSceneProperties={!currentElementId}
+          />
+        </div>
       )}
-    </>
+    </div>
   );
 };
 
