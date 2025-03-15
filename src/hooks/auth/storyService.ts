@@ -8,17 +8,23 @@ import { UserStory } from './types';
 
 export const fetchUserStories = async (userId: string): Promise<UserStory[]> => {
   try {
+    console.log('Fetching stories for user:', userId);
     const { data, error } = await supabase
       .from('stories')
       .select('id, title, description, author, created_at, updated_at, slug, cover_image')
       .eq('user_id', userId)
       .order('updated_at', { ascending: false });
 
-    if (error) throw error;
-    return data as UserStory[];
+    if (error) {
+      console.error('Error fetching stories:', error.message);
+      throw error;
+    }
+    
+    console.log('Fetched stories:', data?.length || 0);
+    return data || [];
   } catch (error: any) {
-    console.error('Error fetching stories:', error.message);
-    return [];
+    console.error('Exception fetching stories:', error.message);
+    throw error;
   }
 };
 
@@ -45,7 +51,7 @@ export const createNewStory = async (userId: string): Promise<UserStory | null> 
     return data as UserStory;
   } catch (error: any) {
     console.error('Error creating new story:', error.message);
-    return null;
+    throw error;
   }
 };
 
@@ -53,6 +59,10 @@ export const createSampleStory = async (userId: string, userName: string): Promi
   try {
     // Fetch the sample story from the public directory
     const response = await fetch('/红衣如故.json');
+    if (!response.ok) {
+      throw new Error(`Failed to fetch sample story: ${response.status}`);
+    }
+    
     const sampleStoryData = await response.json() as Story;
     
     // Prepare story content
@@ -81,7 +91,7 @@ export const createSampleStory = async (userId: string, userName: string): Promi
       description: "无法加载示例剧情，请尝试手动创建新剧情",
       variant: "destructive"
     });
-    return null;
+    throw error;
   }
 };
 
@@ -113,11 +123,14 @@ export const saveStory = async (story: Story, slug: string, userId: string): Pro
       description: "无法将剧情保存到云端，请稍后重试",
       variant: "destructive"
     });
+    throw error;
   }
 };
 
 export const loadStory = async (slug: string, userId: string): Promise<Story | null> => {
   try {
+    console.log(`Loading story with slug: ${slug} for user: ${userId}`);
+    
     // Using maybeSingle() instead of single() to avoid errors when no data is found
     const { data, error } = await supabase
       .from('stories')
@@ -126,20 +139,25 @@ export const loadStory = async (slug: string, userId: string): Promise<Story | n
       .eq('user_id', userId)
       .maybeSingle();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error in database query:', error);
+      throw error;
+    }
     
     if (data && data.content) {
+      console.log('Story loaded successfully');
       return data.content as unknown as Story;
     }
     
+    console.log('No story found with the given slug');
     return null;
   } catch (error: any) {
-    console.error('Error loading story:', error.message);
+    console.error('Exception loading story:', error.message);
     toast({
       title: "加载失败",
       description: "无法从云端加载剧情，请稍后重试",
       variant: "destructive"
     });
-    return null;
+    throw error;
   }
 };
