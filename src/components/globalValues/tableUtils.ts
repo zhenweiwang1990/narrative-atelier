@@ -1,5 +1,5 @@
 
-import { Story, GlobalValue } from "@/utils/types";
+import { Story, GlobalValue, ChoiceElement, QteElement, DialogueTaskElement } from "@/utils/types";
 import { ValueModification } from "./types";
 import { getElementContentPreview } from "@/components/elements/ElementHeader";
 
@@ -27,16 +27,18 @@ export const getAllPossibleOptions = (story: Story | null): Partial<ValueModific
   const allOptions: Partial<ValueModification>[] = [];
   
   story.scenes.forEach(scene => {
-    // Sort elements by order
-    const sortedElements = [...scene.elements].sort((a, b) => a.order - b.order);
+    // Get elements that can have value changes (choice, qte, dialogueTask)
+    const relevantElements = scene.elements.filter(
+      element => ['choice', 'qte', 'dialogueTask'].includes(element.type)
+    ).sort((a, b) => a.order - b.order);
     
-    sortedElements.forEach((element, index) => {
+    relevantElements.forEach((element, index) => {
       const elementTitle = getElementContentPreview(element);
       
       if (element.type === 'choice') {
-        const choiceElement = element as any;
+        const choiceElement = element as ChoiceElement;
         
-        choiceElement.options.forEach((option: any) => {
+        choiceElement.options.forEach((option) => {
           allOptions.push({
             sceneId: scene.id,
             sceneTitle: scene.title,
@@ -49,11 +51,11 @@ export const getAllPossibleOptions = (story: Story | null): Partial<ValueModific
             choiceOptionId: option.id
           });
         });
-      } else if (element.type === 'qte' || element.type === 'dialogueTask') {
-        const outcomeElement = element as any;
+      } else if (element.type === 'qte') {
+        const qteElement = element as QteElement;
         
         // Add success outcome
-        if (outcomeElement.success) {
+        if (qteElement.success) {
           allOptions.push({
             sceneId: scene.id,
             sceneTitle: scene.title,
@@ -67,7 +69,37 @@ export const getAllPossibleOptions = (story: Story | null): Partial<ValueModific
         }
         
         // Add failure outcome
-        if (outcomeElement.failure) {
+        if (qteElement.failure) {
+          allOptions.push({
+            sceneId: scene.id,
+            sceneTitle: scene.title,
+            elementId: element.id,
+            elementIndex: index,
+            elementType: element.type,
+            elementTitle,
+            optionOrOutcome: '失败',
+            outcomeType: 'failure'
+          });
+        }
+      } else if (element.type === 'dialogueTask') {
+        const dialogueTaskElement = element as DialogueTaskElement;
+        
+        // Add success outcome
+        if (dialogueTaskElement.success) {
+          allOptions.push({
+            sceneId: scene.id,
+            sceneTitle: scene.title,
+            elementId: element.id,
+            elementIndex: index,
+            elementType: element.type,
+            elementTitle,
+            optionOrOutcome: '成功',
+            outcomeType: 'success'
+          });
+        }
+        
+        // Add failure outcome
+        if (dialogueTaskElement.failure) {
           allOptions.push({
             sceneId: scene.id,
             sceneTitle: scene.title,
@@ -98,11 +130,11 @@ export const extractValueModifications = (story: Story | null): ValueModificatio
     
     sortedElements.forEach((element, index) => {
       if (element.type === 'choice') {
-        const choiceElement = element as any;
+        const choiceElement = element as ChoiceElement;
         
-        choiceElement.options.forEach((option: any) => {
+        choiceElement.options.forEach((option) => {
           if (option.valueChanges && option.valueChanges.length > 0) {
-            option.valueChanges.forEach((valueChange: any) => {
+            option.valueChanges.forEach((valueChange) => {
               modifications.push({
                 sceneId: scene.id,
                 sceneTitle: scene.title,
@@ -119,12 +151,12 @@ export const extractValueModifications = (story: Story | null): ValueModificatio
             });
           }
         });
-      } else if (element.type === 'qte' || element.type === 'dialogueTask') {
-        const outcomeElement = element as any;
+      } else if (element.type === 'qte') {
+        const qteElement = element as QteElement;
         
         // Process success outcome
-        if (outcomeElement.success && outcomeElement.success.valueChanges) {
-          outcomeElement.success.valueChanges.forEach((valueChange: any) => {
+        if (qteElement.success && qteElement.success.valueChanges) {
+          qteElement.success.valueChanges.forEach((valueChange) => {
             modifications.push({
               sceneId: scene.id,
               sceneTitle: scene.title,
@@ -141,8 +173,46 @@ export const extractValueModifications = (story: Story | null): ValueModificatio
         }
         
         // Process failure outcome
-        if (outcomeElement.failure && outcomeElement.failure.valueChanges) {
-          outcomeElement.failure.valueChanges.forEach((valueChange: any) => {
+        if (qteElement.failure && qteElement.failure.valueChanges) {
+          qteElement.failure.valueChanges.forEach((valueChange) => {
+            modifications.push({
+              sceneId: scene.id,
+              sceneTitle: scene.title,
+              elementId: element.id,
+              elementIndex: index,
+              elementType: element.type,
+              elementTitle: getElementContentPreview(element),
+              optionOrOutcome: '失败',
+              outcomeType: 'failure',
+              valueId: valueChange.valueId,
+              valueChange: valueChange.change
+            });
+          });
+        }
+      } else if (element.type === 'dialogueTask') {
+        const dialogueTaskElement = element as DialogueTaskElement;
+        
+        // Process success outcome
+        if (dialogueTaskElement.success && dialogueTaskElement.success.valueChanges) {
+          dialogueTaskElement.success.valueChanges.forEach((valueChange) => {
+            modifications.push({
+              sceneId: scene.id,
+              sceneTitle: scene.title,
+              elementId: element.id,
+              elementIndex: index,
+              elementType: element.type,
+              elementTitle: getElementContentPreview(element),
+              optionOrOutcome: '成功',
+              outcomeType: 'success',
+              valueId: valueChange.valueId,
+              valueChange: valueChange.change
+            });
+          });
+        }
+        
+        // Process failure outcome
+        if (dialogueTaskElement.failure && dialogueTaskElement.failure.valueChanges) {
+          dialogueTaskElement.failure.valueChanges.forEach((valueChange) => {
             modifications.push({
               sceneId: scene.id,
               sceneTitle: scene.title,

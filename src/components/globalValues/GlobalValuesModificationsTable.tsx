@@ -16,13 +16,13 @@ import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
 import EmptyModificationsState from "./EmptyModificationsState";
 import { getElementTypeName, getValueName } from "./tableUtils";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTableProps> = ({ 
   story, 
   onModificationUpdate 
 }) => {
   const {
+    allPossibleOptions,
     groupedModifications,
     handleValueChange,
     handleAddValueChange,
@@ -35,76 +35,92 @@ const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTablePro
     return <EmptyModificationsState hasStory={false} />;
   }
   
-  if (isEmpty && Object.keys(groupedModifications).length === 0) {
+  if (isEmpty) {
     return <EmptyModificationsState hasStory={true} />;
   }
+  
+  // Group all possible options by element key
+  const elementGroups: Record<string, any[]> = {};
+  
+  allPossibleOptions.forEach(option => {
+    if (!option.sceneId || !option.elementId) return;
+    
+    const elementKey = `${option.sceneId}-${option.elementId}`;
+    if (!elementGroups[elementKey]) {
+      elementGroups[elementKey] = [];
+    }
+    
+    elementGroups[elementKey].push(option);
+  });
   
   return (
     <div className="rounded-md border overflow-x-auto w-full">
       <Table className="text-xs">
         <TableHeader className="bg-muted/30">
           <TableRow>
-            <TableHead className="py-2 px-2">场景</TableHead>
-            <TableHead className="py-2 px-2">序号</TableHead>
-            <TableHead className="py-2 px-2">元素标题</TableHead>
-            <TableHead className="py-2 px-2">选项/结果</TableHead>
-            <TableHead className="py-2 px-2">全局变量调整</TableHead>
+            <TableHead className="py-1 px-2">场景</TableHead>
+            <TableHead className="py-1 px-2">序号</TableHead>
+            <TableHead className="py-1 px-2">元素标题</TableHead>
+            <TableHead className="py-1 px-2">选项/结果</TableHead>
+            <TableHead className="py-1 px-2">全局变量调整</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Object.entries(groupedModifications).map(([elementKey, elementGroup]) => {
-            // Get the first modification in the group to access element info
-            const firstMod = elementGroup.items[0] || Object.values(elementGroup.subgroups)[0]?.items[0];
-            if (!firstMod) return null;
-            
+          {Object.entries(elementGroups).map(([elementKey, options]) => {
+            if (!options.length) return null;
+            // Get the first option to access element info
+            const firstOption = options[0];
             const elementRowKey = `element-${elementKey}`;
             
             return (
               <React.Fragment key={elementRowKey}>
                 {/* Element row */}
                 <TableRow className="bg-muted/20">
-                  <TableCell className="font-medium py-2 px-2">{firstMod.sceneTitle}</TableCell>
-                  <TableCell className="py-2 px-2">{firstMod.elementIndex + 1}</TableCell>
-                  <TableCell className="py-2 px-2">
+                  <TableCell className="font-medium py-1 px-2">{firstOption.sceneTitle}</TableCell>
+                  <TableCell className="py-1 px-2">{(firstOption.elementIndex || 0) + 1}</TableCell>
+                  <TableCell className="py-1 px-2">
                     <div className="flex items-center gap-1">
                       <Badge variant="outline" className="text-xs py-0 px-1">
-                        {getElementTypeName(firstMod.elementType)}
+                        {getElementTypeName(firstOption.elementType || '')}
                       </Badge>
-                      <span className="text-xs truncate max-w-[200px]">{firstMod.elementTitle}</span>
+                      <span className="text-xs truncate max-w-[200px]">{firstOption.elementTitle}</span>
                     </div>
                   </TableCell>
                   <TableCell colSpan={2}></TableCell>
                 </TableRow>
                 
                 {/* Option/Outcome rows */}
-                {Object.entries(elementGroup.subgroups).map(([optionKey, optionGroup]) => {
+                {options.map((option) => {
+                  const outcomeType = option.outcomeType as 'choice' | 'success' | 'failure';
+                  const optionKey = outcomeType === 'choice' && option.choiceOptionId 
+                    ? option.choiceOptionId 
+                    : `${option.elementId}-${outcomeType}`;
+                  
                   const optionRowKey = `${elementRowKey}-option-${optionKey}`;
-                  const firstOptionMod = optionGroup.items[0] || {
-                    ...firstMod,
-                    optionOrOutcome: optionKey.includes('success') ? '成功' : 
-                                     optionKey.includes('failure') ? '失败' : optionKey
-                  };
+                  
+                  // Get modifications for this option/outcome
+                  const modifications = groupedModifications[elementKey]?.subgroups[optionKey]?.items || [];
                   
                   return (
                     <TableRow key={optionRowKey} className="hover:bg-muted/10">
-                      <TableCell className="border-l-2 border-l-primary/20 py-2 px-2"></TableCell>
-                      <TableCell className="py-2 px-2"></TableCell>
-                      <TableCell className="py-2 px-2"></TableCell>
-                      <TableCell className="font-medium py-2 px-2">
-                        {firstOptionMod.outcomeType === 'choice' ? (
-                          <span className="text-xs">{firstOptionMod.optionOrOutcome}</span>
+                      <TableCell className="border-l-2 border-l-primary/20 py-1 px-2"></TableCell>
+                      <TableCell className="py-1 px-2"></TableCell>
+                      <TableCell className="py-1 px-2"></TableCell>
+                      <TableCell className="font-medium py-1 px-2">
+                        {outcomeType === 'choice' ? (
+                          <span className="text-xs">{option.optionOrOutcome}</span>
                         ) : (
                           <Badge 
-                            variant={firstOptionMod.outcomeType === 'success' ? 'default' : 'destructive'}
+                            variant={outcomeType === 'success' ? 'default' : 'destructive'}
                             className="text-xs py-0 px-1"
                           >
-                            {firstOptionMod.optionOrOutcome}
+                            {option.optionOrOutcome}
                           </Badge>
                         )}
                       </TableCell>
-                      <TableCell className="py-2 px-2">
+                      <TableCell className="py-1 px-2">
                         <div className="flex flex-wrap gap-1 items-center">
-                          {optionGroup.items.map((modification) => (
+                          {modifications.map((modification) => (
                             <div 
                               key={`value-${modification.valueId}`} 
                               className="flex items-center border rounded-sm px-1 py-1 bg-background"
@@ -129,20 +145,20 @@ const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTablePro
                             </div>
                           ))}
                           
-                          {story.globalValues.length > optionGroup.items.length && (
+                          {story.globalValues.length > modifications.length && (
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => handleAddValueChange(
-                                firstOptionMod.sceneId,
-                                firstOptionMod.elementId,
-                                firstOptionMod.elementIndex,
-                                firstOptionMod.elementType,
-                                firstOptionMod.elementTitle,
-                                firstOptionMod.sceneTitle,
-                                firstOptionMod.outcomeType,
-                                firstOptionMod.optionOrOutcome,
-                                firstOptionMod.choiceOptionId
+                                option.sceneId || '',
+                                option.elementId || '',
+                                option.elementIndex || 0,
+                                option.elementType || '',
+                                option.elementTitle || '',
+                                option.sceneTitle || '',
+                                outcomeType,
+                                option.optionOrOutcome || '',
+                                option.choiceOptionId
                               )}
                               className="h-5 rounded-sm bg-muted/20"
                             >

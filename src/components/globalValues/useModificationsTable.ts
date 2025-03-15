@@ -21,23 +21,29 @@ export const useModificationsTable = (
     extractValueModifications(story), [story]
   );
 
+  // Get all possible options/outcomes, including those without value changes
+  const allPossibleOptions = useMemo(() => 
+    getAllPossibleOptions(story), [story]
+  );
+
   // Group modifications by element and then by option/outcome
   const groupedModifications = useMemo(() => {
     const groupedData: Record<string, ModificationGroup> = {};
     
     if (story) {
-      // Get all possible options/outcomes, including those without value changes
-      const allOptions = getAllPossibleOptions(story);
-      
       // First populate with all possible options/outcomes
-      allOptions.forEach(option => {
+      allPossibleOptions.forEach(option => {
+        if (!option.sceneId || !option.elementId) return;
+        
         const elementKey = `${option.sceneId}-${option.elementId}`;
         
         let optionKey = '';
         if (option.outcomeType === 'choice' && option.choiceOptionId) {
           optionKey = option.choiceOptionId;
-        } else {
+        } else if (option.outcomeType) {
           optionKey = `${option.elementId}-${option.outcomeType}`;
+        } else {
+          return; // Skip if we don't have enough info
         }
         
         // Initialize first level group if it doesn't exist
@@ -93,7 +99,7 @@ export const useModificationsTable = (
     });
     
     return groupedData;
-  }, [valueModifications, story]);
+  }, [valueModifications, allPossibleOptions, story]);
   
   // Function to get display value for a modification
   const getDisplayValue = (modification: ValueModification): number => {
@@ -176,11 +182,12 @@ export const useModificationsTable = (
   
   return {
     valueModifications,
+    allPossibleOptions,
     groupedModifications,
     handleValueChange,
     handleAddValueChange,
     handleRemoveValueChange,
     getDisplayValue,
-    isEmpty: valueModifications.length === 0
+    isEmpty: valueModifications.length === 0 && allPossibleOptions.length === 0
   };
 };
