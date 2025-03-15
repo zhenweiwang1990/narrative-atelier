@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { Story } from '@/utils/types';
 import { createBlankStory } from '@/utils/storage';
@@ -128,6 +127,7 @@ export const saveStory = async (story: Story, slug: string, userId: string): Pro
 };
 
 // Add caching for loaded stories to prevent repeated database queries
+// Increased the TTL for better performance
 const storyCache = new Map<string, {story: Story, timestamp: number}>();
 const CACHE_TTL = 300000; // 5 minutes cache validity (increased from 60 seconds)
 

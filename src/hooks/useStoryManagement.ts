@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/auth';
 import { UserStory } from '@/hooks/auth/types';
@@ -15,6 +16,16 @@ export const useStoryManagement = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [loadingInitiated, setLoadingInitiated] = useState(false);
 
+  // Debug logging for better visibility into state changes
+  useEffect(() => {
+    console.log('useStoryManagement state update:', { 
+      hasUser: !!user, 
+      storiesCount: userStories?.length || 0,
+      isInitialLoading,
+      loadingInitiated
+    });
+  }, [user, userStories, isInitialLoading, loadingInitiated]);
+
   // Clear initial loading state after a timeout if still loading
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -27,22 +38,33 @@ export const useStoryManagement = () => {
     return () => clearTimeout(timer);
   }, [isInitialLoading]);
 
-  // Set initial loading to false when userStories is loaded
+  // Set initial loading to false when userStories is loaded or when user is null
   useEffect(() => {
-    if (userStories !== undefined) {
-      console.log('User stories loaded, ending initial loading state', userStories?.length || 0);
+    // Either we have stories data or we know user is null, either way we can end loading
+    if (userStories !== undefined || user === null) {
+      console.log('Stories data resolved:', { 
+        hasStories: !!userStories, 
+        storiesCount: userStories?.length || 0,
+        hasUser: !!user 
+      });
       setIsInitialLoading(false);
     }
-  }, [userStories]);
+  }, [userStories, user]);
 
-  // Auto-load stories on mount
+  // Auto-load stories when dependencies change
   useEffect(() => {
-    if (!loadingInitiated) {
-      console.log('Auto-loading stories on mount');
+    // Only initiate loading if we haven't already and there's a user
+    if (!loadingInitiated && user) {
+      console.log('Auto-loading stories for user:', user?.id);
       loadStories();
       setLoadingInitiated(true);
+    } else if (user === null && isInitialLoading) {
+      // If we know there's no user, we can exit loading state immediately
+      console.log('No user, ending loading state');
+      setIsInitialLoading(false);
+      setLoadError('请先登录以查看您的剧情');
     }
-  }, []);
+  }, [user, loadingInitiated]);
 
   const loadStories = useCallback(async () => {
     console.log('loadStories called, setting initial loading state');
@@ -51,7 +73,7 @@ export const useStoryManagement = () => {
     
     try {
       if (user) {
-        console.log('User exists, refreshing stories');
+        console.log('User exists, refreshing stories for:', user.id);
         await refreshStories();
       } else {
         console.log('No user found when trying to load stories');
@@ -63,6 +85,7 @@ export const useStoryManagement = () => {
     } finally {
       // End loading state after a short delay to prevent UI flashing
       setTimeout(() => {
+        console.log('Ending initial loading state after loadStories');
         setIsInitialLoading(false);
       }, 500);
     }

@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export const StoriesLoadingState: React.FC = () => {
   useEffect(() => {
     console.log('StoriesLoadingState mounted - displaying loading UI');
-    // 添加一个超时检查
+    // Add a timeout check to detect if the loading state persists too long
     const timer = setTimeout(() => {
       console.log('StoriesLoadingState still showing after 8 seconds - possible issue');
     }, 8000);

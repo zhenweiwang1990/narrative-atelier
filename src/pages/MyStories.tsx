@@ -24,16 +24,30 @@ export default function MyStories() {
   useEffect(() => {
     console.log('MyStories component rendered with states:', {
       user: !!user, 
+      userId: user?.id,
       userStories: userStories?.length || 0,
-      isInitialLoading
+      isInitialLoading,
+      loadError
     });
-  }, [user, userStories, isInitialLoading]);
+  }, [user, userStories, isInitialLoading, loadError]);
   
-  // Fetch stories when component mounts if not already loading
+  // Directly force a load on component mount
   useEffect(() => {
-    console.log('MyStories mounted, loading stories');
-    loadStories();
-  }, []);
+    const initializeStories = async () => {
+      console.log('MyStories explicitly loading stories on mount');
+      // Direct call to ensure stories are loaded
+      if (user) {
+        try {
+          await refreshStories();
+          console.log('Stories refreshed from MyStories component');
+        } catch (err) {
+          console.error('Error refreshing stories from MyStories:', err);
+        }
+      }
+    };
+    
+    initializeStories();
+  }, [user]); // Only re-run if user changes
   
   // Show loading state if we're still in the initial loading
   if (isInitialLoading) {
@@ -47,6 +61,7 @@ export default function MyStories() {
     return <StoriesErrorState onRetry={loadStories} errorMessage={loadError} />;
   }
 
+  // Show appropriate content based on user and story data
   return (
     <div className="container mx-auto py-6">
       <StoryHeader 
