@@ -1,3 +1,4 @@
+
 import { Story } from "./types";
 
 const STORY_STORAGE_KEY = "interactive-story-editor";
@@ -84,7 +85,6 @@ export const createBlankStory = (): Story => {
           {
             id: `element_${Date.now()}`,
             type: "narration",
-            order: 0,
             text: "剧情从这里开始...",
           },
         ],

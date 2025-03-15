@@ -48,7 +48,8 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
   }
   
   const location = story.locations.find(l => l.id === scene.locationId);
-  const sortedElements = [...scene.elements].sort((a, b) => a.order - b.order);
+  // We no longer sort by order, just use array as is
+  const sortedElements = [...scene.elements];
   const currentElement = currentElementIndex >= 0 && currentElementIndex < sortedElements.length 
     ? sortedElements[currentElementIndex] 
     : null;
