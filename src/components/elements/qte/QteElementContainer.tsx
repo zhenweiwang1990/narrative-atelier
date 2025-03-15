@@ -7,7 +7,7 @@ import QteFields from './QteFields';
 import OutcomeSection from '../shared/OutcomeSection';
 import AiStoryDialog from '../shared/AiStoryDialog';
 import QteOutcomeButtons from './QteOutcomeButtons';
-import { useQteAiDialog } from './useQteAiDialog';
+import { useQteAiDialog } from '@/hooks/ai-dialog/useQteAiDialog';
 import { useElementOutcomes } from '@/hooks/useElementOutcomes';
 
 interface QteElementContainerProps {

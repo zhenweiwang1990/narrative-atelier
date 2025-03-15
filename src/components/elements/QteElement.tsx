@@ -17,7 +17,7 @@ export const QteElement: React.FC<QteElementProps> = ({
   element, 
   scenes, 
   globalValues,
-  story, // Now receiving the story object from props
+  story, 
   onUpdate, 
   validateTimeLimit, 
   validateKeySequence 

@@ -4,11 +4,14 @@
 
 import { toast } from "sonner";
 import { Story } from "@/utils/types";
+import { OutcomeType } from "@/hooks/ai-dialog/useAiDialogState";
 
 interface AiStoryGenerationOptions {
   prompt: string;
   type: "branch" | "ending";
   elementId?: string;
+  outcomeType?: OutcomeType;
+  convergenceSceneId?: string;
   story: Story;
   onSuccess?: () => void;
 }
