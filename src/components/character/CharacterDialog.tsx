@@ -21,7 +21,7 @@ import {
 import { Character } from "@/utils/types";
 import CharacterCard from "../CharacterCard";
 
-// 模拟的角色音色列表
+// TODO: Replace with actual voice data from API
 const MOCK_VOICES = [
   { id: "aria", name: "Aria", gender: "female" },
   { id: "roger", name: "Roger", gender: "male" },
@@ -116,18 +116,17 @@ const CharacterDialog: React.FC<CharacterDialogProps> = ({
             </Select>
           </div>
 
-          {/* 新增音色选择 */}
           <div className="space-y-2">
             <Label htmlFor="voice">音色</Label>
             <Select
-              value={formData.voice || ""}
-              onValueChange={(value) => onSelectChange("voice", value)}
+              value={formData.voice || "none"}
+              onValueChange={(value) => onSelectChange("voice", value === "none" ? "" : value)}
             >
               <SelectTrigger id="voice">
                 <SelectValue placeholder="选择角色音色" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">默认音色</SelectItem>
+                <SelectItem value="none">默认音色</SelectItem>
                 {filteredVoices.map(voice => (
                   <SelectItem key={voice.id} value={voice.id}>
                     {voice.name}

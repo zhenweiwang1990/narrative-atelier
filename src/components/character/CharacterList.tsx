@@ -12,7 +12,7 @@ import {
 import { Button } from "../ui/button";
 import { Edit, Trash2, User, Volume2 } from "lucide-react";
 
-// 模拟的角色音色列表 (与 CharacterDialog.tsx 中的保持一致)
+// TODO: Replace with actual voice data from API
 const MOCK_VOICES = [
   { id: "aria", name: "Aria", gender: "female" },
   { id: "roger", name: "Roger", gender: "male" },

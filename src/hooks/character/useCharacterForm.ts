@@ -76,6 +76,9 @@ export const useCharacterForm = () => {
   const handleSaveCharacter = () => {
     if (!story || !setStory) return;
 
+    // Process voice value - convert empty to undefined
+    const processedVoice = formData.voice === "" ? undefined : formData.voice;
+
     if (isEditMode && selectedCharacterId) {
       // 更新现有角色
       const updatedCharacters = story.characters.map((character) => {
@@ -83,6 +86,7 @@ export const useCharacterForm = () => {
           return {
             ...character,
             ...formData,
+            voice: processedVoice
           } as Character;
         }
         return character;
@@ -102,7 +106,7 @@ export const useCharacterForm = () => {
         bio: formData.bio || "",
         profilePicture: formData.profilePicture || undefined,
         fullBody: formData.fullBody || undefined,
-        voice: formData.voice || undefined,
+        voice: processedVoice,
       };
 
       setStory({
