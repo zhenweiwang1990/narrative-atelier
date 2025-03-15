@@ -1,67 +1,155 @@
+import { Story, Scene, SceneElement } from './types';
+import redDress from '@/public/stories/red-dress.json';
+import { generateId } from './storage';
 
-import { Story } from '@/utils/types';
-import { generateId } from '@/utils/storage';
-import { toast } from 'sonner';
-
-const STORIES_STORAGE_KEY = "interactive-story-editor-stories";
-const CURRENT_STORY_ID_KEY = "interactive-story-editor-current-id";
-
-/**
- * Loads the default Red Dress story from the public directory
- */
+// Load the default "Red Dress" story from the public directory
 export const loadDefaultRedDressStory = async (): Promise<Story | null> => {
   try {
-    const response = await fetch('/红衣如故.json');
-    if (!response.ok) {
-      console.error('Failed to load Red Dress story:', response.statusText);
-      return null;
-    }
+    // The redDress object is already the parsed JSON
+    const storyData = redDress as Story;
     
-    const redDressStory = await response.json();
+    // Add a unique ID to the story
+    storyData.id = generateId("story");
     
-    // Generate a new ID to avoid conflicts
-    redDressStory.id = generateId("story");
-    return redDressStory;
+    return storyData;
   } catch (error) {
-    console.error('Error loading Red Dress story:', error);
+    console.error("Failed to load default story:", error);
     return null;
   }
 };
 
-/**
- * Saves all stories and the current story ID to localStorage
- */
-export const saveAllStories = (storiesToSave: Story[], currentId: string): void => {
+// Save all stories to localStorage
+export const saveAllStories = (stories: Story[], currentStoryId: string): void => {
   try {
-    localStorage.setItem(STORIES_STORAGE_KEY, JSON.stringify(storiesToSave));
-    localStorage.setItem(CURRENT_STORY_ID_KEY, currentId);
+    localStorage.setItem('interactive-story-editor-all', JSON.stringify(stories));
+    localStorage.setItem('interactive-story-editor-current-id', currentStoryId);
   } catch (error) {
-    console.error('Failed to save stories:', error);
-    toast.error('保存剧情失败');
-    throw error; // Rethrow to allow caller to handle
+    console.error('Failed to save stories to localStorage:', error);
   }
 };
 
-/**
- * Retrieves all stories from localStorage
- */
+// Get the current story ID from localStorage
+export const getCurrentStoryId = (): string | null => {
+  try {
+    return localStorage.getItem('interactive-story-editor-current-id');
+  } catch (error) {
+    console.error('Failed to get current story ID from localStorage:', error);
+    return null;
+  }
+};
+
+// Add a migration function for the new ElementOutcome structure
+export const migrateStoryElementsToNewFormat = (story: Story): Story => {
+  // Create a deep copy to avoid mutating the original
+  const updatedStory = JSON.parse(JSON.stringify(story));
+  
+  // Update all scenes' elements
+  updatedStory.scenes.forEach((scene: Scene) => {
+    scene.elements.forEach((element: SceneElement) => {
+      if (element.type === 'qte') {
+        const qteElement = element as any; // Use any to access legacy properties
+        
+        // Migrate success outcome
+        if (qteElement.successSceneId !== undefined || qteElement.successTransition !== undefined || qteElement.successValueChanges !== undefined) {
+          qteElement.success = {
+            sceneId: qteElement.successSceneId || '',
+            transition: qteElement.successTransition || '',
+            valueChanges: qteElement.successValueChanges || []
+          };
+          
+          // Clean up legacy properties
+          delete qteElement.successSceneId;
+          delete qteElement.successTransition;
+          delete qteElement.successValueChanges;
+        }
+        
+        // Ensure success property exists
+        if (!qteElement.success) {
+          qteElement.success = { sceneId: '' };
+        }
+        
+        // Migrate failure outcome
+        if (qteElement.failureSceneId !== undefined || qteElement.failureTransition !== undefined || qteElement.failureValueChanges !== undefined) {
+          qteElement.failure = {
+            sceneId: qteElement.failureSceneId || '',
+            transition: qteElement.failureTransition || '',
+            valueChanges: qteElement.failureValueChanges || []
+          };
+          
+          // Clean up legacy properties
+          delete qteElement.failureSceneId;
+          delete qteElement.failureTransition;
+          delete qteElement.failureValueChanges;
+        }
+        
+        // Ensure failure property exists
+        if (!qteElement.failure) {
+          qteElement.failure = { sceneId: '' };
+        }
+      }
+      
+      if (element.type === 'dialogueTask') {
+        const dialogueElement = element as any; // Use any to access legacy properties
+        
+        // Migrate success outcome
+        if (dialogueElement.successSceneId !== undefined || dialogueElement.successTransition !== undefined || dialogueElement.successValueChanges !== undefined) {
+          dialogueElement.success = {
+            sceneId: dialogueElement.successSceneId || '',
+            transition: dialogueElement.successTransition || '',
+            valueChanges: dialogueElement.successValueChanges || []
+          };
+          
+          // Clean up legacy properties
+          delete dialogueElement.successSceneId;
+          delete dialogueElement.successTransition;
+          delete dialogueElement.successValueChanges;
+        }
+        
+        // Ensure success property exists
+        if (!dialogueElement.success) {
+          dialogueElement.success = { sceneId: '' };
+        }
+        
+        // Migrate failure outcome
+        if (dialogueElement.failureSceneId !== undefined || dialogueElement.failureTransition !== undefined || dialogueElement.failureValueChanges !== undefined) {
+          dialogueElement.failure = {
+            sceneId: dialogueElement.failureSceneId || '',
+            transition: dialogueElement.failureTransition || '',
+            valueChanges: dialogueElement.failureValueChanges || []
+          };
+          
+          // Clean up legacy properties
+          delete dialogueElement.failureSceneId;
+          delete dialogueElement.failureTransition;
+          delete dialogueElement.failureValueChanges;
+        }
+        
+        // Ensure failure property exists
+        if (!dialogueElement.failure) {
+          dialogueElement.failure = { sceneId: '' };
+        }
+      }
+    });
+  });
+  
+  return updatedStory;
+};
+
+// Modify the getStoriesFromStorage function to migrate stories
 export const getStoriesFromStorage = (): Story[] => {
-  const storiesData = localStorage.getItem(STORIES_STORAGE_KEY);
-  if (storiesData) {
-    try {
-      return JSON.parse(storiesData);
-    } catch (parseError) {
-      console.error('Failed to parse stories data:', parseError);
-      // Return empty array rather than failing completely
+  try {
+    const allStoriesData = localStorage.getItem('interactive-story-editor-all');
+    
+    if (!allStoriesData) {
       return [];
     }
+    
+    const parsedStories: Story[] = JSON.parse(allStoriesData);
+    
+    // Apply migration to each story
+    return parsedStories.map(story => migrateStoryElementsToNewFormat(story));
+  } catch (error) {
+    console.error('Failed to load stories from localStorage:', error);
+    return [];
   }
-  return [];
-};
-
-/**
- * Gets the current story ID from localStorage
- */
-export const getCurrentStoryId = (): string | null => {
-  return localStorage.getItem(CURRENT_STORY_ID_KEY);
 };

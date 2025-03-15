@@ -6,9 +6,9 @@ import { SceneNodeData } from './flowTypes';
 // Helper function to get scene ID from element outcome
 const getSceneIdFromOutcome = (element: QteElement | DialogueTaskElement, isSuccess: boolean): string => {
   if (isSuccess) {
-    return element.success?.sceneId || element.successSceneId || '';
+    return element.success?.sceneId || '';
   } else {
-    return element.failure?.sceneId || element.failureSceneId || '';
+    return element.failure?.sceneId || '';
   }
 };
 

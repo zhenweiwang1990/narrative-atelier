@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Scene, Character, SceneElement, Story, GlobalValue, ValueChange, ChoiceElement, QteElement, DialogueTaskElement, ElementOutcome } from '@/utils/types';
+import { Scene, Character, SceneElement, Story, GlobalValue, ValueChange, ChoiceElement, QteElement, DialogueTaskElement } from '@/utils/types';
 
 export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (sceneId: string) => void) => {
   const [currentElementIndex, setCurrentElementIndex] = useState<number>(-1);
@@ -107,41 +107,12 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
     }
   };
 
-  const getOutcomeData = (element: QteElement | DialogueTaskElement, isSuccess: boolean): {sceneId: string, valueChanges?: ValueChange[]} => {
-    // Handle both new structure and legacy structure
-    if (isSuccess) {
-      if (element.success?.sceneId) {
-        return {
-          sceneId: element.success.sceneId,
-          valueChanges: element.success.valueChanges
-        };
-      } else {
-        return {
-          sceneId: element.successSceneId || '',
-          valueChanges: element.successValueChanges
-        };
-      }
-    } else {
-      if (element.failure?.sceneId) {
-        return {
-          sceneId: element.failure.sceneId,
-          valueChanges: element.failure.valueChanges
-        };
-      } else {
-        return {
-          sceneId: element.failureSceneId || '',
-          valueChanges: element.failureValueChanges
-        };
-      }
-    }
-  };
-
   const handleQteResult = (success: boolean, element: QteElement) => {
-    const outcomeData = getOutcomeData(element, success);
+    const outcome = success ? element.success : element.failure;
     
-    applyValueChanges(outcomeData.valueChanges);
-    if (outcomeData.sceneId) {
-      handleChoiceSelect(outcomeData.sceneId);
+    applyValueChanges(outcome.valueChanges);
+    if (outcome.sceneId) {
+      handleChoiceSelect(outcome.sceneId);
     } else {
       // If no scene is set, treat as regular next step
       handleNext();
@@ -149,11 +120,11 @@ export const usePreviewState = (sceneId: string, story: Story, onSceneChange: (s
   };
 
   const handleDialogueTaskResult = (success: boolean, element: DialogueTaskElement) => {
-    const outcomeData = getOutcomeData(element, success);
+    const outcome = success ? element.success : element.failure;
     
-    applyValueChanges(outcomeData.valueChanges);
-    if (outcomeData.sceneId) {
-      handleChoiceSelect(outcomeData.sceneId);
+    applyValueChanges(outcome.valueChanges);
+    if (outcome.sceneId) {
+      handleChoiceSelect(outcome.sceneId);
     } else {
       // If no scene is set, treat as regular next step
       handleNext();

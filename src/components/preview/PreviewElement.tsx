@@ -28,41 +28,6 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
   handleChoiceSelect,
   getCharacter,
 }) => {
-  // Helper function to get outcome values considering both new and legacy structure
-  const getOutcomeData = (element: QteElement | DialogueTaskElement, isSuccess: boolean) => {
-    if (isSuccess) {
-      // Try new structure first
-      if (element.success?.sceneId) {
-        return {
-          sceneId: element.success.sceneId,
-          transition: element.success.transition,
-          valueChanges: element.success.valueChanges
-        };
-      }
-      // Fallback to legacy structure
-      return {
-        sceneId: element.successSceneId || '',
-        transition: element.successTransition,
-        valueChanges: element.successValueChanges
-      };
-    } else {
-      // Try new structure first
-      if (element.failure?.sceneId) {
-        return {
-          sceneId: element.failure.sceneId,
-          transition: element.failure.transition,
-          valueChanges: element.failure.valueChanges
-        };
-      }
-      // Fallback to legacy structure
-      return {
-        sceneId: element.failureSceneId || '',
-        transition: element.failureTransition,
-        valueChanges: element.failureValueChanges
-      };
-    }
-  };
-
   if (!currentElement) {
     return (
       <div className="p-4 text-center">
@@ -147,9 +112,7 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
 
     case "qte":
       const qteElement = currentElement as QteElement;
-      const qteSuccessData = getOutcomeData(qteElement, true);
-      const qteFailureData = getOutcomeData(qteElement, false);
-
+      
       return (
         <div className="p-4">
           <p className="text-sm mb-3 font-bold text-amber-600">
@@ -175,8 +138,8 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
               className="bg-green-600 hover:bg-green-700"
               onClick={() =>
                 handleChoiceSelect(
-                  qteSuccessData.sceneId,
-                  qteSuccessData.valueChanges
+                  qteElement.success.sceneId,
+                  qteElement.success.valueChanges
                 )
               }
             >
@@ -188,8 +151,8 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
               className="bg-red-600 hover:bg-red-700"
               onClick={() =>
                 handleChoiceSelect(
-                  qteFailureData.sceneId,
-                  qteFailureData.valueChanges
+                  qteElement.failure.sceneId,
+                  qteElement.failure.valueChanges
                 )
               }
             >
@@ -201,8 +164,6 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
 
     case "dialogueTask":
       const taskElement = currentElement as DialogueTaskElement;
-      const taskSuccessData = getOutcomeData(taskElement, true);
-      const taskFailureData = getOutcomeData(taskElement, false);
       const targetCharacter = getCharacter(taskElement.targetCharacterId);
       
       return (
@@ -244,8 +205,8 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
               className="bg-green-600 hover:bg-green-700 flex-1"
               onClick={() =>
                 handleChoiceSelect(
-                  taskSuccessData.sceneId,
-                  taskSuccessData.valueChanges
+                  taskElement.success.sceneId,
+                  taskElement.success.valueChanges
                 )
               }
             >
@@ -257,8 +218,8 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
               className="bg-red-600 hover:bg-red-700 flex-1"
               onClick={() =>
                 handleChoiceSelect(
-                  taskFailureData.sceneId,
-                  taskFailureData.valueChanges
+                  taskElement.failure.sceneId,
+                  taskElement.failure.valueChanges
                 )
               }
             >

@@ -90,13 +90,6 @@ export interface QteElement extends BaseElement {
   keySequence?: string; // Sequence of characters to press (3-6 chars)
   success: ElementOutcome;
   failure: ElementOutcome;
-  // Legacy fields for backward compatibility - will be removed in future
-  successSceneId?: string;
-  failureSceneId?: string;
-  successTransition?: string;
-  failureTransition?: string;
-  successValueChanges?: ValueChange[];
-  failureValueChanges?: ValueChange[];
 }
 
 export interface DialogueTaskElement extends BaseElement {
@@ -107,13 +100,6 @@ export interface DialogueTaskElement extends BaseElement {
   openingLine: string;
   success: ElementOutcome;
   failure: ElementOutcome;
-  // Legacy fields for backward compatibility - will be removed in future
-  successSceneId?: string;
-  failureSceneId?: string;
-  successTransition?: string;
-  failureTransition?: string;
-  successValueChanges?: ValueChange[];
-  failureValueChanges?: ValueChange[];
 }
 
 export type SceneElement = 

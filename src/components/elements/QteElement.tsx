@@ -26,32 +26,14 @@ export const QteElement: React.FC<QteElementProps> = ({
   validateTimeLimit, 
   validateKeySequence 
 }) => {
-  // Initialize success and failure if they don't exist (for backward compatibility)
-  const ensureStructure = (element: QteElementType): QteElementType => {
-    const updated = { ...element };
-    
-    if (!updated.success) {
-      updated.success = {
-        sceneId: updated.successSceneId || '',
-        transition: updated.successTransition || '',
-        valueChanges: updated.successValueChanges || []
-      };
-    }
-    
-    if (!updated.failure) {
-      updated.failure = {
-        sceneId: updated.failureSceneId || '',
-        transition: updated.failureTransition || '',
-        valueChanges: updated.failureValueChanges || []
-      };
-    }
-    
-    return updated;
+  // Initialize success and failure with empty objects if they don't exist
+  const safeElement: QteElementType = {
+    ...element,
+    success: element.success || { sceneId: '' },
+    failure: element.failure || { sceneId: '' }
   };
   
-  const safeElement = ensureStructure(element);
-  
-  // Update functions for the new structure
+  // Update functions for the success/failure outcomes
   const updateSuccessSceneId = (sceneId: string) => {
     onUpdate(element.id, {
       success: {

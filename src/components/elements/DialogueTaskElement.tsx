@@ -25,32 +25,14 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
   globalValues,
   onUpdate 
 }) => {
-  // Initialize success and failure if they don't exist (for backward compatibility)
-  const ensureStructure = (element: DialogueTaskElementType): DialogueTaskElementType => {
-    const updated = { ...element };
-    
-    if (!updated.success) {
-      updated.success = {
-        sceneId: updated.successSceneId || '',
-        transition: updated.successTransition || '',
-        valueChanges: updated.successValueChanges || []
-      };
-    }
-    
-    if (!updated.failure) {
-      updated.failure = {
-        sceneId: updated.failureSceneId || '',
-        transition: updated.failureTransition || '',
-        valueChanges: updated.failureValueChanges || []
-      };
-    }
-    
-    return updated;
+  // Initialize success and failure with empty objects if they don't exist
+  const safeElement: DialogueTaskElementType = {
+    ...element,
+    success: element.success || { sceneId: '' },
+    failure: element.failure || { sceneId: '' }
   };
   
-  const safeElement = ensureStructure(element);
-  
-  // Update functions for the new structure
+  // Update functions for the success/failure outcomes
   const updateSuccessSceneId = (sceneId: string) => {
     onUpdate(element.id, {
       success: {
