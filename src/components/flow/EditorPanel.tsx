@@ -22,6 +22,7 @@ interface EditorPanelProps {
   updateSceneEntrance?: (effect: string) => void;
   updateSceneEnvironment?: (effect: string) => void;
   updateEndingName?: (name: string) => void;
+  updateBackgroundMusic?: (music: { url: string; name: string; isUploaded: boolean }) => void;
 }
 
 const EditorPanel = ({
@@ -40,6 +41,7 @@ const EditorPanel = ({
   updateSceneEntrance,
   updateSceneEnvironment,
   updateEndingName,
+  updateBackgroundMusic,
 }: EditorPanelProps) => {
   return (
     <Card className="overflow-hidden h-full max-w-[500px]">
@@ -89,6 +91,7 @@ const EditorPanel = ({
           updateSceneEntrance={updateSceneEntrance}
           updateSceneEnvironment={updateSceneEnvironment}
           updateEndingName={updateEndingName}
+          updateBackgroundMusic={updateBackgroundMusic}
         />
       </Tabs>
     </Card>

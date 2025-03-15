@@ -19,6 +19,7 @@ const ScenePropertiesPanel = ({
   updateSceneEntrance,
   updateSceneEnvironment,
   updateEndingName,
+  updateBackgroundMusic,
 }: ScenePropertiesPanelProps) => {
   const sceneIsIncomplete = checkSceneCompletion(selectedScene);
   
@@ -34,6 +35,7 @@ const ScenePropertiesPanel = ({
         updateSceneLocation={updateSceneLocation}
         updateSceneEntrance={updateSceneEntrance}
         updateSceneEnvironment={updateSceneEnvironment}
+        updateBackgroundMusic={updateBackgroundMusic}
       />
       
       <SceneFlowSection

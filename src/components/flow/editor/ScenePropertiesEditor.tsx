@@ -100,6 +100,17 @@ const ScenePropertiesEditor: React.FC<ScenePropertiesEditorProps> = ({
     });
   };
 
+  const updateBackgroundMusic = (music: { url: string; name: string; isUploaded: boolean }) => {
+    setStory({
+      ...story,
+      scenes: story.scenes.map((scene) =>
+        scene.id === sceneId
+          ? { ...scene, backgroundMusic: music }
+          : scene
+      ),
+    });
+  };
+
   return (
     <ScenePropertiesPanel
       selectedScene={selectedScene}
@@ -113,6 +124,7 @@ const ScenePropertiesEditor: React.FC<ScenePropertiesEditorProps> = ({
       updateSceneEntrance={updateSceneEntrance}
       updateSceneEnvironment={updateSceneEnvironment}
       updateEndingName={updateEndingName}
+      updateBackgroundMusic={updateBackgroundMusic}
     />
   );
 };

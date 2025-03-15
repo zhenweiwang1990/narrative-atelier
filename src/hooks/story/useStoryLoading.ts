@@ -8,7 +8,6 @@ import {
   getStoriesFromStorage,
   getCurrentStoryId
 } from '@/utils/storyLoading';
-import { createBlankStory } from '@/utils/storage';
 
 export function useStoryLoading() {
   const [stories, setStories] = useState<Story[]>([]);
@@ -30,35 +29,33 @@ export function useStoryLoading() {
       let loadedStories = getStoriesFromStorage();
       
       // If no stories exist, create default examples
-      if (loadedStories.length === 0) {
-        // Create a blank story
-        const blankStory = createBlankStory();
-        blankStory.title = "空白剧情";
-        
+      if (loadedStories.length === 0) {        
         try {
           // Load the Red Dress story from public directory
           const redDressStory = await loadDefaultRedDressStory();
           
           if (redDressStory) {
-            loadedStories = [blankStory, redDressStory];
-            toast.success('已加载默认示例剧情');
+            loadedStories = [redDressStory];
+            toast.success('已加载示例剧情「红衣如故」');
           } else {
-            loadedStories = [blankStory];
-            console.warn('无法加载示例剧情，仅加载空白剧情');
+            console.warn('无法加载示例剧情');
+            loadedStories = [];
           }
         } catch (demoError) {
           console.error('Failed to load demo story:', demoError);
-          loadedStories = [blankStory];
-          toast.warning('无法加载示例剧情，仅加载空白剧情');
+          loadedStories = [];
+          toast.warning('无法加载示例剧情');
         }
         
         // Save the default stories
-        try {
-          saveAllStories(loadedStories, loadedStories[0].id);
-        } catch (saveError) {
-          console.error('Failed to save default stories:', saveError);
-          setError('保存默认剧情失败');
-          toast.error('保存默认剧情失败');
+        if (loadedStories.length > 0) {
+          try {
+            saveAllStories(loadedStories, loadedStories[0].id);
+          } catch (saveError) {
+            console.error('Failed to save default stories:', saveError);
+            setError('保存示例剧情失败');
+            toast.error('保存示例剧情失败');
+          }
         }
       }
       
@@ -71,7 +68,7 @@ export function useStoryLoading() {
         : loadedStories[0];
       
       setStories(loadedStories);
-      setCurrentStory(currentStoryObj || loadedStories[0]);
+      setCurrentStory(currentStoryObj || null);
     } catch (error) {
       console.error('Failed to load stories:', error);
       setError('加载剧情数据失败: ' + (error instanceof Error ? error.message : String(error)));

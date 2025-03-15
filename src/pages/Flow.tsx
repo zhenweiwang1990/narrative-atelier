@@ -107,6 +107,16 @@ const Flow = () => {
     setStory({ ...story, scenes: updatedScenes });
   };
 
+  const handleUpdateBackgroundMusic = (music: { url: string; name: string; isUploaded: boolean }) => {
+    if (!selectedSceneId || !story || !setStory) return;
+
+    const updatedScenes = story.scenes.map((scene) =>
+      scene.id === selectedSceneId ? { ...scene, backgroundMusic: music } : scene
+    );
+
+    setStory({ ...story, scenes: updatedScenes });
+  };
+
   if (!story) return null;
 
   return (
@@ -148,6 +158,7 @@ const Flow = () => {
               updateSceneEntrance={handleUpdateSceneEntrance}
               updateSceneEnvironment={handleUpdateSceneEnvironment}
               updateEndingName={handleUpdateEndingName}
+              updateBackgroundMusic={handleUpdateBackgroundMusic}
             />
           </div>
         </div>

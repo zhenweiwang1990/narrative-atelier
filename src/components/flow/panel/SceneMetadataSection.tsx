@@ -6,6 +6,7 @@ import SceneTypeSelector from "./SceneTypeSelector";
 import LocationSelector from "./LocationSelector";
 import EntranceEffectSelector from "./EntranceEffectSelector";
 import EnvironmentEffectSelector from "./EnvironmentEffectSelector";
+import BackgroundMusicSelector from "./BackgroundMusicSelector";
 
 interface SceneMetadataSectionProps {
   selectedScene: Scene;
@@ -15,6 +16,7 @@ interface SceneMetadataSectionProps {
   updateSceneLocation: (locationId: string) => void;
   updateSceneEntrance?: (effect: string) => void;
   updateSceneEnvironment?: (effect: string) => void;
+  updateBackgroundMusic?: (music: { url: string; name: string; isUploaded: boolean }) => void;
 }
 
 const SceneMetadataSection: React.FC<SceneMetadataSectionProps> = ({
@@ -24,7 +26,8 @@ const SceneMetadataSection: React.FC<SceneMetadataSectionProps> = ({
   updateSceneType,
   updateSceneLocation,
   updateSceneEntrance,
-  updateSceneEnvironment
+  updateSceneEnvironment,
+  updateBackgroundMusic
 }) => {
   return (
     <div className="space-y-3">
@@ -55,6 +58,13 @@ const SceneMetadataSection: React.FC<SceneMetadataSectionProps> = ({
         <EnvironmentEffectSelector
           effect={selectedScene.environmentEffect || "none"}
           updateEffect={updateSceneEnvironment}
+        />
+      )}
+
+      {updateBackgroundMusic && (
+        <BackgroundMusicSelector
+          backgroundMusic={selectedScene.backgroundMusic}
+          updateBackgroundMusic={updateBackgroundMusic}
         />
       )}
     </div>

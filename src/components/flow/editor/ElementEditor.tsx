@@ -7,6 +7,7 @@ import { ThoughtElement } from "@/components/elements/ThoughtElement";
 import { ChoiceElement } from "@/components/elements/ChoiceElement";
 import { QteElement } from "@/components/elements/QteElement";
 import { DialogueTaskElement } from "@/components/elements/DialogueTaskElement";
+import SoundEffectSelector from "@/components/elements/shared/SoundEffectSelector";
 
 interface ElementEditorProps {
   element: SceneElement;
@@ -40,73 +41,97 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     }
   };
 
-  switch (element.type) {
-    case "narration":
-      return (
-        <NarrationElement 
-          element={element as any} // Using type assertion to fix TypeScript error
-          onUpdate={handleUpdate}
-        />
-      );
-    
-    case "dialogue":
-      return (
-        <DialogueElement 
-          element={element as any} // Using type assertion to fix TypeScript error
-          characters={story?.characters || []}
-          onUpdate={handleUpdate}
-        />
-      );
-    
-    case "thought":
-      return (
-        <ThoughtElement 
-          element={element as any} // Using type assertion to fix TypeScript error
-          characters={story?.characters || []}
-          onUpdate={handleUpdate}
-        />
-      );
-    
-    case "choice":
-      return (
-        <ChoiceElement 
-          element={element as any} // Using type assertion to fix TypeScript error
-          scenes={story?.scenes || []}
-          globalValues={story?.globalValues || []}
-          onUpdate={handleUpdate}
-          onAddOption={disabled ? undefined : addChoiceOption}
-          onDeleteOption={disabled ? undefined : deleteChoiceOption}
-          onUpdateOption={disabled ? undefined : updateChoiceOption}
-        />
-      );
-    
-    case "qte":
-      return (
-        <QteElement 
-          element={element as any} // Using type assertion to fix TypeScript error
-          scenes={story?.scenes || []}
-          globalValues={story?.globalValues || []}
-          story={story}
-          onUpdate={handleUpdate}
-          validateTimeLimit={validateTimeLimit}
-          validateKeySequence={validateKeySequence}
-        />
-      );
-    
-    case "dialogueTask":
-      return (
-        <DialogueTaskElement 
-          element={element as any} // Using type assertion to fix TypeScript error
-          characters={story?.characters || []}
-          scenes={story?.scenes || []}
-          globalValues={story?.globalValues || []}
-          onUpdate={handleUpdate}
-        />
-      );
+  // Handle sound effect update
+  const handleSoundEffectUpdate = (effect: { category: string; name: string; url: string } | undefined) => {
+    if (disabled) return;
+    handleUpdate(element.id, { soundEffect: effect });
+  };
+
+  // Determine which element type component to render
+  const renderElementTypeComponent = () => {
+    switch (element.type) {
+      case "narration":
+        return (
+          <NarrationElement 
+            element={element as any}
+            onUpdate={handleUpdate}
+          />
+        );
       
-    default:
-      return <div>Unsupported element type</div>;
-  }
+      case "dialogue":
+        return (
+          <DialogueElement 
+            element={element as any}
+            characters={story?.characters || []}
+            onUpdate={handleUpdate}
+          />
+        );
+      
+      case "thought":
+        return (
+          <ThoughtElement 
+            element={element as any}
+            characters={story?.characters || []}
+            onUpdate={handleUpdate}
+          />
+        );
+      
+      case "choice":
+        return (
+          <ChoiceElement 
+            element={element as any}
+            scenes={story?.scenes || []}
+            globalValues={story?.globalValues || []}
+            onUpdate={handleUpdate}
+            onAddOption={disabled ? undefined : addChoiceOption}
+            onDeleteOption={disabled ? undefined : deleteChoiceOption}
+            onUpdateOption={disabled ? undefined : updateChoiceOption}
+          />
+        );
+      
+      case "qte":
+        return (
+          <QteElement 
+            element={element as any}
+            scenes={story?.scenes || []}
+            globalValues={story?.globalValues || []}
+            story={story}
+            onUpdate={handleUpdate}
+            validateTimeLimit={validateTimeLimit}
+            validateKeySequence={validateKeySequence}
+          />
+        );
+      
+      case "dialogueTask":
+        return (
+          <DialogueTaskElement 
+            element={element as any}
+            characters={story?.characters || []}
+            scenes={story?.scenes || []}
+            globalValues={story?.globalValues || []}
+            onUpdate={handleUpdate}
+          />
+        );
+        
+      default:
+        return <div>Unsupported element type</div>;
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      {renderElementTypeComponent()}
+      
+      {/* Add Sound Effect Selector for all element types */}
+      <div className="mt-4 pt-4 border-t">
+        <SoundEffectSelector
+          selectedEffect={element.soundEffect}
+          onSelect={handleSoundEffectUpdate}
+          disabled={disabled}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default ElementEditor;

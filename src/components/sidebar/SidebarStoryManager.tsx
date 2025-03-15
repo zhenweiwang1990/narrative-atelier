@@ -5,6 +5,7 @@ import { useStory } from "@/components/Layout";
 import { SidebarGroup, SidebarGroupLabel, SidebarGroupContent } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { SidebarStorySelector } from "./SidebarStorySelector";
+import CreateStoryDialog from "../story/CreateStoryDialog";
 
 export const SidebarStoryManager = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -26,6 +27,11 @@ export const SidebarStoryManager = () => {
       <SidebarGroupContent>
         <SidebarStorySelector />
       </SidebarGroupContent>
+      
+      <CreateStoryDialog
+        isOpen={isCreateDialogOpen}
+        onClose={() => setIsCreateDialogOpen(false)}
+      />
     </SidebarGroup>
   );
 };

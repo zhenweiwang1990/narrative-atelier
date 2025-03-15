@@ -1,3 +1,4 @@
+
 export interface Story {
   id: string;
   title: string;
@@ -66,6 +67,11 @@ export interface Scene {
   environmentEffect?: string;
   endingName?: string;
   explorationItems?: ExplorationItem[];
+  backgroundMusic?: {
+    url: string;
+    name: string;
+    isUploaded: boolean;
+  };
 }
 
 // New exploration item interface
@@ -90,6 +96,11 @@ export interface SceneElement {
   options?: ChoiceOption[];
   success?: ElementOutcome;
   failure?: ElementOutcome;
+  soundEffect?: {
+    category: string;
+    name: string;
+    url: string;
+  };
 }
 
 export type ElementType = 'narration' | 'dialogue' | 'thought' | 'choice' | 'qte' | 'dialogueTask';

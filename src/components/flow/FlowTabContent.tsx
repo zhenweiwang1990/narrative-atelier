@@ -23,6 +23,7 @@ interface FlowTabContentProps {
   updateSceneEntrance?: (effect: string) => void;
   updateSceneEnvironment?: (effect: string) => void;
   updateEndingName?: (name: string) => void;
+  updateBackgroundMusic?: (music: { url: string; name: string; isUploaded: boolean }) => void;
 }
 
 const FlowTabContent = ({
@@ -39,7 +40,8 @@ const FlowTabContent = ({
   setSelectedElementId,
   updateSceneEntrance,
   updateSceneEnvironment,
-  updateEndingName
+  updateEndingName,
+  updateBackgroundMusic
 }: FlowTabContentProps) => {
   return (
     <>
@@ -57,6 +59,7 @@ const FlowTabContent = ({
             updateSceneEntrance={updateSceneEntrance}
             updateSceneEnvironment={updateSceneEnvironment}
             updateEndingName={updateEndingName}
+            updateBackgroundMusic={updateBackgroundMusic}
           />
         ) : (
           <div className="text-center flex-1 flex items-center justify-center p-3 bg-muted/30 rounded-md mx-2 mb-2">
