@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/auth';
 import { UserStory } from '@/hooks/auth/types';
 import { supabase } from '@/integrations/supabase/client';
@@ -15,12 +15,34 @@ export const useStoryManagement = () => {
   const [selectedStory, setSelectedStory] = useState<UserStory | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
 
+  // Clear initial loading state after a timeout if still loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (isInitialLoading) {
+        console.log('Forcing end of initial loading state after timeout');
+        setIsInitialLoading(false);
+      }
+    }, 5000); // 5 second safety timeout
+    
+    return () => clearTimeout(timer);
+  }, [isInitialLoading]);
+
+  // Set initial loading to false when userStories is loaded
+  useEffect(() => {
+    if (userStories) {
+      console.log('User stories loaded, ending initial loading state', userStories.length);
+      setIsInitialLoading(false);
+    }
+  }, [userStories]);
+
   const loadStories = async () => {
+    console.log('loadStories called, setting initial loading state');
     setIsInitialLoading(true);
     setLoadError(null);
     
     try {
       if (user) {
+        console.log('User exists, refreshing stories');
         await refreshStories();
       }
     } catch (error: any) {

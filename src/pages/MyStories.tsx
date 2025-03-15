@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { useAuth } from '@/hooks/auth';
 import { EditStoryDialog, EmptyStoryState, StoriesLoadingState, StoriesErrorState, StoryHeader, StoryGrid } from '@/components/stories';
@@ -21,28 +22,19 @@ export default function MyStories() {
 
   // Fetch stories when component mounts
   useEffect(() => {
+    console.log('MyStories mounted, loading stories');
     loadStories();
-  }, [user]);
+  }, []);
   
-  // Check initial loading state when component mounts
-  useEffect(() => {
-    if (user && userStories) {
-      // Set a timeout to prevent infinite loading state
-      const timer = setTimeout(() => {
-        // This will be handled by the useStoryManagement hook
-      }, 3000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [user, userStories]);
-
   // Show loading state if we're still in the initial loading
   if (isInitialLoading) {
+    console.log('Showing loading state');
     return <StoriesLoadingState />;
   }
   
   // Show error state if there was an error loading stories
   if (loadError) {
+    console.log('Showing error state', loadError);
     return <StoriesErrorState onRetry={loadStories} errorMessage={loadError} />;
   }
 

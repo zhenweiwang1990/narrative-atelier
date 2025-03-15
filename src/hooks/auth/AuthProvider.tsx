@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -35,26 +34,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const getSession = async () => {
       setLoading(true);
       
-      const { data: { session }, error } = await supabase.auth.getSession();
-      
-      if (error) {
-        console.error('Error getting session:', error);
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session:', error);
+        }
+        
+        setSession(session);
+        setUser(session?.user || null);
+        
+        if (session?.user) {
+          await refreshStories();
+        }
+      } catch (err) {
+        console.error('Unexpected error getting session:', err);
+      } finally {
+        setLoading(false);
       }
-      
-      setSession(session);
-      setUser(session?.user || null);
-      
-      if (session?.user) {
-        await refreshStories();
-      }
-      
-      setLoading(false);
     };
 
     getSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state changed:', event);
         setSession(session);
         setUser(session?.user || null);
         
@@ -63,21 +67,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           
           // Check if user just signed up and has no stories
           if (event === 'SIGNED_IN') {
-            const { data: stories } = await supabase
-              .from('stories')
-              .select('id')
-              .eq('user_id', session.user.id)
-              .limit(1);
-              
-            if (!stories || stories.length === 0) {
-              // User has no stories, initialize sample story
-              const sampleStory = await addSampleStory();
-              if (sampleStory) {
-                toast({
-                  title: "示例剧情已创建",
-                  description: "我们为您准备了一个示例剧情，点击左侧菜单中的剧情即可开始探索"
-                });
+            try {
+              const { data: stories } = await supabase
+                .from('stories')
+                .select('id')
+                .eq('user_id', session.user.id)
+                .limit(1);
+                
+              if (!stories || stories.length === 0) {
+                // User has no stories, initialize sample story
+                const sampleStory = await addSampleStory();
+                if (sampleStory) {
+                  toast({
+                    title: "示例剧情已创建",
+                    description: "我们为您准备了一个示例剧情，点击左侧菜单中的剧情即可开始探索"
+                  });
+                }
               }
+            } catch (err) {
+              console.error('Error checking user stories:', err);
             }
           }
         } else {
@@ -91,8 +99,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const refreshStories = async () => {
     if (!user) return;
-    const stories = await fetchUserStories(user.id);
-    setUserStories(stories);
+    
+    try {
+      console.log('Refreshing stories for user:', user.id);
+      const stories = await fetchUserStories(user.id);
+      console.log('Stories refreshed, count:', stories.length);
+      setUserStories(stories);
+    } catch (err) {
+      console.error('Error refreshing stories:', err);
+    }
   };
 
   const addNewStory = async (): Promise<UserStory | null> => {

@@ -129,7 +129,7 @@ export const saveStory = async (story: Story, slug: string, userId: string): Pro
 
 // Add caching for loaded stories to prevent repeated database queries
 const storyCache = new Map<string, {story: Story, timestamp: number}>();
-const CACHE_TTL = 60000; // 60 seconds cache validity
+const CACHE_TTL = 300000; // 5 minutes cache validity (increased from 60 seconds)
 
 export const loadStory = async (slug: string, userId: string): Promise<Story | null> => {
   try {
@@ -139,7 +139,7 @@ export const loadStory = async (slug: string, userId: string): Promise<Story | n
     const now = Date.now();
     
     if (cachedData && (now - cachedData.timestamp < CACHE_TTL)) {
-      console.log('Using cached story data');
+      console.log('Using cached story data for', slug);
       return cachedData.story;
     }
     
