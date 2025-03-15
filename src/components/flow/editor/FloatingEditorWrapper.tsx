@@ -35,7 +35,7 @@ const FloatingEditorWrapper: React.FC<FloatingEditorWrapperProps> = ({
         left: `${position.x + 290}px`, // 290px is approximately the width of the preview + some margin
         top: `${position.y}px`,
         position: "fixed" as const,
-        zIndex: 51,
+        zIndex: 90, // 增加到90，确保下拉菜单不会被遮挡
         width: "480px", // Increased from 400px to 480px
         minHeight: "625px", // 125% of 500px
       };

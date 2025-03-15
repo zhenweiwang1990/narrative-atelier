@@ -61,7 +61,7 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
           <SelectTrigger>
             <SelectValue placeholder={isSuccess ? "选择成功场景" : "选择失败场景"} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="z-[1100]">
             <SelectItem value="none">不指定</SelectItem>
             <SelectItem value="ai-branch" className="text-blue-600">AI 写支线</SelectItem>
             <SelectItem value="ai-ending" className="text-purple-600">AI 写结局</SelectItem>
@@ -81,7 +81,7 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
           </SelectContent>
         </Select>
         
-        {showAiButtons && (
+        {showAiButtons && sceneId === "none" && (
           <div className="flex gap-1 mt-1">
             <Button
               type="button"

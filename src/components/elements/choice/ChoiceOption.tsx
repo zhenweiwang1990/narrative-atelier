@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -108,7 +107,7 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
           <SelectTrigger className="mt-1 h-7 text-xs">
             <SelectValue placeholder="选择下一个场景" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="z-[1100]">
             <SelectGroup>
               <SelectItem value="none">不指定</SelectItem>
               <SelectItem value="ai-branch" className="text-blue-600">AI 写支线</SelectItem>
