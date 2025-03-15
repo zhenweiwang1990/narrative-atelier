@@ -20,7 +20,16 @@ export default function MyStories() {
     handleCreateStory
   } = useStoryManagement();
 
-  // Fetch stories when component mounts
+  // Debug logging
+  useEffect(() => {
+    console.log('MyStories component rendered with states:', {
+      user: !!user, 
+      userStories: userStories?.length || 0,
+      isInitialLoading
+    });
+  }, [user, userStories, isInitialLoading]);
+  
+  // Fetch stories when component mounts if not already loading
   useEffect(() => {
     console.log('MyStories mounted, loading stories');
     loadStories();
@@ -28,7 +37,7 @@ export default function MyStories() {
   
   // Show loading state if we're still in the initial loading
   if (isInitialLoading) {
-    console.log('Showing loading state');
+    console.log('Showing loading state in MyStories');
     return <StoriesLoadingState />;
   }
   

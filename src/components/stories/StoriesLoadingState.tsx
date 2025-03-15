@@ -1,9 +1,22 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const StoriesLoadingState: React.FC = () => {
+  useEffect(() => {
+    console.log('StoriesLoadingState mounted - displaying loading UI');
+    // 添加一个超时检查
+    const timer = setTimeout(() => {
+      console.log('StoriesLoadingState still showing after 8 seconds - possible issue');
+    }, 8000);
+    
+    return () => {
+      console.log('StoriesLoadingState unmounted');
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
     <div className="flex flex-col items-center justify-center h-[60vh] w-full">
       <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />

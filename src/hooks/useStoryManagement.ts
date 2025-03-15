@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/auth';
 import { UserStory } from '@/hooks/auth/types';
 import { supabase } from '@/integrations/supabase/client';
@@ -14,6 +13,7 @@ export const useStoryManagement = () => {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [selectedStory, setSelectedStory] = useState<UserStory | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const [loadingInitiated, setLoadingInitiated] = useState(false);
 
   // Clear initial loading state after a timeout if still loading
   useEffect(() => {
@@ -29,13 +29,22 @@ export const useStoryManagement = () => {
 
   // Set initial loading to false when userStories is loaded
   useEffect(() => {
-    if (userStories) {
-      console.log('User stories loaded, ending initial loading state', userStories.length);
+    if (userStories !== undefined) {
+      console.log('User stories loaded, ending initial loading state', userStories?.length || 0);
       setIsInitialLoading(false);
     }
   }, [userStories]);
 
-  const loadStories = async () => {
+  // Auto-load stories on mount
+  useEffect(() => {
+    if (!loadingInitiated) {
+      console.log('Auto-loading stories on mount');
+      loadStories();
+      setLoadingInitiated(true);
+    }
+  }, []);
+
+  const loadStories = useCallback(async () => {
     console.log('loadStories called, setting initial loading state');
     setIsInitialLoading(true);
     setLoadError(null);
@@ -44,17 +53,20 @@ export const useStoryManagement = () => {
       if (user) {
         console.log('User exists, refreshing stories');
         await refreshStories();
+      } else {
+        console.log('No user found when trying to load stories');
+        setLoadError('未登录或会话已过期');
       }
     } catch (error: any) {
       console.error('Error loading stories:', error);
       setLoadError(error.message || '加载剧情数据失败');
     } finally {
-      // Always end loading state after a reasonable timeout
+      // End loading state after a short delay to prevent UI flashing
       setTimeout(() => {
         setIsInitialLoading(false);
-      }, 1000);
+      }, 500);
     }
-  };
+  }, [user, refreshStories]);
 
   const handleEditClick = (story: UserStory) => {
     setSelectedStory(story);
