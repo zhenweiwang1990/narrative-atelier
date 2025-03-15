@@ -9,10 +9,12 @@ import {
   Trash2, 
   User,
   Check, 
-  X
+  X,
+  Scissors
 } from "lucide-react";
 import { AspectRatio } from "./ui/aspect-ratio";
 import ImageSelectorDialog from "./ai-story/ImageSelectorDialog";
+import { toast } from "sonner";
 
 interface CharacterCardProps {
   character: Character;
@@ -23,7 +25,7 @@ interface CharacterCardProps {
   onConfirmEdit?: () => void;
   onCancelEdit?: () => void;
   isSelected?: boolean;
-  onImageChange?: (imageUrl: string) => void;
+  onImageChange?: (imageUrl: string, type: 'profilePicture' | 'fullBody') => void;
 }
 
 const CharacterCard = ({
@@ -38,7 +40,9 @@ const CharacterCard = ({
   onImageChange
 }: CharacterCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [isImageSelectorOpen, setIsImageSelectorOpen] = useState(false);
+  const [isProfileImageSelectorOpen, setIsProfileImageSelectorOpen] = useState(false);
+  const [isFullBodyImageSelectorOpen, setIsFullBodyImageSelectorOpen] = useState(false);
+  const [isGeneratingFullBody, setIsGeneratingFullBody] = useState(false);
   
   // Get role and gender display text
   const roleText = character.role === "protagonist" ? "主角" : "配角";
@@ -49,10 +53,37 @@ const CharacterCard = ({
   // Get badge colors based on character role
   const roleBadgeVariant = character.role === "protagonist" ? "default" : "secondary";
   
-  const handleImageSelected = (imageUrl: string) => {
+  const handleProfileImageSelected = (imageUrl: string) => {
     if (onImageChange) {
-      onImageChange(imageUrl);
+      onImageChange(imageUrl, 'profilePicture');
     }
+  };
+  
+  const handleFullBodyImageSelected = (imageUrl: string) => {
+    if (onImageChange) {
+      onImageChange(imageUrl, 'fullBody');
+    }
+  };
+  
+  const handleGenerateFullBody = () => {
+    if (!character.profilePicture) {
+      toast.error("请先设置角色形象照片");
+      return;
+    }
+    
+    setIsGeneratingFullBody(true);
+    
+    // TODO: Call server API to remove background and generate full body image
+    // Mock implementation with timeout
+    setTimeout(() => {
+      if (onImageChange) {
+        // For now, we'll just use the same image as a mock result
+        // In real implementation, this would be the processed image with background removed
+        onImageChange(character.profilePicture!, 'fullBody');
+        toast.success("立绘生成成功");
+      }
+      setIsGeneratingFullBody(false);
+    }, 1500);
   };
   
   return (
@@ -80,14 +111,38 @@ const CharacterCard = ({
           </AspectRatio>
           
           {isEditing && onImageChange && (
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-2">
               <Button 
                 variant="secondary" 
                 size="sm" 
-                onClick={() => setIsImageSelectorOpen(true)}
+                onClick={() => setIsProfileImageSelectorOpen(true)}
               >
-                更换图片
+                更换形象照
               </Button>
+              
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setIsFullBodyImageSelectorOpen(true)}
+                >
+                  设置立绘
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleGenerateFullBody}
+                  disabled={isGeneratingFullBody || !character.profilePicture}
+                >
+                  <Scissors className="h-3 w-3 mr-1" />
+                  抠图
+                </Button>
+              </div>
+              
+              {character.fullBody && (
+                <div className="mt-1 text-xs text-white">已设置立绘</div>
+              )}
             </div>
           )}
           
@@ -143,13 +198,23 @@ const CharacterCard = ({
       </Card>
       
       {onImageChange && (
-        <ImageSelectorDialog
-          open={isImageSelectorOpen}
-          onOpenChange={setIsImageSelectorOpen}
-          onImageSelected={handleImageSelected}
-          aspectRatio={9/16}
-          title="选择角色形象"
-        />
+        <>
+          <ImageSelectorDialog
+            open={isProfileImageSelectorOpen}
+            onOpenChange={setIsProfileImageSelectorOpen}
+            onImageSelected={handleProfileImageSelected}
+            aspectRatio={9/16}
+            title="选择角色形象照"
+          />
+          
+          <ImageSelectorDialog
+            open={isFullBodyImageSelectorOpen}
+            onOpenChange={setIsFullBodyImageSelectorOpen}
+            onImageSelected={handleFullBodyImageSelected}
+            aspectRatio={9/16}
+            title="选择角色立绘"
+          />
+        </>
       )}
     </>
   );

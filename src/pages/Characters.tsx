@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useStory } from "@/components/Layout";
 import CharacterCard from "@/components/CharacterCard";
@@ -44,7 +45,7 @@ const Characters = () => {
     gender: "male",
     role: "supporting",
     bio: "",
-    portrait: "",
+    profilePicture: "",
     fullBody: "",
   });
 
@@ -68,7 +69,7 @@ const Characters = () => {
       gender: "male",
       role: "supporting",
       bio: "",
-      portrait: "",
+      profilePicture: "",
       fullBody: "",
     });
     setIsDialogOpen(true);
@@ -83,7 +84,7 @@ const Characters = () => {
       gender: character.gender,
       role: character.role,
       bio: character.bio,
-      portrait: character.portrait || "",
+      profilePicture: character.profilePicture || "",
       fullBody: character.fullBody || "",
     });
     setIsDialogOpen(true);
@@ -100,6 +101,11 @@ const Characters = () => {
   // 处理选择变化
   const handleSelectChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // 处理图片变更
+  const handleImageChange = (imageUrl: string, type: 'profilePicture' | 'fullBody') => {
+    setFormData((prev) => ({ ...prev, [type]: imageUrl }));
   };
 
   // 处理角色创建或更新
@@ -130,7 +136,7 @@ const Characters = () => {
         gender: (formData.gender as CharacterGender) || "male",
         role: (formData.role as CharacterRole) || "supporting",
         bio: formData.bio || "",
-        portrait: formData.portrait || undefined,
+        profilePicture: formData.profilePicture || undefined,
         fullBody: formData.fullBody || undefined,
       };
 
@@ -210,9 +216,9 @@ const Characters = () => {
               filteredCharacters.map((character) => (
                 <TableRow key={character.id}>
                   <TableCell>
-                    {character.portrait ? (
+                    {character.profilePicture ? (
                       <img
-                        src={character.portrait}
+                        src={character.profilePicture}
                         alt={character.name}
                         className="h-8 w-8 rounded-full object-cover"
                       />
@@ -298,45 +304,21 @@ const Characters = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="gender">性别</Label>
-                <Select
-                  value={formData.gender}
-                  onValueChange={(value) => handleSelectChange("gender", value)}
-                >
-                  <SelectTrigger id="gender">
-                    <SelectValue placeholder="选择性别" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">男</SelectItem>
-                    <SelectItem value="female">女</SelectItem>
-                    <SelectItem value="other">其他</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="portrait">头像URL</Label>
-                <Input
-                  id="portrait"
-                  name="portrait"
-                  value={formData.portrait}
-                  onChange={handleInputChange}
-                  placeholder="https://example.com/portrait.jpg"
-                />
-              </div>
-            </div>
-
             <div className="space-y-2">
-              <Label htmlFor="fullBody">全身像URL</Label>
-              <Input
-                id="fullBody"
-                name="fullBody"
-                value={formData.fullBody}
-                onChange={handleInputChange}
-                placeholder="https://example.com/full-body.jpg"
-              />
+              <Label htmlFor="gender">性别</Label>
+              <Select
+                value={formData.gender}
+                onValueChange={(value) => handleSelectChange("gender", value)}
+              >
+                <SelectTrigger id="gender">
+                  <SelectValue placeholder="选择性别" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="male">男</SelectItem>
+                  <SelectItem value="female">女</SelectItem>
+                  <SelectItem value="other">其他</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">
@@ -349,6 +331,22 @@ const Characters = () => {
                 rows={4}
                 placeholder="角色背景和个性描述..."
               />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                {isEditMode && selectedCharacter && (
+                  <CharacterCard 
+                    character={selectedCharacter}
+                    isEditing={true}
+                    onEdit={() => {}}
+                    onDelete={() => {}}
+                    onImageChange={(url, type) => handleImageChange(url, type)}
+                    onConfirmEdit={() => {}}
+                    onCancelEdit={() => {}}
+                  />
+                )}
+              </div>
             </div>
           </div>
 

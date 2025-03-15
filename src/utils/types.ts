@@ -1,4 +1,3 @@
-
 export interface Story {
   id: string;
   title: string;
@@ -37,9 +36,8 @@ export interface Character {
   gender: CharacterGender;
   role: CharacterRole;
   bio: string;
-  portrait?: string;
-  fullBody?: string;
   profilePicture?: string;
+  fullBody?: string;
 }
 
 export interface Location {
