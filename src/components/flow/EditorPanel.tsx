@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -49,7 +48,7 @@ const EditorPanel = ({
         className="h-full flex flex-col"
       >
         <div className="px-2 pt-2">
-          <TabsList className="grid grid-cols-3 mb-2 h-8">
+          <TabsList className="grid grid-cols-3 mb-2 h-9">
             <TabsTrigger
               value="properties"
               disabled={!selectedSceneId}

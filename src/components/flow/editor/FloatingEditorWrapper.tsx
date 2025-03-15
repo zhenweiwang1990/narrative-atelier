@@ -1,4 +1,3 @@
-
 import React, { ReactNode } from "react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -36,7 +35,7 @@ const FloatingEditorWrapper: React.FC<FloatingEditorWrapperProps> = ({
         top: `${position.y}px`,
         position: "fixed" as const,
         zIndex: 90, // Higher z-index to ensure dropdowns aren't obscured
-        width: "480px",
+        width: "520px",
         minHeight: "625px",
       };
 

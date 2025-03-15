@@ -1,4 +1,3 @@
-
 import React, { ReactNode } from "react";
 import { AppSidebar } from "./AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -56,19 +55,8 @@ const Layout = ({ children }: LayoutProps) => {
                 </Alert>
               )}
 
-              {loading ? (
-                <FlowLoadingState error={error} />
-              ) : (
-                children
-              )}
+              {loading ? <FlowLoadingState error={error} /> : children}
             </main>
-            <footer className="py-3 border-t border-border">
-              <div className="px-3 md:px-4">
-                <p className="text-center text-xs text-muted-foreground">
-                  Miss AI 剧情编辑器
-                </p>
-              </div>
-            </footer>
           </div>
         </StoryContext.Provider>
       </div>
