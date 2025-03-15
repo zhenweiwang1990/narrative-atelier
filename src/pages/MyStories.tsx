@@ -7,6 +7,7 @@ import { useStoryManagement } from '@/hooks/useStoryManagement';
 export default function MyStories() {
   const { user, userStories, refreshStories } = useAuth();
   const [forceRerender, setForceRerender] = useState(false);
+  const [hasAttemptedLoad, setHasAttemptedLoad] = useState(false);
   const {
     isLoading,
     isInitialLoading,
@@ -27,32 +28,45 @@ export default function MyStories() {
     console.log('MyStories component rendered with states:', {
       user: !!user, 
       userId: user?.id,
-      userStories: userStories?.length || 0,
+      storiesCount: userStories?.length || 0,
       isInitialLoading,
       loadError,
-      forceRerender
+      forceRerender,
+      hasAttemptedLoad
     });
-  }, [user, userStories, isInitialLoading, loadError, forceRerender]);
+  }, [user, userStories, isInitialLoading, loadError, forceRerender, hasAttemptedLoad]);
   
   // Add safety timeout to recover from indefinite loading state
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const safetyTimer = setTimeout(() => {
       if (isInitialLoading) {
         console.log('Safety timeout triggered - forcing rerender');
         setForceRerender(prev => !prev); // Toggle to force rerender
       }
-    }, 5000);
+    }, 4000); // Reduced from 5s to 4s
     
-    return () => clearTimeout(timer);
+    return () => clearTimeout(safetyTimer);
   }, [isInitialLoading]);
+  
+  // Second safety check - if we've been on the page for 8 seconds with no stories, try again
+  useEffect(() => {
+    const secondaryTimer = setTimeout(() => {
+      if (!userStories && user && hasAttemptedLoad) {
+        console.log('Secondary timeout - stories still not loaded after 8s, forcing refresh');
+        forceRefreshStories();
+      }
+    }, 8000);
+    
+    return () => clearTimeout(secondaryTimer);
+  }, [userStories, user, hasAttemptedLoad, forceRefreshStories]);
   
   // When forceRerender changes, attempt to load stories again
   useEffect(() => {
-    if (forceRerender) {
+    if (forceRerender && user) {
       console.log('Handling forced rerender by refreshing stories');
       forceRefreshStories();
     }
-  }, [forceRerender, forceRefreshStories]);
+  }, [forceRerender, forceRefreshStories, user]);
   
   // Directly force a load on component mount or when user changes
   useEffect(() => {
@@ -61,6 +75,7 @@ export default function MyStories() {
       // Only try to load if we have a user
       if (user) {
         try {
+          setHasAttemptedLoad(true);
           await refreshStories();
           console.log('Stories refreshed from MyStories component');
         } catch (err) {
@@ -72,7 +87,7 @@ export default function MyStories() {
     };
     
     initializeStories();
-  }, [user, forceRerender]); // Re-run if user changes or force rerender happens
+  }, [user, forceRerender, refreshStories]); // Re-run if user changes or force rerender happens
   
   // Show loading state if we're still in the initial loading
   if (isInitialLoading && !userStories) {

@@ -1,12 +1,20 @@
 
-import React, { useEffect } from 'react';
-import { Loader2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Loader2, RefreshCw } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 
 export const StoriesLoadingState: React.FC = () => {
+  const [showRefresh, setShowRefresh] = useState(false);
+  
   useEffect(() => {
     console.log('StoriesLoadingState mounted - displaying loading UI');
+    
+    // Show refresh button much sooner (after 2 seconds)
+    const refreshTimer = setTimeout(() => {
+      setShowRefresh(true);
+      console.log('Showing refresh button after timeout');
+    }, 2000);
     
     // Add a timeout check to detect if the loading state persists too long
     const timer = setTimeout(() => {
@@ -16,6 +24,7 @@ export const StoriesLoadingState: React.FC = () => {
     return () => {
       console.log('StoriesLoadingState unmounted');
       clearTimeout(timer);
+      clearTimeout(refreshTimer);
     };
   }, []);
 
@@ -24,7 +33,8 @@ export const StoriesLoadingState: React.FC = () => {
     console.log('User triggered manual refresh');
     // Clear any cached data in localStorage that might be causing the issue
     localStorage.removeItem('narrative-atelier-auth');
-    // Force a full page reload
+    localStorage.removeItem('supabase.auth.token');
+    // Force a hard reload to clear any memory state
     window.location.href = '/my-stories';
   };
 
@@ -39,15 +49,17 @@ export const StoriesLoadingState: React.FC = () => {
         <Skeleton className="h-4 w-4/6 mx-auto" />
       </div>
       
-      {/* Manual refresh button that appears after a delay */}
-      <div className="mt-8 opacity-0 animate-in fade-in delay-500 duration-300">
+      {/* Manual refresh button that appears much sooner */}
+      <div className={`mt-8 transition-all duration-300 ${showRefresh ? 'opacity-100' : 'opacity-0'}`}>
         <p className="text-sm text-muted-foreground mb-2">
           加载时间过长？
         </p>
         <Button 
-          variant="outline" 
+          variant="default" 
           onClick={handleForceRefresh}
+          className="flex items-center gap-2"
         >
+          <RefreshCw className="h-4 w-4" />
           点击强制刷新
         </Button>
       </div>
