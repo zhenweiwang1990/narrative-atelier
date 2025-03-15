@@ -1,4 +1,5 @@
-import { SceneElement, ElementType, Story } from "@/utils/types";
+
+import { SceneElement, ElementType, Story, ElementOutcome } from "@/utils/types";
 import { generateId } from "@/utils/storage";
 
 // Create element based on type
@@ -66,10 +67,16 @@ export const createNewElement = (
         introText: "Get ready...",
         timeLimit: 3,
         keySequence: "ABC",
-        successSceneId: "",
-        failureSceneId: "",
-        successTransition: "成功了!",
-        failureTransition: "失败了!",
+        success: {
+          sceneId: "",
+          transition: "成功了!",
+          valueChanges: []
+        },
+        failure: {
+          sceneId: "",
+          transition: "失败了!",
+          valueChanges: []
+        }
       } as SceneElement;
 
     case "dialogueTask":
@@ -82,10 +89,16 @@ export const createNewElement = (
           story.characters.find((c) => c.role !== "protagonist")?.id || "",
         background: "输入对话背景信息...",
         openingLine: "输入开场白...",
-        successSceneId: "",
-        failureSceneId: "",
-        successTransition: "成功完成任务目标.",
-        failureTransition: "未能完成任务目标.",
+        success: {
+          sceneId: "",
+          transition: "成功完成任务目标.",
+          valueChanges: []
+        },
+        failure: {
+          sceneId: "",
+          transition: "未能完成任务目标.",
+          valueChanges: []
+        }
       } as SceneElement;
 
     default:

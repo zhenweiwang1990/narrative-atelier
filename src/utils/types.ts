@@ -36,6 +36,13 @@ export interface ValueChange {
   change: number; // Can be positive or negative
 }
 
+// Outcome for elements with success/failure paths
+export interface ElementOutcome {
+  sceneId: string;
+  transition?: string;
+  valueChanges?: ValueChange[];
+}
+
 // Scene Element Types
 export type ElementType = 'narration' | 'dialogue' | 'thought' | 'choice' | 'qte' | 'dialogueTask';
 
@@ -66,7 +73,7 @@ export interface ChoiceOption {
   id: string;
   text: string;
   nextSceneId: string;
-  valueChanges?: ValueChange[]; // New field for global value changes
+  valueChanges?: ValueChange[];
 }
 
 export interface ChoiceElement extends BaseElement {
@@ -81,12 +88,15 @@ export interface QteElement extends BaseElement {
   introText?: string; // Guide text shown before QTE starts
   timeLimit?: number; // Time limit in seconds (3-6)
   keySequence?: string; // Sequence of characters to press (3-6 chars)
-  successSceneId: string;
-  failureSceneId: string;
-  successTransition?: string; // Narration text for success transition
-  failureTransition?: string; // Narration text for failure transition
-  successValueChanges?: ValueChange[]; // New field for success value changes
-  failureValueChanges?: ValueChange[]; // New field for failure value changes
+  success: ElementOutcome;
+  failure: ElementOutcome;
+  // Legacy fields for backward compatibility - will be removed in future
+  successSceneId?: string;
+  failureSceneId?: string;
+  successTransition?: string;
+  failureTransition?: string;
+  successValueChanges?: ValueChange[];
+  failureValueChanges?: ValueChange[];
 }
 
 export interface DialogueTaskElement extends BaseElement {
@@ -95,12 +105,15 @@ export interface DialogueTaskElement extends BaseElement {
   targetCharacterId: string;
   background: string;
   openingLine: string;
-  successSceneId: string;
-  failureSceneId: string;
-  successTransition?: string; // Narration text for success transition
-  failureTransition?: string; // Narration text for failure transition
-  successValueChanges?: ValueChange[]; // New field for success value changes
-  failureValueChanges?: ValueChange[]; // New field for failure value changes
+  success: ElementOutcome;
+  failure: ElementOutcome;
+  // Legacy fields for backward compatibility - will be removed in future
+  successSceneId?: string;
+  failureSceneId?: string;
+  successTransition?: string;
+  failureTransition?: string;
+  successValueChanges?: ValueChange[];
+  failureValueChanges?: ValueChange[];
 }
 
 export type SceneElement = 

@@ -1,7 +1,16 @@
 
 import { Node, Edge, MarkerType } from 'reactflow';
-import { Story, Scene } from '@/utils/types';
+import { Story, Scene, QteElement, DialogueTaskElement } from '@/utils/types';
 import { SceneNodeData } from './flowTypes';
+
+// Helper function to get scene ID from element outcome
+const getSceneIdFromOutcome = (element: QteElement | DialogueTaskElement, isSuccess: boolean): string => {
+  if (isSuccess) {
+    return element.success?.sceneId || element.successSceneId || '';
+  } else {
+    return element.failure?.sceneId || element.failureSceneId || '';
+  }
+};
 
 // Transform story scenes to flow nodes
 export const scenesToNodes = (story: Story): Node[] => {
@@ -18,10 +27,12 @@ export const scenesToNodes = (story: Story): Node[] => {
           return element.options.some(option => option.nextSceneId);
         }
         if (element.type === "qte") {
-          return element.successSceneId || element.failureSceneId;
+          return getSceneIdFromOutcome(element as QteElement, true) || 
+                 getSceneIdFromOutcome(element as QteElement, false);
         }
         if (element.type === "dialogueTask") {
-          return element.successSceneId || element.failureSceneId;
+          return getSceneIdFromOutcome(element as DialogueTaskElement, true) || 
+                 getSceneIdFromOutcome(element as DialogueTaskElement, false);
         }
         return false;
       });
@@ -107,12 +118,16 @@ export const createEdgesFromStory = (story: Story): Edge[] => {
           }
         });
       } else if (element.type === 'qte') {
-        if (element.successSceneId) {
+        const qteElement = element as QteElement;
+        const successSceneId = getSceneIdFromOutcome(qteElement, true);
+        const failureSceneId = getSceneIdFromOutcome(qteElement, false);
+        
+        if (successSceneId) {
           flowEdges.push({
-            id: `e-${scene.id}-${element.successSceneId}-qte-success-${elemIndex}`,
+            id: `e-${scene.id}-${successSceneId}-qte-success-${elemIndex}`,
             source: scene.id,
             sourceHandle: `qte-success-${elemIndex}`,
-            target: element.successSceneId,
+            target: successSceneId,
             label: 'Success',
             type: 'smoothstep',
             animated: true,
@@ -120,12 +135,12 @@ export const createEdgesFromStory = (story: Story): Edge[] => {
           });
         }
         
-        if (element.failureSceneId) {
+        if (failureSceneId) {
           flowEdges.push({
-            id: `e-${scene.id}-${element.failureSceneId}-qte-failure-${elemIndex}`,
+            id: `e-${scene.id}-${failureSceneId}-qte-failure-${elemIndex}`,
             source: scene.id,
             sourceHandle: `qte-failure-${elemIndex}`,
-            target: element.failureSceneId,
+            target: failureSceneId,
             label: 'Failure',
             type: 'smoothstep',
             animated: true,
@@ -133,12 +148,16 @@ export const createEdgesFromStory = (story: Story): Edge[] => {
           });
         }
       } else if (element.type === 'dialogueTask') {
-        if (element.successSceneId) {
+        const dialogueTaskElement = element as DialogueTaskElement;
+        const successSceneId = getSceneIdFromOutcome(dialogueTaskElement, true);
+        const failureSceneId = getSceneIdFromOutcome(dialogueTaskElement, false);
+        
+        if (successSceneId) {
           flowEdges.push({
-            id: `e-${scene.id}-${element.successSceneId}-dialogueTask-success-${elemIndex}`,
+            id: `e-${scene.id}-${successSceneId}-dialogueTask-success-${elemIndex}`,
             source: scene.id,
             sourceHandle: `dialogueTask-success-${elemIndex}`,
-            target: element.successSceneId,
+            target: successSceneId,
             label: 'Success',
             type: 'smoothstep',
             animated: true,
@@ -146,12 +165,12 @@ export const createEdgesFromStory = (story: Story): Edge[] => {
           });
         }
         
-        if (element.failureSceneId) {
+        if (failureSceneId) {
           flowEdges.push({
-            id: `e-${scene.id}-${element.failureSceneId}-dialogueTask-failure-${elemIndex}`,
+            id: `e-${scene.id}-${failureSceneId}-dialogueTask-failure-${elemIndex}`,
             source: scene.id,
             sourceHandle: `dialogueTask-failure-${elemIndex}`,
-            target: element.failureSceneId,
+            target: failureSceneId,
             label: 'Failure',
             type: 'smoothstep',
             animated: true,

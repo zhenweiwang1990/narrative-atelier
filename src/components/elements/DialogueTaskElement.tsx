@@ -5,7 +5,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { DialogueTaskElement as DialogueTaskElementType, Character, Scene, GlobalValue, ValueChange } from '@/utils/types';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import ValueChangesSection from './shared/ValueChangesSection';
+import SceneSelectSection from './shared/SceneSelectSection';
+import TransitionTextsSection from './shared/TransitionTextsSection';
+import ValueChangesCollapsible from './shared/ValueChangesCollapsible';
 import SuccessFailureLayout from './shared/SuccessFailureLayout';
 
 interface DialogueTaskElementProps {
@@ -23,10 +25,72 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
   globalValues,
   onUpdate 
 }) => {
+  // Initialize success and failure if they don't exist (for backward compatibility)
+  const ensureStructure = (element: DialogueTaskElementType): DialogueTaskElementType => {
+    const updated = { ...element };
+    
+    if (!updated.success) {
+      updated.success = {
+        sceneId: updated.successSceneId || '',
+        transition: updated.successTransition || '',
+        valueChanges: updated.successValueChanges || []
+      };
+    }
+    
+    if (!updated.failure) {
+      updated.failure = {
+        sceneId: updated.failureSceneId || '',
+        transition: updated.failureTransition || '',
+        valueChanges: updated.failureValueChanges || []
+      };
+    }
+    
+    return updated;
+  };
+  
+  const safeElement = ensureStructure(element);
+  
+  // Update functions for the new structure
+  const updateSuccessSceneId = (sceneId: string) => {
+    onUpdate(element.id, {
+      success: {
+        ...safeElement.success,
+        sceneId
+      }
+    });
+  };
+  
+  const updateFailureSceneId = (sceneId: string) => {
+    onUpdate(element.id, {
+      failure: {
+        ...safeElement.failure,
+        sceneId
+      }
+    });
+  };
+  
+  const updateSuccessTransition = (transition: string) => {
+    onUpdate(element.id, {
+      success: {
+        ...safeElement.success,
+        transition
+      }
+    });
+  };
+  
+  const updateFailureTransition = (transition: string) => {
+    onUpdate(element.id, {
+      failure: {
+        ...safeElement.failure,
+        transition
+      }
+    });
+  };
+  
   const addValueChange = (isSuccess: boolean) => {
     const currentChanges = isSuccess 
-      ? element.successValueChanges || []
-      : element.failureValueChanges || [];
+      ? safeElement.success.valueChanges || []
+      : safeElement.failure.valueChanges || [];
       
     const unusedValues = globalValues.filter(
       value => !currentChanges.some(change => change.valueId === value.id)
@@ -41,114 +105,70 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
     
     if (isSuccess) {
       onUpdate(element.id, {
-        successValueChanges: [...currentChanges, newValueChange]
+        success: {
+          ...safeElement.success,
+          valueChanges: [...currentChanges, newValueChange]
+        }
       });
     } else {
       onUpdate(element.id, {
-        failureValueChanges: [...currentChanges, newValueChange]
+        failure: {
+          ...safeElement.failure,
+          valueChanges: [...currentChanges, newValueChange]
+        }
       });
     }
   };
   
   const updateValueChange = (isSuccess: boolean, valueId: string, change: number) => {
     const currentChanges = isSuccess 
-      ? element.successValueChanges || []
-      : element.failureValueChanges || [];
+      ? safeElement.success.valueChanges || []
+      : safeElement.failure.valueChanges || [];
       
     const updatedChanges = currentChanges.map(vc => 
       vc.valueId === valueId ? { ...vc, change } : vc
     );
     
     if (isSuccess) {
-      onUpdate(element.id, { successValueChanges: updatedChanges });
+      onUpdate(element.id, {
+        success: {
+          ...safeElement.success,
+          valueChanges: updatedChanges
+        }
+      });
     } else {
-      onUpdate(element.id, { failureValueChanges: updatedChanges });
+      onUpdate(element.id, {
+        failure: {
+          ...safeElement.failure,
+          valueChanges: updatedChanges
+        }
+      });
     }
   };
   
   const removeValueChange = (isSuccess: boolean, valueId: string) => {
     const currentChanges = isSuccess 
-      ? element.successValueChanges || []
-      : element.failureValueChanges || [];
+      ? safeElement.success.valueChanges || []
+      : safeElement.failure.valueChanges || [];
       
     const updatedChanges = currentChanges.filter(vc => vc.valueId !== valueId);
     
     if (isSuccess) {
-      onUpdate(element.id, { successValueChanges: updatedChanges });
+      onUpdate(element.id, {
+        success: {
+          ...safeElement.success,
+          valueChanges: updatedChanges
+        }
+      });
     } else {
-      onUpdate(element.id, { failureValueChanges: updatedChanges });
+      onUpdate(element.id, {
+        failure: {
+          ...safeElement.failure,
+          valueChanges: updatedChanges
+        }
+      });
     }
   };
-  
-  const handleSceneSelection = (isSuccess: boolean, sceneId: string) => {
-    if (sceneId === "none") {
-      onUpdate(element.id, isSuccess ? { successSceneId: "" } : { failureSceneId: "" });
-    } else {
-      onUpdate(element.id, isSuccess ? { successSceneId: sceneId } : { failureSceneId: sceneId });
-    }
-  };
-
-  const renderSceneSelect = (isSuccess: boolean) => (
-    <div>
-      <Label className="text-xs">{isSuccess ? "成功场景" : "失败场景"}</Label>
-      <Select 
-        value={(isSuccess ? element.successSceneId : element.failureSceneId) || "none"} 
-        onValueChange={(value) => handleSceneSelection(isSuccess, value)}
-      >
-        <SelectTrigger className="mt-1 h-8 text-xs">
-          <SelectValue placeholder="选择场景" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem value="none">不指定</SelectItem>
-            {scenes.map((scene) => (
-              <SelectItem key={scene.id} value={scene.id}>
-                {scene.title} (
-                {scene.type === "start"
-                  ? "开始"
-                  : scene.type === "ending"
-                  ? "结局"
-                  : scene.type === "bad-ending"
-                  ? "异常结局"
-                  : "普通"}
-                )
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-    </div>
-  );
-
-  const renderTransitionText = (isSuccess: boolean) => (
-    <div>
-      <Label className="text-xs">{isSuccess ? "成功转场文本" : "失败转场文本"}</Label>
-      <Textarea
-        value={isSuccess ? (element.successTransition || '') : (element.failureTransition || '')}
-        onChange={(e) => onUpdate(element.id, isSuccess 
-          ? { successTransition: e.target.value } 
-          : { failureTransition: e.target.value }
-        )}
-        className="mt-1 text-sm"
-        rows={2}
-        placeholder={isSuccess ? "成功后的叙述" : "失败后的叙述"}
-      />
-    </div>
-  );
-
-  const renderValueChanges = (isSuccess: boolean) => (
-    <div>
-      <Label className="text-xs">{isSuccess ? "成功数值变化" : "失败数值变化"}</Label>
-      <ValueChangesSection
-        isSuccess={isSuccess}
-        valueChanges={isSuccess ? element.successValueChanges : element.failureValueChanges}
-        globalValues={globalValues}
-        onAddValueChange={addValueChange}
-        onUpdateValueChange={updateValueChange}
-        onRemoveValueChange={removeValueChange}
-      />
-    </div>
-  );
   
   return (
     <div className="space-y-2">
@@ -209,16 +229,62 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
           failureTitle="失败结果"
           successChildren={
             <div className="space-y-2">
-              {renderSceneSelect(true)}
-              {renderTransitionText(true)}
-              {renderValueChanges(true)}
+              <SceneSelectSection
+                successSceneId={safeElement.success.sceneId}
+                failureSceneId=""
+                scenes={scenes}
+                onUpdateSuccessScene={updateSuccessSceneId}
+                onUpdateFailureScene={() => {}}
+                showSingleColumn={true}
+              />
+              
+              <TransitionTextsSection
+                successTransition={safeElement.success.transition}
+                failureTransition=""
+                onUpdateSuccess={updateSuccessTransition}
+                onUpdateFailure={() => {}}
+                showSingleColumn={true}
+              />
+              
+              <ValueChangesCollapsible
+                title="成功数值变化"
+                isSuccess={true}
+                valueChanges={safeElement.success.valueChanges}
+                globalValues={globalValues}
+                onAddValueChange={addValueChange}
+                onUpdateValueChange={updateValueChange}
+                onRemoveValueChange={removeValueChange}
+              />
             </div>
           }
           failureChildren={
             <div className="space-y-2">
-              {renderSceneSelect(false)}
-              {renderTransitionText(false)}
-              {renderValueChanges(false)}
+              <SceneSelectSection
+                successSceneId=""
+                failureSceneId={safeElement.failure.sceneId}
+                scenes={scenes}
+                onUpdateSuccessScene={() => {}}
+                onUpdateFailureScene={updateFailureSceneId}
+                showSingleColumn={true}
+              />
+              
+              <TransitionTextsSection
+                successTransition=""
+                failureTransition={safeElement.failure.transition}
+                onUpdateSuccess={() => {}}
+                onUpdateFailure={updateFailureTransition}
+                showSingleColumn={true}
+              />
+              
+              <ValueChangesCollapsible
+                title="失败数值变化"
+                isSuccess={false}
+                valueChanges={safeElement.failure.valueChanges}
+                globalValues={globalValues}
+                onAddValueChange={addValueChange}
+                onUpdateValueChange={updateValueChange}
+                onRemoveValueChange={removeValueChange}
+              />
             </div>
           }
         />
