@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { AccordionContent, AccordionItem } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
@@ -19,7 +20,8 @@ import {
   ChoiceOption,
   Character,
   Scene,
-  GlobalValue
+  GlobalValue,
+  Story
 } from '@/utils/types';
 
 interface ElementContainerProps {
@@ -66,6 +68,17 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
 }) => {
   // Check if this element is expanded in the accordion
   const isExpanded = selectedElementId === element.id;
+
+  // Create a dummy story object with the minimum required properties for QteElement
+  // This is a temporary solution until we can properly pass the story from higher up
+  const dummyStory: Story = {
+    id: '',
+    title: '',
+    scenes: scenes,
+    characters: characters,
+    globalValues: globalValues,
+    locations: []
+  };
 
   return (
     <AccordionItem 
@@ -129,6 +142,7 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
             element={element as QteElementType}
             scenes={scenes}
             globalValues={globalValues}
+            story={dummyStory} // Pass the dummy story object to QteElement
             onUpdate={onUpdate}
             validateTimeLimit={validateTimeLimit}
             validateKeySequence={validateKeySequence}

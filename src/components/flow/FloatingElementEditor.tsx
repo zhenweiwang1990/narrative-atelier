@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useStory } from "@/components/Layout";
 import { useElementManagement } from "@/hooks/useElementManagement";
@@ -69,11 +68,7 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
     setIsGenerating(true);
     
     try {
-      // TODO: Implement AI content generation API call here
-      // The API should generate content based on the element type
-      // and fill in the form fields automatically
-      
-      // For now, let's mock this with a delay
+      // Call the AI content generation API
       const result = await handleAiStoryGeneration({
         prompt: `为${currentElement.type}类型元素生成内容`,
         type: "branch",
@@ -85,29 +80,30 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
         }
       });
       
-      // In a real implementation, you would process the result and update the element
-      // This is just a placeholder
-      if (result && result.success) {
-        // Mock content update based on element type
-        switch (currentElement.type) {
-          case "narration":
-            updateElement(currentElement.id, { 
-              text: "AI 生成的叙述内容将在这里显示" 
-            });
-            break;
-          case "dialogue":
-            updateElement(currentElement.id, { 
-              text: "AI 生成的对话内容将在这里显示" 
-            });
-            break;
-          case "qte":
-            updateElement(currentElement.id, { 
-              description: "AI 生成的 QTE 描述将在这里显示",
-              keySequence: "SPACE",
-              timeLimit: 5
-            });
-            break;
-          // Add other element types as needed
+      // Check if result exists and has the success property before accessing it
+      if (result && typeof result === 'object' && 'success' in result) {
+        if (result.success) {
+          // Mock content update based on element type
+          switch (currentElement.type) {
+            case "narration":
+              updateElement(currentElement.id, { 
+                text: "AI 生成的叙述内容将在这里显示" 
+              });
+              break;
+            case "dialogue":
+              updateElement(currentElement.id, { 
+                text: "AI 生成的对话内容将在这里显示" 
+              });
+              break;
+            case "qte":
+              updateElement(currentElement.id, { 
+                description: "AI 生成的 QTE 描述将在这里显示",
+                keySequence: "SPACE",
+                timeLimit: 5
+              });
+              break;
+            // Add other element types as needed
+          }
         }
       }
     } catch (error) {
