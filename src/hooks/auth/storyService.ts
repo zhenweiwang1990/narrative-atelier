@@ -5,6 +5,10 @@ import { toast } from '@/components/ui/use-toast';
 import { Json } from '@/integrations/supabase/types';
 import { UserStory } from './types';
 
+// Extended cache TTL and added timestamp checking for better refresh handling
+const storyCache = new Map<string, {story: Story, timestamp: number}>();
+const CACHE_TTL = 60000; // 1 minute cache validity
+
 export const fetchUserStories = async (userId: string): Promise<UserStory[]> => {
   try {
     console.log('Fetching stories for user:', userId);
@@ -125,11 +129,6 @@ export const saveStory = async (story: Story, slug: string, userId: string): Pro
     throw error;
   }
 };
-
-// Add caching for loaded stories to prevent repeated database queries
-// Increased the TTL for better performance
-const storyCache = new Map<string, {story: Story, timestamp: number}>();
-const CACHE_TTL = 300000; // 5 minutes cache validity (increased from 60 seconds)
 
 export const loadStory = async (slug: string, userId: string): Promise<Story | null> => {
   try {

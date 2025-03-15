@@ -15,6 +15,7 @@ export default function MyStories() {
     openDialog,
     setOpenDialog,
     loadStories,
+    forceRefreshStories,
     handleEditClick,
     handleSaveEdit,
     handleDeleteStory,
@@ -28,29 +29,30 @@ export default function MyStories() {
       userId: user?.id,
       userStories: userStories?.length || 0,
       isInitialLoading,
-      loadError
+      loadError,
+      forceRerender
     });
-  }, [user, userStories, isInitialLoading, loadError]);
+  }, [user, userStories, isInitialLoading, loadError, forceRerender]);
   
   // Add safety timeout to recover from indefinite loading state
   useEffect(() => {
     const timer = setTimeout(() => {
       if (isInitialLoading) {
         console.log('Safety timeout triggered - forcing rerender');
-        setForceRerender(true);
+        setForceRerender(prev => !prev); // Toggle to force rerender
       }
     }, 5000);
     
     return () => clearTimeout(timer);
   }, [isInitialLoading]);
   
-  // Reset force rerender after it's triggered
+  // When forceRerender changes, attempt to load stories again
   useEffect(() => {
     if (forceRerender) {
-      console.log('Handling forced rerender');
-      setForceRerender(false);
+      console.log('Handling forced rerender by refreshing stories');
+      forceRefreshStories();
     }
-  }, [forceRerender]);
+  }, [forceRerender, forceRefreshStories]);
   
   // Directly force a load on component mount or when user changes
   useEffect(() => {
@@ -81,7 +83,7 @@ export default function MyStories() {
   // Show error state if there was an error loading stories
   if (loadError) {
     console.log('Showing error state', loadError);
-    return <StoriesErrorState onRetry={loadStories} errorMessage={loadError} />;
+    return <StoriesErrorState onRetry={forceRefreshStories} errorMessage={loadError} />;
   }
 
   // If user is not logged in, show appropriate message

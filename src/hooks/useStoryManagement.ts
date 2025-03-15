@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/auth';
 import { UserStory } from '@/hooks/auth/types';
@@ -15,6 +14,7 @@ export const useStoryManagement = () => {
   const [selectedStory, setSelectedStory] = useState<UserStory | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [lastLoadAttempt, setLastLoadAttempt] = useState(0);
+  const [loadingInitiated, setLoadingInitiated] = useState(false);
 
   // Debug logging for better visibility into state changes
   useEffect(() => {
@@ -22,9 +22,19 @@ export const useStoryManagement = () => {
       hasUser: !!user, 
       storiesCount: userStories?.length || 0,
       isInitialLoading,
-      lastLoadAttempt
+      lastLoadAttempt,
+      loadingInitiated
     });
-  }, [user, userStories, isInitialLoading, lastLoadAttempt]);
+  }, [user, userStories, isInitialLoading, lastLoadAttempt, loadingInitiated]);
+
+  // Reset loading state when unmounted to prevent stale state on refresh
+  useEffect(() => {
+    return () => {
+      console.log('useStoryManagement unmounting, resetting state');
+      setIsInitialLoading(false);
+      setLoadingInitiated(false);
+    };
+  }, []);
 
   // Always end initial loading state when we have stories data or after a delay
   useEffect(() => {
@@ -55,11 +65,11 @@ export const useStoryManagement = () => {
     return () => clearTimeout(timer);
   }, [isInitialLoading, userStories, lastLoadAttempt]);
 
-  // Auto-load stories when dependencies change
+  // Auto-load stories when dependencies change, but only if not already loading
   useEffect(() => {
-    // Attempt to load stories as soon as we have a user
-    if (user && (lastLoadAttempt === 0 || Date.now() - lastLoadAttempt > 5000)) {
+    if (user && !loadingInitiated) {
       console.log('Auto-loading stories for user:', user?.id);
+      setLoadingInitiated(true); // Mark that we've initiated loading to prevent duplicates
       loadStories();
     }
   }, [user]);
@@ -83,13 +93,19 @@ export const useStoryManagement = () => {
       console.error('Error loading stories:', error);
       setLoadError(error.message || '加载剧情数据失败');
     } finally {
-      // End loading state after a short delay to prevent UI flashing
-      setTimeout(() => {
-        console.log('Ending initial loading state after loadStories');
-        setIsInitialLoading(false);
-      }, 300);
+      // End loading state and reset the loading initiated flag for possible future retries
+      console.log('Ending initial loading state after loadStories');
+      setIsInitialLoading(false);
+      setLoadingInitiated(false);
     }
   }, [user, refreshStories]);
+
+  // Force refresh stories - can be called manually to retry
+  const forceRefreshStories = useCallback(async () => {
+    console.log('Force refreshing stories');
+    setLoadingInitiated(false); // Reset loading initiated so we can load again
+    return await loadStories();
+  }, [loadStories]);
 
   const handleEditClick = (story: UserStory) => {
     setSelectedStory(story);
@@ -188,6 +204,7 @@ export const useStoryManagement = () => {
     openDialog,
     setOpenDialog,
     loadStories,
+    forceRefreshStories,
     handleEditClick,
     handleSaveEdit,
     handleDeleteStory,

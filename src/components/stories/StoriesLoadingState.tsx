@@ -22,7 +22,10 @@ export const StoriesLoadingState: React.FC = () => {
   // Function to force a page reload if loading gets stuck
   const handleForceRefresh = () => {
     console.log('User triggered manual refresh');
-    window.location.reload();
+    // Clear any cached data in localStorage that might be causing the issue
+    localStorage.removeItem('narrative-atelier-auth');
+    // Force a full page reload
+    window.location.href = '/my-stories';
   };
 
   return (
@@ -37,7 +40,7 @@ export const StoriesLoadingState: React.FC = () => {
       </div>
       
       {/* Manual refresh button that appears after a delay */}
-      <div className="mt-8 opacity-0 animate-in fade-in delay-700 duration-300">
+      <div className="mt-8 opacity-0 animate-in fade-in delay-500 duration-300">
         <p className="text-sm text-muted-foreground mb-2">
           加载时间过长？
         </p>
@@ -45,7 +48,7 @@ export const StoriesLoadingState: React.FC = () => {
           variant="outline" 
           onClick={handleForceRefresh}
         >
-          点击刷新
+          点击强制刷新
         </Button>
       </div>
     </div>
