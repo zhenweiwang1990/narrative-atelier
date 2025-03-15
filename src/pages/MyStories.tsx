@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/auth';
 import { UserStory } from '@/hooks/auth/types';
@@ -7,14 +7,34 @@ import { Button } from '@/components/ui/button';
 import { Plus, Loader2 } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { StoryCard, EditStoryDialog, EmptyStoryState } from '@/components/stories';
+import { 
+  StoryCard, 
+  EditStoryDialog, 
+  EmptyStoryState,
+  StoriesLoadingState 
+} from '@/components/stories';
 
 export default function MyStories() {
   const navigate = useNavigate();
   const { user, userStories, refreshStories, addNewStory } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [selectedStory, setSelectedStory] = useState<UserStory | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
+
+  // Check initial loading state when component mounts
+  useEffect(() => {
+    if (user && userStories) {
+      setIsInitialLoading(false);
+    }
+    
+    // Set a timeout to prevent infinite loading state
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 5000);
+    
+    return () => clearTimeout(timer);
+  }, [user, userStories]);
 
   const handleEditClick = (story: UserStory) => {
     setSelectedStory(story);
@@ -104,6 +124,11 @@ export default function MyStories() {
       setIsLoading(false);
     }
   };
+
+  // Show loading state if we're still in the initial loading
+  if (isInitialLoading) {
+    return <StoriesLoadingState />;
+  }
 
   return (
     <div className="container mx-auto py-6">
