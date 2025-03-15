@@ -62,6 +62,12 @@ export const useModificationsTable = (
     return groupedData;
   }, [valueModifications]);
   
+  // Function to get display value for a modification
+  const getDisplayValue = (modification: ValueModification): number => {
+    const modificationKey = `${modification.sceneId}-${modification.elementId}-${modification.valueId}-${modification.outcomeType}-${modification.choiceOptionId || ''}`;
+    return editedValues[modificationKey] !== undefined ? editedValues[modificationKey] : modification.valueChange;
+  };
+  
   const handleValueChange = (modification: ValueModification, newValue: string) => {
     const numericValue = parseInt(newValue) || 0;
     const modificationKey = `${modification.sceneId}-${modification.elementId}-${modification.valueId}-${modification.outcomeType}-${modification.choiceOptionId || ''}`;
@@ -84,6 +90,7 @@ export const useModificationsTable = (
     valueModifications,
     groupedModifications,
     handleValueChange,
+    getDisplayValue,
     isEmpty: valueModifications.length === 0
   };
 };

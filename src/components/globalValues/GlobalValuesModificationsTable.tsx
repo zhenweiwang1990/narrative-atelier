@@ -22,6 +22,7 @@ const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTablePro
   const {
     groupedModifications,
     handleValueChange,
+    getDisplayValue,
     isEmpty
   } = useModificationsTable(story, onModificationUpdate);
   
@@ -98,7 +99,7 @@ const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTablePro
                               </span>
                               <Input
                                 type="number"
-                                value={modification.valueChange}
+                                value={getDisplayValue(modification)}
                                 onChange={(e) => handleValueChange(modification, e.target.value)}
                                 className="h-6 w-16 text-sm inline-block"
                               />
