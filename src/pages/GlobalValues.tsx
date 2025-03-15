@@ -2,7 +2,7 @@
 import React from "react";
 import GlobalValues from "@/components/GlobalValues";
 import GlobalValuesModificationsTable from "@/components/GlobalValuesModificationsTable";
-import { useStory } from "@/contexts/StoryContext";
+import { useStory } from "@/components/Layout";
 import { GlobalValue, Story } from "@/utils/types";
 import { ValueModification } from "@/components/globalValues/types";
 import { toast } from "sonner";

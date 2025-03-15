@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Accordion } from "@/components/ui/accordion";
-import { useStory } from "@/contexts/StoryContext";
+import { useStory } from "./Layout";
 import { ElementContainer } from "./elements/ElementContainer";
 import { useElementManagement } from "@/hooks/useElementManagement";
 import ElementTypeButtons from "./elements/ElementTypeButtons";

@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { useStory } from "@/contexts/StoryContext";
+import { useStory } from "@/components/Layout";
 import { useLocationForm } from "@/hooks/location/useLocationForm";
 import LocationHeader from "@/components/location/LocationHeader";
 import LocationSearchBar from "@/components/location/LocationSearchBar";
@@ -9,7 +9,7 @@ import LocationDialog from "@/components/location/LocationDialog";
 import ImageSelectorDialog from "@/components/ai-story/ImageSelectorDialog";
 
 const Locations = () => {
-  const { story, setStory } = useStory();
+  const { story } = useStory();
   const [searchQuery, setSearchQuery] = useState("");
   const [isImageSelectorOpen, setIsImageSelectorOpen] = useState(false);
   const [imageLocationId, setImageLocationId] = useState<string | null>(null);
@@ -28,21 +28,9 @@ const Locations = () => {
     getSceneCount
   } = useLocationForm();
 
-  // Wait for story data to load
-  if (!story) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <h3 className="text-lg font-medium">加载中...</h3>
-          <p className="text-muted-foreground">正在加载地点数据</p>
-        </div>
-      </div>
-    );
-  }
-
   // 根据搜索查询过滤场景
   const filteredLocations =
-    story.locations.filter(
+    story?.locations.filter(
       (location) =>
         location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         location.description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -67,15 +55,14 @@ const Locations = () => {
         return location;
       });
 
-      if (setStory) {
-        setStory({
-          ...story,
-          locations: updatedLocations
-        });
+      if (story) {
+        story.locations = updatedLocations;
       }
     }
     setIsImageSelectorOpen(false);
   };
+
+  if (!story) return null;
 
   return (
     <div className="space-y-4">

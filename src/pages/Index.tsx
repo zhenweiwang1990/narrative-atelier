@@ -1,30 +1,21 @@
 
-import React from "react";
-import { useStory } from "@/contexts/StoryContext";
+import { useState } from "react";
+import { useStory } from "@/components/Layout";
 import StoryDetails from "@/components/ai-story/StoryDetails";
 import ChaptersList from "@/components/ai-story/ChaptersList";
 
 const Index = () => {
   const { story, setStory } = useStory();
 
-  if (!story) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <h3 className="text-lg font-medium">加载中...</h3>
-          <p className="text-muted-foreground">正在加载剧情数据</p>
-        </div>
-      </div>
-    );
-  }
+  if (!story) return null;
 
   const handleStoryUpdate = (updatedStoryData: Partial<typeof story>) => {
-    if (setStory) {
-      setStory({
-        ...story,
-        ...updatedStoryData
-      });
-    }
+    if (!story || !setStory) return;
+
+    setStory({
+      ...story,
+      ...updatedStoryData
+    });
   };
 
   return (

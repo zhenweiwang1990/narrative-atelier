@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { FileEdit, Trash2, ChevronDown } from "lucide-react";
-import { useStory } from "@/contexts/StoryContext";
+import { useStory } from "@/components/Layout";
 import {
   Select,
   SelectContent,

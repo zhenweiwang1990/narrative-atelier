@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { Location } from "@/utils/types";
-import { useStory } from "@/contexts/StoryContext";
+import { useStory } from "@/components/Layout";
 import { generateId } from "@/utils/storage";
 
 export const useLocationForm = () => {

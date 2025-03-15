@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { useStory } from "@/contexts/StoryContext";
+import { useStory } from "@/components/Layout";
 import { useCharacterForm } from "@/hooks/character/useCharacterForm";
 import CharacterHeader from "@/components/character/CharacterHeader";
 import CharacterSearchBar from "@/components/character/CharacterSearchBar";
@@ -9,7 +9,7 @@ import CharacterDialog from "@/components/character/CharacterDialog";
 import ImageSelectorDialog from "@/components/ai-story/ImageSelectorDialog";
 
 const Characters = () => {
-  const { story, setStory } = useStory();
+  const { story } = useStory();
   const [searchQuery, setSearchQuery] = useState("");
   const [isImageSelectorOpen, setIsImageSelectorOpen] = useState(false);
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
@@ -32,18 +32,6 @@ const Characters = () => {
     handleDeleteCharacter,
   } = useCharacterForm();
 
-  // Wait for story data to load
-  if (!story) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <h3 className="text-lg font-medium">加载中...</h3>
-          <p className="text-muted-foreground">正在加载角色数据</p>
-        </div>
-      </div>
-    );
-  }
-
   // 处理打开图片选择器
   const handleOpenImageSelector = (characterId: string, type: 'profilePicture' | 'fullBody') => {
     setSelectedCharacterId(characterId);
@@ -53,7 +41,7 @@ const Characters = () => {
 
   // 处理图片选择
   const handleImageSelected = (imageUrl: string) => {
-    if (selectedCharacterId && story && setStory) {
+    if (selectedCharacterId && story) {
       handleDirectImageChange(selectedCharacterId, imageUrl, imageType);
     }
     setIsImageSelectorOpen(false);
@@ -61,7 +49,7 @@ const Characters = () => {
 
   // 直接更新角色图片
   const handleDirectImageChange = (characterId: string, imageUrl: string, type: 'profilePicture' | 'fullBody') => {
-    if (!story || !setStory) return;
+    if (!story) return;
     
     const updatedCharacters = story.characters.map((character) => {
       if (character.id === characterId) {
@@ -74,10 +62,9 @@ const Characters = () => {
     });
 
     // 使用 setStory 更新角色
-    setStory({
-      ...story,
-      characters: updatedCharacters
-    });
+    if (story) {
+      story.characters = updatedCharacters;
+    }
   };
 
   // 监听图片选择器事件
@@ -99,11 +86,13 @@ const Characters = () => {
 
   // 根据搜索查询过滤角色
   const filteredCharacters =
-    story.characters.filter(
+    story?.characters.filter(
       (character) =>
         character.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         character.bio.toLowerCase().includes(searchQuery.toLowerCase())
     ) || [];
+
+  if (!story) return null;
 
   return (
     <div className="space-y-4">
