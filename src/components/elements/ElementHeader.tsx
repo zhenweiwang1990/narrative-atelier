@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { ElementType, SceneElement } from '@/utils/types';
 import { AlignLeft, MessageSquare, Brain, ListTree, Gamepad, MessagesSquare, ChevronDown, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { AccordionTrigger } from '@/components/ui/accordion';
 
 interface ElementHeaderProps {
   element: SceneElement;
@@ -14,6 +13,7 @@ interface ElementHeaderProps {
   onDelete: (id: string) => void;
   isDragging?: boolean;
   dragHandleProps?: any;
+  isExpanded?: boolean;
 }
 
 export const getElementIcon = (type: ElementType) => {
@@ -49,46 +49,71 @@ export const getElementTypeLabel = (type: ElementType) => {
   }
 };
 
+// Function to get content preview based on element type
+export const getElementContentPreview = (element: SceneElement): string => {
+  switch (element.type) {
+    case 'narration':
+    case 'dialogue':
+    case 'thought':
+      return element.text ? 
+        (element.text.length > 40 ? `${element.text.substring(0, 40)}...` : element.text) : 
+        '(空内容)';
+    case 'choice':
+      return element.prompt ? 
+        (element.prompt.length > 40 ? `${element.prompt.substring(0, 40)}...` : element.prompt) : 
+        '(选项提示)';
+    case 'qte':
+      return element.description ? 
+        (element.description.length > 40 ? `${element.description.substring(0, 40)}...` : element.description) : 
+        '(QTE描述)';
+    case 'dialogueTask':
+      return element.task ? 
+        (element.task.length > 40 ? `${element.task.substring(0, 40)}...` : element.task) : 
+        '(对话任务)';
+    default:
+      return '(无预览)';
+  }
+};
+
 export const ElementHeader: React.FC<ElementHeaderProps> = ({
   element,
   onSelect,
   onDelete,
   isDragging,
-  dragHandleProps
+  dragHandleProps,
+  isExpanded
 }) => {
   return (
     <div 
       className={cn(
-        "flex items-center space-x-2 p-2 bg-muted/20 cursor-grab",
+        "flex items-center space-x-2 p-2 bg-muted/20 cursor-pointer",
         isDragging && "bg-muted shadow-md"
       )}
       {...dragHandleProps}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect(element.id);
+      }}
     >
       <div 
         className={cn(
-          "w-6 h-6 rounded flex items-center justify-center text-white text-xs font-medium",
+          "w-6 h-6 rounded flex items-center justify-center text-white text-xs font-medium shrink-0",
           getElementColorClass(element.type)
         )}
-        onClick={(e) => {
-          e.stopPropagation();
-          onSelect(element.id);
-        }}
       >
         {getElementTypeLabel(element.type)}
       </div>
       
-      <AccordionTrigger className="hover:no-underline py-0 flex-1 justify-between" onClick={() => onSelect(element.id)}>
-        <div className="flex items-center space-x-2">
-          {getElementIcon(element.type)}
-          <h3 className="font-medium capitalize text-sm">{element.type}</h3>
-        </div>
-        <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
-      </AccordionTrigger>
+      <div className="flex-1 truncate">
+        <p className="font-medium text-sm truncate">
+          {getElementContentPreview(element)}
+        </p>
+      </div>
       
       <Button 
         variant="ghost" 
         size="icon"
-        className="h-6 w-6 text-destructive"
+        className="h-6 w-6 text-destructive shrink-0"
         onClick={(e) => {
           e.stopPropagation();
           onDelete(element.id);
@@ -96,6 +121,13 @@ export const ElementHeader: React.FC<ElementHeaderProps> = ({
       >
         <Trash2 className="h-3 w-3" />
       </Button>
+      
+      <ChevronDown 
+        className={cn(
+          "h-4 w-4 shrink-0 transition-transform duration-200",
+          isExpanded ? "rotate-180" : "rotate-0"
+        )} 
+      />
     </div>
   );
 };

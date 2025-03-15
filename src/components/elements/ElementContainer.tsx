@@ -22,6 +22,7 @@ import {
   Scene,
   GlobalValue
 } from '@/utils/types';
+import { useAccordionItem } from '@/components/ui/accordion';
 
 interface ElementContainerProps {
   element: SceneElement;
@@ -65,6 +66,9 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
   dragHandleProps,
   isDragging
 }) => {
+  // Check if this element is expanded in the accordion
+  const isExpanded = selectedElementId === element.id;
+
   return (
     <AccordionItem 
       key={element.id} 
@@ -83,6 +87,7 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
         onDelete={onDelete}
         dragHandleProps={dragHandleProps}
         isDragging={isDragging}
+        isExpanded={isExpanded}
       />
       
       <AccordionContent className="p-3 pt-2">

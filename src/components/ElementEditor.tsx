@@ -52,6 +52,19 @@ const ElementEditor = ({
     }
   };
 
+  // 处理选择元素（切换展开状态）
+  const handleSelectElement = (id: string) => {
+    if (onSelectElement) {
+      // 如果已经选中，则取消选择（关闭手风琴）
+      if (selectedElementId === id) {
+        onSelectElement("");
+      } else {
+        // 否则，选择新元素（打开手风琴）
+        onSelectElement(id);
+      }
+    }
+  };
+
   // 处理拖放重新排序
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
@@ -107,7 +120,7 @@ const ElementEditor = ({
                             characters={story.characters}
                             scenes={story.scenes}
                             globalValues={globalValues}
-                            onSelect={onSelectElement ? onSelectElement : () => {}}
+                            onSelect={handleSelectElement}
                             onDelete={handleDeleteElement}
                             onUpdate={updateElement}
                             onAddChoiceOption={addChoiceOption}
