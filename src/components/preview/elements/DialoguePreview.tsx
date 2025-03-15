@@ -1,46 +1,45 @@
 
-import React from 'react';
-import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Character, DialogueElement } from '@/utils/types';
-import { useStory } from '@/components/Layout';
-import { User } from 'lucide-react';
+import React from "react";
+import { Character, DialogueElement } from "@/utils/types";
 
-interface DialoguePreviewProps {
+export interface DialoguePreviewProps {
   element: DialogueElement;
-  onNext?: () => void;
+  character?: Character;
+  getCharacter?: (characterId: string) => Character;
 }
 
-const DialoguePreview: React.FC<DialoguePreviewProps> = ({ element, onNext }) => {
-  const { story } = useStory();
-  const character = story?.characters.find(c => c.id === element.characterId);
+const DialoguePreview: React.FC<DialoguePreviewProps> = ({ 
+  element,
+  character,
+  getCharacter
+}) => {
+  // Use either the provided character or get it using the getCharacter function
+  const speakingCharacter = character || (getCharacter && element.characterId ? getCharacter(element.characterId) : undefined);
   
-  if (!character) return null;
-  
-  // Check for profile picture - update from portrait to profilePicture
-  const hasProfileImage = !!character.profilePicture;
-  const profileImageUrl = character.profilePicture || "https://via.placeholder.com/200?text=No+Image";
-  
+  if (!speakingCharacter) {
+    return <div className="text-red-500">Character not found</div>;
+  }
+
   return (
-    <Card className="animate-in fade-in-0 duration-300 cursor-pointer" onClick={onNext}>
-      <CardContent className="pt-6 pb-4 flex items-start gap-3">
-        <Avatar className="h-10 w-10 border">
-          {hasProfileImage ? (
-            <AvatarImage src={profileImageUrl} alt={character.name} />
-          ) : (
-            <AvatarFallback>
-              <User className="h-5 w-5" />
-            </AvatarFallback>
-          )}
-        </Avatar>
-        
-        <div className="flex-1 space-y-1.5">
-          <div className="text-sm font-medium">{character.name}</div>
-          <div className="text-sm">{element.text}</div>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex items-start gap-3 py-2">
+      <div className="shrink-0 w-10 h-10 rounded-full overflow-hidden">
+        {speakingCharacter.profilePicture ? (
+          <img 
+            src={speakingCharacter.profilePicture} 
+            alt={speakingCharacter.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground">
+            {speakingCharacter.name.charAt(0)}
+          </div>
+        )}
+      </div>
+      <div className="flex-1">
+        <div className="font-medium">{speakingCharacter.name}</div>
+        <div className="mt-1">{element.text}</div>
+      </div>
+    </div>
   );
 };
 

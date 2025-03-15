@@ -1,84 +1,81 @@
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
+import React from "react";
+import { Character, DialogueTaskElement, ValueChange } from "@/utils/types";
 import { Button } from "@/components/ui/button";
-import { DialogueTaskElement } from '@/utils/types';
-import { useStory } from '@/components/Layout';
-import { User } from 'lucide-react';
 
-interface DialogueTaskPreviewProps {
+export interface DialogueTaskPreviewProps {
   element: DialogueTaskElement;
-  onSuccess: () => void;
-  onFailure: () => void;
+  character?: Character;
+  getCharacter?: (characterId: string) => Character;
+  handleChoiceSelect: (nextSceneId: string | undefined, valueChanges?: ValueChange[]) => void;
 }
 
 const DialogueTaskPreview: React.FC<DialogueTaskPreviewProps> = ({ 
-  element, 
-  onSuccess,
-  onFailure
+  element,
+  character,
+  getCharacter,
+  handleChoiceSelect 
 }) => {
-  const [userInput, setUserInput] = useState('');
-  const { story } = useStory();
+  // Use either the provided character or get it using the getCharacter function
+  const targetCharacter = character || (getCharacter && element.targetCharacterId ? getCharacter(element.targetCharacterId) : undefined);
   
-  const targetCharacter = story?.characters.find(c => c.id === element.targetCharacterId);
-  if (!targetCharacter) return null;
-  
-  // Check for profile picture - update from portrait to profilePicture
-  const hasProfileImage = !!targetCharacter.profilePicture;
-  const profileImageUrl = targetCharacter.profilePicture || "https://via.placeholder.com/200?text=No+Image";
-  
-  // This is a mock implementation - in a real app, you would have more complex dialogue matching
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Mock success criteria (any input of 5+ characters)
-    if (userInput.trim().length >= 5) {
-      onSuccess();
-    } else {
-      onFailure();
+  // Mock success/failure for preview
+  const handleSuccess = () => {
+    if (element.success) {
+      handleChoiceSelect(
+        element.success.sceneId, 
+        element.success.valueChanges
+      );
     }
   };
-  
+
+  const handleFailure = () => {
+    if (element.failure) {
+      handleChoiceSelect(
+        element.failure.sceneId, 
+        element.failure.valueChanges
+      );
+    }
+  };
+
   return (
-    <Card className="animate-in fade-in-0 duration-300">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Avatar className="h-8 w-8 border">
-            {hasProfileImage ? (
-              <AvatarImage src={profileImageUrl} alt={targetCharacter.name} />
+    <div className="p-4 bg-muted/30 rounded-lg">
+      <h3 className="font-medium mb-2">对话任务：{element.goal}</h3>
+      
+      {targetCharacter && (
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-8 h-8 rounded-full overflow-hidden">
+            {targetCharacter.profilePicture ? (
+              <img 
+                src={targetCharacter.profilePicture} 
+                alt={targetCharacter.name}
+                className="w-full h-full object-cover"
+              />
             ) : (
-              <AvatarFallback>
-                <User className="h-4 w-4" />
-              </AvatarFallback>
+              <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground">
+                {targetCharacter.name.charAt(0)}
+              </div>
             )}
-          </Avatar>
-          {targetCharacter.name}
-        </CardTitle>
-        <CardDescription>{element.openingLine || '...'}</CardDescription>
-      </CardHeader>
-      
-      <CardContent>
-        <div className="text-sm mb-4">{element.goal}</div>
-        
-        <form onSubmit={handleSubmit}>
-          <div className="flex gap-2">
-            <Input 
-              placeholder="输入你的对话..."
-              value={userInput}
-              onChange={(e) => setUserInput(e.target.value)}
-              className="flex-1"
-            />
-            <Button type="submit">发送</Button>
           </div>
-        </form>
-      </CardContent>
+          <div>与 <span className="font-medium">{targetCharacter.name}</span> 对话</div>
+        </div>
+      )}
       
-      <CardFooter className="text-xs text-muted-foreground">
-        提示：尝试回答NPC的问题或满足他们的请求
-      </CardFooter>
-    </Card>
+      {element.openingLine && (
+        <div className="mb-3 italic text-muted-foreground">
+          "{element.openingLine}"
+        </div>
+      )}
+      
+      <div className="flex gap-2 justify-end">
+        <Button variant="outline" size="sm" onClick={handleFailure}>
+          失败
+        </Button>
+        <Button size="sm" onClick={handleSuccess}>
+          成功
+        </Button>
+      </div>
+    </div>
   );
 };
 

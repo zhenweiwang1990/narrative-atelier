@@ -1,45 +1,45 @@
 
-import React from 'react';
-import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { ThoughtElement } from '@/utils/types';
-import { useStory } from '@/components/Layout';
-import { User } from 'lucide-react';
+import React from "react";
+import { Character, ThoughtElement } from "@/utils/types";
 
-interface ThoughtPreviewProps {
+export interface ThoughtPreviewProps {
   element: ThoughtElement;
-  onNext?: () => void;
+  character?: Character;
+  getCharacter?: (characterId: string) => Character;
 }
 
-const ThoughtPreview: React.FC<ThoughtPreviewProps> = ({ element, onNext }) => {
-  const { story } = useStory();
-  const character = story?.characters.find(c => c.id === element.characterId);
+const ThoughtPreview: React.FC<ThoughtPreviewProps> = ({ 
+  element,
+  character,
+  getCharacter
+}) => {
+  // Use either the provided character or get it using the getCharacter function
+  const thinkingCharacter = character || (getCharacter && element.characterId ? getCharacter(element.characterId) : undefined);
   
-  if (!character) return null;
-  
-  // Check for profile picture - update from portrait to profilePicture
-  const hasProfileImage = !!character.profilePicture;
-  const profileImageUrl = character.profilePicture || "https://via.placeholder.com/200?text=No+Image";
-  
+  if (!thinkingCharacter) {
+    return <div className="text-red-500">Character not found</div>;
+  }
+
   return (
-    <Card className="animate-in fade-in-0 duration-300 cursor-pointer bg-muted/50 border-dashed" onClick={onNext}>
-      <CardContent className="pt-6 pb-4 flex items-start gap-3">
-        <Avatar className="h-10 w-10 border opacity-70">
-          {hasProfileImage ? (
-            <AvatarImage src={profileImageUrl} alt={character.name} />
-          ) : (
-            <AvatarFallback>
-              <User className="h-5 w-5" />
-            </AvatarFallback>
-          )}
-        </Avatar>
-        
-        <div className="flex-1 space-y-1.5">
-          <div className="text-sm font-medium text-muted-foreground">{character.name}的想法</div>
-          <div className="text-sm italic">{element.text}</div>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex items-start gap-3 py-2">
+      <div className="shrink-0 w-10 h-10 rounded-full overflow-hidden border-2 border-dashed border-slate-300 dark:border-slate-600">
+        {thinkingCharacter.profilePicture ? (
+          <img 
+            src={thinkingCharacter.profilePicture} 
+            alt={thinkingCharacter.name}
+            className="w-full h-full object-cover opacity-70"
+          />
+        ) : (
+          <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground opacity-70">
+            {thinkingCharacter.name.charAt(0)}
+          </div>
+        )}
+      </div>
+      <div className="flex-1">
+        <div className="font-medium italic text-muted-foreground">{thinkingCharacter.name}的想法</div>
+        <div className="mt-1 italic text-muted-foreground">{element.text}</div>
+      </div>
+    </div>
   );
 };
 
