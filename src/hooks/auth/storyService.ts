@@ -10,7 +10,7 @@ export const fetchUserStories = async (userId: string): Promise<UserStory[]> => 
   try {
     const { data, error } = await supabase
       .from('stories')
-      .select('id, title, description, author, created_at, updated_at, slug')
+      .select('id, title, description, author, created_at, updated_at, slug, cover_image')
       .eq('user_id', userId)
       .order('updated_at', { ascending: false });
 
@@ -37,7 +37,7 @@ export const createNewStory = async (userId: string): Promise<UserStory | null> 
         user_id: userId,
         content: storyContent
       })
-      .select('id, title, description, author, created_at, updated_at, slug')
+      .select('id, title, description, author, created_at, updated_at, slug, cover_image')
       .single();
 
     if (error) throw error;
@@ -68,7 +68,7 @@ export const createSampleStory = async (userId: string, userName: string): Promi
         user_id: userId,
         content: storyContent
       })
-      .select('id, title, description, author, created_at, updated_at, slug')
+      .select('id, title, description, author, created_at, updated_at, slug, cover_image')
       .single();
 
     if (error) throw error;

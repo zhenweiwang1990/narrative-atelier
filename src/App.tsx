@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +15,7 @@ import Settings from "./pages/Settings";
 import Help from "./pages/Help";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
+import MyStories from "./pages/MyStories";
 import { AuthProvider } from "./hooks/auth";
 import { useAuth } from "./hooks/auth";
 
@@ -50,6 +52,13 @@ const AppWithAuth = () => (
           <Routes>
             <Route path="/auth" element={<Auth />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
+            <Route path="/my-stories" element={
+              <ProtectedRoute>
+                <Layout>
+                  <MyStories />
+                </Layout>
+              </ProtectedRoute>
+            } />
             
             {/* Editor routes with slug */}
             <Route path="/editor/:slug" element={
@@ -103,13 +112,7 @@ const AppWithAuth = () => (
             } />
             
             {/* Root routes - redirect to auth if not logged in */}
-            <Route path="/" element={
-              <ProtectedRoute>
-                <Layout>
-                  <Index />
-                </Layout>
-              </ProtectedRoute>
-            } />
+            <Route path="/" element={<Navigate to="/my-stories" replace />} />
             <Route path="/characters" element={
               <ProtectedRoute>
                 <Layout>

@@ -10,6 +10,7 @@ export interface UserStory {
   created_at: string;
   updated_at: string;
   slug: string;
+  cover_image?: string;
 }
 
 export interface AuthContextType {

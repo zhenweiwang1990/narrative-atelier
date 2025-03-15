@@ -17,6 +17,7 @@ import {
   Plus,
   LogOut,
   HelpCircle,
+  Library,
 } from "lucide-react";
 import {
   Sidebar,
@@ -143,6 +144,23 @@ export function AppSidebar() {
               <SidebarGroupLabel>我的剧情</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
+                  <SidebarMenuItem>
+                    <Link
+                      to="/my-stories"
+                      className={cn(
+                        "flex items-center gap-3 text-sm py-2",
+                        location.pathname === "/my-stories"
+                          ? "text-primary font-medium"
+                          : "text-muted-foreground"
+                      )}
+                    >
+                      <SidebarMenuButton className="w-full justify-start">
+                        <Library className="h-4 w-4" />
+                        <span>全部剧情</span>
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+                  
                   <SidebarMenuItem>
                     <div className="w-full">
                       <SidebarMenuButton
