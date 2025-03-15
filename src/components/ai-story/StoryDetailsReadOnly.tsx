@@ -10,6 +10,18 @@ interface StoryDetailsReadOnlyProps {
 }
 
 const StoryDetailsReadOnly: React.FC<StoryDetailsReadOnlyProps> = ({ story }) => {
+  // Function to get UI style label
+  const getUiStyleLabel = (style?: string) => {
+    switch (style) {
+      case 'traditional': return '古装剧风';
+      case 'scifi': return '科幻风';
+      case 'romance': return '甜宠风';
+      case 'modern': return '现代风';
+      case 'fantasy': return '奇幻风';
+      default: return '未设置';
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Cover Photo */}
@@ -52,6 +64,11 @@ const StoryDetailsReadOnly: React.FC<StoryDetailsReadOnlyProps> = ({ story }) =>
             {story.orientation === 'yaoi' && '耽美'}
             {story.orientation === 'none' && '无'}
           </p>
+        </div>
+        
+        <div>
+          <Label className="text-muted-foreground">UI 风格</Label>
+          <p className="mt-1">{getUiStyleLabel(story.uiStyle)}</p>
         </div>
         
         {story.tags && story.tags.length > 0 && (

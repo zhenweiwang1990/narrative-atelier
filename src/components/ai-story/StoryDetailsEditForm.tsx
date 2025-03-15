@@ -27,6 +27,8 @@ interface StoryDetailsEditFormProps {
   setOrientation: (value: "hetero" | "yuri" | "yaoi" | "none") => void;
   tags: string[];
   setTags: (value: string[]) => void;
+  uiStyle?: string;
+  setUiStyle?: (value: "traditional" | "scifi" | "romance" | "modern" | "fantasy") => void;
 }
 
 const StoryDetailsEditForm: React.FC<StoryDetailsEditFormProps> = ({
@@ -46,7 +48,9 @@ const StoryDetailsEditForm: React.FC<StoryDetailsEditFormProps> = ({
   orientation,
   setOrientation,
   tags,
-  setTags
+  setTags,
+  uiStyle,
+  setUiStyle
 }) => {
   return (
     <div className="space-y-6">
@@ -127,6 +131,28 @@ const StoryDetailsEditForm: React.FC<StoryDetailsEditFormProps> = ({
               <SelectItem value="yuri">百合</SelectItem>
               <SelectItem value="yaoi">耽美</SelectItem>
               <SelectItem value="none">无</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        
+        {/* UI Style Selector */}
+        <div>
+          <Label htmlFor="uiStyle">UI 风格</Label>
+          <Select 
+            value={uiStyle} 
+            onValueChange={(value: "traditional" | "scifi" | "romance" | "modern" | "fantasy") => 
+              setUiStyle && setUiStyle(value)
+            }
+          >
+            <SelectTrigger className="mt-1">
+              <SelectValue placeholder="选择 UI 风格" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="traditional">古装剧风</SelectItem>
+              <SelectItem value="scifi">科幻风</SelectItem>
+              <SelectItem value="romance">甜宠风</SelectItem>
+              <SelectItem value="modern">现代风</SelectItem>
+              <SelectItem value="fantasy">奇幻风</SelectItem>
             </SelectContent>
           </Select>
         </div>

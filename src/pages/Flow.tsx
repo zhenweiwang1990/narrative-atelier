@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useStory } from '@/components/Layout';
 import FlowEditor from '@/components/flow/FlowEditor';
@@ -29,25 +28,20 @@ const Flow = () => {
     updateRevivalPoint
   } = useSceneManagementHook(story, setStory);
 
-  // 将默认标签设置为"properties"而不是"flow"
   React.useEffect(() => {
     if (activeTab === 'flow') {
       setActiveTab('properties');
     }
   }, [activeTab, setActiveTab]);
 
-  // Ensure we update the element selection when scene changes
   React.useEffect(() => {
-    // Reset element selection when changing scenes
     setSelectedElementId('');
   }, [selectedSceneId]);
 
-  // Handle scene addition with type
   const handleAddSceneWithType = (type?: SceneType) => {
     handleAddScene(type || 'normal');
   };
 
-  // Create adapter functions to match the expected signatures
   const handleUpdateSceneTitle = (newTitle: string) => {
     if (selectedSceneId) {
       updateSceneTitle(selectedSceneId, newTitle);
@@ -78,7 +72,6 @@ const Flow = () => {
     }
   };
 
-  // New handlers for the added scene properties
   const handleUpdateSceneEntrance = (effect: string) => {
     if (!selectedSceneId || !story || !setStory) return;
     
@@ -127,8 +120,8 @@ const Flow = () => {
           </AlertDescription>
         </Alert>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 h-full">
-          <div className="md:col-span-2 border rounded-md overflow-hidden h-full">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr,500px] gap-3 h-full">
+          <div className="border rounded-md overflow-hidden h-full">
             <FlowEditor 
               onSceneSelect={handleSceneSelect} 
               onPreviewToggle={() => setIsPreviewOpen(!isPreviewOpen)}
@@ -136,7 +129,7 @@ const Flow = () => {
             />
           </div>
           
-          <div className="h-full">
+          <div className="h-full w-full max-w-[500px]">
             <EditorPanel 
               activeTab={activeTab}
               setActiveTab={setActiveTab}

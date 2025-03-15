@@ -1,4 +1,3 @@
-
 export interface Story {
   id: string;
   title: string;
@@ -16,6 +15,7 @@ export interface Story {
   protagonistGender?: string;
   orientation?: 'hetero' | 'yuri' | 'yaoi' | 'none';
   tags?: string[];
+  uiStyle?: 'traditional' | 'scifi' | 'romance' | 'modern' | 'fantasy';
 }
 
 export interface Chapter {

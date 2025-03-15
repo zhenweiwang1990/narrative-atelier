@@ -28,6 +28,7 @@ const StoryDetails: React.FC<StoryDetailsProps> = ({ story, onSave }) => {
   const [protagonistGender, setProtagonistGender] = useState(story?.protagonistGender || "男");
   const [orientation, setOrientation] = useState(story?.orientation || "hetero");
   const [tags, setTags] = useState(story?.tags || []);
+  const [uiStyle, setUiStyle] = useState(story?.uiStyle || "traditional");
 
   const handleSave = () => {
     onSave({
@@ -38,7 +39,8 @@ const StoryDetails: React.FC<StoryDetailsProps> = ({ story, onSave }) => {
       protagonistName,
       protagonistGender,
       orientation,
-      tags
+      tags,
+      uiStyle
     });
 
     setIsEditing(false);
@@ -89,6 +91,8 @@ const StoryDetails: React.FC<StoryDetailsProps> = ({ story, onSave }) => {
             setOrientation={setOrientation}
             tags={tags}
             setTags={setTags}
+            uiStyle={uiStyle}
+            setUiStyle={setUiStyle}
           />
         ) : (
           <StoryDetailsReadOnly story={story} />
