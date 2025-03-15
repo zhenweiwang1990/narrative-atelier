@@ -44,9 +44,10 @@ export function useInteractionMarking() {
     sessionStorage.setItem('storyChapters', JSON.stringify(updatedChapters));
   };
 
-  const regenerateChapter = async (index: number) => {
-    return toast.promise(
-      new Promise(resolve => setTimeout(resolve, 1500)), 
+  const regenerateChapter = async (index: number): Promise<void> => {
+    // Modified to explicitly return void
+    await toast.promise(
+      new Promise<void>(resolve => setTimeout(() => resolve(), 1500)), 
       {
         loading: '正在重新生成章节...',
         success: '章节重新生成成功',
