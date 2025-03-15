@@ -2,7 +2,7 @@
 import React, { useCallback, useState } from 'react';
 import { NodeTypes, Connection, MarkerType } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { useStory } from '../Layout';
+import { useStory } from '@/contexts/StoryContext';
 import SceneNode from './SceneNode';
 import { useFlowTransformers } from './useFlowTransformers';
 import { useSceneManagement } from './useSceneManagement';

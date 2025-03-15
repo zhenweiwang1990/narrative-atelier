@@ -1,7 +1,7 @@
 
 import React, { useRef, useState } from "react";
 import { Save, Upload, Download, Share2, Tag } from "lucide-react";
-import { useStory } from "@/components/Layout";
+import { useStory } from "@/contexts/StoryContext";
 import {
   SidebarGroup,
   SidebarGroupContent,

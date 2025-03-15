@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import MobilePreview from "@/components/MobilePreview";
 import FloatingElementEditor from "./FloatingElementEditor";
-import { useStory } from "@/components/Layout";
+import { useStory } from "@/contexts/StoryContext";
 import { useElementManagement } from "@/hooks/useElementManagement";
 import { cn } from "@/lib/utils";
 import { useDraggable } from "./hooks/useDraggable";

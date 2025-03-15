@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useStory } from "@/components/Layout";
+import { useStory } from "@/contexts/StoryContext";
 import { toast } from "sonner";
 
 interface ChapterData {

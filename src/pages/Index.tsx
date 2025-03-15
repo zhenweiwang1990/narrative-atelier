@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { useStory } from "@/components/Layout";
+import { useStory } from "@/contexts/StoryContext";
 import StoryDetails from "@/components/ai-story/StoryDetails";
 import ChaptersList from "@/components/ai-story/ChaptersList";
 
