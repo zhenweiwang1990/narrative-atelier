@@ -33,6 +33,7 @@ const FloatingMobilePreview = ({
     null
   );
 
+  // Original position for the preview window
   const { position, isDragging, elementRef, handleMouseDown } = useDraggable({
     x: window.innerWidth - 700,
     y: 80,
@@ -49,7 +50,10 @@ const FloatingMobilePreview = ({
 
   if (!isOpen) return null;
 
-  const previewHeight = minimized ? "40px" : "625px"; // 500px * 1.25 = 625px
+  // Base height is 500px, we increase it by 25% to get 625px
+  const baseHeight = 500;
+  const heightMultiplier = 1.25;
+  const previewHeight = minimized ? "40px" : `${baseHeight * heightMultiplier}px`;
 
   return (
     <>
