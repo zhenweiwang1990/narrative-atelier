@@ -2,7 +2,11 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { useStory } from "@/contexts/StoryContext";
-import { SidebarGroup, SidebarGroupLabel, SidebarGroupContent } from "@/components/ui/sidebar";
+import {
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+} from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { SidebarStorySelector } from "./SidebarStorySelector";
 
