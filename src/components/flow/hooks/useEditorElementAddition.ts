@@ -25,34 +25,29 @@ export const useEditorElementAddition = ({
   const handleAddElement = (type: ElementType, position: 'before' | 'after') => {
     if (!currentElementId || currentElementIndex === -1) return;
     
-    // Get already sorted elements (don't sort a copy)
-    const sortedElements = elements;
+    // Get the current element
+    const currentElement = elements.find(e => e.id === currentElementId);
+    if (!currentElement) return;
     
     // Calculate the order for the new element
     let newOrder: number;
     
-    if (position === 'after') {
-      // If adding after, use the next available order number
-      const currentElement = sortedElements.find(e => e.id === currentElementId);
-      if (!currentElement) return;
+    if (position === 'before') {
+      // If adding before, use the current element's order
+      newOrder = currentElement.order;
       
-      newOrder = currentElement.order + 1;
-      
-      // Shift all elements that have order greater than or equal to the new order
-      sortedElements.forEach(el => {
+      // Shift the current element and all elements after it
+      elements.forEach(el => {
         if (el.order >= newOrder) {
           updateElement(el.id, { order: el.order + 1 });
         }
       });
-    } else { // position === 'before'
-      // If adding before, use the current element's order
-      const currentElement = sortedElements.find(e => e.id === currentElementId);
-      if (!currentElement) return;
+    } else { // position === 'after'
+      // If adding after, use the next order after current element
+      newOrder = currentElement.order + 1;
       
-      newOrder = currentElement.order;
-      
-      // Shift the current element and all elements after it
-      sortedElements.forEach(el => {
+      // Shift all elements that have order greater than the new order
+      elements.forEach(el => {
         if (el.order >= newOrder) {
           updateElement(el.id, { order: el.order + 1 });
         }
