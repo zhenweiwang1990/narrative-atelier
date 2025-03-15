@@ -1,12 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
+
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { MapPin, X, Minimize, Maximize } from "lucide-react";
 import MobilePreview from "@/components/MobilePreview";
 import FloatingElementEditor from "./FloatingElementEditor";
 import { useStory } from "@/components/Layout";
 import { useElementManagement } from "@/hooks/useElementManagement";
 import { cn } from "@/lib/utils";
+import { useDraggable } from "./hooks/useDraggable";
+import { useElementSelection } from "./hooks/useElementSelection";
+import FloatingPreviewHeader from "./preview/FloatingPreviewHeader";
 
 interface FloatingMobilePreviewProps {
   selectedSceneId: string | null;
@@ -21,99 +23,25 @@ const FloatingMobilePreview = ({
   isOpen,
   onToggle,
 }: FloatingMobilePreviewProps) => {
-  const [position, setPosition] = useState({
-    x: window.innerWidth - 700, // Adjusted for wider combined width
-    y: 80,
-  });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [minimized, setMinimized] = useState(false);
-  const [currentElementId, setCurrentElementId] = useState<string | null>(null);
-  const previewRef = useRef<HTMLDivElement>(null);
   const { story } = useStory();
-
+  const { currentElementId, setCurrentElementId } = useElementSelection(selectedSceneId);
+  
   const { validateTimeLimit, validateKeySequence } = useElementManagement(
     selectedSceneId || "", 
     story, 
     null
   );
 
-  useEffect(() => {
-    const handleSelectElement = (e: CustomEvent) => {
-      if (e.detail && e.detail.elementId) {
-        setCurrentElementId(e.detail.elementId);
-      }
-    };
+  const { position, isDragging, elementRef, handleMouseDown } = useDraggable({
+    x: window.innerWidth - 700,
+    y: 80,
+  });
 
-    window.addEventListener('selectElement', handleSelectElement as EventListener);
-    window.addEventListener('previewElement', handleSelectElement as EventListener);
-    
-    return () => {
-      window.removeEventListener('selectElement', handleSelectElement as EventListener);
-      window.removeEventListener('previewElement', handleSelectElement as EventListener);
-    };
-  }, []);
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (previewRef.current) {
-      setIsDragging(true);
-      const rect = previewRef.current.getBoundingClientRect();
-      setDragOffset({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      });
-    }
-  };
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (isDragging) {
-        const newX = Math.max(
-          0,
-          Math.min(window.innerWidth - 700, e.clientX - dragOffset.x) // Adjusted for wider combined width
-        );
-        const newY = Math.max(
-          0,
-          Math.min(window.innerHeight - 100, e.clientY - dragOffset.y)
-        );
-        setPosition({ x: newX, y: newY });
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-    };
-
-    if (isDragging) {
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
-    }
-
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [isDragging, dragOffset]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setPosition((prev) => ({
-        x: Math.min(prev.x, window.innerWidth - 700), // Adjusted for wider combined width
-        y: Math.min(prev.y, window.innerHeight - 100),
-      }));
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
+  // Handle element selection from MobilePreview
   const handleElementSelect = (elementId: string | null) => {
     setCurrentElementId(elementId);
   };
-
-  useEffect(() => {
-    setCurrentElementId(null);
-  }, [selectedSceneId]);
 
   if (!isOpen) return null;
 
@@ -122,7 +50,7 @@ const FloatingMobilePreview = ({
   return (
     <>
       <Card
-        ref={previewRef}
+        ref={elementRef}
         className={cn(
           "fixed shadow-lg border rounded-md overflow-hidden z-50",
           minimized ? "w-64 h-10" : "w-72"
@@ -134,36 +62,13 @@ const FloatingMobilePreview = ({
           transition: isDragging ? "none" : "height 0.3s ease",
         }}
       >
-        <div
-          className="px-3 py-2 border-b bg-muted/50 flex items-center cursor-move"
+        <FloatingPreviewHeader
+          title="手机预览"
+          minimized={minimized}
+          onToggleMinimize={() => setMinimized(!minimized)}
+          onClose={onToggle}
           onMouseDown={handleMouseDown}
-        >
-          <MapPin className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
-          <h3 className="text-sm font-medium flex-1">手机预览</h3>
-
-          <div className="flex items-center space-x-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={() => setMinimized(!minimized)}
-            >
-              {minimized ? (
-                <Maximize className="h-3 w-3" />
-              ) : (
-                <Minimize className="h-3 w-3" />
-              )}
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={onToggle}
-            >
-              <X className="h-3 w-3" />
-            </Button>
-          </div>
-        </div>
+        />
 
         {!minimized && (
           <div className="h-[calc(100%-35px)]">
