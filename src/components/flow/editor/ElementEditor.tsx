@@ -1,6 +1,6 @@
 
 import React from "react";
-import { SceneElement } from "@/utils/types";
+import { SceneElement, Story } from "@/utils/types";
 import { NarrationElement } from "@/components/elements/NarrationElement";
 import { DialogueElement } from "@/components/elements/DialogueElement";
 import { ThoughtElement } from "@/components/elements/ThoughtElement";
@@ -10,7 +10,7 @@ import { DialogueTaskElement } from "@/components/elements/DialogueTaskElement";
 
 interface ElementEditorProps {
   element: SceneElement;
-  story: any;
+  story: Story; // Changed from 'any' to 'Story'
   updateElement: (id: string, updates: Partial<SceneElement>) => void;
   addChoiceOption: (elementId: string) => void;
   deleteChoiceOption: (elementId: string, optionId: string) => void;
@@ -86,6 +86,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
           element={element}
           scenes={story?.scenes || []}
           globalValues={story?.globalValues || []}
+          story={story} // Pass the full story object to QteElement
           onUpdate={handleUpdate}
           validateTimeLimit={validateTimeLimit}
           validateKeySequence={validateKeySequence}
