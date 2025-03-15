@@ -1,4 +1,3 @@
-
 {
   "id": "story_1741992613812",
   "title": "红衣如故",
@@ -71,7 +70,7 @@
         {
           "id": "element_1741992613812",
           "type": "narration",
-          "text": ""周生辰，我来嫁你了……你不说话，我就当你答应了……""
+          "text": "“周生辰，我来嫁你了……你不说话，我就当你答应了……”"
         },
         {
           "id": "narration_1741993065181_gatn693",
@@ -106,12 +105,12 @@
         {
           "id": "narration_1741993238044_ns8imlb",
           "type": "narration",
-          "text": "车外立刻传来随从匆忙的声音："夫人恕罪，刚才马儿受惊，夫人和姑娘可还好？""
+          "text": "车外立刻传来随从匆忙的声音：“夫人恕罪，刚才马儿受惊，夫人和姑娘可还好？”"
         },
         {
           "id": "narration_1741993248172_pjy3wvv",
           "type": "narration",
-          "text": "漼三娘清了清嗓子，淡淡开口回应道："无妨。""
+          "text": "漼三娘清了清嗓子，淡淡开口回应道：“无妨。”"
         },
         {
           "id": "dialogue_1741993257357_lj67snx",
@@ -341,7 +340,6 @@
           "targetCharacterId": "character_1741992882743_9h05pmt",
           "background": "你前世穿越回来，掌握了情感控制光波特异技能，对他释放了，但决不能让他察觉到问题，每次释放逗会造成一定扰动，成功释放会让对方对你的好感度提升，但你要注意不能暴露。",
           "openingLine": "怎么感觉你人怪怪的？",
-
           "success": {
             "sceneId": "scene_1741995886447_4lsy7y5",
             "transition": "周生辰便不再过问",
@@ -410,5 +408,10 @@
       "name": "情感",
       "initialValue": 0
     }
-  ]
+  ],
+  "coverPhoto": "https://aishen-s3-1309519128.cos.ap-shanghai.myqcloud.com/story_card/01JP78P2F3VBGSBAPMHYJ63M0D.png",
+  "protagonistName": "",
+  "protagonistGender": "男",
+  "orientation": "hetero",
+  "tags": []
 }
