@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Card,
@@ -83,7 +82,7 @@ const StoryDetails: React.FC<StoryDetailsProps> = ({ story, onSave }) => {
             <CoverPhotoUploader 
               coverPhoto={coverPhoto} 
               isEditing={isEditing} 
-              onCoverPhotoChange={setCoverPhoto} 
+              onChange={setCoverPhoto} 
             />
           </div>
         </div>

@@ -10,12 +10,14 @@ interface CoverPhotoUploaderProps {
   coverPhoto: string | undefined;
   onChange: (url: string) => void;
   className?: string;
+  isEditing?: boolean; // Add the isEditing prop to the interface
 }
 
 const CoverPhotoUploader: React.FC<CoverPhotoUploaderProps> = ({
   coverPhoto,
   onChange,
-  className
+  className,
+  isEditing = true // Default to true to maintain backward compatibility
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   
@@ -87,14 +89,16 @@ const CoverPhotoUploader: React.FC<CoverPhotoUploaderProps> = ({
           onChange={handleFileInput}
         />
         
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-black/40 transition-opacity">
-          <Button asChild variant="secondary">
-            <label htmlFor="cover-photo-input" className="cursor-pointer">
-              <Upload className="mr-2 h-4 w-4" />
-              上传封面
-            </label>
-          </Button>
-        </div>
+        {isEditing && (
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-black/40 transition-opacity">
+            <Button asChild variant="secondary">
+              <label htmlFor="cover-photo-input" className="cursor-pointer">
+                <Upload className="mr-2 h-4 w-4" />
+                上传封面
+              </label>
+            </Button>
+          </div>
+        )}
       </div>
     </Card>
   );
