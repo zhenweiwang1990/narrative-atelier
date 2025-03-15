@@ -64,7 +64,7 @@ const ScenePropertiesPanel = ({
   return (
     <div className="p-3 space-y-3 flex-1 overflow-y-auto">
       {isIncomplete && (
-        <Alert variant="warning" className="bg-amber-50 border-amber-200 text-amber-800">
+        <Alert variant="destructive" className="bg-amber-50 border-amber-200 text-amber-800">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription className="text-xs">
             此场景处于未完待续状态，没有指定后续场景。

@@ -12,10 +12,8 @@ export interface SceneNodeData {
   hasNextScene?: boolean;
 }
 
-export interface SceneNode extends Node {
-  data: SceneNodeData;
-}
+// Define SceneNode type properly, using the generic Node type from reactflow
+export type SceneNode = Node<SceneNodeData>;
 
-export interface SceneEdge extends Edge {
-  data?: any;
-}
+// Define SceneEdge type properly
+export type SceneEdge = Edge<any>;
