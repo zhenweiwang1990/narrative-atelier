@@ -14,7 +14,7 @@ export function ThemeToggle() {
         <p className="text-xs text-sidebar-foreground/70 font-medium ml-2">主题模式</p>
         <ToggleGroup 
           type="single" 
-          value={theme}
+          value={theme || "system"}
           onValueChange={(value) => {
             if (value) setTheme(value);
           }}
@@ -26,6 +26,7 @@ export function ThemeToggle() {
                 value="light" 
                 size="sm"
                 className="rounded-md h-8 w-8 data-[state=on]:bg-sidebar-accent-foreground data-[state=on]:text-sidebar-accent"
+                aria-label="亮色模式"
               >
                 <Sun className="h-4 w-4" />
                 <span className="sr-only">亮色模式</span>
@@ -40,6 +41,7 @@ export function ThemeToggle() {
                 value="dark" 
                 size="sm"
                 className="rounded-md h-8 w-8 data-[state=on]:bg-sidebar-accent-foreground data-[state=on]:text-sidebar-accent"
+                aria-label="暗色模式"
               >
                 <Moon className="h-4 w-4" />
                 <span className="sr-only">暗色模式</span>
@@ -54,6 +56,7 @@ export function ThemeToggle() {
                 value="system" 
                 size="sm"
                 className="rounded-md h-8 w-8 data-[state=on]:bg-sidebar-accent-foreground data-[state=on]:text-sidebar-accent"
+                aria-label="跟随系统"
               >
                 <Monitor className="h-4 w-4" />
                 <span className="sr-only">跟随系统</span>

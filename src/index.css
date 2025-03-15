@@ -141,6 +141,25 @@
   @apply border-border hover:bg-muted transition-all;
 }
 
+/* Flow Pane Background - Fix for dark mode */
+.dark .react-flow__pane {
+  @apply bg-background/80;
+}
+
+/* Mobile Preview Colors - Fix for dark mode */
+.dark .MobilePreview-container {
+  @apply bg-card text-card-foreground;
+}
+
+/* Variable Value Display - Fix for dark mode */
+.dark .values-display {
+  @apply bg-muted/30 border-muted;
+}
+
+.dark .value-item {
+  @apply bg-muted border-muted-foreground/30;
+}
+
 /* Animated image placeholder */
 .image-placeholder {
   @apply relative overflow-hidden bg-gradient-to-r from-gray-100 to-gray-200 animate-pulse dark:from-gray-800 dark:to-gray-700;

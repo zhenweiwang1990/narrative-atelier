@@ -82,7 +82,7 @@ const MobilePreview = ({
   const locationBackground = location?.background || "/placeholder.svg";
 
   return (
-    <Card className="w-full h-full border overflow-hidden flex flex-col bg-white">
+    <Card className="MobilePreview-container w-full h-full border overflow-hidden flex flex-col bg-white dark:bg-card">
       <div
         className="h-[45%] bg-cover bg-center border-b"
         style={{ backgroundImage: `url(${locationBackground})` }}
