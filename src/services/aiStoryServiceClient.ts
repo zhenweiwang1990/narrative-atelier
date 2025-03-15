@@ -44,8 +44,7 @@ export const handleAiStoryGeneration = async ({
       }
     );
 
-    // Use non-null assertion to tell TypeScript that result will not be null
-    // after awaiting the promise
+    // Get the result from the promise
     const result = await toastPromise;
     
     // Check that result is not null and is an object with a success property before accessing it

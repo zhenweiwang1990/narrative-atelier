@@ -17,6 +17,7 @@ interface ElementEditorProps {
   updateChoiceOption: (elementId: string, optionId: string, updates: any) => void;
   validateTimeLimit?: (value: number) => number;
   validateKeySequence?: (value: string) => string;
+  disabled?: boolean;
 }
 
 const ElementEditor: React.FC<ElementEditorProps> = ({
@@ -28,15 +29,23 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
   updateChoiceOption,
   validateTimeLimit = (v) => v,
   validateKeySequence = (v) => v,
+  disabled = false,
 }) => {
   if (!element) return null;
+
+  // Create a wrapper function for updateElement that respects the disabled state
+  const handleUpdate = (id: string, updates: Partial<SceneElement>) => {
+    if (!disabled) {
+      updateElement(id, updates);
+    }
+  };
 
   switch (element.type) {
     case "narration":
       return (
         <NarrationElement 
           element={element}
-          onUpdate={updateElement}
+          onUpdate={handleUpdate}
         />
       );
     
@@ -45,7 +54,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
         <DialogueElement 
           element={element}
           characters={story?.characters || []}
-          onUpdate={updateElement}
+          onUpdate={handleUpdate}
         />
       );
     
@@ -54,7 +63,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
         <ThoughtElement 
           element={element}
           characters={story?.characters || []}
-          onUpdate={updateElement}
+          onUpdate={handleUpdate}
         />
       );
     
@@ -64,10 +73,10 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
           element={element}
           scenes={story?.scenes || []}
           globalValues={story?.globalValues || []}
-          onUpdate={updateElement}
-          onAddOption={addChoiceOption}
-          onDeleteOption={deleteChoiceOption}
-          onUpdateOption={updateChoiceOption}
+          onUpdate={handleUpdate}
+          onAddOption={disabled ? undefined : addChoiceOption}
+          onDeleteOption={disabled ? undefined : deleteChoiceOption}
+          onUpdateOption={disabled ? undefined : updateChoiceOption}
         />
       );
     
@@ -77,7 +86,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
           element={element}
           scenes={story?.scenes || []}
           globalValues={story?.globalValues || []}
-          onUpdate={updateElement}
+          onUpdate={handleUpdate}
           validateTimeLimit={validateTimeLimit}
           validateKeySequence={validateKeySequence}
         />
@@ -90,7 +99,7 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
           characters={story?.characters || []}
           scenes={story?.scenes || []}
           globalValues={story?.globalValues || []}
-          onUpdate={updateElement}
+          onUpdate={handleUpdate}
         />
       );
       

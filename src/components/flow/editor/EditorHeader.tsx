@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { PencilLine, X, Plus, ArrowLeft, ArrowRight } from "lucide-react";
+import { PencilLine, X, Plus, ArrowLeft, ArrowRight, Wand2 } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -18,6 +18,7 @@ interface EditorHeaderProps {
   onAddElement?: (type: ElementType, position: 'before' | 'after') => void;
   showElementActions?: boolean;
   elementType?: ElementType;
+  onAiGenerate?: () => void;
 }
 
 const ElementTypeOptions: ElementType[] = [
@@ -43,7 +44,8 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
   onClose, 
   onAddElement,
   showElementActions = false,
-  elementType 
+  elementType,
+  onAiGenerate
 }) => {
   return (
     <div className="px-3 py-2 border-b bg-muted/50 flex items-center">
@@ -61,47 +63,63 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
       )}
       <h3 className="text-sm font-medium flex-1">{title}</h3>
       
-      {showElementActions && onAddElement && (
+      {showElementActions && (
         <div className="flex items-center mr-2 space-x-1">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-6 w-6 relative">
-                <ArrowLeft className="h-3 w-3" />
-                <Plus className="h-2 w-2 absolute top-1 left-1" />
-                <span className="sr-only">在前添加</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="z-[100]">
-              {ElementTypeOptions.map((type) => (
-                <DropdownMenuItem 
-                  key={`before-${type}`}
-                  onClick={() => onAddElement(type, 'before')}
-                >
-                  在此元素前添加{ElementTypeLabels[type]}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {onAddElement && (
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-6 w-6 relative">
+                    <ArrowLeft className="h-3 w-3" />
+                    <Plus className="h-2 w-2 absolute top-1 left-1" />
+                    <span className="sr-only">在前添加</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="z-[100]">
+                  {ElementTypeOptions.map((type) => (
+                    <DropdownMenuItem 
+                      key={`before-${type}`}
+                      onClick={() => onAddElement(type, 'before')}
+                    >
+                      在此元素前添加{ElementTypeLabels[type]}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-6 w-6 relative">
-                <ArrowRight className="h-3 w-3" />
-                <Plus className="h-2 w-2 absolute top-1 right-1" />
-                <span className="sr-only">在后添加</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="z-[100]">
-              {ElementTypeOptions.map((type) => (
-                <DropdownMenuItem 
-                  key={`after-${type}`}
-                  onClick={() => onAddElement(type, 'after')}
-                >
-                  在此元素后添加{ElementTypeLabels[type]}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-6 w-6 relative">
+                    <ArrowRight className="h-3 w-3" />
+                    <Plus className="h-2 w-2 absolute top-1 right-1" />
+                    <span className="sr-only">在后添加</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="z-[100]">
+                  {ElementTypeOptions.map((type) => (
+                    <DropdownMenuItem 
+                      key={`after-${type}`}
+                      onClick={() => onAddElement(type, 'after')}
+                    >
+                      在此元素后添加{ElementTypeLabels[type]}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          )}
+          
+          {onAiGenerate && (
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={onAiGenerate} 
+              className="h-6 w-6 text-purple-600"
+              title="AI 生成内容"
+            >
+              <Wand2 className="h-3 w-3" />
+            </Button>
+          )}
         </div>
       )}
 

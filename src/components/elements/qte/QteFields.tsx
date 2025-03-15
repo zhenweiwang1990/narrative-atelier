@@ -1,9 +1,10 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { QteElement } from '@/utils/types';
+import { cn } from '@/lib/utils';
 
 interface QteFieldsProps {
   element: QteElement;
@@ -18,6 +19,32 @@ const QteFields: React.FC<QteFieldsProps> = ({
   validateTimeLimit,
   validateKeySequence
 }) => {
+  const [keySequence, setKeySequence] = useState(element.keySequence || '');
+  const [isValidSequence, setIsValidSequence] = useState(true);
+  const [validationMessage, setValidationMessage] = useState('');
+
+  // Validate key sequence with debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (keySequence.length > 0 && (keySequence.length < 3 || keySequence.length > 6)) {
+        setIsValidSequence(false);
+        setValidationMessage(keySequence.length < 3 
+          ? '按键序列至少需要3个字符' 
+          : '按键序列最多6个字符');
+      } else {
+        setIsValidSequence(true);
+        setValidationMessage('');
+        
+        // Only update the element when validation passes
+        if (keySequence !== element.keySequence) {
+          onUpdate(element.id, { keySequence });
+        }
+      }
+    }, 3000); // 3 second debounce
+    
+    return () => clearTimeout(timer);
+  }, [keySequence, element.id, element.keySequence, onUpdate]);
+
   return (
     <div className="space-y-2">
       <div>
@@ -57,15 +84,20 @@ const QteFields: React.FC<QteFieldsProps> = ({
         
         <div>
           <Label className="text-xs">按键序列（3-6个字符）</Label>
-          <Input
-            value={element.keySequence || ''}
-            onChange={(e) => onUpdate(element.id, { 
-              keySequence: validateKeySequence(e.target.value) 
-            })}
-            className="mt-1 h-7 text-xs"
-            maxLength={6}
-            placeholder="ABC"
-          />
+          <div className="relative">
+            <Input
+              value={keySequence}
+              onChange={(e) => setKeySequence(e.target.value)}
+              className={cn(
+                "mt-1 h-7 text-xs",
+                !isValidSequence && "border-red-500 focus-visible:ring-red-500"
+              )}
+              placeholder="ABC"
+            />
+            {!isValidSequence && (
+              <p className="text-xs text-red-500 mt-1">{validationMessage}</p>
+            )}
+          </div>
         </div>
       </div>
     </div>

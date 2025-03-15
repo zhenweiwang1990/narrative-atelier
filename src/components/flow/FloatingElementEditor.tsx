@@ -1,11 +1,13 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useStory } from "@/components/Layout";
 import { useElementManagement } from "@/hooks/useElementManagement";
 import FloatingEditorWrapper from "./editor/FloatingEditorWrapper";
 import EditorHeader from "./editor/EditorHeader";
 import EditorContent from "./editor/EditorContent";
 import { useEditorElementAddition } from "./hooks/useEditorElementAddition";
+import { toast } from "sonner";
+import { handleAiStoryGeneration } from "@/services/aiStoryServiceClient";
 
 interface FloatingElementEditorProps {
   sceneId: string;
@@ -29,6 +31,7 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
   showSceneProperties = false
 }) => {
   const { story, setStory } = useStory();
+  const [isGenerating, setIsGenerating] = useState(false);
   
   const {
     elements,
@@ -59,6 +62,62 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
     onClose,
   });
 
+  // Handle AI content generation
+  const handleAiGenerate = async () => {
+    if (!currentElement || !story) return;
+    
+    setIsGenerating(true);
+    
+    try {
+      // TODO: Implement AI content generation API call here
+      // The API should generate content based on the element type
+      // and fill in the form fields automatically
+      
+      // For now, let's mock this with a delay
+      const result = await handleAiStoryGeneration({
+        prompt: `为${currentElement.type}类型元素生成内容`,
+        type: "branch",
+        elementId: currentElement.id,
+        story: story,
+        onSuccess: () => {
+          // Refresh the element content after successful generation
+          toast.success("AI 已成功生成内容");
+        }
+      });
+      
+      // In a real implementation, you would process the result and update the element
+      // This is just a placeholder
+      if (result && result.success) {
+        // Mock content update based on element type
+        switch (currentElement.type) {
+          case "narration":
+            updateElement(currentElement.id, { 
+              text: "AI 生成的叙述内容将在这里显示" 
+            });
+            break;
+          case "dialogue":
+            updateElement(currentElement.id, { 
+              text: "AI 生成的对话内容将在这里显示" 
+            });
+            break;
+          case "qte":
+            updateElement(currentElement.id, { 
+              description: "AI 生成的 QTE 描述将在这里显示",
+              keySequence: "SPACE",
+              timeLimit: 5
+            });
+            break;
+          // Add other element types as needed
+        }
+      }
+    } catch (error) {
+      console.error("AI generation error:", error);
+      toast.error("AI 生成内容失败，请重试");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <FloatingEditorWrapper position={position} isOpen={isOpen}>
       <EditorHeader 
@@ -67,6 +126,7 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
         onAddElement={!showSceneProperties && currentElement ? handleAddElement : undefined}
         showElementActions={!showSceneProperties && !!currentElement}
         elementType={currentElement?.type}
+        onAiGenerate={!showSceneProperties && currentElement ? handleAiGenerate : undefined}
       />
 
       <EditorContent 
@@ -82,6 +142,7 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
         updateChoiceOption={updateChoiceOption}
         validateTimeLimit={validateTimeLimit}
         validateKeySequence={validateKeySequence}
+        isGenerating={isGenerating}
       />
     </FloatingEditorWrapper>
   );

@@ -17,6 +17,7 @@ interface EditorContentProps {
   updateChoiceOption: (elementId: string, optionId: string, updates: any) => void;
   validateTimeLimit?: (value: number) => number;
   validateKeySequence?: (value: string) => string;
+  isGenerating?: boolean;
 }
 
 const EditorContent: React.FC<EditorContentProps> = ({
@@ -32,9 +33,16 @@ const EditorContent: React.FC<EditorContentProps> = ({
   updateChoiceOption,
   validateTimeLimit = (v) => v,
   validateKeySequence = (v) => v,
+  isGenerating = false,
 }) => {
   return (
     <div className="p-3 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 120px)' }}>
+      {isGenerating && (
+        <div className="mb-3 text-sm text-center p-2 bg-purple-100 dark:bg-purple-900/30 rounded-md">
+          AI 正在生成内容，请稍候...
+        </div>
+      )}
+      
       {showSceneProperties && selectedScene && story && setStory && (
         <ScenePropertiesEditor
           sceneId={sceneId}
@@ -54,6 +62,7 @@ const EditorContent: React.FC<EditorContentProps> = ({
           updateChoiceOption={updateChoiceOption}
           validateTimeLimit={validateTimeLimit}
           validateKeySequence={validateKeySequence}
+          disabled={isGenerating}
         />
       )}
     </div>
