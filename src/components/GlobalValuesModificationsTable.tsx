@@ -1,3 +1,3 @@
 
-import GlobalValuesModificationsTable from "./globalValues/GlobalValuesModificationsTable";
-export default GlobalValuesModificationsTable;
+import GlobalValuesModificationsGroupTable from "./globalValues/GlobalValuesModificationsGroupTable";
+export default GlobalValuesModificationsGroupTable;

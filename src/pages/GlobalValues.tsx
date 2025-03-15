@@ -1,3 +1,4 @@
+
 import React from "react";
 import GlobalValues from "@/components/GlobalValues";
 import GlobalValuesModificationsTable from "@/components/GlobalValuesModificationsTable";
@@ -80,7 +81,7 @@ const GlobalValuesPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
+    <div className="container mx-auto p-4 max-w-6xl">
       <h1 className="text-2xl font-bold mb-6">全局变量</h1>
       <p className="text-muted-foreground mb-6">
         全局变量可用于跟踪剧情中各场景之间的数值变化。
