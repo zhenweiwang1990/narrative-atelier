@@ -78,6 +78,43 @@ const Flow = () => {
     }
   };
 
+  // New handlers for the added scene properties
+  const handleUpdateSceneEntrance = (effect: string) => {
+    if (!selectedSceneId || !story || !setStory) return;
+    
+    const updatedScenes = story.scenes.map(scene => 
+      scene.id === selectedSceneId 
+        ? { ...scene, entranceEffect: effect } 
+        : scene
+    );
+    
+    setStory({ ...story, scenes: updatedScenes });
+  };
+
+  const handleUpdateSceneEnvironment = (effect: string) => {
+    if (!selectedSceneId || !story || !setStory) return;
+    
+    const updatedScenes = story.scenes.map(scene => 
+      scene.id === selectedSceneId 
+        ? { ...scene, environmentEffect: effect } 
+        : scene
+    );
+    
+    setStory({ ...story, scenes: updatedScenes });
+  };
+
+  const handleUpdateEndingName = (name: string) => {
+    if (!selectedSceneId || !story || !setStory) return;
+    
+    const updatedScenes = story.scenes.map(scene => 
+      scene.id === selectedSceneId 
+        ? { ...scene, endingName: name } 
+        : scene
+    );
+    
+    setStory({ ...story, scenes: updatedScenes });
+  };
+
   if (!story) return null;
   
   return (
@@ -113,6 +150,9 @@ const Flow = () => {
               updateRevivalPoint={handleUpdateRevivalPoint}
               selectedElementId={selectedElementId}
               setSelectedElementId={setSelectedElementId}
+              updateSceneEntrance={handleUpdateSceneEntrance}
+              updateSceneEnvironment={handleUpdateSceneEnvironment}
+              updateEndingName={handleUpdateEndingName}
             />
           </div>
         </div>

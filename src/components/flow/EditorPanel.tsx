@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,6 +18,10 @@ interface EditorPanelProps {
   updateRevivalPoint?: (sceneId: string) => void;
   selectedElementId?: string;
   setSelectedElementId?: (id: string) => void;
+  // New props for scene effects and ending name
+  updateSceneEntrance?: (effect: string) => void;
+  updateSceneEnvironment?: (effect: string) => void;
+  updateEndingName?: (name: string) => void;
 }
 
 const EditorPanel = ({
@@ -32,6 +37,9 @@ const EditorPanel = ({
   updateRevivalPoint,
   selectedElementId,
   setSelectedElementId,
+  updateSceneEntrance,
+  updateSceneEnvironment,
+  updateEndingName,
 }: EditorPanelProps) => {
   return (
     <Card className="overflow-hidden h-full">
@@ -41,7 +49,7 @@ const EditorPanel = ({
         className="h-full flex flex-col"
       >
         <div className="px-2 pt-2">
-          <TabsList className="grid grid-cols-2 mb-2 h-8">
+          <TabsList className="grid grid-cols-3 mb-2 h-8">
             <TabsTrigger
               value="properties"
               disabled={!selectedSceneId}
@@ -55,6 +63,13 @@ const EditorPanel = ({
               className="text-xs"
             >
               内容
+            </TabsTrigger>
+            <TabsTrigger
+              value="exploration"
+              disabled={!selectedSceneId}
+              className="text-xs"
+            >
+              探索项
             </TabsTrigger>
           </TabsList>
         </div>
@@ -71,6 +86,9 @@ const EditorPanel = ({
           updateRevivalPoint={updateRevivalPoint}
           selectedElementId={selectedElementId}
           setSelectedElementId={setSelectedElementId}
+          updateSceneEntrance={updateSceneEntrance}
+          updateSceneEnvironment={updateSceneEnvironment}
+          updateEndingName={updateEndingName}
         />
       </Tabs>
     </Card>

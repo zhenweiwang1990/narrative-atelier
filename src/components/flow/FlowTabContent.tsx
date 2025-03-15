@@ -4,6 +4,7 @@ import { TabsContent } from '@/components/ui/tabs';
 import ElementEditor from '@/components/ElementEditor';
 import { Scene } from '@/utils/types';
 import ScenePropertiesPanel from './ScenePropertiesPanel';
+import ExplorationPanel from './ExplorationPanel';
 import { Story } from '@/utils/types';
 
 interface FlowTabContentProps {
@@ -18,6 +19,10 @@ interface FlowTabContentProps {
   updateRevivalPoint?: (sceneId: string) => void;
   selectedElementId?: string;
   setSelectedElementId?: (id: string) => void;
+  // New props for scene effects and ending name
+  updateSceneEntrance?: (effect: string) => void;
+  updateSceneEnvironment?: (effect: string) => void;
+  updateEndingName?: (name: string) => void;
 }
 
 const FlowTabContent = ({
@@ -31,7 +36,10 @@ const FlowTabContent = ({
   updateNextScene,
   updateRevivalPoint,
   selectedElementId,
-  setSelectedElementId
+  setSelectedElementId,
+  updateSceneEntrance,
+  updateSceneEnvironment,
+  updateEndingName
 }: FlowTabContentProps) => {
   return (
     <>
@@ -46,6 +54,9 @@ const FlowTabContent = ({
             updateNextScene={updateNextScene}
             updateRevivalPoint={updateRevivalPoint}
             selectedSceneId={selectedSceneId || ''}
+            updateSceneEntrance={updateSceneEntrance}
+            updateSceneEnvironment={updateSceneEnvironment}
+            updateEndingName={updateEndingName}
           />
         ) : (
           <div className="text-center flex-1 flex items-center justify-center p-3 bg-muted/30 rounded-md mx-2 mb-2">
@@ -66,6 +77,21 @@ const FlowTabContent = ({
         ) : (
           <div className="text-center flex-1 flex items-center justify-center p-3 bg-muted/30 rounded-md mx-2 mb-2">
             <p className="text-sm text-muted-foreground">Select a scene to edit its elements.</p>
+          </div>
+        )}
+      </TabsContent>
+
+      <TabsContent value="exploration" className="data-[state=active]:flex flex-col h-full overflow-hidden">
+        {selectedSceneId ? (
+          <div className="p-3 h-full overflow-y-auto">
+            <ExplorationPanel 
+              sceneId={selectedSceneId}
+              story={story}
+            />
+          </div>
+        ) : (
+          <div className="text-center flex-1 flex items-center justify-center p-3 bg-muted/30 rounded-md mx-2 mb-2">
+            <p className="text-sm text-muted-foreground">Select a scene to edit its exploration items.</p>
           </div>
         )}
       </TabsContent>

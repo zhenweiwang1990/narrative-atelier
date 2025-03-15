@@ -1,3 +1,4 @@
+
 export interface Story {
   id: string;
   title: string;
@@ -60,6 +61,20 @@ export interface Scene {
   nextSceneId?: string;
   revivalPointId?: string;
   position: { x: number; y: number };
+  // New fields
+  entranceEffect?: string;
+  environmentEffect?: string;
+  endingName?: string;
+  explorationItems?: ExplorationItem[];
+}
+
+// New exploration item interface
+export interface ExplorationItem {
+  id: string;
+  type: 'item' | 'knowledge';
+  name: string;
+  description: string;
+  isCollectible?: boolean;
 }
 
 export interface SceneElement {
