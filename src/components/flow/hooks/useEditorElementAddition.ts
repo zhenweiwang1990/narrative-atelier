@@ -29,29 +29,29 @@ export const useEditorElementAddition = ({
     const currentElement = elements.find(e => e.id === currentElementId);
     if (!currentElement) return;
     
-    // First create a sorted copy of elements
+    // Create a sorted array of all elements
     const sortedElements = [...elements].sort((a, b) => a.order - b.order);
     
-    // Calculate the order for the new element and adjust other elements' orders
+    // Calculate the new order and update existing elements' orders
     let newOrder: number;
-
+    
     if (position === 'before') {
       // For 'before', use the current element's order
       newOrder = currentElement.order;
       
-      // Shift current element and all elements after it
+      // Update orders of all elements with order >= newOrder
       for (const el of sortedElements) {
         if (el.order >= newOrder) {
           updateElement(el.id, { order: el.order + 1 });
         }
       }
     } else { // position === 'after'
-      // For 'after', use the order immediately after the current element
+      // For 'after', use order immediately after the current element
       newOrder = currentElement.order + 1;
       
-      // Shift all elements that come after the current element
+      // Update orders of all elements with order > currentElement.order
       for (const el of sortedElements) {
-        if (el.order >= newOrder) {
+        if (el.order > currentElement.order) {
           updateElement(el.id, { order: el.order + 1 });
         }
       }

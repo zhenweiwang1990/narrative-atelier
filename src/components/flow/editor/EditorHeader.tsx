@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { PencilLine, X, Plus, ArrowDownUp } from "lucide-react";
+import { PencilLine, X, Plus, ArrowLeft, ArrowRight } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -65,8 +65,10 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
         <div className="flex items-center mr-2 space-x-1">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-6 w-6">
-                <ArrowDownUp className="h-3 w-3" />
+              <Button variant="ghost" size="icon" className="h-6 w-6 relative">
+                <ArrowLeft className="h-3 w-3" />
+                <Plus className="h-2 w-2 absolute top-1 left-1" />
+                <span className="sr-only">在前添加</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="z-[100]">
@@ -83,8 +85,10 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-6 w-6">
-                <Plus className="h-3 w-3" />
+              <Button variant="ghost" size="icon" className="h-6 w-6 relative">
+                <ArrowRight className="h-3 w-3" />
+                <Plus className="h-2 w-2 absolute top-1 right-1" />
+                <span className="sr-only">在后添加</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="z-[100]">
