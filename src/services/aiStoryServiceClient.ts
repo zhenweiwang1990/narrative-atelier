@@ -47,13 +47,19 @@ export const handleAiStoryGeneration = async ({
     // Get the result from the promise
     const result = await toastPromise;
     
-    // Check that result is not null or undefined before accessing its properties
-    if (result && typeof result === 'object' && 'success' in result) {
-      if (result && 'success' in result && result.success && onSuccess) {
-        onSuccess();
+    // Proper null and type checking
+    if (result) {
+      // First check if result is an object with success property
+      if (typeof result === 'object' && result !== null && 'success' in result) {
+        // Now TypeScript knows result has a success property
+        if (result.success && onSuccess) {
+          onSuccess();
+        }
+        return result;
       }
       
-      return result;
+      // If result exists but doesn't have the right structure
+      return { success: false, message: "响应格式不正确" };
     }
     
     return { success: false, message: "无响应" };
