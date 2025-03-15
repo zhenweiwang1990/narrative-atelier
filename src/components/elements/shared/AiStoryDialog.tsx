@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -51,6 +51,12 @@ const AiStoryDialog: React.FC<AiStoryDialogProps> = ({
           <DialogTitle className="flex items-center gap-2">
             {type === "branch" ? "AI 写支线" : "AI 写结局"}
           </DialogTitle>
+          <DialogDescription>
+            {type === "branch" 
+              ? "AI 会根据您的提示生成支线分支内容" 
+              : "AI 会根据您的提示生成结局内容"
+            }
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
@@ -96,7 +102,7 @@ const AiStoryDialog: React.FC<AiStoryDialogProps> = ({
                 <SelectTrigger>
                   <SelectValue placeholder="选择支线最终要合回的场景" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-[1100]">
                   {scenes.map((scene) => (
                     <SelectItem key={scene.id} value={scene.id}>
                       {scene.title}
