@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { BookText, Users, MapPin, Network } from "lucide-react";
+import { BookText, Users, MapPin, Network, Music } from "lucide-react";
 
 interface NavItemProps {
   path: string;
@@ -46,6 +46,11 @@ export const useNavItems = () => {
       path: "/locations",
       name: "Locations",
       icon: <MapPin className="w-5 h-5" />,
+    },
+    {
+      path: "/music",
+      name: "Music",
+      icon: <Music className="w-5 h-5" />,
     },
     {
       path: "/flow",

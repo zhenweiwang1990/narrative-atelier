@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +15,7 @@ import Settings from "./pages/Settings";
 import TextProcessing from "./pages/StoryCreation/TextProcessing";
 import InteractionMarking from "./pages/StoryCreation/InteractionMarking";
 import StoryConversion from "./pages/StoryCreation/StoryConversion";
+import Music from "./pages/Music";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +46,7 @@ const App = () => (
                 path="/story-creation/conversion"
                 element={<StoryConversion />}
               />
+              <Route path="/music" element={<Music />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>

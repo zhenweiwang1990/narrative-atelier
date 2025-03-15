@@ -9,6 +9,7 @@ import {
   GitBranch,
   Settings,
   Database,
+  Music,
 } from "lucide-react";
 import {
   SidebarGroup,
@@ -37,6 +38,11 @@ export const SidebarNavigation = () => {
       title: "地点",
       icon: MapPin,
       path: "/locations",
+    },
+    {
+      title: "音乐",
+      icon: Music,
+      path: "/music",
     },
     {
       title: "全局变量",

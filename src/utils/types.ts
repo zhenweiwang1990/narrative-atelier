@@ -1,4 +1,3 @@
-
 export interface Story {
   id: string;
   title: string;
@@ -68,9 +67,9 @@ export interface Scene {
   endingName?: string;
   explorationItems?: ExplorationItem[];
   backgroundMusic?: {
-    url: string;
+    id: string;
     name: string;
-    isUploaded: boolean;
+    url: string;
   };
 }
 

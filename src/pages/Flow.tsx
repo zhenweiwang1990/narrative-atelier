@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useStory } from "@/components/Layout";
 import FlowEditor from "@/components/flow/FlowEditor";
@@ -107,7 +106,7 @@ const Flow = () => {
     setStory({ ...story, scenes: updatedScenes });
   };
 
-  const handleUpdateBackgroundMusic = (music: { url: string; name: string; isUploaded: boolean }) => {
+  const handleUpdateBackgroundMusic = (music: { id: string; name: string; url: string }) => {
     if (!selectedSceneId || !story || !setStory) return;
 
     const updatedScenes = story.scenes.map((scene) =>

@@ -100,7 +100,7 @@ const ScenePropertiesEditor: React.FC<ScenePropertiesEditorProps> = ({
     });
   };
 
-  const updateBackgroundMusic = (music: { url: string; name: string; isUploaded: boolean }) => {
+  const updateBackgroundMusic = (music: { id: string; name: string; url: string }) => {
     setStory({
       ...story,
       scenes: story.scenes.map((scene) =>
