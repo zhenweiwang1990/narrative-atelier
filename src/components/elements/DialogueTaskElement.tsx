@@ -1,14 +1,12 @@
+
 import React from 'react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { DialogueTaskElement as DialogueTaskElementType, Character, Scene, GlobalValue, ValueChange } from '@/utils/types';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ChevronDown } from 'lucide-react';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import SceneSelectSection from './shared/SceneSelectSection';
-import TransitionTextsSection from './shared/TransitionTextsSection';
-import ValueChangesCollapsible from './shared/ValueChangesCollapsible';
+import ValueChangesSection from './shared/ValueChangesSection';
+import SuccessFailureLayout from './shared/SuccessFailureLayout';
 
 interface DialogueTaskElementProps {
   element: DialogueTaskElementType;
@@ -89,6 +87,68 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
       onUpdate(element.id, isSuccess ? { successSceneId: sceneId } : { failureSceneId: sceneId });
     }
   };
+
+  const renderSceneSelect = (isSuccess: boolean) => (
+    <div>
+      <Label className="text-xs">{isSuccess ? "成功场景" : "失败场景"}</Label>
+      <Select 
+        value={(isSuccess ? element.successSceneId : element.failureSceneId) || "none"} 
+        onValueChange={(value) => handleSceneSelection(isSuccess, value)}
+      >
+        <SelectTrigger className="mt-1 h-8 text-xs">
+          <SelectValue placeholder="选择场景" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value="none">不指定</SelectItem>
+            {scenes.map((scene) => (
+              <SelectItem key={scene.id} value={scene.id}>
+                {scene.title} (
+                {scene.type === "start"
+                  ? "开始"
+                  : scene.type === "ending"
+                  ? "结局"
+                  : scene.type === "bad-ending"
+                  ? "异常结局"
+                  : "普通"}
+                )
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+
+  const renderTransitionText = (isSuccess: boolean) => (
+    <div>
+      <Label className="text-xs">{isSuccess ? "成功转场文本" : "失败转场文本"}</Label>
+      <Textarea
+        value={isSuccess ? (element.successTransition || '') : (element.failureTransition || '')}
+        onChange={(e) => onUpdate(element.id, isSuccess 
+          ? { successTransition: e.target.value } 
+          : { failureTransition: e.target.value }
+        )}
+        className="mt-1 text-sm"
+        rows={2}
+        placeholder={isSuccess ? "成功后的叙述" : "失败后的叙述"}
+      />
+    </div>
+  );
+
+  const renderValueChanges = (isSuccess: boolean) => (
+    <div>
+      <Label className="text-xs">{isSuccess ? "成功数值变化" : "失败数值变化"}</Label>
+      <ValueChangesSection
+        isSuccess={isSuccess}
+        valueChanges={isSuccess ? element.successValueChanges : element.failureValueChanges}
+        globalValues={globalValues}
+        onAddValueChange={addValueChange}
+        onUpdateValueChange={updateValueChange}
+        onRemoveValueChange={removeValueChange}
+      />
+    </div>
+  );
   
   return (
     <div className="space-y-2">
@@ -143,50 +203,25 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
         />
       </div>
       
-      <SceneSelectSection
-        successSceneId={element.successSceneId}
-        failureSceneId={element.failureSceneId}
-        scenes={scenes}
-        onUpdateSuccessScene={(value) => handleSceneSelection(true, value)}
-        onUpdateFailureScene={(value) => handleSceneSelection(false, value)}
-      />
-      
-      <Collapsible className="border rounded-md p-2 bg-muted/20">
-        <CollapsibleTrigger className="flex items-center justify-between w-full text-xs font-medium">
-          转场文本 <ChevronDown className="h-3 w-3" />
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <TransitionTextsSection
-            successTransition={element.successTransition}
-            failureTransition={element.failureTransition}
-            onUpdateSuccess={(value) => onUpdate(element.id, { successTransition: value })}
-            onUpdateFailure={(value) => onUpdate(element.id, { failureTransition: value })}
-          />
-        </CollapsibleContent>
-      </Collapsible>
-      
       {globalValues.length > 0 && (
-        <>
-          <ValueChangesCollapsible
-            title="成功数值变化"
-            isSuccess={true}
-            valueChanges={element.successValueChanges}
-            globalValues={globalValues}
-            onAddValueChange={addValueChange}
-            onUpdateValueChange={updateValueChange}
-            onRemoveValueChange={removeValueChange}
-          />
-          
-          <ValueChangesCollapsible
-            title="失败数值变化"
-            isSuccess={false}
-            valueChanges={element.failureValueChanges}
-            globalValues={globalValues}
-            onAddValueChange={addValueChange}
-            onUpdateValueChange={updateValueChange}
-            onRemoveValueChange={removeValueChange}
-          />
-        </>
+        <SuccessFailureLayout
+          successTitle="成功结果"
+          failureTitle="失败结果"
+          successChildren={
+            <div className="space-y-2">
+              {renderSceneSelect(true)}
+              {renderTransitionText(true)}
+              {renderValueChanges(true)}
+            </div>
+          }
+          failureChildren={
+            <div className="space-y-2">
+              {renderSceneSelect(false)}
+              {renderTransitionText(false)}
+              {renderValueChanges(false)}
+            </div>
+          }
+        />
       )}
     </div>
   );
