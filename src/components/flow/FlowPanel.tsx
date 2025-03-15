@@ -24,7 +24,7 @@ const FlowPanel: React.FC<FlowPanelProps> = ({
   return (
     <Panel
       position="top-left"
-      className="bg-white p-2 rounded-md shadow-sm flex items-center gap-2"
+      className="bg-white dark:bg-card p-2 rounded-md shadow-sm flex items-center gap-2 border dark:border-muted"
     >
       <Button
         variant="outline"

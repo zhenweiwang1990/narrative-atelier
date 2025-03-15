@@ -66,13 +66,13 @@ const SceneNode = ({ data, selected }: SceneNodeProps) => {
   const getNodeStyles = () => {
     switch (data.sceneType) {
       case "start":
-        return "border-green-500 bg-green-50";
+        return "border-green-500 bg-green-50 dark:bg-green-950/30 dark:border-green-700";
       case "ending":
-        return "border-blue-500 bg-blue-50";
+        return "border-blue-500 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-700";
       case "bad-ending":
-        return "border-red-500 bg-red-50";
+        return "border-red-500 bg-red-50 dark:bg-red-950/30 dark:border-red-700";
       default:
-        return "border-gray-300";
+        return "border-gray-300 dark:border-gray-700";
     }
   };
 
@@ -123,7 +123,7 @@ const SceneNode = ({ data, selected }: SceneNodeProps) => {
         </div>
 
         {data.sceneType === "bad-ending" && data.revivalPointId && (
-          <div className="flex items-center text-[10px] text-red-500 mt-1">
+          <div className="flex items-center text-[10px] text-red-500 dark:text-red-400 mt-1">
             <RotateCcw className="h-3 w-3 mr-1" /> 复活点: {data.revivalPointName || "未知场景"}
           </div>
         )}

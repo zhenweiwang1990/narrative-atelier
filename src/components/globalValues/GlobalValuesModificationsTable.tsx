@@ -132,9 +132,9 @@ const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTablePro
                               <div 
                                 key={`value-${modification.valueId}`} 
                                 className={`flex items-center border rounded-sm px-1 py-1 ${
-                                  isPositive ? 'bg-green-50 border-green-200' : 
-                                  isNegative ? 'bg-red-50 border-red-200' : 
-                                  'bg-background'
+                                  isPositive ? 'bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-800' : 
+                                  isNegative ? 'bg-red-50 border-red-200 dark:bg-red-950/30 dark:border-red-800' : 
+                                  'bg-background dark:bg-muted/30'
                                 }`}
                               >
                                 <span className="text-xs mr-1">
@@ -145,8 +145,8 @@ const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTablePro
                                   value={value}
                                   onChange={(e) => handleValueChange(modification, e.target.value)}
                                   className={`h-5 w-12 text-xs inline-block px-1 ${
-                                    isPositive ? 'text-green-600' : 
-                                    isNegative ? 'text-red-600' : ''
+                                    isPositive ? 'text-green-600 dark:text-green-400' : 
+                                    isNegative ? 'text-red-600 dark:text-red-400' : ''
                                   }`}
                                 />
                                 <Button

@@ -122,7 +122,7 @@
 }
 
 .react-flow__handle {
-  @apply w-3 h-3 rounded-full border-2 border-white bg-primary transition-all;
+  @apply w-3 h-3 rounded-full border-2 border-white bg-primary transition-all dark:border-gray-800;
 }
 
 .react-flow__handle:hover {
@@ -158,6 +158,20 @@
 
 .dark .value-item {
   @apply bg-muted border-muted-foreground/30;
+}
+
+/* Success/Failure elements dark mode fixes */
+.dark .success-outcome {
+  @apply bg-green-950/30 border-green-800;
+}
+
+.dark .failure-outcome {
+  @apply bg-red-950/30 border-red-800;
+}
+
+/* Fix for filter panel in dark mode */
+.dark .filter-panel {
+  @apply bg-card border-muted;
 }
 
 /* Animated image placeholder */

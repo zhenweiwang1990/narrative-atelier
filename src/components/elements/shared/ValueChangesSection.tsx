@@ -60,7 +60,7 @@ const ValueChangesSection: React.FC<ValueChangesSectionProps> = ({
                     valueChange.valueId, 
                     parseInt(e.target.value) || 0
                   )}
-                  className="h-7 text-xs"
+                  className={`h-7 text-xs ${valueChange.change > 0 ? 'text-green-600 dark:text-green-400' : valueChange.change < 0 ? 'text-red-600 dark:text-red-400' : ''}`}
                 />
               </div>
               <Button
