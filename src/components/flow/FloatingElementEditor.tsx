@@ -14,7 +14,7 @@ import { QteElement } from "@/components/elements/QteElement";
 import { DialogueTaskElement } from "@/components/elements/DialogueTaskElement";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import ScenePropertiesPanel from "./panel/ScenePropertiesPanel";
+import ScenePropertiesPanel from "./ScenePropertiesPanel";
 
 interface FloatingElementEditorProps {
   sceneId: string;
