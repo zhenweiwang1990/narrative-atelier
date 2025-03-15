@@ -1,19 +1,22 @@
+
 import { useState } from "react";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookText, Users, MapPin, Network, Edit, Save } from "lucide-react";
+import { Edit, Save, Sparkles, BookText, FileText } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useStory } from "@/components/Layout";
-import { Link } from "react-router-dom";
+import SimpleIdeaDialog from "@/components/ai-story/SimpleIdeaDialog";
+import NovelToStoryDialog from "@/components/ai-story/NovelToStoryDialog";
+import StoryStats from "@/components/ai-story/StoryStats";
+import StoryPreview from "@/components/ai-story/StoryPreview";
 
 const Index = () => {
   const { story, setStory } = useStory();
@@ -21,6 +24,10 @@ const Index = () => {
   const [title, setTitle] = useState(story?.title || "");
   const [author, setAuthor] = useState(story?.author || "");
   const [description, setDescription] = useState(story?.description || "");
+  
+  // AI 对话框状态
+  const [showSimpleIdeaDialog, setShowSimpleIdeaDialog] = useState(false);
+  const [showNovelDialog, setShowNovelDialog] = useState(false);
 
   const handleSave = () => {
     if (!story || !setStory) return;
@@ -37,28 +44,6 @@ const Index = () => {
 
   if (!story) return null;
 
-  // 项目统计数据
-  const stats = [
-    {
-      name: "角色",
-      value: story.characters.length,
-      icon: <Users className="h-4 w-4" />,
-      path: "/characters",
-    },
-    {
-      name: "场景",
-      value: story.locations.length,
-      icon: <MapPin className="h-4 w-4" />,
-      path: "/locations",
-    },
-    {
-      name: "分支",
-      value: story.scenes.length,
-      icon: <Network className="h-4 w-4" />,
-      path: "/flow",
-    },
-  ];
-
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-2">
@@ -69,6 +54,28 @@ const Index = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* AI 创作功能卡片 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>AI 创作助手</CardTitle>
+            <CardDescription>借助 AI 快速创建剧情结构</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Button 
+              className="w-full justify-start" 
+              onClick={() => setShowSimpleIdeaDialog(true)}
+            >
+              <Sparkles className="h-4 w-4 mr-2" /> 从简单创意创作剧情
+            </Button>
+            <Button 
+              className="w-full justify-start" 
+              onClick={() => setShowNovelDialog(true)}
+            >
+              <BookText className="h-4 w-4 mr-2" /> 从小说创作剧情
+            </Button>
+          </CardContent>
+        </Card>
+
         {/* 剧情信息卡片 */}
         <Card className="md:col-span-2 h-full">
           <CardHeader>
@@ -157,124 +164,36 @@ const Index = () => {
           </CardContent>
         </Card>
 
-        {/* 统计和快速操作 */}
-        <div className="space-y-6">
-          {/* 统计 */}
-          <Card>
-            <CardHeader>
-              <CardTitle>统计</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {stats.map((stat, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between"
-                  >
-                    <div className="flex items-center">
-                      <div className="mr-2 p-2 bg-primary/10 rounded-full">
-                        {stat.icon}
-                      </div>
-                      <span>{stat.name}</span>
-                    </div>
-                    <span className="font-semibold">{stat.value}</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+        {/* 统计信息 */}
+        <StoryStats story={story} />
 
-          {/* 快速操作 */}
-          <Card>
-            <CardHeader>
-              <CardTitle>快速操作</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button
-                variant="outline"
-                asChild
-                className="w-full justify-start"
-              >
-                <Link to="/characters">
-                  <Users className="h-4 w-4 mr-2" /> 管理角色
-                </Link>
-              </Button>
-              <Button
-                variant="outline"
-                asChild
-                className="w-full justify-start"
-              >
-                <Link to="/locations">
-                  <MapPin className="h-4 w-4 mr-2" /> 管理场景
-                </Link>
-              </Button>
-              <Button
-                variant="outline"
-                asChild
-                className="w-full justify-start"
-              >
-                <Link to="/flow">
-                  <Network className="h-4 w-4 mr-2" /> 编辑剧情流程
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+        {/* 剧情预览 */}
+        <StoryPreview 
+          story={story}
+          isEditing={isEditing}
+          title={title}
+          author={author}
+          description={description}
+          setTitle={setTitle}
+          setAuthor={setAuthor}
+          setDescription={setDescription}
+        />
       </div>
 
-      {/* 使用指南 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>快速指南</CardTitle>
-          <CardDescription>如何创建您的互动剧情</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <div className="mr-2 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
-                  1
-                </div>
-                <h3 className="font-medium">创建角色</h3>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                定义您的主角和配角，设置姓名、肖像和背景剧情。
-              </p>
-            </div>
+      {/* AI 对话框 */}
+      <SimpleIdeaDialog
+        isOpen={showSimpleIdeaDialog}
+        onClose={() => setShowSimpleIdeaDialog(false)}
+        story={story}
+        setStory={setStory}
+      />
 
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <div className="mr-2 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
-                  2
-                </div>
-                <h3 className="font-medium">设计场景</h3>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                创建剧情发生的地点，包括描述和背景图片。
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <div className="mr-2 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
-                  3
-                </div>
-                <h3 className="font-medium">构建分支</h3>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                设计包含旁白、对话、选择和互动元素的场景，创建您的分支叙事。
-              </p>
-            </div>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button variant="outline" asChild className="w-full">
-            <Link to="/characters">
-              <BookText className="h-4 w-4 mr-2" /> 开始创作
-            </Link>
-          </Button>
-        </CardFooter>
-      </Card>
+      <NovelToStoryDialog
+        isOpen={showNovelDialog}
+        onClose={() => setShowNovelDialog(false)}
+        story={story}
+        setStory={setStory}
+      />
     </div>
   );
 };
