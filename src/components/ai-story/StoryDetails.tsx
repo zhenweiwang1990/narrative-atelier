@@ -45,7 +45,7 @@ const StoryDetails: React.FC<StoryDetailsProps> = ({ story, onSave }) => {
   };
 
   return (
-    <Card className="md:col-span-1 max-w-[300px]">
+    <Card className="md:col-span-1">
       <CardHeader>
         <div className="flex justify-between items-start">
           <div>
