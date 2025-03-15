@@ -1,5 +1,5 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { NodeTypes, Connection, MarkerType } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useStory } from '../Layout';
@@ -86,6 +86,7 @@ const getLayoutedElements = (nodes, edges, direction = 'TB') => {
 
 const FlowEditor = ({ onSceneSelect, onPreviewToggle }: FlowEditorProps) => {
   const { story, setStory } = useStory();
+  const [isInitialized, setIsInitialized] = useState(false);
   
   // Return early if there's no story
   if (!story) {
@@ -119,6 +120,13 @@ const FlowEditor = ({ onSceneSelect, onPreviewToggle }: FlowEditorProps) => {
     onSceneSelect
   );
 
+  // Prevent initial flicker
+  useEffect(() => {
+    if (nodes && nodes.length > 0 && !isInitialized) {
+      setIsInitialized(true);
+    }
+  }, [nodes, isInitialized]);
+
   // Auto-arrange the nodes
   const handleAutoArrange = useCallback(() => {
     if (!nodes || !edges) return;
@@ -130,6 +138,11 @@ const FlowEditor = ({ onSceneSelect, onPreviewToggle }: FlowEditorProps) => {
   // Make sure we have nodes before rendering ReactFlow
   if (!nodes || nodes.length === 0) {
     return <FlowEmptyState />;
+  }
+
+  // Show loading state during initialization
+  if (!isInitialized) {
+    return <FlowLoadingState />;
   }
 
   return (

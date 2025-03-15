@@ -1,11 +1,10 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/auth';
 import { useStory } from '@/context/StoryContext';
 import { loadStory, createBlankStory } from '@/utils/storage';
 import { toast } from '@/components/ui/use-toast';
-import { Story } from '@/utils/types';
 
 interface StoryInitializerProps {
   children: React.ReactNode;
@@ -23,6 +22,8 @@ export const StoryInitializer: React.FC<StoryInitializerProps> = ({ children }) 
   
   const navigate = useNavigate();
   const location = useLocation();
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   
   // Check if route starts with /editor/
   const isEditorRoute = location.pathname.startsWith('/editor/');
@@ -31,7 +32,12 @@ export const StoryInitializer: React.FC<StoryInitializerProps> = ({ children }) 
 
   // Load story on component mount or when URL slug changes
   useEffect(() => {
+    // Skip if already initialized or currently loading
+    if (isInitialized || isLoading) return;
+    
     const initializeStory = async () => {
+      setIsLoading(true);
+      
       // For editor routes, load specific story
       if (isEditorRoute && urlSlug) {
         setCurrentStorySlug(urlSlug);
@@ -43,6 +49,8 @@ export const StoryInitializer: React.FC<StoryInitializerProps> = ({ children }) 
             if (dbStory) {
               setStory(dbStory);
               setCurrentStory(dbStory);
+              setIsInitialized(true);
+              setIsLoading(false);
               return;
             }
           } catch (error) {
@@ -57,6 +65,8 @@ export const StoryInitializer: React.FC<StoryInitializerProps> = ({ children }) 
         const savedStory = loadStory();
         if (savedStory) {
           setStory(savedStory);
+          setIsInitialized(true);
+          setIsLoading(false);
           return;
         }
       }
@@ -64,6 +74,8 @@ export const StoryInitializer: React.FC<StoryInitializerProps> = ({ children }) 
       // If no story found, create a blank one
       const newStory = createBlankStory();
       setStory(newStory);
+      setIsInitialized(true);
+      setIsLoading(false);
       
       // If in editor mode, redirect to home if no story could be loaded
       if (isEditorRoute && !user) {
@@ -77,7 +89,14 @@ export const StoryInitializer: React.FC<StoryInitializerProps> = ({ children }) 
     };
 
     initializeStory();
-  }, [isEditorRoute, urlSlug, user, setCurrentStorySlug, navigate, setCurrentStory, loadStoryFromDatabase, setStory]);
+  }, [isEditorRoute, urlSlug, user, isInitialized, isLoading]);
+
+  // Reset initialization when slug changes
+  useEffect(() => {
+    if (urlSlug !== currentStorySlug) {
+      setIsInitialized(false);
+    }
+  }, [urlSlug, currentStorySlug]);
 
   // Redirect to auth if not logged in and trying to access editor
   useEffect(() => {
@@ -85,17 +104,6 @@ export const StoryInitializer: React.FC<StoryInitializerProps> = ({ children }) 
       navigate('/auth');
     }
   }, [isEditorRoute, user, navigate]);
-
-  // Auto-save story changes
-  useEffect(() => {
-    if (story && currentStorySlug && user && isEditorRoute) {
-      const saveTimer = setTimeout(() => {
-        // This will be handled by the StoryProvider
-      }, 5000); // Auto-save after 5 seconds of inactivity
-      
-      return () => clearTimeout(saveTimer);
-    }
-  }, [story, currentStorySlug, user, isEditorRoute]);
 
   return <>{children}</>;
 };

@@ -127,8 +127,22 @@ export const saveStory = async (story: Story, slug: string, userId: string): Pro
   }
 };
 
+// Add caching for loaded stories to prevent repeated database queries
+const storyCache = new Map<string, {story: Story, timestamp: number}>();
+const CACHE_TTL = 60000; // 60 seconds cache validity
+
 export const loadStory = async (slug: string, userId: string): Promise<Story | null> => {
   try {
+    // Check if we have a valid cached version
+    const cacheKey = `${userId}-${slug}`;
+    const cachedData = storyCache.get(cacheKey);
+    const now = Date.now();
+    
+    if (cachedData && (now - cachedData.timestamp < CACHE_TTL)) {
+      console.log('Using cached story data');
+      return cachedData.story;
+    }
+    
     console.log(`Loading story with slug: ${slug} for user: ${userId}`);
     
     // Using maybeSingle() instead of single() to avoid errors when no data is found
@@ -146,7 +160,12 @@ export const loadStory = async (slug: string, userId: string): Promise<Story | n
     
     if (data && data.content) {
       console.log('Story loaded successfully');
-      return data.content as unknown as Story;
+      const story = data.content as unknown as Story;
+      
+      // Cache the result
+      storyCache.set(cacheKey, {story, timestamp: now});
+      
+      return story;
     }
     
     console.log('No story found with the given slug');
@@ -159,5 +178,16 @@ export const loadStory = async (slug: string, userId: string): Promise<Story | n
       variant: "destructive"
     });
     throw error;
+  }
+};
+
+// Add method to clear cache when needed
+export const clearStoryCache = (userId?: string, slug?: string) => {
+  if (userId && slug) {
+    // Clear specific story
+    storyCache.delete(`${userId}-${slug}`);
+  } else {
+    // Clear all cache
+    storyCache.clear();
   }
 };
