@@ -12,3 +12,8 @@ export * from './dialogueTask/DialogueTaskFields';
 export * from './shared/OutcomeSection';
 export * from './choice/ChoiceOption';
 export * from './choice/ValueChangeEditor';
+
+// Additional exports for the new components
+export * from './shared/SingleOutcomeSection';
+export * from './shared/DualOutcomeSection';
+export * from './shared/OutcomeAiDialog';

@@ -1,13 +1,9 @@
 
 import React from 'react';
 import { Scene, GlobalValue } from '@/utils/types';
-import SceneSelectSection from './SceneSelectSection';
-import TransitionTextsSection from './TransitionTextsSection';
-import ValueChangesCollapsible from './ValueChangesCollapsible';
-import AiStoryDialog from './AiStoryDialog';
-import { toast } from 'sonner';
 import { useOutcomeHandling } from '@/hooks/useOutcomeHandling';
 import SingleOutcomeSection from './SingleOutcomeSection';
+import OutcomeAiDialog from './OutcomeAiDialog';
 
 interface OutcomeSectionProps {
   scenes: Scene[];
@@ -59,28 +55,7 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
     getAiButtonsVisibility
   } = useOutcomeHandling(elementId);
 
-  const handleAiStorySubmit = (prompt: string, convergenceSceneId?: string, endingType?: 'normal' | 'bad') => {
-    toast.promise(
-      new Promise((resolve) => setTimeout(resolve, 1500)), 
-      {
-        loading: aiDialogType === 'branch' ? '正在生成支线...' : '正在生成结局...',
-        success: aiDialogType === 'branch' ? 'AI 支线生成成功！' : 'AI 结局生成成功！',
-        error: '生成失败，请重试。',
-      }
-    );
-
-    console.log('AI Story Request for Element Outcome:', {
-      type: aiDialogType,
-      isSuccess,
-      elementId,
-      prompt,
-      convergenceSceneId,
-      endingType,
-      outcomeType: isSuccess ? 'success' : 'failure'
-    });
-  };
-  
-  // Show single outcome section based on the mode
+  // Render success-only section
   if (showSuccessOnly) {
     return (
       <div className="space-y-2">
@@ -100,18 +75,19 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
           showAiButtons={getAiButtonsVisibility(successSceneId)}
         />
 
-        <AiStoryDialog 
+        <OutcomeAiDialog
           isOpen={aiDialogOpen}
           onClose={() => setAiDialogOpen(false)}
-          onSubmit={handleAiStorySubmit}
-          type={aiDialogType}
+          aiDialogType={aiDialogType}
+          isSuccess={isSuccess}
           scenes={scenes}
-          showConvergenceSelector={aiDialogType === 'branch'}
+          elementId={elementId}
         />
       </div>
     );
   }
   
+  // Render failure-only section
   if (showFailureOnly) {
     return (
       <div className="space-y-2">
@@ -131,73 +107,43 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
           showAiButtons={getAiButtonsVisibility(failureSceneId)}
         />
 
-        <AiStoryDialog 
+        <OutcomeAiDialog
           isOpen={aiDialogOpen}
           onClose={() => setAiDialogOpen(false)}
-          onSubmit={handleAiStorySubmit}
-          type={aiDialogType}
+          aiDialogType={aiDialogType}
+          isSuccess={isSuccess}
           scenes={scenes}
-          showConvergenceSelector={aiDialogType === 'branch'}
+          elementId={elementId}
         />
       </div>
     );
   }
   
-  // Default view with both columns
-  return (
-    <div className="space-y-2">
-      <SceneSelectSection
-        successSceneId={successSceneId}
-        failureSceneId={failureSceneId}
-        scenes={scenes}
-        onUpdateSuccessScene={updateSuccessSceneId}
-        onUpdateFailureScene={updateFailureSceneId}
-        showSingleColumn={false}
-        onOpenAiDialog={handleOpenAiDialog}
-        showSuccessAiButtons={getAiButtonsVisibility(successSceneId)}
-        showFailureAiButtons={getAiButtonsVisibility(failureSceneId)}
-      />
-      
-      <TransitionTextsSection
-        successTransition={successTransition}
-        failureTransition={failureTransition}
-        onUpdateSuccess={updateSuccessTransition}
-        onUpdateFailure={updateFailureTransition}
-        showSingleColumn={false}
-      />
-      
-      <div className="grid grid-cols-2 gap-2">
-        <ValueChangesCollapsible
-          title="成功数值变化"
-          isSuccess={true}
-          valueChanges={successValueChanges}
-          globalValues={globalValues}
-          onAddValueChange={(isSuccess) => addValueChange(isSuccess, globalValues)}
-          onUpdateValueChange={updateValueChange}
-          onRemoveValueChange={removeValueChange}
-        />
-        
-        <ValueChangesCollapsible
-          title="失败数值变化"
-          isSuccess={false}
-          valueChanges={failureValueChanges}
-          globalValues={globalValues}
-          onAddValueChange={(isSuccess) => addValueChange(isSuccess, globalValues)}
-          onUpdateValueChange={updateValueChange}
-          onRemoveValueChange={removeValueChange}
-        />
-      </div>
-
-      <AiStoryDialog 
-        isOpen={aiDialogOpen}
-        onClose={() => setAiDialogOpen(false)}
-        onSubmit={handleAiStorySubmit}
-        type={aiDialogType}
-        scenes={scenes}
-        showConvergenceSelector={aiDialogType === 'branch'}
-      />
-    </div>
-  );
+  // Render the dual column layout with both success and failure
+  return <DualOutcomeSection 
+    scenes={scenes}
+    globalValues={globalValues}
+    successSceneId={successSceneId}
+    failureSceneId={failureSceneId}
+    successTransition={successTransition}
+    failureTransition={failureTransition}
+    successValueChanges={successValueChanges}
+    failureValueChanges={failureValueChanges}
+    updateSuccessSceneId={updateSuccessSceneId}
+    updateFailureSceneId={updateFailureSceneId}
+    updateSuccessTransition={updateSuccessTransition}
+    updateFailureTransition={updateFailureTransition}
+    addValueChange={addValueChange}
+    updateValueChange={updateValueChange}
+    removeValueChange={removeValueChange}
+    handleOpenAiDialog={handleOpenAiDialog}
+    getAiButtonsVisibility={getAiButtonsVisibility}
+    aiDialogOpen={aiDialogOpen}
+    setAiDialogOpen={setAiDialogOpen}
+    aiDialogType={aiDialogType}
+    isSuccess={isSuccess}
+    elementId={elementId}
+  />;
 };
 
 export default OutcomeSection;
