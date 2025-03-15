@@ -37,7 +37,7 @@ const NextSceneSelector: React.FC<NextSceneSelectorProps> = ({
         <SelectTrigger id="nextScene" className="h-8 text-sm">
           <SelectValue placeholder="选择下一个场景" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent position="popper" className="z-[100]">
           <SelectItem value="none">无（结束或基于选择）</SelectItem>
           {story.scenes
             .filter((scene) => scene.id !== selectedSceneId)

@@ -22,7 +22,7 @@ const FloatingMobilePreview = ({
   onToggle,
 }: FloatingMobilePreviewProps) => {
   const [position, setPosition] = useState({
-    x: window.innerWidth - 600, // Adjusted for wider combined width
+    x: window.innerWidth - 700, // Adjusted for wider combined width
     y: 80,
   });
   const [isDragging, setIsDragging] = useState(false);
@@ -56,7 +56,7 @@ const FloatingMobilePreview = ({
       if (isDragging) {
         const newX = Math.max(
           0,
-          Math.min(window.innerWidth - 600, e.clientX - dragOffset.x) // Adjusted for wider combined width
+          Math.min(window.innerWidth - 700, e.clientX - dragOffset.x) // Adjusted for wider combined width
         );
         const newY = Math.max(
           0,
@@ -85,7 +85,7 @@ const FloatingMobilePreview = ({
   useEffect(() => {
     const handleResize = () => {
       setPosition((prev) => ({
-        x: Math.min(prev.x, window.innerWidth - 600), // Adjusted for wider combined width
+        x: Math.min(prev.x, window.innerWidth - 700), // Adjusted for wider combined width
         y: Math.min(prev.y, window.innerHeight - 100),
       }));
     };
@@ -94,9 +94,14 @@ const FloatingMobilePreview = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleElementSelect = (elementId: string) => {
+  const handleElementSelect = (elementId: string | null) => {
     setCurrentElementId(elementId);
   };
+
+  // Reset element selection when scene changes
+  useEffect(() => {
+    setCurrentElementId(null);
+  }, [selectedSceneId]);
 
   if (!isOpen) return null;
 
@@ -173,11 +178,11 @@ const FloatingMobilePreview = ({
           sceneId={selectedSceneId}
           currentElementId={currentElementId}
           position={position}
-          onClose={() => {}}
+          onClose={() => setCurrentElementId(null)}
           isOpen={true}
           validateTimeLimit={validateTimeLimit}
           validateKeySequence={validateKeySequence}
-          showSceneProperties={!currentElementId}
+          showSceneProperties={currentElementId === null}
         />
       )}
     </>

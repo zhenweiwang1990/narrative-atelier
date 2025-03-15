@@ -24,7 +24,7 @@ const PreviewPanel = ({ selectedSceneId, setSelectedSceneId }: PreviewPanelProps
     null
   );
 
-  const handleElementSelect = (elementId: string) => {
+  const handleElementSelect = (elementId: string | null) => {
     setCurrentElementId(elementId);
     setIsEditorOpen(true);
   };
@@ -62,7 +62,7 @@ const PreviewPanel = ({ selectedSceneId, setSelectedSceneId }: PreviewPanelProps
             isOpen={true}
             validateTimeLimit={validateTimeLimit}
             validateKeySequence={validateKeySequence}
-            showSceneProperties={!currentElementId}
+            showSceneProperties={currentElementId === null}
           />
         </div>
       )}

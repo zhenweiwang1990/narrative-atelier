@@ -62,7 +62,7 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
         top: `${position.y}px`,
         position: 'fixed' as const,
         zIndex: 51,
-        width: '320px', // 160% of the preview width (200px)
+        width: '400px', // 200% of the preview width (200px)
         minHeight: '625px', // 125% of 500px
       };
 

@@ -38,7 +38,7 @@ const RevivalPointSelector: React.FC<RevivalPointSelectorProps> = ({
         <SelectTrigger id="revivalPoint" className="h-8 text-sm">
           <SelectValue placeholder="选择复活点" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent position="popper" className="z-[100]">
           <SelectItem value="none">无</SelectItem>
           {story.scenes
             .filter(

@@ -12,7 +12,7 @@ import ValuesDisplay from "./preview/ValuesDisplay";
 interface MobilePreviewProps {
   sceneId: string;
   onSceneChange: (sceneId: string) => void;
-  onElementSelect?: (elementId: string) => void;
+  onElementSelect?: (elementId: string | null) => void; // Updated to accept null
 }
 
 const MobilePreview = ({ 
@@ -40,15 +40,18 @@ const MobilePreview = ({
 
   // Update currentElementId whenever currentElement changes
   useEffect(() => {
-    if (currentElement) {
-      setCurrentElementId(currentElement.id);
-      if (onElementSelect) {
-        onElementSelect(currentElement.id);
-      }
-    } else {
-      setCurrentElementId(null);
+    setCurrentElementId(currentElement?.id || null);
+    if (onElementSelect) {
+      onElementSelect(currentElement?.id || null);
     }
   }, [currentElement, onElementSelect]);
+
+  // When scene changes, ensure scene properties are shown if no element is selected
+  useEffect(() => {
+    if (!currentElement && onElementSelect) {
+      onElementSelect(null); // Signal to show scene properties
+    }
+  }, [sceneId, currentElement, onElementSelect]);
 
   if (!scene) return null;
 

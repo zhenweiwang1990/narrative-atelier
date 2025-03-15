@@ -23,7 +23,7 @@ export const DialogueElement: React.FC<DialogueElementProps> = ({ element, chara
           <SelectTrigger className="mt-1 h-8 text-xs">
             <SelectValue placeholder="选择角色" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent position="popper" className="z-[100]">
             <SelectGroup>
               {characters.map(character => (
                 <SelectItem key={character.id} value={character.id}>

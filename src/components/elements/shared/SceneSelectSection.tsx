@@ -38,7 +38,7 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
             <SelectTrigger className="mt-1 h-8 text-xs">
               <SelectValue placeholder="选择场景" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent position="popper" className="z-[100]">
               <SelectGroup>
                 <SelectItem value="none">不指定</SelectItem>
                 {scenes.map((scene) => (
@@ -67,7 +67,7 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
             <SelectTrigger className="mt-1 h-8 text-xs">
               <SelectValue placeholder="选择场景" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent position="popper" className="z-[100]">
               <SelectGroup>
                 <SelectItem value="none">不指定</SelectItem>
                 {scenes.map((scene) => (
@@ -102,7 +102,7 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
           <SelectTrigger className="mt-1 h-8 text-xs">
             <SelectValue placeholder="选择场景" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent position="popper" className="z-[100]">
             <SelectGroup>
               <SelectItem value="none">不指定</SelectItem>
               {scenes.map((scene) => (
@@ -129,7 +129,7 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
           <SelectTrigger className="mt-1 h-8 text-xs">
             <SelectValue placeholder="选择场景" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent position="popper" className="z-[100]">
             <SelectGroup>
               <SelectItem value="none">不指定</SelectItem>
               {scenes.map((scene) => (
