@@ -1,7 +1,10 @@
 
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "./components/ui/toaster";
 import Layout from "./components/Layout";
+import { StoryContext } from "./contexts/StoryContext";
+import { useStoryManagement } from "./hooks/useStoryManagement";
 
 // Pages
 import Index from "./pages/Index";
@@ -20,8 +23,13 @@ import NotFound from "./pages/NotFound";
 import TextProcessing from "./pages/StoryCreation/TextProcessing";
 import InteractionMarking from "./pages/StoryCreation/InteractionMarking";
 import StoryConversion from "./pages/StoryCreation/StoryConversion";
+import FlowLoadingState from "./components/flow/FlowLoadingState";
 
 function App() {
+  // Use the story management hook to get story data and functions
+  const storyManagement = useStoryManagement();
+  const { loading, error } = storyManagement;
+
   // Mock authentication status - in a real app, this would check if the user is logged in
   const isAuthenticated = true;
 
@@ -30,34 +38,47 @@ function App() {
     return <Navigate to="/login" />;
   }
 
+  // If story is loading, show loading state
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <FlowLoadingState error={error} />
+      </div>
+    );
+  }
+
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Auth routes - accessible without authentication */}
-        <Route path="/login" element={<Login />} />
-        
-        {/* Static pages */}
-        <Route path="/about" element={<About />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/privacy" element={<Privacy />} />
-        
-        {/* Main app routes - require authentication */}
-        <Route path="/" element={<Index />} />
-        <Route path="/characters" element={<Characters />} />
-        <Route path="/locations" element={<Locations />} />
-        <Route path="/flow" element={<Flow />} />
-        <Route path="/global-values" element={<GlobalValues />} />
-        <Route path="/settings" element={<Settings />} />
-        
-        {/* Story creation */}
-        <Route path="/story-creation/text-processing" element={<TextProcessing />} />
-        <Route path="/story-creation/interaction-marking" element={<InteractionMarking />} />
-        <Route path="/story-creation/conversion" element={<StoryConversion />} />
-        
-        {/* Catch-all route for 404 */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    <StoryContext.Provider value={storyManagement}>
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            {/* Auth routes - accessible without authentication */}
+            <Route path="/login" element={<Login />} />
+            
+            {/* Static pages */}
+            <Route path="/about" element={<About />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+            
+            {/* Main app routes - require authentication */}
+            <Route path="/" element={<Index />} />
+            <Route path="/characters" element={<Characters />} />
+            <Route path="/locations" element={<Locations />} />
+            <Route path="/flow" element={<Flow />} />
+            <Route path="/global-values" element={<GlobalValues />} />
+            <Route path="/settings" element={<Settings />} />
+            
+            {/* Story creation */}
+            <Route path="/story-creation/text-processing" element={<TextProcessing />} />
+            <Route path="/story-creation/interaction-marking" element={<InteractionMarking />} />
+            <Route path="/story-creation/conversion" element={<StoryConversion />} />
+            
+            {/* Catch-all route for 404 */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </StoryContext.Provider>
   );
 }
 
