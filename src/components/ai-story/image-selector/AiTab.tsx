@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RefreshCcw, Wand2 } from "lucide-react";
 import ImageStyleGrid, { ImageStyle } from "./ImageStyleGrid";
+import AiPromptButton from "./AiPromptButton";
 
 interface AiTabProps {
   prompt: string;
@@ -40,12 +41,18 @@ const AiTab: React.FC<AiTabProps> = ({
       {/* Prompt Input */}
       <div className="space-y-2">
         <Label htmlFor="ai-prompt">描述你想要的图片</Label>
-        <Input 
-          id="ai-prompt" 
-          placeholder="例如：一个身穿红色长袍的女巫，站在神秘的魔法森林中" 
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-        />
+        <div className="relative">
+          <Input 
+            id="ai-prompt" 
+            placeholder="例如：一个身穿红色长袍的女巫，站在神秘的魔法森林中" 
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+          />
+          <AiPromptButton 
+            onPromptGenerated={setPrompt}
+            disabled={isGenerating}
+          />
+        </div>
       </div>
       
       {/* Generate Button */}
