@@ -59,16 +59,16 @@ export const getElementContentPreview = (element: SceneElement): string => {
         (element.text.length > 40 ? `${element.text.substring(0, 40)}...` : element.text) : 
         '(空内容)';
     case 'choice':
-      return element.prompt ? 
-        (element.prompt.length > 40 ? `${element.prompt.substring(0, 40)}...` : element.prompt) : 
+      return element.text ? 
+        (element.text.length > 40 ? `${element.text.substring(0, 40)}...` : element.text) : 
         '(选项提示)';
     case 'qte':
       return element.description ? 
         (element.description.length > 40 ? `${element.description.substring(0, 40)}...` : element.description) : 
         '(QTE描述)';
     case 'dialogueTask':
-      return element.task ? 
-        (element.task.length > 40 ? `${element.task.substring(0, 40)}...` : element.task) : 
+      return element.goal ? 
+        (element.goal.length > 40 ? `${element.goal.substring(0, 40)}...` : element.goal) : 
         '(对话任务)';
     default:
       return '(无预览)';

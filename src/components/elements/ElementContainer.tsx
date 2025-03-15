@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AccordionContent, AccordionItem } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
@@ -22,7 +21,6 @@ import {
   Scene,
   GlobalValue
 } from '@/utils/types';
-import { useAccordionItem } from '@/components/ui/accordion';
 
 interface ElementContainerProps {
   element: SceneElement;
