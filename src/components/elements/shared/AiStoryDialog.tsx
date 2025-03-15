@@ -4,16 +4,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Wand, GitBranch, BookText } from "lucide-react";
-import { Scene } from "@/utils/types";
+import { Wand } from "lucide-react";
 
 interface AiStoryDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (prompt: string, convergenceSceneId?: string) => void;
+  onSubmit: (prompt: string, convergenceSceneId?: string, endingType?: 'normal' | 'bad') => void;
   type: "branch" | "ending";
-  scenes?: Scene[];
+  scenes?: any[];
   showConvergenceSelector?: boolean;
 }
 
@@ -27,36 +27,35 @@ const AiStoryDialog: React.FC<AiStoryDialogProps> = ({
 }) => {
   const [prompt, setPrompt] = useState("");
   const [convergenceSceneId, setConvergenceSceneId] = useState("");
+  const [endingType, setEndingType] = useState<'normal' | 'bad'>('normal');
 
   const handleSubmit = () => {
-    onSubmit(prompt, showConvergenceSelector ? convergenceSceneId : undefined);
+    onSubmit(
+      prompt, 
+      showConvergenceSelector ? convergenceSceneId : undefined, 
+      type === 'ending' ? endingType : undefined
+    );
     setPrompt("");
     setConvergenceSceneId("");
+    setEndingType('normal');
     onClose();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent 
+        className="sm:max-w-[500px]"
+        style={{ zIndex: 1000 }} // Higher z-index to ensure it appears above other floating elements
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            {type === "branch" ? (
-              <>
-                <GitBranch className="h-5 w-5 text-purple-500" />
-                AI 写支线
-              </>
-            ) : (
-              <>
-                <BookText className="h-5 w-5 text-amber-500" />
-                AI 写结局
-              </>
-            )}
+            {type === "branch" ? "AI 写支线" : "AI 写结局"}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label>提示语</Label>
+            <Label>提示语（可选）</Label>
             <Textarea 
               placeholder={
                 type === "branch" 
@@ -69,6 +68,26 @@ const AiStoryDialog: React.FC<AiStoryDialogProps> = ({
               className="resize-none"
             />
           </div>
+
+          {type === "ending" && (
+            <div className="space-y-2">
+              <Label>结局类型</Label>
+              <RadioGroup 
+                value={endingType} 
+                onValueChange={(value) => setEndingType(value as 'normal' | 'bad')}
+                className="flex gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="normal" id="normal" />
+                  <Label htmlFor="normal">正常结局</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="bad" id="bad" />
+                  <Label htmlFor="bad">异常结局</Label>
+                </div>
+              </RadioGroup>
+            </div>
+          )}
 
           {showConvergenceSelector && (
             <div className="space-y-2">
@@ -96,7 +115,6 @@ const AiStoryDialog: React.FC<AiStoryDialogProps> = ({
           <Button variant="outline" onClick={onClose}>取消</Button>
           <Button 
             onClick={handleSubmit} 
-            disabled={!prompt.trim()}
             className="gap-2"
           >
             <Wand className="h-4 w-4" />

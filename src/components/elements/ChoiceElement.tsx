@@ -99,7 +99,7 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
     setAiDialogOpen(true);
   };
 
-  const handleAiStorySubmit = (prompt: string, convergenceSceneId?: string) => {
+  const handleAiStorySubmit = (prompt: string, convergenceSceneId?: string, endingType?: 'normal' | 'bad') => {
     toast.promise(
       new Promise((resolve) => setTimeout(resolve, 1500)), 
       {
@@ -114,6 +114,7 @@ export const ChoiceElement: React.FC<ChoiceElementProps> = ({
       optionId: currentOptionId,
       prompt,
       convergenceSceneId,
+      endingType,
       elementId: element.id
     });
   };

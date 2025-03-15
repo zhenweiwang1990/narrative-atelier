@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Trash2, GitBranch, BookText } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { ChoiceOption as ChoiceOptionType, Scene, GlobalValue } from "@/utils/types";
 import ValueChangeEditor from "./ValueChangeEditor";
 
@@ -98,19 +98,17 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
         <Button 
           variant="outline" 
           size="sm" 
-          className="w-full text-xs flex items-center gap-1"
+          className="w-full text-xs"
           onClick={() => onOpenAiDialog('branch', option.id)}
         >
-          <GitBranch className="h-3.5 w-3.5" />
           AI 写支线
         </Button>
         <Button 
           variant="outline" 
           size="sm" 
-          className="w-full text-xs flex items-center gap-1"
+          className="w-full text-xs"
           onClick={() => onOpenAiDialog('ending', option.id)}
         >
-          <BookText className="h-3.5 w-3.5" />
           AI 写结局
         </Button>
       </div>

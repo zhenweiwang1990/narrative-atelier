@@ -36,7 +36,7 @@ const FloatingEditorWrapper: React.FC<FloatingEditorWrapperProps> = ({
         top: `${position.y}px`,
         position: "fixed" as const,
         zIndex: 51,
-        width: "400px", // 200% of the preview width (200px)
+        width: "480px", // Increased from 400px to 480px
         minHeight: "625px", // 125% of 500px
       };
 

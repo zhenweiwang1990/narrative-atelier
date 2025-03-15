@@ -12,4 +12,3 @@ export * from './dialogueTask/DialogueTaskFields';
 export * from './shared/OutcomeSection';
 export * from './choice/ChoiceOption';
 export * from './choice/ValueChangeEditor';
-

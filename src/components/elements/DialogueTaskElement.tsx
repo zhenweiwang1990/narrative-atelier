@@ -8,7 +8,6 @@ import OutcomeSection from './shared/OutcomeSection';
 import { useElementOutcomes } from '@/hooks/useElementOutcomes';
 import AiStoryDialog from './shared/AiStoryDialog';
 import { Button } from '@/components/ui/button';
-import { Wand, GitBranch, BookText } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface DialogueTaskElementProps {
@@ -47,7 +46,7 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
     setAiDialogOpen(true);
   };
 
-  const handleAiStorySubmit = (prompt: string, convergenceSceneId?: string) => {
+  const handleAiStorySubmit = (prompt: string, convergenceSceneId?: string, endingType?: 'normal' | 'bad') => {
     // TODO: Implement API call to generate AI story content
     // The API should be called with the following parameters:
     // - prompt: User's input prompt for story generation
@@ -55,6 +54,7 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
     // - elementId: element.id
     // - outcomeType: Either 'success' or 'failure'
     // - convergenceSceneId: Optional ID of scene where branch should converge
+    // - endingType: Optional type of ending ('normal' or 'bad')
     
     toast.promise(
       // This would be replaced with the actual API call
@@ -71,6 +71,7 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
       for: aiDialogFor,
       prompt,
       convergenceSceneId,
+      endingType,
       elementId: element.id
     });
   };
@@ -123,19 +124,17 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="w-full text-xs flex items-center gap-1"
+                className="w-full text-xs"
                 onClick={() => handleOpenAiDialog('branch', 'success')}
               >
-                <GitBranch className="h-3.5 w-3.5" />
                 AI 写支线
               </Button>
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="w-full text-xs flex items-center gap-1"
+                className="w-full text-xs"
                 onClick={() => handleOpenAiDialog('ending', 'success')}
               >
-                <BookText className="h-3.5 w-3.5" />
                 AI 写结局
               </Button>
             </div>
@@ -163,19 +162,17 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="w-full text-xs flex items-center gap-1"
+                className="w-full text-xs"
                 onClick={() => handleOpenAiDialog('branch', 'failure')}
               >
-                <GitBranch className="h-3.5 w-3.5" />
                 AI 写支线
               </Button>
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="w-full text-xs flex items-center gap-1"
+                className="w-full text-xs"
                 onClick={() => handleOpenAiDialog('ending', 'failure')}
               >
-                <BookText className="h-3.5 w-3.5" />
                 AI 写结局
               </Button>
             </div>
