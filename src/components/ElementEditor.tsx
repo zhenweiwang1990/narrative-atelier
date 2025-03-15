@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Accordion } from "@/components/ui/accordion";
 import { useStory } from "./Layout";
 import { ElementContainer } from "./elements/ElementContainer";
@@ -76,6 +76,21 @@ const ElementEditor = ({
       reorderElements(sourceIndex, destinationIndex);
     }
   };
+
+  // Listen for selectElement custom event
+  useEffect(() => {
+    const handleSelectElementEvent = (event: CustomEvent) => {
+      if (event.detail.sceneId === sceneId && event.detail.elementId && onSelectElement) {
+        onSelectElement(event.detail.elementId);
+      }
+    };
+    
+    window.addEventListener('selectElement', handleSelectElementEvent as EventListener);
+    
+    return () => {
+      window.removeEventListener('selectElement', handleSelectElementEvent as EventListener);
+    };
+  }, [sceneId, onSelectElement]);
 
   if (!story) return null;
 

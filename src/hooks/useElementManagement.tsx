@@ -62,14 +62,19 @@ export const useElementManagement = (
 
   // Add new element with optional specific order
   const addElement = (type: ElementType, order?: number) => {
-    if (!story) return;
+    if (!story) return null;
     
     const newOrder = order !== undefined ? order : elements.length;
     const newElement = createNewElement(type, story, newOrder);
     
+    // Add the new element to our local state
     const updatedElements = [...elements, newElement];
-    setElements(updatedElements as SceneElement[]);
+    
+    // Call updateStory immediately to ensure the story state is updated
     updateStory(updatedElements as SceneElement[]);
+    
+    // Update our local state after
+    setElements(updatedElements as SceneElement[]);
     
     return newElement.id;
   };
@@ -80,8 +85,11 @@ export const useElementManagement = (
     // Reorder remaining elements
     const reorderedElements = reorderElementsUtil(updatedElements);
     
-    setElements(reorderedElements);
+    // Update story first
     updateStory(reorderedElements);
+    
+    // Then update local state
+    setElements(reorderedElements);
     
     return id;
   };
@@ -98,15 +106,22 @@ export const useElementManagement = (
       order: index
     }));
     
-    setElements(reorderedElements);
+    // Update story first
     updateStory(reorderedElements);
+    
+    // Then update local state
+    setElements(reorderedElements);
   };
 
   // Update element
   const updateElement = (id: string, updatedElement: Partial<SceneElement>) => {
     const newElements = updateElementUtil(elements, id, updatedElement);
-    setElements([...newElements] as SceneElement[]);
+    
+    // Update story first to ensure consistency
     updateStory([...newElements] as SceneElement[]);
+    
+    // Then update our local state
+    setElements([...newElements] as SceneElement[]);
   };
 
   // Add choice option

@@ -53,8 +53,8 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
   const handleAddElement = (type: ElementType, position: 'before' | 'after') => {
     if (!currentElement || currentElementIndex === -1) return;
     
-    // Sort elements by order to ensure we have the correct sequence
-    const sortedElements = [...elements].sort((a, b) => a.order - b.order);
+    // Get already sorted elements (don't sort a copy)
+    const sortedElements = elements;
     
     // Calculate the order for the new element
     let newOrder: number;
@@ -84,20 +84,24 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
     // Add the new element with the calculated order
     const newElementId = addElement(type, newOrder);
     
-    // Auto-scroll to the new element in the preview (if we have onClose callback)
+    // Auto-select the new element
     if (newElementId && onClose) {
-      // Close the current editor and the parent component will handle the selection
+      // Close the current editor
       onClose();
+      
       // Small timeout to allow state updates to complete
       setTimeout(() => {
-        // The parent will need to handle selecting the new element
+        // Dispatch custom event to notify the parent component
         if (typeof window !== 'undefined') {
-          // Dispatch a custom event to notify the parent component
-          window.dispatchEvent(new CustomEvent('selectElement', { 
-            detail: { elementId: newElementId } 
-          }));
+          const selectEvent = new CustomEvent('selectElement', { 
+            detail: { 
+              elementId: newElementId,
+              sceneId: sceneId
+            } 
+          });
+          window.dispatchEvent(selectEvent);
         }
-      }, 10);
+      }, 50); // Increased timeout to ensure state updates complete
     }
   };
 

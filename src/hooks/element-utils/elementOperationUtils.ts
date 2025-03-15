@@ -13,7 +13,7 @@ export const reorderElements = (elements: SceneElement[]): SceneElement[] => {
 export const moveElementUp = (elements: SceneElement[], index: number): SceneElement[] => {
   if (index <= 0) return elements;
   
-  const newElements = [...elements];
+  const newElements = [...elements].sort((a, b) => a.order - b.order);
   
   // Swap order property
   const temp = newElements[index].order;
@@ -30,7 +30,7 @@ export const moveElementUp = (elements: SceneElement[], index: number): SceneEle
 export const moveElementDown = (elements: SceneElement[], index: number): SceneElement[] => {
   if (index >= elements.length - 1) return elements;
   
-  const newElements = [...elements];
+  const newElements = [...elements].sort((a, b) => a.order - b.order);
   
   // Swap order property
   const temp = newElements[index].order;
@@ -49,10 +49,18 @@ export const updateElement = <T extends SceneElement>(
   id: string, 
   updatedElement: Partial<T>
 ): SceneElement[] => {
-  return elements.map(elem => {
+  // Create a new array with the updated element
+  const updatedElements = elements.map(elem => {
     if (elem.id === id) {
       return { ...elem, ...updatedElement } as SceneElement;
     }
     return elem;
   });
+  
+  // If the order property was updated, make sure to re-sort
+  if (updatedElement.hasOwnProperty('order')) {
+    return updatedElements.sort((a, b) => a.order - b.order);
+  }
+  
+  return updatedElements;
 };
