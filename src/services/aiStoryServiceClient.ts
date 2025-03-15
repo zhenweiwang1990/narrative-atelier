@@ -48,22 +48,22 @@ export const handleAiStoryGeneration = async ({
     const result = await toastPromise;
     
     // Proper null and type checking
-    if (result) {
-      // First check if result is an object with success property
-      if (typeof result === 'object' && result !== null && 'success' in result) {
-        // Now TypeScript knows result has a success property
-        const typedResult = result as { success: boolean; message: string };
-        if (typedResult.success && onSuccess) {
-          onSuccess();
-        }
-        return typedResult;
-      }
-      
-      // If result exists but doesn't have the right structure
-      return { success: false, message: "响应格式不正确" };
+    if (!result) {
+      return { success: false, message: "无响应" };
     }
     
-    return { success: false, message: "无响应" };
+    // First check if result is an object with success property
+    if (typeof result === 'object' && 'success' in result) {
+      // Now TypeScript knows result has a success property
+      const typedResult = result as { success: boolean; message: string };
+      if (typedResult.success && onSuccess) {
+        onSuccess();
+      }
+      return typedResult;
+    }
+    
+    // If result exists but doesn't have the right structure
+    return { success: false, message: "响应格式不正确" };
   } catch (error) {
     console.error("AI story generation error:", error);
     toast.error("生成故事时出错");

@@ -36,7 +36,7 @@ const StoryStats: React.FC<StoryStatsProps> = ({ story }) => {
       case 'qte':
         return sum + (element.description?.length || 0);
       case 'dialogueTask':
-        return sum + (element.goal?.length || 0) + (element.keywords?.join(' ').length || 0);
+        return sum + (element.goal?.length || 0) + (element.openingLine?.length || 0);
       default:
         return sum;
     }
@@ -44,14 +44,14 @@ const StoryStats: React.FC<StoryStatsProps> = ({ story }) => {
   
   // 统计结局数量
   const endings = {
-    normal: story.scenes.filter(scene => scene.type === 'ending' && scene.endingType === 'normal').length,
-    bad: story.scenes.filter(scene => scene.type === 'ending' && scene.endingType === 'bad').length,
-    total: story.scenes.filter(scene => scene.type === 'ending').length
+    normal: story.scenes.filter(scene => scene.type === 'ending').length,
+    bad: story.scenes.filter(scene => scene.type === 'bad-ending').length,
+    total: story.scenes.filter(scene => scene.type === 'ending' || scene.type === 'bad-ending').length
   };
   
   // 判断剧情是否完结
   const isCompleted = story.scenes.some(scene => 
-    scene.type === 'ending' && scene.endingType === 'normal'
+    scene.type === 'ending'
   );
 
   return (
