@@ -6,9 +6,9 @@ import EmptyModificationsState from "./EmptyModificationsState";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { GlobalValue } from "@/utils/types";
 import { Input } from "@/components/ui/input";
 import { getValueName } from "./tableUtils";
+import { getElementColorClass, getElementTypeLabel } from "../flow/editor/ElementTypeUtils";
 
 const GlobalValuesModificationsGroupTable: React.FC<GlobalValuesModificationsTableProps> = ({ 
   story, 
@@ -109,11 +109,11 @@ const GlobalValuesModificationsGroupTable: React.FC<GlobalValuesModificationsTab
                 <div key={element.key} className="py-3">
                   <div className="flex items-center gap-2 mb-2">
                     <Badge variant="outline" className="font-normal">序号 {element.index + 1}</Badge>
-                    <Badge variant="secondary" className="font-normal">
-                      {element.type === 'choice' ? '选择' : 
-                       element.type === 'qte' ? '快速反应' : 
-                       element.type === 'dialogueTask' ? '对话任务' : element.type}
-                    </Badge>
+                    <div 
+                      className={`w-5 h-5 rounded flex items-center justify-center text-white text-xs font-medium ${getElementColorClass(element.type)}`}
+                    >
+                      {getElementTypeLabel(element.type)}
+                    </div>
                     <span className="text-sm font-medium truncate">{element.title}</span>
                   </div>
                   
@@ -169,19 +169,35 @@ const ValueChangesList: React.FC<ValueChangesListProps> = ({
 }) => {
   return (
     <div className="grid grid-cols-2 gap-2">
-      {modifications.map(mod => (
-        <div key={mod.valueId} className="flex items-center justify-between border rounded p-2">
-          <span className="text-sm font-medium">
-            {getValueName(story, mod.valueId)}
-          </span>
-          <Input
-            type="number"
-            value={getDisplayValue(mod)}
-            onChange={(e) => handleValueChange(mod, e.target.value)}
-            className="h-7 w-20 text-sm ml-2"
-          />
-        </div>
-      ))}
+      {modifications.map(mod => {
+        const value = getDisplayValue(mod);
+        const isPositive = value > 0;
+        const isNegative = value < 0;
+        
+        return (
+          <div 
+            key={mod.valueId} 
+            className={`flex items-center justify-between border rounded p-2 ${
+              isPositive ? 'bg-green-50 border-green-200' : 
+              isNegative ? 'bg-red-50 border-red-200' : 
+              'bg-background'
+            }`}
+          >
+            <span className="text-sm font-medium">
+              {getValueName(story, mod.valueId)}
+            </span>
+            <Input
+              type="number"
+              value={value}
+              onChange={(e) => handleValueChange(mod, e.target.value)}
+              className={`h-7 w-20 text-sm ml-2 ${
+                isPositive ? 'text-green-600' : 
+                isNegative ? 'text-red-600' : ''
+              }`}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 };

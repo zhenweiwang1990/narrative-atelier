@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
 import EmptyModificationsState from "./EmptyModificationsState";
 import { getElementTypeName, getValueName } from "./tableUtils";
+import { getElementColorClass, getElementTypeLabel } from "../flow/editor/ElementTypeUtils";
 
 const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTableProps> = ({ 
   story, 
@@ -77,12 +78,14 @@ const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTablePro
                 {/* Element row */}
                 <TableRow className="bg-muted/20">
                   <TableCell className="font-medium py-1 px-2">{firstOption.sceneTitle}</TableCell>
-                  <TableCell className="py-1 px-2">{(firstOption.elementIndex || 0) + 1}</TableCell>
+                  <TableCell className="py-1 px-2">{firstOption.elementIndex + 1}</TableCell>
                   <TableCell className="py-1 px-2">
                     <div className="flex items-center gap-1">
-                      <Badge variant="outline" className="text-xs py-0 px-1">
-                        {getElementTypeName(firstOption.elementType || '')}
-                      </Badge>
+                      <div 
+                        className={`w-5 h-5 rounded flex items-center justify-center text-white text-xs font-medium ${getElementColorClass(firstOption.elementType || '')}`}
+                      >
+                        {getElementTypeLabel(firstOption.elementType || '')}
+                      </div>
                       <span className="text-xs truncate max-w-[200px]">{firstOption.elementTitle}</span>
                     </div>
                   </TableCell>
@@ -120,30 +123,43 @@ const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTablePro
                       </TableCell>
                       <TableCell className="py-1 px-2">
                         <div className="flex flex-wrap gap-1 items-center">
-                          {modifications.map((modification) => (
-                            <div 
-                              key={`value-${modification.valueId}`} 
-                              className="flex items-center border rounded-sm px-1 py-1 bg-background"
-                            >
-                              <span className="text-xs mr-1">
-                                {getValueName(story, modification.valueId)}:
-                              </span>
-                              <Input
-                                type="number"
-                                value={getDisplayValue(modification)}
-                                onChange={(e) => handleValueChange(modification, e.target.value)}
-                                className="h-5 w-12 text-xs inline-block px-1"
-                              />
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => handleRemoveValueChange(modification)}
-                                className="h-5 w-5 ml-1 text-muted-foreground hover:text-destructive"
+                          {modifications.map((modification) => {
+                            const value = getDisplayValue(modification);
+                            const isPositive = value > 0;
+                            const isNegative = value < 0;
+                            
+                            return (
+                              <div 
+                                key={`value-${modification.valueId}`} 
+                                className={`flex items-center border rounded-sm px-1 py-1 ${
+                                  isPositive ? 'bg-green-50 border-green-200' : 
+                                  isNegative ? 'bg-red-50 border-red-200' : 
+                                  'bg-background'
+                                }`}
                               >
-                                <X className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          ))}
+                                <span className="text-xs mr-1">
+                                  {getValueName(story, modification.valueId)}:
+                                </span>
+                                <Input
+                                  type="number"
+                                  value={value}
+                                  onChange={(e) => handleValueChange(modification, e.target.value)}
+                                  className={`h-5 w-12 text-xs inline-block px-1 ${
+                                    isPositive ? 'text-green-600' : 
+                                    isNegative ? 'text-red-600' : ''
+                                  }`}
+                                />
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => handleRemoveValueChange(modification)}
+                                  className="h-5 w-5 ml-1 text-muted-foreground hover:text-destructive"
+                                >
+                                  <X className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            )
+                          })}
                           
                           {story.globalValues.length > modifications.length && (
                             <Button

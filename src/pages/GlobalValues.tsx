@@ -131,10 +131,12 @@ const GlobalValuesPage: React.FC = () => {
         这些值可以根据用户选择而改变，并会影响剧情进展。
       </p>
 
-      <GlobalValues
-        values={story?.globalValues || []}
-        onChange={handleGlobalValuesChange}
-      />
+      <div className="max-w-[300px] mb-8">
+        <GlobalValues
+          values={story?.globalValues || []}
+          onChange={handleGlobalValuesChange}
+        />
+      </div>
       
       <div className="mt-8">
         <h2 className="text-xl font-bold mb-4">变量变更一览表</h2>
