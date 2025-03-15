@@ -39,13 +39,14 @@ export const scenesToNodes = (story: Story): Node[] => {
     
     return {
       id: scene.id,
-      type: 'scene',
+      type: 'sceneNode',
       data: {
         label: scene.title,
         sceneType: scene.type,
         locationName: location?.name || 'Unknown Location',
         elements: scene.elements,
         revivalPointId: scene.revivalPointId,
+        revivalPointName: story.scenes.find(s => s.id === scene.revivalPointId)?.title,
         nextSceneId: scene.nextSceneId,
         hasNextScene: hasNextScene
       } as SceneNodeData,
@@ -99,21 +100,24 @@ export const createEdgesFromStory = (story: Story): Edge[] => {
     }
   });
 
-  // Connections from choice elements
+  // Connections from choice elements - Fix for choices
   story.scenes.forEach(scene => {
     scene.elements.forEach((element, elemIndex) => {
       if (element.type === 'choice') {
         element.options.forEach((option, optIndex) => {
           if (option.nextSceneId) {
             flowEdges.push({
-              id: `e-${scene.id}-${option.nextSceneId}-choice-${optIndex}`,
+              id: `e-${scene.id}-${option.nextSceneId}-choice-${elemIndex}-${optIndex}`,
               source: scene.id,
               target: option.nextSceneId,
-              sourceHandle: `choice-${elemIndex}-${optIndex}`,
-              label: `Choice: ${option.text.substring(0, 15)}${option.text.length > 15 ? '...' : ''}`,
               type: 'smoothstep',
               animated: true,
-              style: { stroke: '#f59e0b' }
+              label: `选项: ${option.text.substring(0, 15)}${option.text.length > 15 ? '...' : ''}`,
+              style: { stroke: '#f59e0b' },
+              markerEnd: {
+                type: MarkerType.ArrowClosed,
+                color: '#f59e0b'
+              }
             });
           }
         });
@@ -126,12 +130,15 @@ export const createEdgesFromStory = (story: Story): Edge[] => {
           flowEdges.push({
             id: `e-${scene.id}-${successSceneId}-qte-success-${elemIndex}`,
             source: scene.id,
-            sourceHandle: `qte-success-${elemIndex}`,
             target: successSceneId,
-            label: 'Success',
+            label: '成功',
             type: 'smoothstep',
             animated: true,
-            style: { stroke: '#10b981' }
+            style: { stroke: '#10b981' },
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              color: '#10b981'
+            }
           });
         }
         
@@ -139,12 +146,15 @@ export const createEdgesFromStory = (story: Story): Edge[] => {
           flowEdges.push({
             id: `e-${scene.id}-${failureSceneId}-qte-failure-${elemIndex}`,
             source: scene.id,
-            sourceHandle: `qte-failure-${elemIndex}`,
             target: failureSceneId,
-            label: 'Failure',
+            label: '失败',
             type: 'smoothstep',
             animated: true,
-            style: { stroke: '#ef4444' }
+            style: { stroke: '#ef4444' },
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              color: '#ef4444'
+            }
           });
         }
       } else if (element.type === 'dialogueTask') {
@@ -156,12 +166,15 @@ export const createEdgesFromStory = (story: Story): Edge[] => {
           flowEdges.push({
             id: `e-${scene.id}-${successSceneId}-dialogueTask-success-${elemIndex}`,
             source: scene.id,
-            sourceHandle: `dialogueTask-success-${elemIndex}`,
             target: successSceneId,
-            label: 'Success',
+            label: '成功',
             type: 'smoothstep',
             animated: true,
-            style: { stroke: '#10b981' }
+            style: { stroke: '#10b981' },
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              color: '#10b981'
+            }
           });
         }
         
@@ -169,12 +182,15 @@ export const createEdgesFromStory = (story: Story): Edge[] => {
           flowEdges.push({
             id: `e-${scene.id}-${failureSceneId}-dialogueTask-failure-${elemIndex}`,
             source: scene.id,
-            sourceHandle: `dialogueTask-failure-${elemIndex}`,
             target: failureSceneId,
-            label: 'Failure',
+            label: '失败',
             type: 'smoothstep',
             animated: true,
-            style: { stroke: '#ef4444' }
+            style: { stroke: '#ef4444' },
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              color: '#ef4444'
+            }
           });
         }
       }

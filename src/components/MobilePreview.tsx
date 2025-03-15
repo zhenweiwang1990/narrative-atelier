@@ -81,7 +81,7 @@ const MobilePreview = ({ sceneId, onSceneChange }: MobilePreviewProps) => {
             currentElement?.type === "choice" ||
             currentElement?.type === "qte" ||
             currentElement?.type === "dialogueTask" ||
-            (isSceneEnding &&
+            (lastElementShown &&
               scene.type === "bad-ending" &&
               !!scene.revivalPointId)
           }
