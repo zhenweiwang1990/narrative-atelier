@@ -20,20 +20,7 @@ import {
 } from "../ui/dialog";
 import { Character } from "@/utils/types";
 import CharacterCard from "../CharacterCard";
-
-// TODO: Replace with actual voice data from API
-const MOCK_VOICES = [
-  { id: "aria", name: "Aria", gender: "female" },
-  { id: "roger", name: "Roger", gender: "male" },
-  { id: "sarah", name: "Sarah", gender: "female" },
-  { id: "george", name: "George", gender: "male" },
-  { id: "laura", name: "Laura", gender: "female" },
-  { id: "callum", name: "Callum", gender: "male" },
-  { id: "river", name: "River", gender: "other" },
-  { id: "liam", name: "Liam", gender: "male" },
-  { id: "charlotte", name: "Charlotte", gender: "female" },
-  { id: "daniel", name: "Daniel", gender: "male" },
-];
+import VoiceSelector from "./VoiceSelector";
 
 interface CharacterDialogProps {
   isOpen: boolean;
@@ -41,9 +28,11 @@ interface CharacterDialogProps {
   isEditMode: boolean;
   formData: Partial<Character>;
   selectedCharacter: Character | null;
+  currentPlayingVoice: string | null;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onSelectChange: (name: string, value: string) => void;
   onImageChange: (imageUrl: string, type: 'profilePicture' | 'fullBody') => void;
+  onPlayVoiceSample: (voiceId: string) => void;
   onSave: () => void;
 }
 
@@ -53,16 +42,13 @@ const CharacterDialog: React.FC<CharacterDialogProps> = ({
   isEditMode,
   formData,
   selectedCharacter,
+  currentPlayingVoice,
   onInputChange,
   onSelectChange,
   onImageChange,
+  onPlayVoiceSample,
   onSave,
 }) => {
-  // 基于角色性别筛选音色
-  const filteredVoices = formData.gender 
-    ? MOCK_VOICES.filter(voice => voice.gender === formData.gender || voice.gender === 'other')
-    : MOCK_VOICES;
-
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[525px]">
@@ -116,25 +102,13 @@ const CharacterDialog: React.FC<CharacterDialogProps> = ({
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="voice">音色</Label>
-            <Select
-              value={formData.voice || "none"}
-              onValueChange={(value) => onSelectChange("voice", value === "none" ? "" : value)}
-            >
-              <SelectTrigger id="voice">
-                <SelectValue placeholder="选择角色音色" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">默认音色</SelectItem>
-                {filteredVoices.map(voice => (
-                  <SelectItem key={voice.id} value={voice.id}>
-                    {voice.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <VoiceSelector 
+            selectedVoice={formData.voice || "none"}
+            gender={formData.gender || ""}
+            currentPlayingVoice={currentPlayingVoice}
+            onSelectChange={onSelectChange}
+            onPlayVoiceSample={onPlayVoiceSample}
+          />
 
           <div className="space-y-2">
             <Label htmlFor="bio">人物传记</Label>

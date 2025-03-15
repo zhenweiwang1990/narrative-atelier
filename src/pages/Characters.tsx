@@ -21,11 +21,13 @@ const Characters = () => {
     isEditMode,
     formData,
     selectedCharacter,
+    currentPlayingVoice,
     handleOpenCreateDialog,
     handleOpenEditDialog,
     handleInputChange,
     handleSelectChange,
     handleImageChange,
+    handlePlayVoiceSample,
     handleSaveCharacter,
     handleDeleteCharacter,
   } = useCharacterForm();
@@ -116,9 +118,11 @@ const Characters = () => {
         isEditMode={isEditMode}
         formData={formData}
         selectedCharacter={selectedCharacter}
+        currentPlayingVoice={currentPlayingVoice}
         onInputChange={handleInputChange}
         onSelectChange={handleSelectChange}
         onImageChange={handleImageChange}
+        onPlayVoiceSample={handlePlayVoiceSample}
         onSave={handleSaveCharacter}
       />
 

@@ -3,12 +3,28 @@ import { useState } from "react";
 import { Character, CharacterGender, CharacterRole } from "@/utils/types";
 import { useStory } from "@/components/Layout";
 import { generateId } from "@/utils/storage";
+import { toast } from "sonner";
+
+// Mock voice samples data
+export const VOICE_SAMPLES = [
+  { id: "aria", name: "Aria", gender: "female", sampleUrl: "/voice-samples/aria-sample.mp3" },
+  { id: "roger", name: "Roger", gender: "male", sampleUrl: "/voice-samples/roger-sample.mp3" },
+  { id: "sarah", name: "Sarah", gender: "female", sampleUrl: "/voice-samples/sarah-sample.mp3" },
+  { id: "george", name: "George", gender: "male", sampleUrl: "/voice-samples/george-sample.mp3" },
+  { id: "laura", name: "Laura", gender: "female", sampleUrl: "/voice-samples/laura-sample.mp3" },
+  { id: "callum", name: "Callum", gender: "male", sampleUrl: "/voice-samples/callum-sample.mp3" },
+  { id: "river", name: "River", gender: "other", sampleUrl: "/voice-samples/river-sample.mp3" },
+  { id: "liam", name: "Liam", gender: "male", sampleUrl: "/voice-samples/liam-sample.mp3" },
+  { id: "charlotte", name: "Charlotte", gender: "female", sampleUrl: "/voice-samples/charlotte-sample.mp3" },
+  { id: "daniel", name: "Daniel", gender: "male", sampleUrl: "/voice-samples/daniel-sample.mp3" },
+];
 
 export const useCharacterForm = () => {
   const { story, setStory } = useStory();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
+  const [currentPlayingVoice, setCurrentPlayingVoice] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<Character>>({
     name: "",
     gender: "male",
@@ -70,6 +86,51 @@ export const useCharacterForm = () => {
   // 处理图片变更
   const handleImageChange = (imageUrl: string, type: 'profilePicture' | 'fullBody') => {
     setFormData((prev) => ({ ...prev, [type]: imageUrl }));
+  };
+
+  // 播放语音示例
+  const handlePlayVoiceSample = (voiceId: string) => {
+    // 检查是否播放中
+    if (currentPlayingVoice === voiceId) {
+      // 停止当前播放
+      setCurrentPlayingVoice(null);
+      return;
+    }
+
+    // 寻找语音样本
+    const voiceSample = VOICE_SAMPLES.find(sample => sample.id === voiceId);
+    
+    if (!voiceSample) {
+      toast.error("无法找到语音样本");
+      return;
+    }
+
+    try {
+      // 创建新的音频实例播放
+      const audio = new Audio(voiceSample.sampleUrl);
+      
+      // 设置播放完毕事件
+      audio.onended = () => {
+        setCurrentPlayingVoice(null);
+      };
+      
+      // 设置错误处理
+      audio.onerror = () => {
+        toast.error("语音样本播放失败");
+        setCurrentPlayingVoice(null);
+      };
+      
+      // 开始播放
+      audio.play().then(() => {
+        setCurrentPlayingVoice(voiceId);
+      }).catch(error => {
+        console.error("播放音频失败:", error);
+        toast.error("语音样本播放失败");
+      });
+    } catch (error) {
+      console.error("播放音频出错:", error);
+      toast.error("语音样本播放失败");
+    }
   };
 
   // 处理角色创建或更新
@@ -140,11 +201,13 @@ export const useCharacterForm = () => {
     isEditMode,
     formData,
     selectedCharacter,
+    currentPlayingVoice,
     handleOpenCreateDialog,
     handleOpenEditDialog,
     handleInputChange,
     handleSelectChange,
     handleImageChange,
+    handlePlayVoiceSample,
     handleSaveCharacter,
     handleDeleteCharacter,
   };
