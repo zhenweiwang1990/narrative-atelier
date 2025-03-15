@@ -53,7 +53,8 @@ export const handleAiStoryGeneration = async ({
     }
     
     // First check if result is an object with success property
-    if (typeof result === 'object' && 'success' in result) {
+    // Add null check for result before checking properties
+    if (result !== null && typeof result === 'object' && 'success' in result) {
       // Now TypeScript knows result has a success property
       const typedResult = result as { success: boolean; message: string };
       if (typedResult.success && onSuccess) {
