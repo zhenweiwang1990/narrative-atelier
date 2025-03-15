@@ -29,13 +29,13 @@ const FloatingEditorWrapper: React.FC<FloatingEditorWrapperProps> = ({
         right: "16px",
         left: "16px",
         position: "fixed" as const,
-        zIndex: 51,
+        zIndex: 40, // Reduced from 51 to 40
       }
     : {
         left: `${position.x + 380}px`, // 380px accounts for the wider preview (352px) plus some margin
         top: `${position.y}px`,
         position: "fixed" as const,
-        zIndex: 100, // Higher z-index to ensure it's above other elements but below dropdowns
+        zIndex: 40, // Reduced from 100 to 40
         width: "520px",
         minHeight: "625px",
       };

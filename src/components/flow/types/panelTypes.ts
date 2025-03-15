@@ -10,7 +10,7 @@ export interface ScenePropertiesPanelProps {
   updateNextScene: (nextSceneId: string) => void;
   updateRevivalPoint?: (sceneId: string) => void;
   selectedSceneId: string;
-  // New props for scene effects and ending name
+  // Props for scene effects and ending name
   updateSceneEntrance?: (effect: string) => void;
   updateSceneEnvironment?: (effect: string) => void;
   updateEndingName?: (name: string) => void;

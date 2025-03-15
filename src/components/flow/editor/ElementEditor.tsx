@@ -122,14 +122,16 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     <div className="space-y-4">
       {renderElementTypeComponent()}
       
-      {/* Add Sound Effect Selector for all element types */}
-      <div className="mt-4 pt-4 border-t">
-        <SoundEffectSelector
-          selectedEffect={element.soundEffect}
-          onSelect={handleSoundEffectUpdate}
-          disabled={disabled}
-        />
-      </div>
+      {/* Only show Sound Effect Selector for narration elements */}
+      {element.type === 'narration' && (
+        <div className="mt-4 pt-4 border-t">
+          <SoundEffectSelector
+            selectedEffect={element.soundEffect}
+            onSelect={handleSoundEffectUpdate}
+            disabled={disabled}
+          />
+        </div>
+      )}
     </div>
   );
 };

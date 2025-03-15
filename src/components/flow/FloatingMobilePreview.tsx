@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import MobilePreview from "@/components/MobilePreview";
@@ -33,33 +32,29 @@ const FloatingMobilePreview = ({
     null
   );
 
-  // Original position for the preview window
   const { position, isDragging, elementRef, handleMouseDown } = useDraggable({
     x: window.innerWidth - 700,
     y: 80,
   });
 
-  // Handle element selection from MobilePreview
   const handleElementSelect = (elementId: string | null) => {
     setCurrentElementId(elementId);
   };
 
-  // Get the current scene title
   const selectedScene = selectedSceneId ? story?.scenes.find(s => s.id === selectedSceneId) : null;
   const sceneTitle = selectedScene?.title;
 
   if (!isOpen) return null;
 
-  // Using aspect ratio of 9:16 for mobile preview
   const previewHeight = minimized ? "40px" : "625px";
-  const previewWidth = minimized ? "64px" : "352px"; // 9:16 ratio means width should be 9/16 * height
+  const previewWidth = minimized ? "64px" : "352px";
 
   return (
     <>
       <Card
         ref={elementRef}
         className={cn(
-          "fixed shadow-lg border rounded-md overflow-hidden z-50",
+          "fixed shadow-lg border rounded-md overflow-hidden z-40",
           minimized ? "w-16 h-10" : ""
         )}
         style={{
