@@ -3,7 +3,7 @@ import React from "react";
 import GlobalValues from "@/components/GlobalValues";
 import GlobalValuesModificationsTable from "@/components/GlobalValuesModificationsTable";
 import { useStory } from "@/components/Layout";
-import { GlobalValue, Story, ValueModification } from "@/utils/types";
+import { GlobalValue, Story } from "@/utils/types";
 
 const GlobalValuesPage: React.FC = () => {
   const { story, setStory } = useStory();
