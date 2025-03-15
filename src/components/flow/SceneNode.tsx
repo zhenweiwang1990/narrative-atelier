@@ -13,6 +13,7 @@ interface SceneNodeProps {
     locationName?: string;
     elements?: SceneElement[];
     revivalPointId?: string;
+    revivalPointName?: string;
     nextSceneId?: string;
     hasNextScene?: boolean;
   };
@@ -32,20 +33,34 @@ const SceneNode = ({ data, selected }: SceneNodeProps) => {
 
     return (
       <div className="flex flex-wrap gap-1 mt-1">
-        {sortedElements.map((element) => (
-          <div
-            key={element.id}
-            className={cn(
-              "w-4 h-4 rounded cursor-pointer hover:ring-2 hover:ring-primary/50",
-              element.type === "narration" && "bg-gray-400",
-              element.type === "dialogue" && "bg-blue-400",
-              element.type === "thought" && "bg-purple-400",
-              element.type === "choice" && "bg-amber-400",
-              element.type === "qte" && "bg-red-400",
-              element.type === "dialogueTask" && "bg-green-400"
-            )}
-          />
-        ))}
+        {sortedElements.map((element) => {
+          let label = '';
+          switch(element.type) {
+            case 'narration': label = '旁'; break;
+            case 'dialogue': label = '话'; break;
+            case 'thought': label = '想'; break;
+            case 'choice': label = '选'; break;
+            case 'qte': label = '游'; break;
+            case 'dialogueTask': label = '任'; break;
+          }
+          
+          return (
+            <div
+              key={element.id}
+              className={cn(
+                "w-5 h-5 rounded flex items-center justify-center text-white text-xs font-medium",
+                element.type === "narration" && "bg-gray-400",
+                element.type === "dialogue" && "bg-blue-400",
+                element.type === "thought" && "bg-purple-400",
+                element.type === "choice" && "bg-amber-400",
+                element.type === "qte" && "bg-red-400",
+                element.type === "dialogueTask" && "bg-green-400"
+              )}
+            >
+              {label}
+            </div>
+          );
+        })}
       </div>
     );
   };
@@ -111,7 +126,7 @@ const SceneNode = ({ data, selected }: SceneNodeProps) => {
 
         {data.sceneType === "bad-ending" && data.revivalPointId && (
           <div className="flex items-center text-[10px] text-red-500 mt-1">
-            <RotateCcw className="h-3 w-3 mr-1" /> 复活点
+            <RotateCcw className="h-3 w-3 mr-1" /> 复活点: {data.revivalPointName || "未知场景"}
           </div>
         )}
 

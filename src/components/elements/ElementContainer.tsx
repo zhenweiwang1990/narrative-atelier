@@ -32,8 +32,6 @@ interface ElementContainerProps {
   scenes: Scene[];
   globalValues: GlobalValue[];
   onSelect: (id: string) => void;
-  onMoveUp: (index: number) => void;
-  onMoveDown: (index: number) => void;
   onDelete: (id: string) => void;
   onUpdate: (id: string, updatedElement: Partial<SceneElement>) => void;
   // Choice-specific handlers
@@ -43,6 +41,9 @@ interface ElementContainerProps {
   // QTE validation
   validateTimeLimit: (value: number) => number;
   validateKeySequence: (value: string) => string;
+  // Drag and drop
+  dragHandleProps?: any;
+  isDragging?: boolean;
 }
 
 export const ElementContainer: React.FC<ElementContainerProps> = ({
@@ -54,15 +55,15 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
   scenes,
   globalValues,
   onSelect,
-  onMoveUp,
-  onMoveDown,
   onDelete,
   onUpdate,
   onAddChoiceOption,
   onDeleteChoiceOption,
   onUpdateChoiceOption,
   validateTimeLimit,
-  validateKeySequence
+  validateKeySequence,
+  dragHandleProps,
+  isDragging
 }) => {
   return (
     <AccordionItem 
@@ -70,7 +71,8 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
       value={element.id}
       className={cn(
         "rounded-md border overflow-hidden", 
-        selectedElementId === element.id && "ring-2 ring-primary"
+        selectedElementId === element.id && "ring-2 ring-primary",
+        isDragging && "opacity-60"
       )}
     >
       <ElementHeader 
@@ -78,9 +80,9 @@ export const ElementContainer: React.FC<ElementContainerProps> = ({
         index={index}
         totalElements={totalElements}
         onSelect={onSelect}
-        onMoveUp={onMoveUp}
-        onMoveDown={onMoveDown}
         onDelete={onDelete}
+        dragHandleProps={dragHandleProps}
+        isDragging={isDragging}
       />
       
       <AccordionContent className="p-3 pt-2">

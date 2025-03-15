@@ -14,9 +14,7 @@ import {
   updateOptionInChoice,
   validateTimeLimit,
   validateKeySequence,
-  reorderElements,
-  moveElementUp as moveUp,
-  moveElementDown as moveDown,
+  reorderElements as reorderElementsUtil,
   updateElement as updateElementUtil
 } from './element-utils';
 
@@ -79,7 +77,7 @@ export const useElementManagement = (
   const deleteElement = (id: string) => {
     const updatedElements = elements.filter(e => e.id !== id);
     // Reorder remaining elements
-    const reorderedElements = reorderElements(updatedElements);
+    const reorderedElements = reorderElementsUtil(updatedElements);
     
     setElements(reorderedElements);
     updateStory(reorderedElements);
@@ -87,18 +85,20 @@ export const useElementManagement = (
     return id;
   };
 
-  // Move element up
-  const moveElementUp = (index: number) => {
-    const newElements = moveUp(elements, index);
-    setElements([...newElements] as SceneElement[]);
-    updateStory([...newElements] as SceneElement[]);
-  };
-
-  // Move element down
-  const moveElementDown = (index: number) => {
-    const newElements = moveDown(elements, index);
-    setElements([...newElements] as SceneElement[]);
-    updateStory([...newElements] as SceneElement[]);
+  // Reorder elements using drag and drop
+  const reorderElements = (sourceIndex: number, destinationIndex: number) => {
+    const result = Array.from(elements);
+    const [removed] = result.splice(sourceIndex, 1);
+    result.splice(destinationIndex, 0, removed);
+    
+    // Update order properties
+    const reorderedElements = result.map((element, index) => ({
+      ...element,
+      order: index
+    }));
+    
+    setElements(reorderedElements);
+    updateStory(reorderedElements);
   };
 
   // Update element
@@ -139,8 +139,7 @@ export const useElementManagement = (
     elements,
     addElement,
     deleteElement,
-    moveElementUp,
-    moveElementDown,
+    reorderElements,
     updateElement,
     addChoiceOption,
     deleteChoiceOption,

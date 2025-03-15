@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Accordion } from "@/components/ui/accordion";
 import { useStory } from "./Layout";
@@ -5,6 +6,7 @@ import { ElementContainer } from "./elements/ElementContainer";
 import { useElementManagement } from "@/hooks/useElementManagement";
 import ElementTypeButtons from "./elements/ElementTypeButtons";
 import EmptyElementsState from "./elements/EmptyElementsState";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 interface ElementEditorProps {
   sceneId: string;
@@ -23,9 +25,8 @@ const ElementEditor = ({
     elements,
     addElement,
     deleteElement,
-    moveElementUp,
-    moveElementDown,
     updateElement,
+    reorderElements,
     addChoiceOption,
     deleteChoiceOption,
     updateChoiceOption,
@@ -51,6 +52,18 @@ const ElementEditor = ({
     }
   };
 
+  // 处理拖放重新排序
+  const handleDragEnd = (result: any) => {
+    if (!result.destination) return;
+    
+    const sourceIndex = result.source.index;
+    const destinationIndex = result.destination.index;
+    
+    if (sourceIndex !== destinationIndex) {
+      reorderElements(sourceIndex, destinationIndex);
+    }
+  };
+
   if (!story) return null;
 
   // 从剧情中获取全局变量
@@ -64,34 +77,56 @@ const ElementEditor = ({
         {elements.length === 0 ? (
           <EmptyElementsState />
         ) : (
-          <Accordion
-            type="multiple"
-            className="space-y-2"
-            value={selectedElementId ? [selectedElementId] : []}
-          >
-            {elements.map((element, index) => (
-              <ElementContainer
-                key={element.id}
-                element={element}
-                index={index}
-                totalElements={elements.length}
-                selectedElementId={selectedElementId}
-                characters={story.characters}
-                scenes={story.scenes}
-                globalValues={globalValues}
-                onSelect={onSelectElement ? onSelectElement : () => {}}
-                onMoveUp={moveElementUp}
-                onMoveDown={moveElementDown}
-                onDelete={handleDeleteElement}
-                onUpdate={updateElement}
-                onAddChoiceOption={addChoiceOption}
-                onDeleteChoiceOption={deleteChoiceOption}
-                onUpdateChoiceOption={updateChoiceOption}
-                validateTimeLimit={validateTimeLimit}
-                validateKeySequence={validateKeySequence}
-              />
-            ))}
-          </Accordion>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="elements">
+              {(provided) => (
+                <Accordion
+                  type="multiple"
+                  className="space-y-2"
+                  value={selectedElementId ? [selectedElementId] : []}
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {elements.map((element, index) => (
+                    <Draggable 
+                      key={element.id} 
+                      draggableId={element.id} 
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                        >
+                          <ElementContainer
+                            key={element.id}
+                            element={element}
+                            index={index}
+                            totalElements={elements.length}
+                            selectedElementId={selectedElementId}
+                            characters={story.characters}
+                            scenes={story.scenes}
+                            globalValues={globalValues}
+                            onSelect={onSelectElement ? onSelectElement : () => {}}
+                            onDelete={handleDeleteElement}
+                            onUpdate={updateElement}
+                            onAddChoiceOption={addChoiceOption}
+                            onDeleteChoiceOption={deleteChoiceOption}
+                            onUpdateChoiceOption={updateChoiceOption}
+                            validateTimeLimit={validateTimeLimit}
+                            validateKeySequence={validateKeySequence}
+                            dragHandleProps={provided.dragHandleProps}
+                            isDragging={snapshot.isDragging}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </Accordion>
+              )}
+            </Droppable>
+          </DragDropContext>
         )}
       </div>
     </div>
