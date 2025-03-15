@@ -16,7 +16,6 @@ import Settings from "./pages/Settings";
 import TextProcessing from "./pages/StoryCreation/TextProcessing";
 import InteractionMarking from "./pages/StoryCreation/InteractionMarking";
 import StoryConversion from "./pages/StoryCreation/StoryConversion";
-import ChapterPreview from "./pages/StoryCreation/ChapterPreview";
 
 const queryClient = new QueryClient();
 
@@ -46,10 +45,6 @@ const App = () => (
               <Route
                 path="/story-creation/conversion"
                 element={<StoryConversion />}
-              />
-              <Route
-                path="/story-creation/preview"
-                element={<ChapterPreview />}
               />
               <Route path="*" element={<NotFound />} />
             </Routes>

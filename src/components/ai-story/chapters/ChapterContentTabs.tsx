@@ -7,7 +7,6 @@ import TextMarkerContextMenu from './TextMarkerContextMenu';
 import InteractionMarkingGuide from './InteractionMarkingGuide';
 import ChapterPreview from './ChapterPreview';
 import { Chapter } from '@/utils/types';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 interface ChapterContentTabsProps {
@@ -23,28 +22,28 @@ const ChapterContentTabs: React.FC<ChapterContentTabsProps> = ({
   onAIProcess,
   onMarkingToServer
 }) => {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("step1");
+  const [isProcessingPreview, setIsProcessingPreview] = useState(false);
 
   // 处理预览主线按钮
   const handlePreviewMainStory = async () => {
     try {
+      setIsProcessingPreview(true);
       // TODO: 实际调用服务器处理互动标记内容并转换为JSON
       toast.loading("正在处理互动标记...");
       
       // Mock: 假设等待1秒模拟服务器处理
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      toast.success("处理完成，正在跳转到预览...");
+      toast.success("处理完成，跳转到主线入库阶段");
       
-      // 保存当前章节状态到sessionStorage，实际项目中可能需要更复杂的状态管理
-      sessionStorage.setItem('previewChapter', JSON.stringify(chapter));
-      
-      // 跳转到预览页面
-      navigate('/story-creation/preview');
+      // 直接切换到第四个Tab而不是跳转页面
+      setActiveTab("step4");
     } catch (error) {
       console.error('预览主线失败', error);
       toast.error('预览失败，请重试');
+    } finally {
+      setIsProcessingPreview(false);
     }
   };
 
@@ -176,17 +175,19 @@ const ChapterContentTabs: React.FC<ChapterContentTabsProps> = ({
           <div className="flex gap-2">
             <Button 
               onClick={handlePreviewMainStory}
-              disabled={!chapter.markedContent && !chapter.mainStoryContent}
+              disabled={!chapter.markedContent && !chapter.mainStoryContent || isProcessingPreview}
             >
-              <ArrowRight className="h-4 w-4 mr-2" />
-              预览主线
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => setActiveTab("step4")}
-            >
-              下一步
-              <ArrowRight className="h-4 w-4 ml-2" />
+              {isProcessingPreview ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  处理中...
+                </>
+              ) : (
+                <>
+                  <ArrowRight className="h-4 w-4 mr-2" />
+                  预览主线
+                </>
+              )}
             </Button>
           </div>
         </div>
