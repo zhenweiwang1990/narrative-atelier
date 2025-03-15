@@ -19,7 +19,6 @@ import {
   DialogFooter,
 } from "../ui/dialog";
 import { Character } from "@/utils/types";
-import CharacterCard from "../CharacterCard";
 import VoiceSelector from "./VoiceSelector";
 
 interface CharacterDialogProps {
@@ -120,22 +119,6 @@ const CharacterDialog: React.FC<CharacterDialogProps> = ({
               rows={4}
               placeholder="角色背景和个性描述..."
             />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              {isEditMode && selectedCharacter && (
-                <CharacterCard 
-                  character={selectedCharacter}
-                  isEditing={true}
-                  onEdit={() => {}}
-                  onDelete={() => {}}
-                  onImageChange={(url, type) => onImageChange(url, type)}
-                  onConfirmEdit={() => {}}
-                  onCancelEdit={() => {}}
-                />
-              )}
-            </div>
           </div>
         </div>
 

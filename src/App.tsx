@@ -1,49 +1,64 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ThemeProvider } from "next-themes";
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
+
+// Pages
 import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
 import Characters from "./pages/Characters";
 import Locations from "./pages/Locations";
-import GlobalValues from "./pages/GlobalValues";
 import Flow from "./pages/Flow";
+import GlobalValues from "./pages/GlobalValues";
 import Settings from "./pages/Settings";
+import Login from "./pages/Login";
+import About from "./pages/About";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
+import NotFound from "./pages/NotFound";
+
+// Story creation
 import TextProcessing from "./pages/StoryCreation/TextProcessing";
 import InteractionMarking from "./pages/StoryCreation/InteractionMarking";
 import StoryConversion from "./pages/StoryCreation/StoryConversion";
 
-const queryClient = new QueryClient();
+function App() {
+  // Mock authentication status - in a real app, this would check if the user is logged in
+  const isAuthenticated = true;
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/characters" element={<Characters />} />
-              <Route path="/locations" element={<Locations />} />
-              <Route path="/global-values" element={<GlobalValues />} />
-              <Route path="/flow" element={<Flow />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/story-creation/text-processing" element={<TextProcessing />} />
-              <Route path="/story-creation/interaction-marking" element={<InteractionMarking />} />
-              <Route path="/story-creation/conversion" element={<StoryConversion />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+  // If not authenticated, redirect to login page
+  if (!isAuthenticated && window.location.pathname !== '/login') {
+    return <Navigate to="/login" />;
+  }
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Auth routes - accessible without authentication */}
+        <Route path="/login" element={<Login />} />
+        
+        {/* Static pages */}
+        <Route path="/about" element={<About />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        
+        {/* Main app routes - require authentication */}
+        <Route path="/" element={<Index />} />
+        <Route path="/characters" element={<Characters />} />
+        <Route path="/locations" element={<Locations />} />
+        <Route path="/flow" element={<Flow />} />
+        <Route path="/global-values" element={<GlobalValues />} />
+        <Route path="/settings" element={<Settings />} />
+        
+        {/* Story creation */}
+        <Route path="/story-creation/text-processing" element={<TextProcessing />} />
+        <Route path="/story-creation/interaction-marking" element={<InteractionMarking />} />
+        <Route path="/story-creation/conversion" element={<StoryConversion />} />
+        
+        {/* Catch-all route for 404 */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
 
 export default App;

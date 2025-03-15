@@ -12,7 +12,8 @@ import {
   SidebarStoryManager,
   SidebarNavigation, 
   SidebarActions,
-  SidebarToggle 
+  SidebarToggle,
+  UserProfile
 } from "./sidebar";
 import { ThemeToggle } from "./theme/ThemeToggle";
 
@@ -21,6 +22,8 @@ export function AppSidebar() {
     <>
       <Sidebar>
         <SidebarContent>
+          <UserProfile />
+          <SidebarSeparator className="my-4" />
           <SidebarStoryManager />
           <SidebarNavigation />
           <SidebarActions />
