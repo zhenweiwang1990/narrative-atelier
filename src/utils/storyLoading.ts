@@ -1,17 +1,23 @@
+
 import { Story, Scene, SceneElement } from './types';
-import redDress from '@/public/stories/red-dress.json';
 import { generateId } from './storage';
 
 // Load the default "Red Dress" story from the public directory
 export const loadDefaultRedDressStory = async (): Promise<Story | null> => {
   try {
-    // The redDress object is already the parsed JSON
-    const storyData = redDress as Story;
+    // Fetch the JSON file directly from the public directory
+    const response = await fetch('/红衣如故.json');
+    if (!response.ok) {
+      throw new Error('Failed to fetch red dress story');
+    }
+    
+    const storyData = await response.json() as Story;
     
     // Add a unique ID to the story
     storyData.id = generateId("story");
     
-    return storyData;
+    // Make sure the story is migrated to the latest format
+    return migrateStoryElementsToNewFormat(storyData);
   } catch (error) {
     console.error("Failed to load default story:", error);
     return null;

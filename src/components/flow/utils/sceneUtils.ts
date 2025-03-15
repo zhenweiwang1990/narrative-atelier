@@ -13,10 +13,10 @@ export const checkSceneCompletion = (scene: Scene): boolean => {
         return element.options.some(option => option.nextSceneId);
       }
       if (element.type === "qte") {
-        return element.successSceneId || element.failureSceneId;
+        return element.success?.sceneId || element.failure?.sceneId;
       }
       if (element.type === "dialogueTask") {
-        return element.successSceneId || element.failureSceneId;
+        return element.success?.sceneId || element.failure?.sceneId;
       }
       return false;
     });

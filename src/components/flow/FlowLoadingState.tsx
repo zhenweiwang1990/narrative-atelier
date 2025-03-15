@@ -1,8 +1,14 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
-const FlowLoadingState: React.FC = () => {
+interface FlowLoadingStateProps {
+  error?: string | null;
+}
+
+const FlowLoadingState: React.FC<FlowLoadingStateProps> = ({ error }) => {
   const [showRefresh, setShowRefresh] = useState(false);
 
   useEffect(() => {
@@ -28,6 +34,13 @@ const FlowLoadingState: React.FC = () => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
       <h2 className="text-xl font-semibold mb-4">正在加载剧情数据...</h2>
+      
+      {error && (
+        <Alert variant="destructive" className="mb-4 max-w-md">
+          <AlertTitle>加载错误</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
       
       {showRefresh && (
         <div className="flex flex-col items-center mt-4 space-y-2">

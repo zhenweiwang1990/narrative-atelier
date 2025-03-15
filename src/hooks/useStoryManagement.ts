@@ -41,14 +41,21 @@ export function useStoryManagement() {
         const blankStory = createBlankStory();
         blankStory.title = "空白剧情";
         
-        // Load the Red Dress story from public directory
-        const redDressStory = await loadDefaultRedDressStory();
-        
-        if (redDressStory) {
-          loadedStories = [blankStory, redDressStory];
-          toast.success('已加载默认示例剧情');
-        } else {
+        try {
+          // Load the Red Dress story from public directory
+          const redDressStory = await loadDefaultRedDressStory();
+          
+          if (redDressStory) {
+            loadedStories = [blankStory, redDressStory];
+            toast.success('已加载默认示例剧情');
+          } else {
+            loadedStories = [blankStory];
+            console.warn('无法加载示例剧情，仅加载空白剧情');
+          }
+        } catch (demoError) {
+          console.error('Failed to load demo story:', demoError);
           loadedStories = [blankStory];
+          toast.warning('无法加载示例剧情，仅加载空白剧情');
         }
         
         // Save the default stories
@@ -73,7 +80,7 @@ export function useStoryManagement() {
       setStory(currentStory || loadedStories[0]);
     } catch (error) {
       console.error('Failed to load stories:', error);
-      setError('加载剧情数据失败');
+      setError('加载剧情数据失败: ' + (error instanceof Error ? error.message : String(error)));
       toast.error('加载剧情数据失败');
     } finally {
       setLoading(false);

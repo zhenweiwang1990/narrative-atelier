@@ -1,3 +1,4 @@
+
 import React, { ReactNode } from "react";
 import { AppSidebar } from "./AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -5,6 +6,7 @@ import { useStoryManagement } from "@/hooks/useStoryManagement";
 import { StoryContext } from "@/contexts/StoryContext";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import FlowLoadingState from "./flow/FlowLoadingState";
 
 interface LayoutProps {
   children: ReactNode;
@@ -55,13 +57,7 @@ const Layout = ({ children }: LayoutProps) => {
               )}
 
               {loading ? (
-                <div className="flex items-center justify-center h-[60vh]">
-                  <div className="animate-pulse text-center">
-                    <p className="text-lg text-muted-foreground">
-                      加载剧情数据中...
-                    </p>
-                  </div>
-                </div>
+                <FlowLoadingState error={error} />
               ) : (
                 children
               )}
