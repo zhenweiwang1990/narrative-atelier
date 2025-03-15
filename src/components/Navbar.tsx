@@ -1,20 +1,20 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { 
-  BookText, 
-  Users, 
-  MapPin, 
-  Network, 
-  Download, 
-  Upload, 
-  Save, 
-  Menu, 
-  X
-} from 'lucide-react';
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import {
+  BookText,
+  Users,
+  MapPin,
+  Network,
+  Download,
+  Upload,
+  Save,
+  Menu,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Story } from '@/utils/types';
-import { exportStory, saveStory } from '@/utils/storage';
-import { useToast } from '@/components/ui/use-toast';
+import { Story } from "@/utils/types";
+import { exportStory, saveStory } from "@/utils/storage";
+import { useToast } from "@/components/ui/use-toast";
 
 interface NavbarProps {
   story: Story | null;
@@ -41,7 +41,7 @@ const Navbar = ({ story, onImport, onSave }: NavbarProps) => {
       toast({
         title: "Export failed",
         description: "No story to export.",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };
@@ -55,10 +55,22 @@ const Navbar = ({ story, onImport, onSave }: NavbarProps) => {
   };
 
   const navItems = [
-    { path: '/', name: 'Overview', icon: <BookText className="w-5 h-5" /> },
-    { path: '/characters', name: 'Characters', icon: <Users className="w-5 h-5" /> },
-    { path: '/locations', name: 'Locations', icon: <MapPin className="w-5 h-5" /> },
-    { path: '/flow', name: 'Scene Flow', icon: <Network className="w-5 h-5" /> },
+    { path: "/", name: "Overview", icon: <BookText className="w-5 h-5" /> },
+    {
+      path: "/characters",
+      name: "Characters",
+      icon: <Users className="w-5 h-5" />,
+    },
+    {
+      path: "/locations",
+      name: "Locations",
+      icon: <MapPin className="w-5 h-5" />,
+    },
+    {
+      path: "/flow",
+      name: "Scene Flow",
+      icon: <Network className="w-5 h-5" />,
+    },
   ];
 
   return (
@@ -67,27 +79,38 @@ const Navbar = ({ story, onImport, onSave }: NavbarProps) => {
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center space-x-2">
             <BookText className="h-6 w-6 text-primary" />
-            <span className="text-xl font-semibold tracking-tight">Narrative Atelier</span>
+            <span className="text-xl font-semibold tracking-tight">
+              Miss AI 剧情编辑器
+            </span>
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden">
-            <Button variant="ghost" size="icon" onClick={toggleMenu} aria-label="Menu">
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleMenu}
+              aria-label="Menu"
+            >
+              {isOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
             </Button>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => (
-              <Link 
-                key={item.path} 
+              <Link
+                key={item.path}
                 to={item.path}
                 onClick={closeMenu}
                 className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  location.pathname === item.path 
-                    ? 'bg-primary/10 text-primary' 
-                    : 'text-foreground/80 hover:bg-accent hover:text-accent-foreground'
+                  location.pathname === item.path
+                    ? "bg-primary/10 text-primary"
+                    : "text-foreground/80 hover:bg-accent hover:text-accent-foreground"
                 }`}
               >
                 {item.icon}
@@ -99,25 +122,40 @@ const Navbar = ({ story, onImport, onSave }: NavbarProps) => {
           {/* Action Buttons */}
           <div className="hidden md:flex items-center space-x-2">
             <label htmlFor="import-file">
-              <Button variant="outline" size="sm" className="flex items-center" asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center"
+                asChild
+              >
                 <div>
                   <Upload className="h-4 w-4 mr-2" />
                   Import
                 </div>
               </Button>
-              <input 
-                id="import-file" 
-                type="file" 
-                accept=".json" 
-                onChange={onImport} 
-                className="hidden" 
+              <input
+                id="import-file"
+                type="file"
+                accept=".json"
+                onChange={onImport}
+                className="hidden"
               />
             </label>
-            <Button variant="outline" size="sm" className="flex items-center" onClick={handleExport}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center"
+              onClick={handleExport}
+            >
               <Download className="h-4 w-4 mr-2" />
               Export
             </Button>
-            <Button variant="default" size="sm" className="flex items-center" onClick={handleSave}>
+            <Button
+              variant="default"
+              size="sm"
+              className="flex items-center"
+              onClick={handleSave}
+            >
               <Save className="h-4 w-4 mr-2" />
               Save
             </Button>
@@ -135,8 +173,8 @@ const Navbar = ({ story, onImport, onSave }: NavbarProps) => {
                   onClick={closeMenu}
                   className={`flex items-center px-3 py-2 rounded-md text-sm font-medium ${
                     location.pathname === item.path
-                      ? 'bg-primary/10 text-primary'
-                      : 'text-foreground/80 hover:bg-accent'
+                      ? "bg-primary/10 text-primary"
+                      : "text-foreground/80 hover:bg-accent"
                   }`}
                 >
                   {item.icon}
@@ -146,7 +184,12 @@ const Navbar = ({ story, onImport, onSave }: NavbarProps) => {
             </div>
             <div className="flex items-center justify-between pt-3">
               <label htmlFor="mobile-import-file" className="flex-1 mr-2">
-                <Button variant="outline" size="sm" className="w-full flex items-center justify-center" asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full flex items-center justify-center"
+                  asChild
+                >
                   <div>
                     <Upload className="h-4 w-4 mr-2" />
                     Import
