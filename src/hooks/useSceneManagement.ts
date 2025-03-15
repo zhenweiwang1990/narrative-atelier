@@ -24,6 +24,7 @@ export const useSceneManagement = (
       elements: [],
       nextSceneId: null,
       revivalPointId: null,
+      position: { x: 0, y: 0 },
     };
 
     setStory({
