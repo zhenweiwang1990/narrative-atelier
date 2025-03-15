@@ -46,8 +46,11 @@ export const handleAiStoryGeneration = async ({
 
     const result = await toastPromise;
     
-    if (result.success && onSuccess) {
-      onSuccess();
+    // Check that result is an object with a success property before accessing it
+    if (result && typeof result === 'object' && 'success' in result) {
+      if (result.success && onSuccess) {
+        onSuccess();
+      }
     }
     
     return result;

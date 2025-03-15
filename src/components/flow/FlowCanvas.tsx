@@ -13,7 +13,7 @@ import {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { SceneNodeData } from './flowTypes';
-import FlowControls from './FlowControls';
+import { FlowControls } from './FlowControls';
 import FlowPanel from './FlowPanel';
 import { SceneFilterOption } from './FlowEditor';
 import FlowFilterPanel from './FlowFilterPanel';
@@ -71,7 +71,7 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
       defaultViewport={{ x: 0, y: 0, zoom: 1 }}
     >
       <Background />
-      <FlowControls position="bottom-right" showInteractive={false} />
+      <FlowControls />
       
       <FlowPanel
         selectedNode={selectedNode}
