@@ -23,7 +23,26 @@ const Layout = ({ children }: LayoutProps) => {
     loadStories();
   }, []);
 
-  const loadStories = () => {
+  const loadDefaultRedDressStory = async (): Promise<Story | null> => {
+    try {
+      const response = await fetch('/红衣如故.json');
+      if (!response.ok) {
+        console.error('Failed to load Red Dress story:', response.statusText);
+        return null;
+      }
+      
+      const redDressStory = await response.json();
+      
+      // Generate a new ID to avoid conflicts
+      redDressStory.id = generateId("story");
+      return redDressStory;
+    } catch (error) {
+      console.error('Error loading Red Dress story:', error);
+      return null;
+    }
+  };
+
+  const loadStories = async () => {
     try {
       // Load list of stories
       const storiesData = localStorage.getItem(STORIES_STORAGE_KEY);
@@ -33,25 +52,36 @@ const Layout = ({ children }: LayoutProps) => {
         loadedStories = JSON.parse(storiesData);
       }
       
+      // If no stories exist, create default examples
+      if (loadedStories.length === 0) {
+        // Create a blank story
+        const blankStory = createBlankStory();
+        blankStory.title = "空白剧情";
+        
+        // Load the Red Dress story from public directory
+        const redDressStory = await loadDefaultRedDressStory();
+        
+        if (redDressStory) {
+          loadedStories = [blankStory, redDressStory];
+          toast.success('已加载默认示例剧情');
+        } else {
+          loadedStories = [blankStory];
+        }
+        
+        // Save the default stories
+        saveAllStories(loadedStories, loadedStories[0].id);
+      }
+      
       // Load current story ID
       const currentStoryId = localStorage.getItem(CURRENT_STORY_ID_KEY);
       
-      if (loadedStories.length > 0) {
-        // Find current story or use the first one
-        const currentStory = currentStoryId 
-          ? loadedStories.find(s => s.id === currentStoryId) 
-          : loadedStories[0];
-        
-        setStories(loadedStories);
-        setStory(currentStory || loadedStories[0]);
-      } else {
-        // Create a blank story if none exists
-        const newStory = createBlankStory();
-        setStories([newStory]);
-        setStory(newStory);
-        saveAllStories([newStory], newStory.id);
-      }
+      // Find current story or use the first one
+      const currentStory = currentStoryId 
+        ? loadedStories.find(s => s.id === currentStoryId) 
+        : loadedStories[0];
       
+      setStories(loadedStories);
+      setStory(currentStory || loadedStories[0]);
       setLoading(false);
     } catch (error) {
       console.error('Failed to load stories:', error);

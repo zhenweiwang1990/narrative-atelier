@@ -15,10 +15,10 @@ const FlowLoadingState: React.FC = () => {
   }, []);
 
   const handleForceRefresh = () => {
-    // Clear any localStorage cache that might be causing issues
+    // Keep the current story ID but clear other potential problem data
     const currentStoryId = localStorage.getItem("interactive-story-editor-current-id");
     
-    // Keep the current story ID but clear other potential problem data
+    // Clear any localStorage cache that might be causing issues
     localStorage.removeItem("interactive-story-editor-loading");
     
     // Force a page reload
