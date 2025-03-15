@@ -5,7 +5,6 @@ import { useAuth } from '@/hooks/auth';
 import { AppSidebar } from './AppSidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { StoryProvider } from '@/context/StoryContext';
-import { StoryLoader } from './layout/StoryLoader';
 import { Footer } from './layout/Footer';
 import { StoryInitializer } from './layout/StoryInitializer';
 

@@ -1,5 +1,6 @@
+
 import React, { useState } from "react";
-import { useStory } from "@/components/Layout";
+import { useStory } from "@/context/StoryContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,6 +23,7 @@ import {
 import { Plus, Search, Edit, Trash2, Image } from "lucide-react";
 import { Location } from "@/utils/types";
 import { generateId } from "@/utils/storage";
+import { StoryWrapper } from "@/components/layout/StoryWrapper";
 
 const Locations = () => {
   const { story, setStory } = useStory();
@@ -156,151 +158,151 @@ const Locations = () => {
       .length;
   };
 
-  if (!story) return null;
-
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">地点</h1>
-          <p className="text-sm text-muted-foreground">
-            管理您剧情的地点和背景。
-          </p>
-        </div>
-
-        <Button size="sm" onClick={handleOpenCreateDialog}>
-          <Plus className="h-4 w-4 mr-2" /> 添加地点
-        </Button>
-      </div>
-
-      <div className="flex items-center mb-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="搜索地点..."
-            className="pl-9 h-9"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-      </div>
-
-      <div className="border rounded-md">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[40px]"></TableHead>
-              <TableHead>名称</TableHead>
-              <TableHead className="hidden md:table-cell">描述</TableHead>
-              <TableHead>场景数量</TableHead>
-              <TableHead className="text-right">操作</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredLocations.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={5}
-                  className="text-center h-32 text-muted-foreground"
-                >
-                  未找到地点。添加您的第一个地点以开始。
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredLocations.map((location) => (
-                <TableRow key={location.id}>
-                  <TableCell>
-                    {location.background ? (
-                      <img
-                        src={location.background}
-                        alt={location.name}
-                        className="h-8 w-12 rounded object-cover"
-                      />
-                    ) : (
-                      <div className="h-8 w-12 rounded bg-muted flex items-center justify-center">
-                        <Image className="h-4 w-4 text-muted-foreground" />
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell className="font-medium">{location.name}</TableCell>
-                  <TableCell className="hidden md:table-cell text-muted-foreground text-sm truncate max-w-[300px]">
-                    {location.description}
-                  </TableCell>
-                  <TableCell>{getSceneCount(location.id)}</TableCell>
-                  <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleOpenEditDialog(location)}
-                      className="h-8 w-8"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDeleteLocation(location.id)}
-                      className="h-8 w-8 text-destructive"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
-
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[525px]">
-          <DialogHeader>
-            <DialogTitle>{isEditMode ? "编辑地点" : "创建地点"}</DialogTitle>
-          </DialogHeader>
-
-          <div className="space-y-4 py-2">
-            <div className="space-y-2">
-              <Label htmlFor="name">名称</Label>
-              <Input
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="background">背景图片URL</Label>
-              <Input
-                id="background"
-                name="background"
-                value={formData.background}
-                onChange={handleInputChange}
-                placeholder="https://example.com/background.jpg"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">描述</Label>
-              <Textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                rows={4}
-                placeholder="描述这个地点..."
-              />
-            </div>
+    <StoryWrapper>
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">地点</h1>
+            <p className="text-sm text-muted-foreground">
+              管理您剧情的地点和背景。
+            </p>
           </div>
 
-          <DialogFooter>
-            <Button type="submit" onClick={handleSaveLocation}>
-              {isEditMode ? "更新地点" : "创建地点"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+          <Button size="sm" onClick={handleOpenCreateDialog}>
+            <Plus className="h-4 w-4 mr-2" /> 添加地点
+          </Button>
+        </div>
+
+        <div className="flex items-center mb-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="搜索地点..."
+              className="pl-9 h-9"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="border rounded-md">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[40px]"></TableHead>
+                <TableHead>名称</TableHead>
+                <TableHead className="hidden md:table-cell">描述</TableHead>
+                <TableHead>场景数量</TableHead>
+                <TableHead className="text-right">操作</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredLocations.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="text-center h-32 text-muted-foreground"
+                  >
+                    未找到地点。添加您的第一个地点以开始。
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredLocations.map((location) => (
+                  <TableRow key={location.id}>
+                    <TableCell>
+                      {location.background ? (
+                        <img
+                          src={location.background}
+                          alt={location.name}
+                          className="h-8 w-12 rounded object-cover"
+                        />
+                      ) : (
+                        <div className="h-8 w-12 rounded bg-muted flex items-center justify-center">
+                          <Image className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="font-medium">{location.name}</TableCell>
+                    <TableCell className="hidden md:table-cell text-muted-foreground text-sm truncate max-w-[300px]">
+                      {location.description}
+                    </TableCell>
+                    <TableCell>{getSceneCount(location.id)}</TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleOpenEditDialog(location)}
+                        className="h-8 w-8"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteLocation(location.id)}
+                        className="h-8 w-8 text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="sm:max-w-[525px]">
+            <DialogHeader>
+              <DialogTitle>{isEditMode ? "编辑地点" : "创建地点"}</DialogTitle>
+            </DialogHeader>
+
+            <div className="space-y-4 py-2">
+              <div className="space-y-2">
+                <Label htmlFor="name">名称</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="background">背景图片URL</Label>
+                <Input
+                  id="background"
+                  name="background"
+                  value={formData.background}
+                  onChange={handleInputChange}
+                  placeholder="https://example.com/background.jpg"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="description">描述</Label>
+                <Textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  rows={4}
+                  placeholder="描述这个地点..."
+                />
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button type="submit" onClick={handleSaveLocation}>
+                {isEditMode ? "更新地点" : "创建地点"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </StoryWrapper>
   );
 };
 
