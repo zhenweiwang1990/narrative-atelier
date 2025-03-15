@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -185,7 +186,3 @@ const FloatingMobilePreview = ({
 };
 
 export default FloatingMobilePreview;
-
-const cn = (...classes: (string | boolean | undefined)[]) => {
-  return classes.filter(Boolean).join(" ");
-};
