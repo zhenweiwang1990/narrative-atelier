@@ -3,6 +3,7 @@ import React from 'react';
 import { Scene, GlobalValue } from '@/utils/types';
 import { useOutcomeHandling } from '@/hooks/useOutcomeHandling';
 import SingleOutcomeSection from './SingleOutcomeSection';
+import DualOutcomeSection from './DualOutcomeSection';
 import OutcomeAiDialog from './OutcomeAiDialog';
 
 interface OutcomeSectionProps {
