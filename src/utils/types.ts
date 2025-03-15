@@ -1,3 +1,4 @@
+
 export interface Story {
   id: string;
   title: string;
@@ -9,6 +10,12 @@ export interface Story {
   scenes: Scene[];
   globalValues: GlobalValue[];
   chapters?: Chapter[];
+  // Add missing properties
+  coverPhoto?: string;
+  protagonistName?: string;
+  protagonistGender?: string;
+  orientation?: 'hetero' | 'yuri' | 'yaoi' | 'none';
+  tags?: string[];
 }
 
 export interface Chapter {
@@ -21,12 +28,17 @@ export interface Chapter {
   isConverted: boolean;
 }
 
+export type CharacterGender = 'male' | 'female' | 'other';
+export type CharacterRole = 'protagonist' | 'supporting';
+
 export interface Character {
   id: string;
   name: string;
-  gender: string;
-  role: string;
+  gender: CharacterGender;
+  role: CharacterRole;
   bio: string;
+  portrait?: string;
+  fullBody?: string;
   profilePicture?: string;
 }
 
@@ -38,7 +50,7 @@ export interface Location {
   background?: string;
 }
 
-export type SceneType = 'normal' | 'start' | 'bad-ending';
+export type SceneType = 'normal' | 'start' | 'bad-ending' | 'ending';
 
 export interface Scene {
   id: string;
@@ -55,6 +67,15 @@ export interface SceneElement {
   id: string;
   type: ElementType;
   order?: number;
+  // Add common properties used by specific element types
+  text?: string;
+  characterId?: string;
+  description?: string;
+  goal?: string;
+  openingLine?: string;
+  options?: ChoiceOption[];
+  success?: ElementOutcome;
+  failure?: ElementOutcome;
 }
 
 export type ElementType = 'narration' | 'dialogue' | 'thought' | 'choice' | 'qte' | 'dialogueTask';
@@ -78,7 +99,7 @@ export interface ThoughtElement extends SceneElement {
 
 export interface ChoiceElement extends SceneElement {
   type: 'choice';
-  question: string;
+  text: string;
   options: ChoiceOption[];
 }
 
@@ -102,6 +123,7 @@ export interface QteElement extends SceneElement {
 export interface ElementOutcome {
   sceneId?: string;
   valueChanges?: ValueChange[];
+  transition?: string;
 }
 
 export interface GlobalValue {
@@ -110,6 +132,7 @@ export interface GlobalValue {
   description: string;
   initialValue: number;
   currentValue?: number;
+  type?: string;
 }
 
 export interface ValueChange {
@@ -122,7 +145,7 @@ export interface DialogueTaskElement extends SceneElement {
   goal: string;
   targetCharacterId: string;
   openingLine?: string;
-  background?: string; // Added missing background property
+  background?: string;
   success: ElementOutcome;
   failure: ElementOutcome;
 }

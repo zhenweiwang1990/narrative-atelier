@@ -109,7 +109,7 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
               globalValues={globalValues}
               successSceneId={safeElement.success.sceneId}
               failureSceneId=""
-              successTransition={safeElement.success.transition}
+              successTransition={safeElement.success.transition || ""}
               successValueChanges={safeElement.success.valueChanges}
               updateSuccessSceneId={updateSuccessSceneId}
               updateFailureSceneId={() => {}}
@@ -147,7 +147,7 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
               globalValues={globalValues}
               successSceneId=""
               failureSceneId={safeElement.failure.sceneId}
-              failureTransition={safeElement.failure.transition}
+              failureTransition={safeElement.failure.transition || ""}
               failureValueChanges={safeElement.failure.valueChanges}
               updateSuccessSceneId={() => {}}
               updateFailureSceneId={updateFailureSceneId}

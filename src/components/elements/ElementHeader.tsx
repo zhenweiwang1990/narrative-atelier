@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ElementType, SceneElement } from '@/utils/types';
+import { ElementType, SceneElement, NarrationElement, DialogueElement, ThoughtElement, ChoiceElement, QteElement, DialogueTaskElement } from '@/utils/types';
 import { AlignLeft, MessageSquare, Brain, ListTree, Gamepad, MessagesSquare, ChevronDown, Trash2, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -54,22 +54,30 @@ export const getElementTypeLabel = (type: ElementType) => {
 export const getElementContentPreview = (element: SceneElement): string => {
   switch (element.type) {
     case 'narration':
+      const narrationElem = element as NarrationElement;
+      return narrationElem.text ? 
+        (narrationElem.text.length > 40 ? `${narrationElem.text.substring(0, 40)}...` : narrationElem.text) : 
+        '(空内容)';
     case 'dialogue':
     case 'thought':
-      return element.text ? 
-        (element.text.length > 40 ? `${element.text.substring(0, 40)}...` : element.text) : 
+      const textElem = element as DialogueElement | ThoughtElement;
+      return textElem.text ? 
+        (textElem.text.length > 40 ? `${textElem.text.substring(0, 40)}...` : textElem.text) : 
         '(空内容)';
     case 'choice':
-      return element.text ? 
-        (element.text.length > 40 ? `${element.text.substring(0, 40)}...` : element.text) : 
+      const choiceElem = element as ChoiceElement;
+      return choiceElem.text ? 
+        (choiceElem.text.length > 40 ? `${choiceElem.text.substring(0, 40)}...` : choiceElem.text) : 
         '(选项提示)';
     case 'qte':
-      return element.description ? 
-        (element.description.length > 40 ? `${element.description.substring(0, 40)}...` : element.description) : 
+      const qteElem = element as QteElement;
+      return qteElem.description ? 
+        (qteElem.description.length > 40 ? `${qteElem.description.substring(0, 40)}...` : qteElem.description) : 
         '(QTE描述)';
     case 'dialogueTask':
-      return element.goal ? 
-        (element.goal.length > 40 ? `${element.goal.substring(0, 40)}...` : element.goal) : 
+      const dialogueTaskElem = element as DialogueTaskElement;
+      return dialogueTaskElem.goal ? 
+        (dialogueTaskElem.goal.length > 40 ? `${dialogueTaskElem.goal.substring(0, 40)}...` : dialogueTaskElem.goal) : 
         '(对话任务)';
     default:
       return '(无预览)';

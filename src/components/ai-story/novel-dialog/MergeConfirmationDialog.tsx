@@ -23,7 +23,7 @@ const MergeConfirmationDialog: React.FC<MergeConfirmationDialogProps> = ({
   onConfirm
 }) => {
   return (
-    <AlertDialog open={isOpen} onOpenChange={onClose}>
+    <AlertDialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>确认合并故事</AlertDialogTitle>

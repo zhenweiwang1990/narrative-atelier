@@ -1,18 +1,36 @@
+
 import { useState } from 'react';
 import { Scene, SceneType, Story } from '@/utils/types';
 import { useStory } from '@/components/Layout';
+import { generateId } from '@/utils/storage';
 
-interface UseSceneManagementHook {
+export interface UseSceneManagementHook {
   selectedScene: Scene | undefined;
   selectScene: (sceneId: string) => void;
   createScene: (type?: SceneType) => void;
   updateScene: (id: string, updates: Partial<Scene>) => void;
   deleteScene: (id: string) => void;
+  // Add missing properties expected by Flow.tsx
+  selectedSceneId: string | null;
+  setSelectedSceneId: (id: string | null) => void;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+  handleAddScene: (type: SceneType) => void;
+  handleSceneSelect: (id: string) => void;
+  updateSceneTitle: (id: string, title: string) => void;
+  updateSceneType: (id: string, type: SceneType) => void;
+  updateSceneLocation: (id: string, locationId: string) => void;
+  updateNextScene: (id: string, nextSceneId: string | undefined) => void;
+  updateRevivalPoint: (id: string, revivalPointId: string | undefined) => void;
 }
 
-export const useSceneManagementHook = (): UseSceneManagementHook => {
-  const { story, setStory, selectedLocation } = useStory();
+export const useSceneManagementHook = (
+  story: Story | null,
+  setStory: React.Dispatch<React.SetStateAction<Story | null>> | null
+): UseSceneManagementHook => {
+  const { selectedLocation } = useStory() as { selectedLocation?: { id: string } };
   const [selectedSceneId, setSelectedSceneId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>('properties');
 
   const selectedScene = story?.scenes.find(scene => scene.id === selectedSceneId);
 
@@ -20,16 +38,32 @@ export const useSceneManagementHook = (): UseSceneManagementHook => {
     setSelectedSceneId(sceneId);
   };
 
+  const handleSceneSelect = selectScene;
+
   const createScene = (type: SceneType = 'normal'): Scene => {
-    const newId = `scene_${Date.now()}`;
+    const newId = generateId('scene');
     return {
       id: newId,
       title: '新场景',
       type: type,
       locationId: selectedLocation?.id || '',
       elements: [],
-      position: { x: 100, y: 100 }, // Added required position property
+      position: { x: 100, y: 100 },
     };
+  };
+
+  const handleAddScene = (type: SceneType = 'normal') => {
+    if (!story || !setStory) return;
+    
+    const newScene = createScene(type);
+    const updatedScenes = [...story.scenes, newScene];
+    
+    setStory({
+      ...story,
+      scenes: updatedScenes
+    });
+    
+    setSelectedSceneId(newScene.id);
   };
 
   const updateScene = (id: string, updates: Partial<Scene>) => {
@@ -40,6 +74,26 @@ export const useSceneManagementHook = (): UseSceneManagementHook => {
     );
 
     setStory({ ...story, scenes: updatedScenes });
+  };
+
+  const updateSceneTitle = (id: string, title: string) => {
+    updateScene(id, { title });
+  };
+
+  const updateSceneType = (id: string, type: SceneType) => {
+    updateScene(id, { type });
+  };
+
+  const updateSceneLocation = (id: string, locationId: string) => {
+    updateScene(id, { locationId });
+  };
+
+  const updateNextScene = (id: string, nextSceneId: string | undefined) => {
+    updateScene(id, { nextSceneId });
+  };
+
+  const updateRevivalPoint = (id: string, revivalPointId: string | undefined) => {
+    updateScene(id, { revivalPointId });
   };
 
   const deleteScene = (id: string) => {
@@ -56,5 +110,17 @@ export const useSceneManagementHook = (): UseSceneManagementHook => {
     createScene,
     updateScene,
     deleteScene,
+    // Add the additional properties expected by Flow.tsx
+    selectedSceneId,
+    setSelectedSceneId,
+    activeTab,
+    setActiveTab,
+    handleAddScene,
+    handleSceneSelect,
+    updateSceneTitle,
+    updateSceneType,
+    updateSceneLocation,
+    updateNextScene,
+    updateRevivalPoint
   };
 };

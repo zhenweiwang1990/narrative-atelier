@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Story, SceneElement } from '@/utils/types';
+import { Story, SceneElement, NarrationElement, DialogueElement, ThoughtElement, ChoiceElement, QteElement, DialogueTaskElement } from '@/utils/types';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface StoryStatsProps {
@@ -25,18 +25,22 @@ const StoryStats: React.FC<StoryStatsProps> = ({ story }) => {
   const totalTextLength = allElements.reduce((sum, element) => {
     switch (element.type) {
       case 'narration':
+        return sum + ((element as NarrationElement).text?.length || 0);
       case 'dialogue':
+        return sum + ((element as DialogueElement).text?.length || 0);
       case 'thought':
-        return sum + (element.text?.length || 0);
+        return sum + ((element as ThoughtElement).text?.length || 0);
       case 'choice':
-        const choiceText = element.text?.length || 0;
-        const optionsText = element.options?.reduce((total, opt) => 
+        const choiceElem = element as ChoiceElement;
+        const choiceText = choiceElem.text?.length || 0;
+        const optionsText = choiceElem.options?.reduce((total, opt) => 
           total + (opt.text?.length || 0), 0) || 0;
         return sum + choiceText + optionsText;
       case 'qte':
-        return sum + (element.description?.length || 0);
+        return sum + ((element as QteElement).description?.length || 0);
       case 'dialogueTask':
-        return sum + (element.goal?.length || 0) + (element.openingLine?.length || 0);
+        const dialogueTask = element as DialogueTaskElement;
+        return sum + (dialogueTask.goal?.length || 0) + (dialogueTask.openingLine?.length || 0);
       default:
         return sum;
     }
