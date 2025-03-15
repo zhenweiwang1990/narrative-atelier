@@ -1,3 +1,4 @@
+
 import { v4 as uuidv4 } from 'uuid';
 import { Story } from '@/utils/types';
 
@@ -64,12 +65,11 @@ class AIStoryServiceClient {
         const results: TaskResult[] = await response.json();
         
         // Update the tasks with the new status
-        results.forEach(result => {
-          const result = results.find(r => r.id === taskId);
-          if (result !== null && result !== undefined) {
-            const hasFiles = result.files && result.files.length > 0;
-            console.log(`Result for task ${taskId} received: ${result.status}, hasFiles: ${hasFiles}`);
-            this.tasks.set(result.id, result);
+        results.forEach(taskResult => {
+          if (taskResult !== null && taskResult !== undefined) {
+            const hasFiles = taskResult.files && taskResult.files.length > 0;
+            console.log(`Result for task ${taskResult.id} received: ${taskResult.status}, hasFiles: ${hasFiles}`);
+            this.tasks.set(taskResult.id, taskResult);
           }
         });
       } catch (error) {
