@@ -26,6 +26,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <Footer />
         </div>
       </div>
+      <Toaster />
     </SidebarProvider>
   );
 };

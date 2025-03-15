@@ -32,6 +32,18 @@ const Characters = () => {
     handleDeleteCharacter,
   } = useCharacterForm();
 
+  // Wait for story data to load
+  if (!story) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <h3 className="text-lg font-medium">加载中...</h3>
+          <p className="text-muted-foreground">正在加载角色数据</p>
+        </div>
+      </div>
+    );
+  }
+
   // 处理打开图片选择器
   const handleOpenImageSelector = (characterId: string, type: 'profilePicture' | 'fullBody') => {
     setSelectedCharacterId(characterId);
@@ -87,19 +99,11 @@ const Characters = () => {
 
   // 根据搜索查询过滤角色
   const filteredCharacters =
-    story?.characters.filter(
+    story.characters.filter(
       (character) =>
         character.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         character.bio.toLowerCase().includes(searchQuery.toLowerCase())
     ) || [];
-
-  if (!story) {
-    return (
-      <div className="p-4 text-center">
-        <p>Loading character data...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4">

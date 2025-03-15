@@ -9,19 +9,22 @@ const Index = () => {
 
   if (!story) {
     return (
-      <div className="p-4 text-center">
-        <p>Loading story data...</p>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <h3 className="text-lg font-medium">加载中...</h3>
+          <p className="text-muted-foreground">正在加载剧情数据</p>
+        </div>
       </div>
     );
   }
 
   const handleStoryUpdate = (updatedStoryData: Partial<typeof story>) => {
-    if (!story || !setStory) return;
-
-    setStory({
-      ...story,
-      ...updatedStoryData
-    });
+    if (setStory) {
+      setStory({
+        ...story,
+        ...updatedStoryData
+      });
+    }
   };
 
   return (

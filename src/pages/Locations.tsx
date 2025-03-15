@@ -28,9 +28,21 @@ const Locations = () => {
     getSceneCount
   } = useLocationForm();
 
+  // Wait for story data to load
+  if (!story) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <h3 className="text-lg font-medium">加载中...</h3>
+          <p className="text-muted-foreground">正在加载地点数据</p>
+        </div>
+      </div>
+    );
+  }
+
   // 根据搜索查询过滤场景
   const filteredLocations =
-    story?.locations.filter(
+    story.locations.filter(
       (location) =>
         location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         location.description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -55,7 +67,7 @@ const Locations = () => {
         return location;
       });
 
-      if (story && setStory) {
+      if (setStory) {
         setStory({
           ...story,
           locations: updatedLocations
@@ -64,14 +76,6 @@ const Locations = () => {
     }
     setIsImageSelectorOpen(false);
   };
-
-  if (!story) {
-    return (
-      <div className="p-4 text-center">
-        <p>Loading location data...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4">
