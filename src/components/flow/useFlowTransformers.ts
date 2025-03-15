@@ -29,7 +29,7 @@ export function useFlowTransformers(scenes: Scene[]): FlowTransformers {
   const transformScenesToNodes = useCallback(() => {
     if (!scenes) return [];
     
-    return scenes.map((scene) => {
+    return scenes.map((scene, index) => {
       // Find the location
       const hasNextScene = !!scene.nextSceneId;
       
@@ -40,10 +40,16 @@ export function useFlowTransformers(scenes: Scene[]): FlowTransformers {
         revivalPointName = revivalPoint?.title || '';
       }
       
+      // Use default position if scene doesn't have one
+      const position = {
+        x: (index % 3) * 250,
+        y: Math.floor(index / 3) * 180
+      };
+      
       return {
         id: scene.id,
         type: 'sceneNode',
-        position: scene.position || { x: 0, y: 0 },
+        position: position,
         data: {
           label: scene.title,
           sceneType: scene.type,
