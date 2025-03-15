@@ -172,7 +172,7 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
           isSuccess={true}
           valueChanges={successValueChanges}
           globalValues={globalValues}
-          onAddValueChange={addValueChange}
+          onAddValueChange={(isSuccess) => addValueChange(isSuccess, globalValues)}
           onUpdateValueChange={updateValueChange}
           onRemoveValueChange={removeValueChange}
         />
@@ -182,7 +182,7 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
           isSuccess={false}
           valueChanges={failureValueChanges}
           globalValues={globalValues}
-          onAddValueChange={addValueChange}
+          onAddValueChange={(isSuccess) => addValueChange(isSuccess, globalValues)}
           onUpdateValueChange={updateValueChange}
           onRemoveValueChange={removeValueChange}
         />

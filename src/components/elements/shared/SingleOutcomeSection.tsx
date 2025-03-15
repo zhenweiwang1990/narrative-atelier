@@ -38,6 +38,11 @@ const SingleOutcomeSection: React.FC<SingleOutcomeSectionProps> = ({
   onOpenAiDialog,
   showAiButtons = true
 }) => {
+  // Create a wrapper function to match the expected signature
+  const handleAddValueChange = (isSuccessLocal: boolean) => {
+    addValueChange(isSuccessLocal, globalValues);
+  };
+
   return (
     <div className="space-y-2">
       <SceneSelectSection
@@ -65,7 +70,7 @@ const SingleOutcomeSection: React.FC<SingleOutcomeSectionProps> = ({
         isSuccess={isSuccess}
         valueChanges={valueChanges}
         globalValues={globalValues}
-        onAddValueChange={addValueChange}
+        onAddValueChange={handleAddValueChange}
         onUpdateValueChange={updateValueChange}
         onRemoveValueChange={removeValueChange}
       />
