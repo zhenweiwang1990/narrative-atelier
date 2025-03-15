@@ -1,12 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Save } from "lucide-react";
+import { RefreshCw, Save, ArrowRight, Server } from "lucide-react";
 import TextMarkerContextMenu from './TextMarkerContextMenu';
 import InteractionMarkingGuide from './InteractionMarkingGuide';
 import ChapterPreview from './ChapterPreview';
 import { Chapter } from '@/utils/types';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface ChapterContentTabsProps {
   chapter: Chapter;
@@ -21,16 +23,70 @@ const ChapterContentTabs: React.FC<ChapterContentTabsProps> = ({
   onAIProcess,
   onMarkingToServer
 }) => {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("step1");
+
+  // 处理预览主线按钮
+  const handlePreviewMainStory = async () => {
+    try {
+      // TODO: 实际调用服务器处理互动标记内容并转换为JSON
+      toast.loading("正在处理互动标记...");
+      
+      // Mock: 假设等待1秒模拟服务器处理
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast.success("处理完成，正在跳转到预览...");
+      
+      // 保存当前章节状态到sessionStorage，实际项目中可能需要更复杂的状态管理
+      sessionStorage.setItem('previewChapter', JSON.stringify(chapter));
+      
+      // 跳转到预览页面
+      navigate('/story-creation/preview');
+    } catch (error) {
+      console.error('预览主线失败', error);
+      toast.error('预览失败，请重试');
+    }
+  };
+
   return (
-    <Tabs defaultValue="original">
-      <TabsList className="mb-4">
-        <TabsTrigger value="original">原文</TabsTrigger>
-        <TabsTrigger value="mainStory" disabled={!chapter.isProcessed}>文本剧情</TabsTrigger>
-        <TabsTrigger value="interaction" disabled={!chapter.isProcessed}>互动标记</TabsTrigger>
-        <TabsTrigger value="preview" disabled={!chapter.isProcessed}>预览</TabsTrigger>
+    <Tabs 
+      defaultValue="step1" 
+      value={activeTab}
+      onValueChange={setActiveTab}
+      className="w-full"
+    >
+      <TabsList className="mb-4 w-full justify-start bg-background border-b rounded-none px-0 relative">
+        <div className="absolute h-[3px] bottom-0 left-0 right-0 bg-muted-foreground/20"></div>
+        <TabsTrigger 
+          value="step1" 
+          className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-4 relative"
+        >
+          1. 获得原文
+        </TabsTrigger>
+        <TabsTrigger 
+          value="step2" 
+          className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-4"
+          disabled={!chapter.isProcessed}
+        >
+          2. 处理文本
+        </TabsTrigger>
+        <TabsTrigger 
+          value="step3" 
+          className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-4"
+          disabled={!chapter.isProcessed}
+        >
+          3. 标记互动
+        </TabsTrigger>
+        <TabsTrigger 
+          value="step4" 
+          className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-4"
+          disabled={!chapter.isProcessed}
+        >
+          4. 主线入库
+        </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="original" className="space-y-4">
+      <TabsContent value="step1" className="space-y-4">
         <TextMarkerContextMenu
           rows={10}
           value={chapter.originalContent}
@@ -39,18 +95,32 @@ const ChapterContentTabs: React.FC<ChapterContentTabsProps> = ({
           placeholder="输入章节内容..."
         />
 
-        <div className="flex justify-end">
-          <Button 
-            onClick={() => onAIProcess(chapter.id)}
-            disabled={!chapter.originalContent}
-          >
-            <RefreshCw className="h-4 w-4 mr-2" />
-            AI文本处理
-          </Button>
+        <div className="flex justify-between">
+          <div></div> {/* 空div用于对齐 */}
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => onAIProcess(chapter.id)}
+              disabled={!chapter.originalContent}
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              AI文本处理
+            </Button>
+            {chapter.isProcessed && (
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setActiveTab("step2");
+                }}
+              >
+                下一步
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            )}
+          </div>
         </div>
       </TabsContent>
 
-      <TabsContent value="mainStory" className="space-y-4">
+      <TabsContent value="step2" className="space-y-4">
         <TextMarkerContextMenu
           rows={10}
           value={chapter.mainStoryContent || ''}
@@ -59,18 +129,33 @@ const ChapterContentTabs: React.FC<ChapterContentTabsProps> = ({
           placeholder="AI 处理后的主线剧情会显示在这里..."
         />
         
-        <div className="flex justify-end">
+        <div className="flex justify-between">
           <Button 
-            onClick={() => onAIProcess(chapter.id)}
-            disabled={!chapter.originalContent}
+            variant="outline" 
+            onClick={() => setActiveTab("step1")}
           >
-            <RefreshCw className="h-4 w-4 mr-2" />
-            重新处理
+            上一步
           </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => onAIProcess(chapter.id)}
+              disabled={!chapter.originalContent}
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              重新处理
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => setActiveTab("step3")}
+            >
+              下一步
+              <ArrowRight className="h-4 w-4 ml-2" />
+            </Button>
+          </div>
         </div>
       </TabsContent>
 
-      <TabsContent value="interaction" className="space-y-4">
+      <TabsContent value="step3" className="space-y-4">
         <InteractionMarkingGuide />
         
         <TextMarkerContextMenu
@@ -81,29 +166,50 @@ const ChapterContentTabs: React.FC<ChapterContentTabsProps> = ({
           placeholder="在这里添加互动标记..."
         />
 
-        <div className="flex justify-end">
+        <div className="flex justify-between">
           <Button 
-            onClick={() => onMarkingToServer(chapter.id)}
-            disabled={!chapter.markedContent && !chapter.mainStoryContent}
+            variant="outline" 
+            onClick={() => setActiveTab("step2")}
           >
-            <Save className="h-4 w-4 mr-2" />
-            标记入库
+            上一步
           </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={handlePreviewMainStory}
+              disabled={!chapter.markedContent && !chapter.mainStoryContent}
+            >
+              <ArrowRight className="h-4 w-4 mr-2" />
+              预览主线
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => setActiveTab("step4")}
+            >
+              下一步
+              <ArrowRight className="h-4 w-4 ml-2" />
+            </Button>
+          </div>
         </div>
       </TabsContent>
       
-      <TabsContent value="preview" className="space-y-4">
+      <TabsContent value="step4" className="space-y-4">
         <div className="border rounded-md p-4 bg-muted/20">
           <ChapterPreview content={chapter.markedContent || chapter.mainStoryContent || ''} />
         </div>
         
-        <div className="flex justify-end">
+        <div className="flex justify-between">
+          <Button 
+            variant="outline" 
+            onClick={() => setActiveTab("step3")}
+          >
+            上一步
+          </Button>
           <Button 
             onClick={() => onMarkingToServer(chapter.id)}
             disabled={!chapter.markedContent && !chapter.mainStoryContent}
           >
-            <RefreshCw className="h-4 w-4 mr-2" />
-            重新转换
+            <Server className="h-4 w-4 mr-2" />
+            入库制作
           </Button>
         </div>
       </TabsContent>

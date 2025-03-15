@@ -27,15 +27,17 @@ const Index = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* 左侧区域：剧情详情 */}
-        <StoryDetails 
-          story={story} 
-          onSave={handleStoryUpdate} 
-        />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {/* 左侧区域：剧情详情 - 限制最大宽度为 300px */}
+        <div className="md:col-span-1" style={{ maxWidth: "300px" }}>
+          <StoryDetails 
+            story={story} 
+            onSave={handleStoryUpdate} 
+          />
+        </div>
 
-        {/* 右侧区域：章节管理 */}
-        <div className="md:col-span-2">
+        {/* 右侧区域：章节管理 - 占据更多空间 */}
+        <div className="md:col-span-3">
           <ChaptersList 
             story={story}
             setStory={setStory}
