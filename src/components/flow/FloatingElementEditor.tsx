@@ -99,6 +99,7 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
         onClose={onClose}
         onAddElement={!showSceneProperties && currentElement ? handleAddElement : undefined}
         showElementActions={!showSceneProperties && !!currentElement}
+        elementType={currentElement?.type}
       />
 
       <div className="p-3 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 120px)' }}>

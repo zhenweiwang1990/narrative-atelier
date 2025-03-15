@@ -9,12 +9,15 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { ElementType } from "@/utils/types";
+import { getElementColorClass, getElementTypeLabel } from "./ElementTypeUtils";
+import { cn } from "@/lib/utils";
 
 interface EditorHeaderProps {
   title: string;
   onClose: () => void;
   onAddElement?: (type: ElementType, position: 'before' | 'after') => void;
   showElementActions?: boolean;
+  elementType?: ElementType;
 }
 
 const ElementTypeOptions: ElementType[] = [
@@ -39,11 +42,23 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
   title, 
   onClose, 
   onAddElement,
-  showElementActions = false 
+  showElementActions = false,
+  elementType 
 }) => {
   return (
     <div className="px-3 py-2 border-b bg-muted/50 flex items-center">
-      <PencilLine className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
+      {elementType ? (
+        <div 
+          className={cn(
+            "w-6 h-6 rounded flex items-center justify-center text-white text-xs font-medium mr-1.5",
+            getElementColorClass(elementType)
+          )}
+        >
+          {getElementTypeLabel(elementType)}
+        </div>
+      ) : (
+        <PencilLine className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
+      )}
       <h3 className="text-sm font-medium flex-1">{title}</h3>
       
       {showElementActions && onAddElement && (
