@@ -31,6 +31,7 @@ const CoverPhotoUploader: React.FC<CoverPhotoUploaderProps> = ({
           "relative overflow-hidden transition-all",
           className
         )}
+        style={{ maxHeight: "300px" }}
       >
         <div className="relative">
           <AspectRatio ratio={aspectRatio}>
@@ -39,9 +40,10 @@ const CoverPhotoUploader: React.FC<CoverPhotoUploaderProps> = ({
                 src={coverPhoto} 
                 alt="封面"
                 className="w-full h-full object-cover"
+                style={{ maxHeight: "300px" }}
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-muted/50">
+              <div className="w-full h-full flex items-center justify-center bg-muted/50" style={{ maxHeight: "300px" }}>
                 <ImageIcon className="h-12 w-12 text-muted-foreground" />
               </div>
             )}
