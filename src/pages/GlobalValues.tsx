@@ -1,9 +1,9 @@
-
 import React from "react";
 import GlobalValues from "@/components/GlobalValues";
 import GlobalValuesModificationsTable from "@/components/GlobalValuesModificationsTable";
 import { useStory } from "@/components/Layout";
 import { GlobalValue, Story } from "@/utils/types";
+import { ValueModification } from "@/components/globalValues/types";
 
 const GlobalValuesPage: React.FC = () => {
   const { story, setStory } = useStory();
@@ -16,7 +16,7 @@ const GlobalValuesPage: React.FC = () => {
     });
   };
 
-  const handleModificationUpdate = (modification: any) => {
+  const handleModificationUpdate = (modification: ValueModification) => {
     if (!story) return;
     
     const updatedStory = { ...story };
