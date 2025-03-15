@@ -1,5 +1,5 @@
 
-import { ElementOutcome, ValueChange, QteElement, DialogueTaskElement } from '@/utils/types';
+import { ElementOutcome, ValueChange, QteElement, DialogueTaskElement, GlobalValue } from '@/utils/types';
 
 type ElementWithOutcomes = QteElement | DialogueTaskElement;
 
@@ -51,7 +51,7 @@ export const useElementOutcomes = (
     });
   };
   
-  const addValueChange = (isSuccess: boolean, globalValues: any[]) => {
+  const addValueChange = (isSuccess: boolean, globalValues: GlobalValue[]) => {
     const currentChanges = isSuccess 
       ? safeElement.success.valueChanges || []
       : safeElement.failure.valueChanges || [];
