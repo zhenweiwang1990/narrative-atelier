@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,7 @@ import MobilePreview from "@/components/MobilePreview";
 import FloatingElementEditor from "./FloatingElementEditor";
 import { useStory } from "@/components/Layout";
 import { useElementManagement } from "@/hooks/useElementManagement";
+import { cn } from "@/lib/utils";
 
 interface FloatingMobilePreviewProps {
   selectedSceneId: string | null;
@@ -38,7 +38,6 @@ const FloatingMobilePreview = ({
     null
   );
 
-  // Handle mouse down for drag start
   const handleMouseDown = (e: React.MouseEvent) => {
     if (previewRef.current) {
       setIsDragging(true);
@@ -50,7 +49,6 @@ const FloatingMobilePreview = ({
     }
   };
 
-  // Handle mouse move for dragging
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging) {
@@ -81,7 +79,6 @@ const FloatingMobilePreview = ({
     };
   }, [isDragging, dragOffset]);
 
-  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       setPosition((prev) => ({
@@ -98,14 +95,12 @@ const FloatingMobilePreview = ({
     setCurrentElementId(elementId);
   };
 
-  // Reset element selection when scene changes
   useEffect(() => {
     setCurrentElementId(null);
   }, [selectedSceneId]);
 
   if (!isOpen) return null;
 
-  // Calculate preview height (125% of original)
   const previewHeight = minimized ? "40px" : "625px"; // 500px * 1.25 = 625px
 
   return (
@@ -191,7 +186,6 @@ const FloatingMobilePreview = ({
 
 export default FloatingMobilePreview;
 
-// Helper function for className conditionals
 const cn = (...classes: (string | boolean | undefined)[]) => {
   return classes.filter(Boolean).join(" ");
 };
