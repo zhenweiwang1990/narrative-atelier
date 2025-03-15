@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useStory } from "./Layout";
+import { useStory } from "@/contexts/StoryContext";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import PreviewElement from "./preview/PreviewElement";
 import SceneEnding from "./preview/SceneEnding";

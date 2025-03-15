@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { MapPin } from 'lucide-react';
 import MobilePreview from '@/components/MobilePreview';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import FloatingElementEditor from './FloatingElementEditor';
-import { useStory } from '@/components/Layout';
+import { useStory } from '@/contexts/StoryContext';
 import { useElementManagement } from '@/hooks/useElementManagement';
 
 interface PreviewPanelProps {

@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Character, CharacterGender, CharacterRole } from "@/utils/types";
-import { useStory } from "@/components/Layout";
+import { useStory } from "@/contexts/StoryContext";
 import { generateId } from "@/utils/storage";
 import { toast } from "sonner";
 

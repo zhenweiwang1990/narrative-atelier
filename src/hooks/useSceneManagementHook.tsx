@@ -1,8 +1,7 @@
-
-import { useState } from 'react';
-import { Scene, SceneType, Story } from '@/utils/types';
-import { useStory } from '@/components/Layout';
-import { generateId } from '@/utils/storage';
+import React, { useState, useEffect } from "react";
+import { generateId } from "@/utils/storage";
+import { useStory } from "@/contexts/StoryContext";
+import { Scene, SceneType, Story } from "@/utils/types";
 
 export interface UseSceneManagementHook {
   selectedScene: Scene | undefined;
@@ -10,7 +9,6 @@ export interface UseSceneManagementHook {
   createScene: (type?: SceneType) => void;
   updateScene: (id: string, updates: Partial<Scene>) => void;
   deleteScene: (id: string) => void;
-  // Add missing properties expected by Flow.tsx
   selectedSceneId: string | null;
   setSelectedSceneId: (id: string | null) => void;
   activeTab: string;
@@ -110,7 +108,6 @@ export const useSceneManagementHook = (
     createScene,
     updateScene,
     deleteScene,
-    // Add the additional properties expected by Flow.tsx
     selectedSceneId,
     setSelectedSceneId,
     activeTab,

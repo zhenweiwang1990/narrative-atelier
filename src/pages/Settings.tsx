@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useStory } from "@/components/Layout";
+import { useStory } from "@/contexts/StoryContext";
 
 const generalFormSchema = z.object({
   autosave: z.boolean().default(true),

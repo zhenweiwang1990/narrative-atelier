@@ -1,80 +1,31 @@
 
-import React, { ReactNode } from "react";
+import React from "react";
+import Navbar from "./Navbar";
+import { Toaster } from "./ui/toaster";
+import { SidebarProvider } from "./ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { useStoryManagement } from "@/hooks/useStoryManagement";
-import { StoryContext } from "@/contexts/StoryContext";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
-import FlowLoadingState from "./flow/FlowLoadingState";
+import { Footer } from "./Footer";
 
-interface LayoutProps {
-  children: ReactNode;
-}
-
-const Layout = ({ children }: LayoutProps) => {
-  const {
-    story,
-    setStory,
-    stories,
-    setStories,
-    loading,
-    error,
-    handleSave,
-    handleImport,
-    handleExport,
-    createNewStory,
-    deleteStory,
-  } = useStoryManagement();
-
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background text-foreground">
-        <StoryContext.Provider
-          value={{
-            story,
-            setStory,
-            stories,
-            setStories,
-            handleSave,
-            handleImport,
-            handleExport,
-            createNewStory,
-            deleteStory,
-            loading,
-            error,
-          }}
-        >
-          <AppSidebar />
-          <div className="flex flex-col flex-1 w-full">
-            <main className="flex-1 px-3 py-3 md:px-4 md:py-4 animate-fade-up">
-              {error && (
-                <Alert variant="destructive" className="mb-4">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>错误</AlertTitle>
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-
-              {loading ? (
-                <FlowLoadingState error={error} />
-              ) : (
-                children
-              )}
-            </main>
-            <footer className="py-3 border-t border-border">
-              <div className="px-3 md:px-4">
-                <p className="text-center text-xs text-muted-foreground">
-                  Miss AI 剧情编辑器
-                </p>
-              </div>
-            </footer>
-          </div>
-        </StoryContext.Provider>
+      <div className="min-h-screen flex flex-col">
+        <AppSidebar />
+        <div className="flex-1 flex flex-col">
+          <Navbar 
+            story={null} 
+            onImport={() => {}} 
+            onSave={() => {}} 
+          />
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
+        </div>
+        <Toaster />
       </div>
     </SidebarProvider>
   );
 };
 
-export { StoryContext, useStory } from "@/contexts/StoryContext";
 export default Layout;

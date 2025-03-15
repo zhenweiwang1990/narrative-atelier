@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { useStory } from "@/components/Layout";
+import { useStory } from "@/contexts/StoryContext";
 import { useElementManagement } from "@/hooks/useElementManagement";
 import FloatingEditorWrapper from "./editor/FloatingEditorWrapper";
 import EditorHeader from "./editor/EditorHeader";

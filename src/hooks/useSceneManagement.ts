@@ -1,104 +1,81 @@
-import { useState, useCallback } from 'react';
-import { Scene, SceneType, Story } from '@/utils/types';
-import { useStory } from '@/components/Layout';
-import { generateId } from '@/utils/storage';
+import { useState } from "react";
+import { useStory } from "@/contexts/StoryContext";
+import { Scene, SceneType } from "@/utils/types";
+import { generateId } from "@/utils/storage";
 
-export const useSceneManagement = () => {
-  const { story, setStory } = useStory();
-  const [selectedSceneId, setSelectedSceneId] = useState<string | null>(null);
+export const useSceneManagement = (
+  story: any,
+  setStory: any,
+  nodes: any,
+  setNodes: any,
+  setEdges: any,
+  selectedNode: any,
+  setSelectedNode: any,
+  onSceneSelect: any
+) => {
+  const addScene = (type: SceneType = "normal") => {
+    if (!story || !setStory) return;
 
-  const updateStory = useCallback(
-    (updatedStory: Story) => {
-      if (setStory) {
-        setStory(updatedStory);
-      }
-    },
-    [setStory]
-  );
-
-  const updateScene = useCallback(
-    (sceneId: string, updates: Partial<Scene>) => {
-      if (!story) return;
-
-      const updatedScenes = story.scenes.map((scene) =>
-        scene.id === sceneId ? { ...scene, ...updates } : scene
-      );
-
-      updateStory({ ...story, scenes: updatedScenes });
-    },
-    [story, updateStory]
-  );
-
-  const deleteScene = useCallback(
-    (sceneId: string) => {
-      if (!story) return;
-
-      const updatedScenes = story.scenes.filter((scene) => scene.id !== sceneId);
-
-      // Also remove the scene from any location that references it
-      const updatedLocations = story.locations.map(location => ({
-        ...location,
-        scenes: location.scenes.filter(scene => scene !== sceneId),
-      }));
-
-      updateStory({ ...story, scenes: updatedScenes, locations: updatedLocations });
-      setSelectedSceneId(null);
-    },
-    [story, updateStory, setSelectedSceneId]
-  );
-
-  const createScene = (type: SceneType = 'normal') => {
-    const newId = generateId('scene');
-    return {
-      id: newId,
-      title: '新场景',
-      type,
-      locationId: '',
+    const newScene: Scene = {
+      id: generateId("scene"),
+      title: "新分支",
+      type: type,
+      locationId: story.locations[0]?.id || null,
       elements: [],
-      position: { x: 100, y: 100 },
+      nextSceneId: null,
+      revivalPointId: null,
+      position: { x: 0, y: 0 },
     };
+
+    setStory({
+      ...story,
+      scenes: [...story.scenes, newScene],
+    });
+
+    const newNode = {
+      id: newScene.id,
+      data: {
+        label: newScene.title,
+        sceneType: newScene.type,
+        hasNextScene: !!newScene.nextSceneId,
+      },
+      position: { x: 0, y: 0 },
+      type: "sceneNode",
+    };
+
+    setNodes((prevNodes: any) => [...prevNodes, newNode]);
   };
 
-  const addScene = useCallback(
-    (newScene: Scene) => {
-      if (!story) return;
+  const deleteSelectedScene = () => {
+    if (!story || !setStory || !selectedNode) return;
 
-      const updatedScenes = [...story.scenes, newScene];
-      updateStory({ ...story, scenes: updatedScenes });
-    },
-    [story, updateStory]
-  );
+    const sceneIdToDelete = selectedNode.id;
 
-  const duplicateScene = useCallback(
-    (sceneId: string) => {
-      if (!story) return;
-
-      const sceneToDuplicate = story.scenes.find(scene => scene.id === sceneId);
-
-      if (sceneToDuplicate) {
-        const newScene = {
-          ...sceneToDuplicate,
-          id: generateId('scene'),
-          title: `${sceneToDuplicate.title} (副本)`,
-          position: {
-            x: sceneToDuplicate.position.x + 50,
-            y: sceneToDuplicate.position.y + 50,
-          },
-        };
-
-        addScene(newScene);
+    // 检查是否有其他场景指向要删除的场景
+    const updatedScenes = story.scenes.map((scene: Scene) => {
+      if (scene.nextSceneId === sceneIdToDelete) {
+        return { ...scene, nextSceneId: null };
       }
-    },
-    [story, addScene]
-  );
+      return scene;
+    });
 
-  return {
-    selectedSceneId,
-    setSelectedSceneId,
-    updateScene,
-    deleteScene,
-    addScene,
-    createScene,
-    duplicateScene,
+    setStory({
+      ...story,
+      scenes: updatedScenes.filter((scene: Scene) => scene.id !== sceneIdToDelete),
+    });
+
+    setNodes((prevNodes: any) =>
+      prevNodes.filter((node: any) => node.id !== sceneIdToDelete)
+    );
+    setEdges((prevEdges: any) =>
+      prevEdges.filter(
+        (edge: any) =>
+          edge.source !== sceneIdToDelete && edge.target !== sceneIdToDelete
+      )
+    );
+    setSelectedNode(null);
+    onSceneSelect(null);
   };
+
+  return { addScene, deleteSelectedScene };
 };
