@@ -58,6 +58,7 @@ const StoryDetailsEditForm: React.FC<StoryDetailsEditFormProps> = ({
             coverPhoto={coverPhoto} 
             isEditing={true} 
             onChange={setCoverPhoto} 
+            aspectRatio={9/16}
           />
         </div>
       </div>

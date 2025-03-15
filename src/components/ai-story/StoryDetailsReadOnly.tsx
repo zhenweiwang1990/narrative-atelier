@@ -20,6 +20,7 @@ const StoryDetailsReadOnly: React.FC<StoryDetailsReadOnlyProps> = ({ story }) =>
             coverPhoto={story.coverPhoto} 
             isEditing={false} 
             onChange={() => {}} 
+            aspectRatio={9/16}
           />
         </div>
       </div>
