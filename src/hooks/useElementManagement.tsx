@@ -60,11 +60,12 @@ export const useElementManagement = (
     });
   };
 
-  // Add new element
-  const addElement = (type: ElementType) => {
+  // Add new element with optional specific order
+  const addElement = (type: ElementType, order?: number) => {
     if (!story) return;
     
-    const newElement = createNewElement(type, story, elements.length);
+    const newOrder = order !== undefined ? order : elements.length;
+    const newElement = createNewElement(type, story, newOrder);
     
     const updatedElements = [...elements, newElement];
     setElements(updatedElements as SceneElement[]);

@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -38,6 +37,20 @@ const FloatingMobilePreview = ({
     story, 
     null
   );
+
+  useEffect(() => {
+    const handleSelectElement = (e: CustomEvent) => {
+      if (e.detail && e.detail.elementId) {
+        setCurrentElementId(e.detail.elementId);
+      }
+    };
+
+    window.addEventListener('selectElement', handleSelectElement as EventListener);
+    
+    return () => {
+      window.removeEventListener('selectElement', handleSelectElement as EventListener);
+    };
+  }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (previewRef.current) {
