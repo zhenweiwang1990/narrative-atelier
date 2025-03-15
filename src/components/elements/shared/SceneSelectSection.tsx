@@ -1,196 +1,131 @@
 
-import React from "react";
-import { Label } from "@/components/ui/label";
-import { Scene } from "@/utils/types";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import React from 'react';
+import { Scene } from '@/utils/types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Wand } from 'lucide-react';
 
 interface SceneSelectSectionProps {
   successSceneId: string;
   failureSceneId: string;
   scenes: Scene[];
+  showSingleColumn?: boolean;
   onUpdateSuccessScene: (sceneId: string) => void;
   onUpdateFailureScene: (sceneId: string) => void;
-  showSingleColumn?: boolean;
-  onOpenAiDialog?: (type: 'branch' | 'ending', isSuccess: boolean) => void;
+  onOpenAiDialog: (type: 'branch' | 'ending', isSuccess: boolean) => void;
+  showSuccessAiButtons?: boolean;
+  showFailureAiButtons?: boolean;
 }
 
 const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
   successSceneId,
   failureSceneId,
   scenes,
+  showSingleColumn = false,
   onUpdateSuccessScene,
   onUpdateFailureScene,
-  showSingleColumn = false,
-  onOpenAiDialog
+  onOpenAiDialog,
+  showSuccessAiButtons = true,
+  showFailureAiButtons = true,
 }) => {
-  // If showing a single column, only render the relevant selector
-  if (showSingleColumn) {
-    if (successSceneId !== undefined) {
-      return (
-        <div>
-          <Label className="text-xs">成功场景</Label>
-          <Select value={successSceneId || "none"} onValueChange={(value) => {
-            if (value === "ai-branch") {
-              onOpenAiDialog && onOpenAiDialog('branch', true);
-            } else if (value === "ai-ending") {
-              onOpenAiDialog && onOpenAiDialog('ending', true);
-            } else {
-              onUpdateSuccessScene(value);
-            }
-          }}>
-            <SelectTrigger className="mt-1 h-8 text-xs">
-              <SelectValue placeholder="选择场景" />
-            </SelectTrigger>
-            <SelectContent position="popper" className="z-[100]">
-              <SelectGroup>
-                <SelectItem value="none">不指定</SelectItem>
-                <SelectItem value="ai-branch" className="text-blue-600">AI 写支线</SelectItem>
-                <SelectItem value="ai-ending" className="text-purple-600">AI 写结局</SelectItem>
-                {scenes.map((scene) => (
-                  <SelectItem key={scene.id} value={scene.id}>
-                    {scene.title} (
-                    {scene.type === "start"
-                      ? "开始"
-                      : scene.type === "ending"
-                      ? "结局"
-                      : scene.type === "bad-ending"
-                      ? "异常结局"
-                      : "普通"}
-                    )
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-      );
-    } else if (failureSceneId !== undefined) {
-      return (
-        <div>
-          <Label className="text-xs">失败场景</Label>
-          <Select value={failureSceneId || "none"} onValueChange={(value) => {
-            if (value === "ai-branch") {
-              onOpenAiDialog && onOpenAiDialog('branch', false);
-            } else if (value === "ai-ending") {
-              onOpenAiDialog && onOpenAiDialog('ending', false);
-            } else {
-              onUpdateFailureScene(value);
-            }
-          }}>
-            <SelectTrigger className="mt-1 h-8 text-xs">
-              <SelectValue placeholder="选择场景" />
-            </SelectTrigger>
-            <SelectContent position="popper" className="z-[100]">
-              <SelectGroup>
-                <SelectItem value="none">不指定</SelectItem>
-                <SelectItem value="ai-branch" className="text-blue-600">AI 写支线</SelectItem>
-                <SelectItem value="ai-ending" className="text-purple-600">AI 写结局</SelectItem>
-                {scenes.map((scene) => (
-                  <SelectItem key={scene.id} value={scene.id}>
-                    {scene.title} (
-                    {scene.type === "start"
-                      ? "开始"
-                      : scene.type === "ending"
-                      ? "结局"
-                      : scene.type === "bad-ending"
-                      ? "异常结局"
-                      : "普通"}
-                    )
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-      );
+  const handleSceneChange = (value: string, isSuccess: boolean) => {
+    if (value === "ai-branch") {
+      onOpenAiDialog('branch', isSuccess);
+    } else if (value === "ai-ending") {
+      onOpenAiDialog('ending', isSuccess);
+    } else {
+      if (isSuccess) {
+        onUpdateSuccessScene(value);
+      } else {
+        onUpdateFailureScene(value);
+      }
     }
-    // If both are undefined in single column mode, don't render anything
-    return null;
+  };
+
+  const renderSceneSelect = (isSuccess: boolean) => {
+    const sceneId = isSuccess ? successSceneId : failureSceneId;
+    const onUpdateScene = isSuccess ? onUpdateSuccessScene : onUpdateFailureScene;
+    const showAiButtons = isSuccess ? showSuccessAiButtons : showFailureAiButtons;
+    
+    return (
+      <div className="space-y-1">
+        <div className="flex justify-between">
+          <Label>{isSuccess ? '成功场景' : '失败场景'}</Label>
+        </div>
+        
+        <Select
+          value={sceneId || "none"}
+          onValueChange={(value) => handleSceneChange(value, isSuccess)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder={isSuccess ? "选择成功场景" : "选择失败场景"} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">不指定</SelectItem>
+            <SelectItem value="ai-branch" className="text-blue-600">AI 写支线</SelectItem>
+            <SelectItem value="ai-ending" className="text-purple-600">AI 写结局</SelectItem>
+            {scenes.map((scene) => (
+              <SelectItem key={scene.id} value={scene.id}>
+                {scene.title} (
+                {scene.type === "start"
+                  ? "开始"
+                  : scene.type === "ending"
+                  ? "正常结局"
+                  : scene.type === "bad-ending"
+                  ? "异常结局"
+                  : "普通"}
+                )
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        
+        {showAiButtons && (
+          <div className="flex gap-1 mt-1">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="gap-1 text-xs flex-1 text-blue-600"
+              onClick={() => onOpenAiDialog('branch', isSuccess)}
+            >
+              <Wand className="h-3 w-3" />
+              AI 写支线
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="gap-1 text-xs flex-1 text-purple-600"
+              onClick={() => onOpenAiDialog('ending', isSuccess)}
+            >
+              <Wand className="h-3 w-3" />
+              AI 写结局
+            </Button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  if (showSingleColumn) {
+    if (successSceneId !== '') {
+      return renderSceneSelect(true);
+    }
+    
+    if (failureSceneId !== '') {
+      return renderSceneSelect(false);
+    }
+    
+    // Determine which one to show by default in single column mode
+    return renderSceneSelect(true);
   }
 
-  // Default two-column view
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-      <div>
-        <Label className="text-xs">成功场景</Label>
-        <Select value={successSceneId || "none"} onValueChange={(value) => {
-          if (value === "ai-branch") {
-            onOpenAiDialog && onOpenAiDialog('branch', true);
-          } else if (value === "ai-ending") {
-            onOpenAiDialog && onOpenAiDialog('ending', true);
-          } else {
-            onUpdateSuccessScene(value);
-          }
-        }}>
-          <SelectTrigger className="mt-1 h-8 text-xs">
-            <SelectValue placeholder="选择场景" />
-          </SelectTrigger>
-          <SelectContent position="popper" className="z-[100]">
-            <SelectGroup>
-              <SelectItem value="none">不指定</SelectItem>
-              <SelectItem value="ai-branch" className="text-blue-600">AI 写支线</SelectItem>
-              <SelectItem value="ai-ending" className="text-purple-600">AI 写结局</SelectItem>
-              {scenes.map((scene) => (
-                <SelectItem key={scene.id} value={scene.id}>
-                  {scene.title} (
-                  {scene.type === "start"
-                    ? "开始"
-                    : scene.type === "ending"
-                    ? "结局"
-                    : scene.type === "bad-ending"
-                    ? "异常结局"
-                    : "普通"}
-                  )
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div>
-        <Label className="text-xs">失败场景</Label>
-        <Select value={failureSceneId || "none"} onValueChange={(value) => {
-          if (value === "ai-branch") {
-            onOpenAiDialog && onOpenAiDialog('branch', false);
-          } else if (value === "ai-ending") {
-            onOpenAiDialog && onOpenAiDialog('ending', false);
-          } else {
-            onUpdateFailureScene(value);
-          }
-        }}>
-          <SelectTrigger className="mt-1 h-8 text-xs">
-            <SelectValue placeholder="选择场景" />
-          </SelectTrigger>
-          <SelectContent position="popper" className="z-[100]">
-            <SelectGroup>
-              <SelectItem value="none">不指定</SelectItem>
-              <SelectItem value="ai-branch" className="text-blue-600">AI 写支线</SelectItem>
-              <SelectItem value="ai-ending" className="text-purple-600">AI 写结局</SelectItem>
-              {scenes.map((scene) => (
-                <SelectItem key={scene.id} value={scene.id}>
-                  {scene.title} (
-                  {scene.type === "start"
-                    ? "开始"
-                    : scene.type === "ending"
-                    ? "结局"
-                    : scene.type === "bad-ending"
-                    ? "异常结局"
-                    : "普通"}
-                  )
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
+    <div className="grid grid-cols-2 gap-2">
+      {renderSceneSelect(true)}
+      {renderSceneSelect(false)}
     </div>
   );
 };

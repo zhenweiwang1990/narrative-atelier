@@ -94,6 +94,9 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
           onUpdateFailureScene={() => {}}
           showSingleColumn={true}
           onOpenAiDialog={handleOpenAiDialog}
+          // Only show AI buttons when no scene is selected
+          showSuccessAiButtons={!successSceneId}
+          showFailureAiButtons={false}
         />
         
         <TransitionTextsSection
@@ -138,6 +141,9 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
           onUpdateFailureScene={updateFailureSceneId}
           showSingleColumn={true}
           onOpenAiDialog={handleOpenAiDialog}
+          // Only show AI buttons when no scene is selected
+          showSuccessAiButtons={false}
+          showFailureAiButtons={!failureSceneId}
         />
         
         <TransitionTextsSection
@@ -181,6 +187,9 @@ const OutcomeSection: React.FC<OutcomeSectionProps> = ({
         onUpdateFailureScene={updateFailureSceneId}
         showSingleColumn={showSingleColumn}
         onOpenAiDialog={handleOpenAiDialog}
+        // Only show AI buttons when no scene is selected
+        showSuccessAiButtons={!successSceneId}
+        showFailureAiButtons={!failureSceneId}
       />
       
       <TransitionTextsSection
