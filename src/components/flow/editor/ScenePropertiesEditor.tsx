@@ -67,6 +67,39 @@ const ScenePropertiesEditor: React.FC<ScenePropertiesEditorProps> = ({
     });
   };
 
+  const updateSceneEntrance = (effect: string) => {
+    setStory({
+      ...story,
+      scenes: story.scenes.map((scene) =>
+        scene.id === sceneId
+          ? { ...scene, entranceEffect: effect }
+          : scene
+      ),
+    });
+  };
+
+  const updateSceneEnvironment = (effect: string) => {
+    setStory({
+      ...story,
+      scenes: story.scenes.map((scene) =>
+        scene.id === sceneId
+          ? { ...scene, environmentEffect: effect }
+          : scene
+      ),
+    });
+  };
+
+  const updateEndingName = (name: string) => {
+    setStory({
+      ...story,
+      scenes: story.scenes.map((scene) =>
+        scene.id === sceneId
+          ? { ...scene, endingName: name }
+          : scene
+      ),
+    });
+  };
+
   return (
     <ScenePropertiesPanel
       selectedScene={selectedScene}
@@ -77,6 +110,9 @@ const ScenePropertiesEditor: React.FC<ScenePropertiesEditorProps> = ({
       updateNextScene={updateNextScene}
       updateRevivalPoint={updateRevivalPoint}
       selectedSceneId={sceneId}
+      updateSceneEntrance={updateSceneEntrance}
+      updateSceneEnvironment={updateSceneEnvironment}
+      updateEndingName={updateEndingName}
     />
   );
 };
