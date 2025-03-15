@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useStory } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ import {
 import { Plus, Search, Edit, Trash2, Image } from "lucide-react";
 import { Location } from "@/utils/types";
 import { generateId } from "@/utils/storage";
+import ImageSelectorDialog from "@/components/ai-story/ImageSelectorDialog";
 
 const Locations = () => {
   const { story, setStory } = useStory();
@@ -37,6 +39,10 @@ const Locations = () => {
     background: "",
     scenes: [],
   });
+
+  // 图片选择器状态
+  const [isImageSelectorOpen, setIsImageSelectorOpen] = useState(false);
+  const [imageLocationId, setImageLocationId] = useState<string | null>(null);
 
   // 获取选中的场景用于编辑
   const selectedLocation =
@@ -149,6 +155,33 @@ const Locations = () => {
     });
   };
 
+  // 打开图片选择器
+  const handleOpenImageSelector = (locationId: string) => {
+    setImageLocationId(locationId);
+    setIsImageSelectorOpen(true);
+  };
+
+  // 处理图片选择
+  const handleImageSelected = (imageUrl: string) => {
+    if (imageLocationId && story) {
+      const updatedLocations = story.locations.map((location) => {
+        if (location.id === imageLocationId) {
+          return {
+            ...location,
+            background: imageUrl
+          };
+        }
+        return location;
+      });
+
+      setStory({
+        ...story,
+        locations: updatedLocations,
+      });
+    }
+    setIsImageSelectorOpen(false);
+  };
+
   // 计算使用此场景的分支数量
   const getSceneCount = (locationId: string) => {
     if (!story) return 0;
@@ -189,7 +222,7 @@ const Locations = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[40px]"></TableHead>
+              <TableHead>背景图片</TableHead>
               <TableHead>名称</TableHead>
               <TableHead className="hidden md:table-cell">描述</TableHead>
               <TableHead>场景数量</TableHead>
@@ -210,17 +243,30 @@ const Locations = () => {
               filteredLocations.map((location) => (
                 <TableRow key={location.id}>
                   <TableCell>
-                    {location.background ? (
-                      <img
-                        src={location.background}
-                        alt={location.name}
-                        className="h-8 w-12 rounded object-cover"
-                      />
-                    ) : (
-                      <div className="h-8 w-12 rounded bg-muted flex items-center justify-center">
-                        <Image className="h-4 w-4 text-muted-foreground" />
-                      </div>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {location.background ? (
+                        <div className="relative h-16 w-24 rounded overflow-hidden">
+                          <img
+                            src={location.background}
+                            alt={location.name}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="h-16 w-24 rounded bg-muted flex items-center justify-center">
+                          <Image className="h-6 w-6 text-muted-foreground" />
+                        </div>
+                      )}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleOpenImageSelector(location.id)}
+                        className="h-8"
+                      >
+                        <Image className="h-4 w-4 mr-1" />
+                        设置背景
+                      </Button>
+                    </div>
                   </TableCell>
                   <TableCell className="font-medium">{location.name}</TableCell>
                   <TableCell className="hidden md:table-cell text-muted-foreground text-sm truncate max-w-[300px]">
@@ -270,17 +316,6 @@ const Locations = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="background">背景图片URL</Label>
-              <Input
-                id="background"
-                name="background"
-                value={formData.background}
-                onChange={handleInputChange}
-                placeholder="https://example.com/background.jpg"
-              />
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="description">描述</Label>
               <Textarea
                 id="description"
@@ -300,6 +335,15 @@ const Locations = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* 图片选择器弹窗 */}
+      <ImageSelectorDialog
+        open={isImageSelectorOpen}
+        onOpenChange={setIsImageSelectorOpen}
+        onImageSelected={handleImageSelected}
+        aspectRatio={16/9}
+        title="选择地点背景图片"
+      />
     </div>
   );
 };
