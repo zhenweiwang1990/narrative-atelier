@@ -78,6 +78,8 @@ export const useCharacterForm = () => {
 
     // Process voice value - convert empty to undefined
     const processedVoice = formData.voice === "" ? undefined : formData.voice;
+    const processedProfilePicture = formData.profilePicture === "" ? undefined : formData.profilePicture;
+    const processedFullBody = formData.fullBody === "" ? undefined : formData.fullBody;
 
     if (isEditMode && selectedCharacterId) {
       // 更新现有角色
@@ -86,7 +88,9 @@ export const useCharacterForm = () => {
           return {
             ...character,
             ...formData,
-            voice: processedVoice
+            voice: processedVoice,
+            profilePicture: processedProfilePicture,
+            fullBody: processedFullBody
           } as Character;
         }
         return character;
@@ -104,8 +108,8 @@ export const useCharacterForm = () => {
         gender: (formData.gender as CharacterGender) || "male",
         role: (formData.role as CharacterRole) || "supporting",
         bio: formData.bio || "",
-        profilePicture: formData.profilePicture || undefined,
-        fullBody: formData.fullBody || undefined,
+        profilePicture: processedProfilePicture,
+        fullBody: processedFullBody,
         voice: processedVoice,
       };
 

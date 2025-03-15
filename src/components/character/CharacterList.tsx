@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "../ui/table";
 import { Button } from "../ui/button";
-import { Edit, Trash2, User, Volume2 } from "lucide-react";
+import { Edit, Trash2, User, Volume2, Image, UserRound } from "lucide-react";
 
 // TODO: Replace with actual voice data from API
 const MOCK_VOICES = [
@@ -30,18 +30,31 @@ interface CharacterListProps {
   characters: Character[];
   onEdit: (character: Character) => void;
   onDelete: (characterId: string) => void;
+  onImageChange?: (characterId: string, imageUrl: string, type: 'profilePicture' | 'fullBody') => void;
 }
 
 const CharacterList: React.FC<CharacterListProps> = ({
   characters,
   onEdit,
   onDelete,
+  onImageChange
 }) => {
   // 获取音色名称的辅助函数
   const getVoiceName = (voiceId: string | undefined) => {
     if (!voiceId) return "默认";
     const voice = MOCK_VOICES.find(v => v.id === voiceId);
     return voice ? voice.name : "未知";
+  };
+  
+  // 打开图片选择器
+  const handleOpenImageSelector = (character: Character, type: 'profilePicture' | 'fullBody') => {
+    const event = new CustomEvent('openCharacterImageSelector', {
+      detail: { 
+        characterId: character.id,
+        imageType: type
+      }
+    });
+    window.dispatchEvent(event);
   };
   
   return (
@@ -55,6 +68,8 @@ const CharacterList: React.FC<CharacterListProps> = ({
             <TableHead>性别</TableHead>
             <TableHead>音色</TableHead>
             <TableHead className="hidden md:table-cell">简介</TableHead>
+            <TableHead>形象照</TableHead>
+            <TableHead>立绘</TableHead>
             <TableHead className="text-right">操作</TableHead>
           </TableRow>
         </TableHeader>
@@ -62,7 +77,7 @@ const CharacterList: React.FC<CharacterListProps> = ({
           {characters.length === 0 ? (
             <TableRow>
               <TableCell
-                colSpan={7}
+                colSpan={9}
                 className="text-center h-32 text-muted-foreground"
               >
                 未找到角色。添加您的第一个角色以开始。
@@ -107,8 +122,60 @@ const CharacterList: React.FC<CharacterListProps> = ({
                     <span className="text-muted-foreground">默认</span>
                   )}
                 </TableCell>
-                <TableCell className="hidden md:table-cell text-muted-foreground text-sm truncate max-w-[300px]">
+                <TableCell className="hidden md:table-cell text-muted-foreground text-sm truncate max-w-[200px]">
                   {character.bio}
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    {character.profilePicture ? (
+                      <div className="relative h-12 w-12 rounded overflow-hidden">
+                        <img
+                          src={character.profilePicture}
+                          alt={`${character.name} 形象照`}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-12 w-12 rounded bg-muted flex items-center justify-center">
+                        <UserRound className="h-6 w-6 text-muted-foreground" />
+                      </div>
+                    )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleOpenImageSelector(character, 'profilePicture')}
+                      className="h-8"
+                    >
+                      <Image className="h-4 w-4 mr-1" />
+                      设置
+                    </Button>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    {character.fullBody ? (
+                      <div className="relative h-12 w-12 rounded overflow-hidden">
+                        <img
+                          src={character.fullBody}
+                          alt={`${character.name} 立绘`}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-12 w-12 rounded bg-muted flex items-center justify-center">
+                        <Image className="h-6 w-6 text-muted-foreground" />
+                      </div>
+                    )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleOpenImageSelector(character, 'fullBody')}
+                      className="h-8"
+                    >
+                      <Image className="h-4 w-4 mr-1" />
+                      设置
+                    </Button>
+                  </div>
                 </TableCell>
                 <TableCell className="text-right">
                   <Button
