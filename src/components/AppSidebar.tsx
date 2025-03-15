@@ -6,6 +6,7 @@ import {
   SidebarContent,
   SidebarTrigger,
   useSidebar,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { 
   SidebarStoryManager,
@@ -13,6 +14,7 @@ import {
   SidebarActions,
   SidebarToggle 
 } from "./sidebar";
+import { ThemeToggle } from "./theme/ThemeToggle";
 
 export function AppSidebar() {
   return (
@@ -22,8 +24,12 @@ export function AppSidebar() {
           <SidebarStoryManager />
           <SidebarNavigation />
           <SidebarActions />
+          <div className="mt-auto">
+            <SidebarSeparator />
+            <ThemeToggle />
+          </div>
         </SidebarContent>
-        <div className="p-3 mt-auto border-t">
+        <div className="p-3 border-t">
           <SidebarTrigger>
             <button className="w-full flex items-center justify-between text-xs text-muted-foreground p-2 rounded-md hover:bg-muted">
               <span>切换侧边栏</span>

@@ -17,7 +17,7 @@ const FlowFilterPanel: React.FC<FlowFilterPanelProps> = ({
   return (
     <Panel
       position="top-right"
-      className="bg-white p-2 rounded-md shadow-sm flex items-center gap-2"
+      className="bg-card border border-border p-2 rounded-md shadow-sm flex items-center gap-2"
     >
       <div className="flex items-center mr-1">
         <Filter className="h-4 w-4 mr-1 text-muted-foreground" />
