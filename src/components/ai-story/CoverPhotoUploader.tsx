@@ -1,132 +1,102 @@
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Image, Camera } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Upload, Image as ImageIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface CoverPhotoUploaderProps {
-  coverPhoto: string;
-  isEditing: boolean;
-  onCoverPhotoChange: (url: string) => void;
+  coverPhoto: string | undefined;
+  onChange: (url: string) => void;
+  className?: string;
 }
 
 const CoverPhotoUploader: React.FC<CoverPhotoUploaderProps> = ({
   coverPhoto,
-  isEditing,
-  onCoverPhotoChange,
+  onChange,
+  className
 }) => {
-  const [coverPhotoUrl, setCoverPhotoUrl] = useState("");
-  const [showUrlInput, setShowUrlInput] = useState(false);
-
-  const handleCoverPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [isDragging, setIsDragging] = useState(false);
+  
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+  
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+  
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleImageUpload(e.dataTransfer.files[0]);
+    }
+  };
+  
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        onCoverPhotoChange(reader.result as string);
-        setShowUrlInput(false);
-      };
-      reader.readAsDataURL(file);
+      handleImageUpload(e.target.files[0]);
     }
   };
-
-  const handleCoverPhotoUrlChange = () => {
-    if (coverPhotoUrl) {
-      onCoverPhotoChange(coverPhotoUrl);
-      setCoverPhotoUrl("");
-      setShowUrlInput(false);
-    }
+  
+  const handleImageUpload = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        onChange(reader.result);
+      }
+    };
+    reader.readAsDataURL(file);
   };
-
-  if (isEditing) {
-    return (
-      <div className="flex flex-col items-center justify-center p-4">
-        {coverPhoto ? (
-          <div className="relative w-full mb-3">
+  
+  return (
+    <Card 
+      className={cn(
+        "relative overflow-hidden transition-all",
+        isDragging ? "border-blue-500 ring-2 ring-blue-300" : "",
+        className
+      )}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      <div className="relative">
+        <AspectRatio ratio={2/3}>
+          {coverPhoto ? (
             <img 
               src={coverPhoto} 
-              alt="剧情封面" 
-              className="object-cover w-full h-48 rounded-md"
+              alt="小说封面"
+              className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity">
-              <Button 
-                variant="secondary"
-                onClick={() => document.getElementById('cover-photo-upload')?.click()}
-                className="mr-2"
-              >
-                <Camera className="h-4 w-4 mr-2" />
-                更换
-              </Button>
-              <Button 
-                variant="secondary"
-                onClick={() => setShowUrlInput(!showUrlInput)}
-              >
-                <Image className="h-4 w-4 mr-2" />
-                URL
-              </Button>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-muted/50">
+              <ImageIcon className="h-12 w-12 text-muted-foreground" />
             </div>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center h-48 w-full border-2 border-dashed rounded-md mb-3">
-            <Image className="h-10 w-10 text-muted-foreground mb-2" />
-            <Button 
-              variant="secondary"
-              onClick={() => document.getElementById('cover-photo-upload')?.click()}
-              className="mr-2"
-            >
-              <Camera className="h-4 w-4 mr-2" />
-              上传图片
-            </Button>
-            <Button 
-              variant="secondary"
-              onClick={() => setShowUrlInput(!showUrlInput)}
-            >
-              <Image className="h-4 w-4 mr-2" />
-              输入 URL
-            </Button>
-          </div>
-        )}
-
-        <Input
-          id="cover-photo-upload"
-          type="file"
+          )}
+        </AspectRatio>
+        
+        <input 
+          type="file" 
+          id="cover-photo-input"
           accept="image/*"
-          onChange={handleCoverPhotoChange}
           className="hidden"
+          onChange={handleFileInput}
         />
-
-        {showUrlInput && (
-          <div className="flex w-full mt-2">
-            <Input
-              placeholder="输入图片URL"
-              value={coverPhotoUrl}
-              onChange={(e) => setCoverPhotoUrl(e.target.value)}
-              className="mr-2"
-            />
-            <Button onClick={handleCoverPhotoUrlChange} disabled={!coverPhotoUrl}>
-              确定
-            </Button>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  return (
-    <div className="p-4">
-      {coverPhoto ? (
-        <img 
-          src={coverPhoto} 
-          alt="剧情封面" 
-          className="object-cover w-full h-48 rounded-md"
-        />
-      ) : (
-        <div className="flex flex-col items-center justify-center h-48 border-2 border-dashed rounded-md">
-          <Image className="h-10 w-10 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground mt-2">暂无封面照片</p>
+        
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-black/40 transition-opacity">
+          <Button asChild variant="secondary">
+            <label htmlFor="cover-photo-input" className="cursor-pointer">
+              <Upload className="mr-2 h-4 w-4" />
+              上传封面
+            </label>
+          </Button>
         </div>
-      )}
-    </div>
+      </div>
+    </Card>
   );
 };
 

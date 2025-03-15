@@ -8,6 +8,7 @@ import PreviewElement from "./preview/PreviewElement";
 import SceneEnding from "./preview/SceneEnding";
 import { usePreviewState } from "./preview/usePreviewState";
 import ValuesDisplay from "./preview/ValuesDisplay";
+import { AspectRatio } from "./ui/aspect-ratio";
 
 interface MobilePreviewProps {
   sceneId: string;
@@ -83,10 +84,12 @@ const MobilePreview = ({
 
   return (
     <Card className="MobilePreview-container w-full h-full border overflow-hidden flex flex-col bg-white dark:bg-card">
-      <div
-        className="h-[45%] bg-cover bg-center border-b"
-        style={{ backgroundImage: `url(${locationBackground})` }}
-      />
+      <AspectRatio ratio={9/16} className="w-full">
+        <div
+          className="h-full bg-cover bg-center border-b"
+          style={{ backgroundImage: `url(${locationBackground})` }}
+        />
+      </AspectRatio>
 
       <div className="flex-1 overflow-auto">
         <div>

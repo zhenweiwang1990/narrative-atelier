@@ -34,19 +34,21 @@ const PreviewPanel = ({ selectedSceneId, setSelectedSceneId }: PreviewPanelProps
       <Card className="overflow-hidden" style={{ width: '40%' }}>
         <div className="px-3 py-2 border-b bg-muted/20 flex items-center">
           <MapPin className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
-          <h3 className="text-sm font-medium">Mobile Preview</h3>
+          <h3 className="text-sm font-medium">手机预览</h3>
         </div>
         
-        <div className="h-[calc(100%-35px)]" style={{ height: '625px' }}>
+        <div className="flex justify-center" style={{ height: '625px' }}>
           {selectedSceneId ? (
-            <MobilePreview 
-              sceneId={selectedSceneId} 
-              onSceneChange={setSelectedSceneId}
-              onElementSelect={handleElementSelect}
-            />
+            <div className="h-full" style={{ width: '352px' }}> {/* 9:16 ratio of height */}
+              <MobilePreview 
+                sceneId={selectedSceneId} 
+                onSceneChange={setSelectedSceneId}
+                onElementSelect={handleElementSelect}
+              />
+            </div>
           ) : (
             <div className="h-full flex items-center justify-center p-4 text-center">
-              <p className="text-sm text-muted-foreground">Select a scene to preview.</p>
+              <p className="text-sm text-muted-foreground">选择一个场景来预览</p>
             </div>
           )}
         </div>

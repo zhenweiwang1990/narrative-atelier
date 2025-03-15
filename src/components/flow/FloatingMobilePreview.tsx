@@ -50,10 +50,9 @@ const FloatingMobilePreview = ({
 
   if (!isOpen) return null;
 
-  // Base height is 500px, we increase it by 25% to get 625px
-  const baseHeight = 500;
-  const heightMultiplier = 1.25;
-  const previewHeight = minimized ? "40px" : `${baseHeight * heightMultiplier}px`;
+  // Using aspect ratio of 9:16 for mobile preview
+  const previewHeight = minimized ? "40px" : "625px";
+  const previewWidth = minimized ? "64px" : "352px"; // 9:16 ratio means width should be 9/16 * height
 
   return (
     <>
@@ -61,13 +60,14 @@ const FloatingMobilePreview = ({
         ref={elementRef}
         className={cn(
           "fixed shadow-lg border rounded-md overflow-hidden z-50",
-          minimized ? "w-64 h-10" : "w-72"
+          minimized ? "w-16 h-10" : ""
         )}
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
           height: previewHeight,
-          transition: isDragging ? "none" : "height 0.3s ease",
+          width: previewWidth,
+          transition: isDragging ? "none" : "height 0.3s ease, width 0.3s ease",
         }}
       >
         <FloatingPreviewHeader
