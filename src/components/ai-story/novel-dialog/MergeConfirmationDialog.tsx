@@ -26,14 +26,14 @@ const MergeConfirmationDialog: React.FC<MergeConfirmationDialogProps> = ({
     <AlertDialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>确认合并故事</AlertDialogTitle>
+          <AlertDialogTitle>确认合并到剧情</AlertDialogTitle>
           <AlertDialogDescription>
-            所有章节已成功转换为交互式剧情。是否将转换后的内容合并到当前故事中？
+            新章节将被添加到当前剧情中，或者创建一个新的剧情。此操作不可撤销。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onClose}>取消</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>确认合并</AlertDialogAction>
+          <AlertDialogAction onClick={onConfirm}>确认</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
