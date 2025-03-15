@@ -1,3 +1,4 @@
+
 import React, { useCallback } from 'react';
 import { NodeTypes, Connection, MarkerType } from 'reactflow';
 import 'reactflow/dist/style.css';
@@ -10,6 +11,7 @@ import FlowEmptyState from './FlowEmptyState';
 import FlowLoadingState from './FlowLoadingState';
 import dagre from 'dagre';
 import { SceneType } from '@/utils/types';
+import { useNodeInteractions } from './useNodeInteractions';
 
 // Custom Node Types
 const nodeTypes: NodeTypes = {
@@ -101,7 +103,7 @@ const FlowEditor = ({ onSceneSelect, onPreviewToggle, onAddSceneWithType }: Flow
     onNodesChange,
     onEdgesChange,
     onConnect,
-    onNodeClick,
+    onNodeClick: baseOnNodeClick,
     setNodes,
     setEdges
   } = useFlowTransformers(story.scenes);
@@ -119,6 +121,12 @@ const FlowEditor = ({ onSceneSelect, onPreviewToggle, onAddSceneWithType }: Flow
     setSelectedNode, 
     onSceneSelect
   );
+
+  // Custom node click handler that calls both the base handler and the scene select callback
+  const onNodeClick = useCallback((event, node) => {
+    baseOnNodeClick(event, node);
+    onSceneSelect(node.id);
+  }, [baseOnNodeClick, onSceneSelect]);
 
   // Auto-arrange the nodes
   const handleAutoArrange = useCallback(() => {

@@ -36,6 +36,12 @@ const Flow = () => {
     }
   }, [activeTab, setActiveTab]);
 
+  // Ensure we update the element selection when scene changes
+  React.useEffect(() => {
+    // Reset element selection when changing scenes
+    setSelectedElementId('');
+  }, [selectedSceneId]);
+
   // Handle scene addition with type
   const handleAddSceneWithType = (type?: SceneType) => {
     handleAddScene(type || 'normal');

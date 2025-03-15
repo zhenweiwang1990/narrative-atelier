@@ -68,9 +68,11 @@ export const useNodeInteractions = (
   );
 
   // Handle node selection
-  const onNodeClick = useCallback((_: React.MouseEvent, node: Node<SceneNodeData>) => {
+  const onNodeClick = useCallback((event: React.MouseEvent, node: Node<SceneNodeData>) => {
+    // Update the selected node in the flow state
     setSelectedNode(node);
-    // Call the parent's scene select handler
+    
+    // Call the parent's scene select handler to update the application state
     onSceneSelect(node.id);
   }, [onSceneSelect, setSelectedNode]);
 
