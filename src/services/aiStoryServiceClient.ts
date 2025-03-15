@@ -47,9 +47,8 @@ export const handleAiStoryGeneration = async ({
     // Get the result from the promise
     const result = await toastPromise;
     
-    // Check that result is not null and is an object with a success property before accessing it
+    // Check that result is not null before accessing its properties
     if (result && typeof result === 'object' && 'success' in result) {
-      // Now TypeScript knows result is not null inside this block
       if (result.success && onSuccess) {
         onSuccess();
       }
