@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
-import { useStory } from '@/components/Layout';
+import { useStory } from '@/context/StoryContext';
+import { StoryWrapper } from '@/components/layout/StoryWrapper';
 import FlowEditor from '@/components/flow/FlowEditor';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
@@ -34,53 +35,53 @@ const Flow = () => {
       setActiveTab('properties');
     }
   }, [activeTab, setActiveTab]);
-
-  if (!story) return null;
   
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col space-y-3">
-      {story.scenes.length === 0 ? (
-        <Alert variant="default" className="bg-amber-50 text-amber-600 border-amber-200">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            您还没有任何分支。添加一个分支开始。
-          </AlertDescription>
-        </Alert>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 h-full">
-          <div className="md:col-span-2 border rounded-md overflow-hidden h-full">
-            <FlowEditor 
-              onSceneSelect={handleSceneSelect} 
-              onPreviewToggle={() => setIsPreviewOpen(!isPreviewOpen)}
-            />
+    <StoryWrapper>
+      <div className="h-[calc(100vh-4rem)] flex flex-col space-y-3">
+        {story && story.scenes.length === 0 ? (
+          <Alert variant="default" className="bg-amber-50 text-amber-600 border-amber-200">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              您还没有任何分支。添加一个分支开始。
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 h-full">
+            <div className="md:col-span-2 border rounded-md overflow-hidden h-full">
+              <FlowEditor 
+                onSceneSelect={handleSceneSelect} 
+                onPreviewToggle={() => setIsPreviewOpen(!isPreviewOpen)}
+              />
+            </div>
+            
+            <div className="h-full">
+              <EditorPanel 
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                selectedSceneId={selectedSceneId}
+                selectedScene={selectedScene}
+                story={story}
+                updateSceneTitle={updateSceneTitle}
+                updateSceneType={updateSceneType}
+                updateSceneLocation={updateSceneLocation}
+                updateNextScene={updateNextScene}
+                updateRevivalPoint={updateRevivalPoint}
+                selectedElementId={selectedElementId}
+                setSelectedElementId={setSelectedElementId}
+              />
+            </div>
           </div>
-          
-          <div className="h-full">
-            <EditorPanel 
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              selectedSceneId={selectedSceneId}
-              selectedScene={selectedScene}
-              story={story}
-              updateSceneTitle={updateSceneTitle}
-              updateSceneType={updateSceneType}
-              updateSceneLocation={updateSceneLocation}
-              updateNextScene={updateNextScene}
-              updateRevivalPoint={updateRevivalPoint}
-              selectedElementId={selectedElementId}
-              setSelectedElementId={setSelectedElementId}
-            />
-          </div>
-        </div>
-      )}
-      
-      <FloatingMobilePreview 
-        selectedSceneId={selectedSceneId} 
-        setSelectedSceneId={setSelectedSceneId} 
-        isOpen={isPreviewOpen}
-        onToggle={() => setIsPreviewOpen(!isPreviewOpen)}
-      />
-    </div>
+        )}
+        
+        <FloatingMobilePreview 
+          selectedSceneId={selectedSceneId} 
+          setSelectedSceneId={setSelectedSceneId} 
+          isOpen={isPreviewOpen}
+          onToggle={() => setIsPreviewOpen(!isPreviewOpen)}
+        />
+      </div>
+    </StoryWrapper>
   );
 };
 
