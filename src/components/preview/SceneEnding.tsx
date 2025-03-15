@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
@@ -17,7 +18,7 @@ const SceneEnding: React.FC<SceneEndingProps> = ({
   if (!lastElementShown) {
     return null;
   }
-  剧情;
+  
   if (scene.type === "bad-ending") {
     return (
       <div className="p-4 text-center">
@@ -35,7 +36,7 @@ const SceneEnding: React.FC<SceneEndingProps> = ({
         )}
       </div>
     );
-    剧情;
+    
   } else if (scene.type === "ending") {
     return (
       <div className="p-4 text-center">
