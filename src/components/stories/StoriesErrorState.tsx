@@ -12,6 +12,9 @@ export const StoriesErrorState: React.FC<StoriesErrorStateProps> = ({
   onRetry, 
   errorMessage = "加载剧情失败" 
 }) => {
+  // Log the error to make debugging easier
+  console.error('StoriesErrorState rendered with error:', errorMessage);
+  
   return (
     <div className="flex flex-col items-center justify-center h-[60vh] w-full">
       <AlertTriangle className="h-12 w-12 text-destructive mb-4" />
