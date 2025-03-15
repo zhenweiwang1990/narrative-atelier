@@ -111,9 +111,9 @@ const GlobalValuesModificationsGroupTable: React.FC<GlobalValuesModificationsTab
                   <div className="flex items-center gap-2 mb-2">
                     <Badge variant="outline" className="font-normal">序号 {element.index + 1}</Badge>
                     <div 
-                      className={`w-5 h-5 rounded flex items-center justify-center text-white text-xs font-medium ${getElementColorClass(element.type)}`}
+                      className={`w-5 h-5 rounded flex items-center justify-center text-white text-xs font-medium ${getElementColorClass(element.type as ElementType)}`}
                     >
-                      {getElementTypeLabel(element.type)}
+                      {getElementTypeLabel(element.type as ElementType)}
                     </div>
                     <span className="text-sm font-medium truncate">{element.title}</span>
                   </div>
