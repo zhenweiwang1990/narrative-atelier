@@ -101,6 +101,29 @@ const StoryStats: React.FC<StoryStatsProps> = ({ story }) => {
             </div>
           </div>
         </div>
+        
+        {/* 添加额外的基本信息 */}
+        <div className="mt-4 pt-4 border-t">
+          <h3 className="text-sm font-semibold mb-2">基本信息</h3>
+          <ul className="space-y-1">
+            <li className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">场景数量:</span>
+              <span className="font-medium">{story.scenes.length}</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">角色数量:</span>
+              <span className="font-medium">{story.characters.length}</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">地点数量:</span>
+              <span className="font-medium">{story.locations.length}</span>
+            </li>
+            <li className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">全局变量:</span>
+              <span className="font-medium">{story.globalValues.length}</span>
+            </li>
+          </ul>
+        </div>
       </CardContent>
     </Card>
   );
