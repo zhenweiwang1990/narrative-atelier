@@ -23,7 +23,7 @@ interface FlowTabContentProps {
   updateSceneEntrance?: (effect: string) => void;
   updateSceneEnvironment?: (effect: string) => void;
   updateEndingName?: (name: string) => void;
-  updateBackgroundMusic?: (music: { url: string; name: string; isUploaded: boolean }) => void;
+  updateBackgroundMusic?: (music: { id: string; name: string; url: string }) => void;
 }
 
 const FlowTabContent = ({

@@ -16,7 +16,7 @@ interface SceneMetadataSectionProps {
   updateSceneLocation: (locationId: string) => void;
   updateSceneEntrance?: (effect: string) => void;
   updateSceneEnvironment?: (effect: string) => void;
-  updateBackgroundMusic?: (music: { url: string; name: string; isUploaded: boolean }) => void;
+  updateBackgroundMusic?: (music: { id: string; name: string; url: string }) => void;
 }
 
 const SceneMetadataSection: React.FC<SceneMetadataSectionProps> = ({
