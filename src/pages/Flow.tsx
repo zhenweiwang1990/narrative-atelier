@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useStory } from '@/components/Layout';
 import FlowEditor from '@/components/flow/FlowEditor';
@@ -112,7 +111,7 @@ const Flow = () => {
   if (!story) return null;
   
   return (
-    <div className="h-screen flex flex-col space-y-3">
+    <div className="h-[calc(100vh-4rem)] flex flex-col space-y-3">
       {story.scenes.length === 0 ? (
         <Alert variant="default" className="bg-amber-50 text-amber-600 border-amber-200">
           <AlertCircle className="h-4 w-4" />
