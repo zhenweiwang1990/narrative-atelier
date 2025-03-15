@@ -61,7 +61,7 @@ export const SidebarNavigation = () => {
       <SidebarGroupContent>
         <SidebarMenu>
           {menuItems.map((item) => (
-            <SidebarMenuItem key={item.title}>
+            <SidebarMenuItem key={item.path}>
               <Link
                 to={item.path}
                 className={cn(

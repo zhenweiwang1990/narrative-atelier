@@ -1,6 +1,6 @@
 
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
 import Layout from "./components/Layout";
 import { StoryContext } from "./contexts/StoryContext";
@@ -33,11 +33,6 @@ function App() {
   // Mock authentication status - in a real app, this would check if the user is logged in
   const isAuthenticated = true;
 
-  // If not authenticated, redirect to login page
-  if (!isAuthenticated && window.location.pathname !== '/login') {
-    return <Navigate to="/login" />;
-  }
-
   // If story is loading, show loading state
   if (loading) {
     return (
@@ -49,7 +44,7 @@ function App() {
 
   return (
     <StoryContext.Provider value={storyManagement}>
-      <BrowserRouter>
+      <Router>
         <Layout>
           <Routes>
             {/* Auth routes - accessible without authentication */}
@@ -77,7 +72,8 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
-      </BrowserRouter>
+        <Toaster />
+      </Router>
     </StoryContext.Provider>
   );
 }

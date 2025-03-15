@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import React from "react";
 import { useStory } from "@/contexts/StoryContext";
 import StoryDetails from "@/components/ai-story/StoryDetails";
 import ChaptersList from "@/components/ai-story/ChaptersList";
@@ -7,7 +7,13 @@ import ChaptersList from "@/components/ai-story/ChaptersList";
 const Index = () => {
   const { story, setStory } = useStory();
 
-  if (!story) return null;
+  if (!story) {
+    return (
+      <div className="p-4 text-center">
+        <p>Loading story data...</p>
+      </div>
+    );
+  }
 
   const handleStoryUpdate = (updatedStoryData: Partial<typeof story>) => {
     if (!story || !setStory) return;

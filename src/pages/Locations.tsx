@@ -9,7 +9,7 @@ import LocationDialog from "@/components/location/LocationDialog";
 import ImageSelectorDialog from "@/components/ai-story/ImageSelectorDialog";
 
 const Locations = () => {
-  const { story } = useStory();
+  const { story, setStory } = useStory();
   const [searchQuery, setSearchQuery] = useState("");
   const [isImageSelectorOpen, setIsImageSelectorOpen] = useState(false);
   const [imageLocationId, setImageLocationId] = useState<string | null>(null);
@@ -55,14 +55,23 @@ const Locations = () => {
         return location;
       });
 
-      if (story) {
-        story.locations = updatedLocations;
+      if (story && setStory) {
+        setStory({
+          ...story,
+          locations: updatedLocations
+        });
       }
     }
     setIsImageSelectorOpen(false);
   };
 
-  if (!story) return null;
+  if (!story) {
+    return (
+      <div className="p-4 text-center">
+        <p>Loading location data...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">

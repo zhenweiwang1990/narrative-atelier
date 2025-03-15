@@ -9,7 +9,7 @@ import CharacterDialog from "@/components/character/CharacterDialog";
 import ImageSelectorDialog from "@/components/ai-story/ImageSelectorDialog";
 
 const Characters = () => {
-  const { story } = useStory();
+  const { story, setStory } = useStory();
   const [searchQuery, setSearchQuery] = useState("");
   const [isImageSelectorOpen, setIsImageSelectorOpen] = useState(false);
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
@@ -41,7 +41,7 @@ const Characters = () => {
 
   // 处理图片选择
   const handleImageSelected = (imageUrl: string) => {
-    if (selectedCharacterId && story) {
+    if (selectedCharacterId && story && setStory) {
       handleDirectImageChange(selectedCharacterId, imageUrl, imageType);
     }
     setIsImageSelectorOpen(false);
@@ -49,7 +49,7 @@ const Characters = () => {
 
   // 直接更新角色图片
   const handleDirectImageChange = (characterId: string, imageUrl: string, type: 'profilePicture' | 'fullBody') => {
-    if (!story) return;
+    if (!story || !setStory) return;
     
     const updatedCharacters = story.characters.map((character) => {
       if (character.id === characterId) {
@@ -62,9 +62,10 @@ const Characters = () => {
     });
 
     // 使用 setStory 更新角色
-    if (story) {
-      story.characters = updatedCharacters;
-    }
+    setStory({
+      ...story,
+      characters: updatedCharacters
+    });
   };
 
   // 监听图片选择器事件
@@ -92,7 +93,13 @@ const Characters = () => {
         character.bio.toLowerCase().includes(searchQuery.toLowerCase())
     ) || [];
 
-  if (!story) return null;
+  if (!story) {
+    return (
+      <div className="p-4 text-center">
+        <p>Loading character data...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
