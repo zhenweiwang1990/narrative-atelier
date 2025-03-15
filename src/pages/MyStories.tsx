@@ -1,11 +1,12 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/auth';
 import { EditStoryDialog, EmptyStoryState, StoriesLoadingState, StoriesErrorState, StoryHeader, StoryGrid } from '@/components/stories';
 import { useStoryManagement } from '@/hooks/useStoryManagement';
 
 export default function MyStories() {
   const { user, userStories, refreshStories } = useAuth();
+  const [forceRerender, setForceRerender] = useState(false);
   const {
     isLoading,
     isInitialLoading,
@@ -31,11 +32,31 @@ export default function MyStories() {
     });
   }, [user, userStories, isInitialLoading, loadError]);
   
-  // Directly force a load on component mount
+  // Add safety timeout to recover from indefinite loading state
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (isInitialLoading) {
+        console.log('Safety timeout triggered - forcing rerender');
+        setForceRerender(true);
+      }
+    }, 5000);
+    
+    return () => clearTimeout(timer);
+  }, [isInitialLoading]);
+  
+  // Reset force rerender after it's triggered
+  useEffect(() => {
+    if (forceRerender) {
+      console.log('Handling forced rerender');
+      setForceRerender(false);
+    }
+  }, [forceRerender]);
+  
+  // Directly force a load on component mount or when user changes
   useEffect(() => {
     const initializeStories = async () => {
       console.log('MyStories explicitly loading stories on mount');
-      // Direct call to ensure stories are loaded
+      // Only try to load if we have a user
       if (user) {
         try {
           await refreshStories();
@@ -43,14 +64,16 @@ export default function MyStories() {
         } catch (err) {
           console.error('Error refreshing stories from MyStories:', err);
         }
+      } else {
+        console.log('No user available yet, waiting for auth state');
       }
     };
     
     initializeStories();
-  }, [user]); // Only re-run if user changes
+  }, [user, forceRerender]); // Re-run if user changes or force rerender happens
   
   // Show loading state if we're still in the initial loading
-  if (isInitialLoading) {
+  if (isInitialLoading && !userStories) {
     console.log('Showing loading state in MyStories');
     return <StoriesLoadingState />;
   }
@@ -59,6 +82,11 @@ export default function MyStories() {
   if (loadError) {
     console.log('Showing error state', loadError);
     return <StoriesErrorState onRetry={loadStories} errorMessage={loadError} />;
+  }
+
+  // If user is not logged in, show appropriate message
+  if (!user) {
+    return <StoriesErrorState onRetry={() => window.location.href = '/auth'} errorMessage="请先登录以查看您的剧情" />;
   }
 
   // Show appropriate content based on user and story data
