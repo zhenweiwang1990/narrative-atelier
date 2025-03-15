@@ -1,6 +1,5 @@
-
 import React, { useState } from "react";
-import { useStory } from "@/context/StoryContext";
+import { useStory } from "@/components/Layout";
 import CharacterCard from "@/components/CharacterCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,7 +30,6 @@ import {
 import { Plus, Search, Edit, Trash2, User } from "lucide-react";
 import { Character, CharacterGender, CharacterRole } from "@/utils/types";
 import { generateId } from "@/utils/storage";
-import { StoryWrapper } from "@/components/layout/StoryWrapper";
 
 const Characters = () => {
   const { story, setStory } = useStory();
@@ -157,211 +155,211 @@ const Characters = () => {
     });
   };
 
+  if (!story) return null;
+
   return (
-    <StoryWrapper>
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">角色</h1>
-            <p className="text-sm text-muted-foreground">
-              管理您剧情中的角色及其属性。
-            </p>
-          </div>
-
-          <Button size="sm" onClick={handleOpenCreateDialog}>
-            <Plus className="h-4 w-4 mr-2" /> 添加角色
-          </Button>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">角色</h1>
+          <p className="text-sm text-muted-foreground">
+            管理您剧情中的角色及其属性。
+          </p>
         </div>
 
-        <div className="flex items-center mb-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="搜索角色..."
-              className="pl-9 h-9"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-        </div>
+        <Button size="sm" onClick={handleOpenCreateDialog}>
+          <Plus className="h-4 w-4 mr-2" /> 添加角色
+        </Button>
+      </div>
 
-        <div className="border rounded-md">
-          <Table>
-            <TableHeader>
+      <div className="flex items-center mb-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="搜索角色..."
+            className="pl-9 h-9"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
+
+      <div className="border rounded-md">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[40px]"></TableHead>
+              <TableHead>名称</TableHead>
+              <TableHead>角色</TableHead>
+              <TableHead>性别</TableHead>
+              <TableHead className="hidden md:table-cell">简介</TableHead>
+              <TableHead className="text-right">操作</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredCharacters.length === 0 ? (
               <TableRow>
-                <TableHead className="w-[40px]"></TableHead>
-                <TableHead>名称</TableHead>
-                <TableHead>角色</TableHead>
-                <TableHead>性别</TableHead>
-                <TableHead className="hidden md:table-cell">简介</TableHead>
-                <TableHead className="text-right">操作</TableHead>
+                <TableCell
+                  colSpan={6}
+                  className="text-center h-32 text-muted-foreground"
+                >
+                  未找到角色。添加您的第一个角色以开始。
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredCharacters.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={6}
-                    className="text-center h-32 text-muted-foreground"
-                  >
-                    未找到角色。添加您的第一个角色以开始。
+            ) : (
+              filteredCharacters.map((character) => (
+                <TableRow key={character.id}>
+                  <TableCell>
+                    {character.portrait ? (
+                      <img
+                        src={character.portrait}
+                        alt={character.name}
+                        className="h-8 w-8 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                        <User className="h-4 w-4 text-muted-foreground" />
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    {character.name}
+                  </TableCell>
+                  <TableCell className="capitalize">
+                    {character.role === "protagonist" ? "主角" : "配角"}
+                  </TableCell>
+                  <TableCell className="capitalize">
+                    {character.gender === "male"
+                      ? "男"
+                      : character.gender === "female"
+                      ? "女"
+                      : "其他"}
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell text-muted-foreground text-sm truncate max-w-[300px]">
+                    {character.bio}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleOpenEditDialog(character)}
+                      className="h-8 w-8"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDeleteCharacter(character.id)}
+                      className="h-8 w-8 text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </TableCell>
                 </TableRow>
-              ) : (
-                filteredCharacters.map((character) => (
-                  <TableRow key={character.id}>
-                    <TableCell>
-                      {character.portrait ? (
-                        <img
-                          src={character.portrait}
-                          alt={character.name}
-                          className="h-8 w-8 rounded-full object-cover"
-                        />
-                      ) : (
-                        <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
-                          <User className="h-4 w-4 text-muted-foreground" />
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      {character.name}
-                    </TableCell>
-                    <TableCell className="capitalize">
-                      {character.role === "protagonist" ? "主角" : "配角"}
-                    </TableCell>
-                    <TableCell className="capitalize">
-                      {character.gender === "male"
-                        ? "男"
-                        : character.gender === "female"
-                        ? "女"
-                        : "其他"}
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell text-muted-foreground text-sm truncate max-w-[300px]">
-                      {character.bio}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleOpenEditDialog(character)}
-                        className="h-8 w-8"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDeleteCharacter(character.id)}
-                        className="h-8 w-8 text-destructive"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
 
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[525px]">
-            <DialogHeader>
-              <DialogTitle>{isEditMode ? "编辑角色" : "创建角色"}</DialogTitle>
-            </DialogHeader>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-[525px]">
+          <DialogHeader>
+            <DialogTitle>{isEditMode ? "编辑角色" : "创建角色"}</DialogTitle>
+          </DialogHeader>
 
-            <div className="space-y-4 py-2">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">名称</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="role">角色类型</Label>
-                  <Select
-                    value={formData.role}
-                    onValueChange={(value) => handleSelectChange("role", value)}
-                  >
-                    <SelectTrigger id="role">
-                      <SelectValue placeholder="选择角色类型" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="protagonist">主角</SelectItem>
-                      <SelectItem value="supporting">配角</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="gender">性别</Label>
-                  <Select
-                    value={formData.gender}
-                    onValueChange={(value) => handleSelectChange("gender", value)}
-                  >
-                    <SelectTrigger id="gender">
-                      <SelectValue placeholder="选择性别" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="male">男</SelectItem>
-                      <SelectItem value="female">女</SelectItem>
-                      <SelectItem value="other">其他</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="portrait">头像URL</Label>
-                  <Input
-                    id="portrait"
-                    name="portrait"
-                    value={formData.portrait}
-                    onChange={handleInputChange}
-                    placeholder="https://example.com/portrait.jpg"
-                  />
-                </div>
-              </div>
-
+          <div className="space-y-4 py-2">
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="fullBody">全身像URL</Label>
+                <Label htmlFor="name">名称</Label>
                 <Input
-                  id="fullBody"
-                  name="fullBody"
-                  value={formData.fullBody}
+                  id="name"
+                  name="name"
+                  value={formData.name}
                   onChange={handleInputChange}
-                  placeholder="https://example.com/full-body.jpg"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="bio">人物传记</Label>
-                <Textarea
-                  id="bio"
-                  name="bio"
-                  value={formData.bio}
+                <Label htmlFor="role">角色类型</Label>
+                <Select
+                  value={formData.role}
+                  onValueChange={(value) => handleSelectChange("role", value)}
+                >
+                  <SelectTrigger id="role">
+                    <SelectValue placeholder="选择角色类型" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="protagonist">主角</SelectItem>
+                    <SelectItem value="supporting">配角</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="gender">性别</Label>
+                <Select
+                  value={formData.gender}
+                  onValueChange={(value) => handleSelectChange("gender", value)}
+                >
+                  <SelectTrigger id="gender">
+                    <SelectValue placeholder="选择性别" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="male">男</SelectItem>
+                    <SelectItem value="female">女</SelectItem>
+                    <SelectItem value="other">其他</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="portrait">头像URL</Label>
+                <Input
+                  id="portrait"
+                  name="portrait"
+                  value={formData.portrait}
                   onChange={handleInputChange}
-                  rows={4}
-                  placeholder="角色背景和个性描述..."
+                  placeholder="https://example.com/portrait.jpg"
                 />
               </div>
             </div>
 
-            <DialogFooter>
-              <Button type="submit" onClick={handleSaveCharacter}>
-                {isEditMode ? "更新角色" : "创建角色"}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-    </StoryWrapper>
+            <div className="space-y-2">
+              <Label htmlFor="fullBody">全身像URL</Label>
+              <Input
+                id="fullBody"
+                name="fullBody"
+                value={formData.fullBody}
+                onChange={handleInputChange}
+                placeholder="https://example.com/full-body.jpg"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bio">人物传记</Label>
+              <Textarea
+                id="bio"
+                name="bio"
+                value={formData.bio}
+                onChange={handleInputChange}
+                rows={4}
+                placeholder="角色背景和个性描述..."
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button type="submit" onClick={handleSaveCharacter}>
+              {isEditMode ? "更新角色" : "创建角色"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };
 

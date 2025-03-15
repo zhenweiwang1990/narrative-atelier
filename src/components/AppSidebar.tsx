@@ -1,26 +1,74 @@
+
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import {
+  BookOpen,
+  Users,
+  MapPin,
+  GitBranch,
+  Settings,
+  Menu,
+  Save,
+  Upload,
+  Download,
+  Database,
+  PanelLeft,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarTrigger,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Menu, PanelLeft } from "lucide-react";
-import { useAuth } from "@/hooks/auth";
 import { useStory } from "./Layout";
-import { SidebarNavigation } from "./sidebar/SidebarNavigation";
-import { SidebarActions } from "./sidebar/SidebarActions";
-import { SidebarStories } from "./sidebar/SidebarStories";
-import { SidebarCollapseButton } from "./sidebar/SidebarCollapseButton";
+import { Button } from "./ui/button";
 
 export function AppSidebar() {
   const location = useLocation();
   const { story, handleSave, handleImport } = useStory();
   const { state, toggleSidebar } = useSidebar();
-  const { user, userStories, addNewStory, currentStorySlug } = useAuth();
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const menuItems = [
+    {
+      title: "剧情",
+      icon: BookOpen,
+      path: "/",
+    },
+    {
+      title: "角色",
+      icon: Users,
+      path: "/characters",
+    },
+    {
+      title: "地点",
+      icon: MapPin,
+      path: "/locations",
+    },
+    {
+      title: "全局变量",
+      icon: Database,
+      path: "/global-values",
+    },
+    {
+      title: "流程",
+      icon: GitBranch,
+      path: "/flow",
+    },
+    {
+      title: "设置",
+      icon: Settings,
+      path: "/settings",
+    },
+  ];
 
   const handleExport = () => {
     if (!story) return;
@@ -32,7 +80,7 @@ export function AppSidebar() {
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${story.title || "Miss AI 剧情编辑器"}.json`;
+    a.download = `${story.title || "narrative-atelier"}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -49,27 +97,79 @@ export function AppSidebar() {
     <>
       <Sidebar>
         <SidebarContent>
-          {user && (
-            <SidebarStories
-              userStories={userStories}
-              currentStorySlug={currentStorySlug}
-              onCreateStory={addNewStory}
-            />
-          )}
+          <SidebarGroup>
+            <SidebarGroupLabel>导航</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {menuItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <Link
+                      to={item.path}
+                      className={cn(
+                        "flex items-center gap-3 text-sm py-2",
+                        location.pathname === item.path
+                          ? "text-primary font-medium"
+                          : "text-muted-foreground"
+                      )}
+                    >
+                      <SidebarMenuButton className="w-full justify-start">
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
 
-          <SidebarNavigation
-            currentStorySlug={currentStorySlug}
-            currentPath={location.pathname}
-          />
-
-          <SidebarActions
-            onSave={handleSave}
-            onImport={triggerImport}
-            onExport={handleExport}
-            fileInputRef={fileInputRef}
-            handleImport={handleImport}
-            user={user}
-          />
+          <SidebarGroup>
+            <SidebarGroupLabel>操作</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <div className="w-full">
+                    <SidebarMenuButton
+                      onClick={handleSave}
+                      className="w-full justify-start"
+                    >
+                      <Save className="h-4 w-4" />
+                      <span>保存</span>
+                    </SidebarMenuButton>
+                  </div>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <div className="w-full">
+                    <SidebarMenuButton
+                      onClick={triggerImport}
+                      className="w-full justify-start"
+                    >
+                      <Upload className="h-4 w-4" />
+                      <span>导入</span>
+                    </SidebarMenuButton>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      accept=".json"
+                      className="hidden"
+                      onChange={handleImport}
+                    />
+                  </div>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <div className="w-full">
+                    <SidebarMenuButton
+                      onClick={handleExport}
+                      className="w-full justify-start"
+                    >
+                      <Download className="h-4 w-4" />
+                      <span>导出</span>
+                    </SidebarMenuButton>
+                  </div>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
         </SidebarContent>
         <div className="p-3 mt-auto border-t">
           <SidebarTrigger>
@@ -80,11 +180,18 @@ export function AppSidebar() {
           </SidebarTrigger>
         </div>
       </Sidebar>
-
-      <SidebarCollapseButton
-        sidebarState={state}
-        toggleSidebar={toggleSidebar}
-      />
+      
+      {/* 添加侧边栏折叠时的悬浮按钮 */}
+      {state === "collapsed" && (
+        <Button
+          variant="outline"
+          size="icon"
+          className="fixed top-4 left-4 z-50 bg-background shadow-md"
+          onClick={toggleSidebar}
+        >
+          <PanelLeft className="h-4 w-4" />
+        </Button>
+      )}
     </>
   );
 }

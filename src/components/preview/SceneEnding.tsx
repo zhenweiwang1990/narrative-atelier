@@ -10,11 +10,7 @@ interface SceneEndingProps {
   lastElementShown: boolean;
 }
 
-const SceneEnding: React.FC<SceneEndingProps> = ({
-  scene,
-  handleRevival,
-  lastElementShown,
-}) => {
+const SceneEnding: React.FC<SceneEndingProps> = ({ scene, handleRevival, lastElementShown }) => {
   if (!lastElementShown) {
     return null;
   }
@@ -36,7 +32,6 @@ const SceneEnding: React.FC<SceneEndingProps> = ({
         )}
       </div>
     );
-    
   } else if (scene.type === "ending") {
     return (
       <div className="p-4 text-center">

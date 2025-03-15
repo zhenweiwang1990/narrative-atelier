@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Accordion } from "@/components/ui/accordion";
 import { useStory } from "./Layout";
@@ -51,7 +50,7 @@ const ElementEditor = ({
       onSelectElement("");
     }
   };
-  
+
   if (!story) return null;
 
   // 从剧情中获取全局变量

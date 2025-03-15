@@ -1,5 +1,5 @@
 
-import { useCallback, useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Node, Edge, useNodesState, useEdgesState } from 'reactflow';
 import { Story } from '@/utils/types';
 import { scenesToNodes, createEdgesFromStory } from './transformUtils';
@@ -15,26 +15,12 @@ export const useFlowTransformers = (
   const [nodes, setNodes, onNodesChange] = useNodesState<SceneNodeData>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState<Node<SceneNodeData> | null>(null);
-  
-  // Track when the story was last processed to prevent multiple processing
-  const processedStoryRef = useRef<string | null>(null);
-  
+
   // Convert scenes to nodes and connections
   useEffect(() => {
     if (!story) return;
-    
-    // Use stringify for quick comparison
-    const storyString = JSON.stringify(story.scenes);
-    
-    // Skip if we've already processed this exact story state
-    if (processedStoryRef.current === storyString) {
-      return;
-    }
-    
+
     try {
-      // Update our reference to the processed story
-      processedStoryRef.current = storyString;
-      
       // Create nodes from scenes
       const flowNodes = scenesToNodes(story);
       
