@@ -4,40 +4,15 @@ import {
   Dialog, 
   DialogContent, 
   DialogHeader, 
-  DialogTitle,
-  DialogFooter
+  DialogTitle
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Check, Image as ImageIcon, RefreshCcw, Upload, Wand2, ChevronLeft, ChevronRight, X, Expand } from "lucide-react";
-
-interface ImageStyle {
-  id: string;
-  name: string;
-  previewUrl: string;
-}
-
-const IMAGE_STYLES: ImageStyle[] = [
-  { id: "portrait", name: "人像摄影", previewUrl: "https://via.placeholder.com/100x100?text=人像摄影" },
-  { id: "movie", name: "电影写真", previewUrl: "https://via.placeholder.com/100x100?text=电影写真" },
-  { id: "chinese", name: "中国风", previewUrl: "https://via.placeholder.com/100x100?text=中国风" },
-  { id: "anime", name: "动漫", previewUrl: "https://via.placeholder.com/100x100?text=动漫" },
-  { id: "3d", name: "3D", previewUrl: "https://via.placeholder.com/100x100?text=3D" },
-  { id: "cyberpunk", name: "赛博朋克", previewUrl: "https://via.placeholder.com/100x100?text=赛博朋克" },
-  { id: "cg", name: "CG动画", previewUrl: "https://via.placeholder.com/100x100?text=CG动画" },
-  { id: "ink", name: "水墨画", previewUrl: "https://via.placeholder.com/100x100?text=水墨画" },
-  { id: "cartoon", name: "卡通", previewUrl: "https://via.placeholder.com/100x100?text=卡通" },
-  { id: "landscape", name: "风景", previewUrl: "https://via.placeholder.com/100x100?text=风景" },
-  { id: "hk-anime", name: "港风动漫", previewUrl: "https://via.placeholder.com/100x100?text=港风动漫" },
-  { id: "pixel", name: "像素风", previewUrl: "https://via.placeholder.com/100x100?text=像素风" },
-  { id: "figure", name: "手办", previewUrl: "https://via.placeholder.com/100x100?text=手办" },
-  { id: "anime2", name: "二次元", previewUrl: "https://via.placeholder.com/100x100?text=二次元" },
-];
+import UrlTab from "./image-selector/UrlTab";
+import UploadTab from "./image-selector/UploadTab";
+import AiTab from "./image-selector/AiTab";
+import AiResultsView from "./image-selector/AiResultsView";
+import LightboxDialog from "./image-selector/LightboxDialog";
+import { IMAGE_STYLES } from "./image-selector/constants";
 
 interface ImageSelectorDialogProps {
   open: boolean;
@@ -172,63 +147,15 @@ const ImageSelectorDialog: React.FC<ImageSelectorDialogProps> = ({
           </DialogHeader>
           
           {activeTab === "ai" && showAiResults ? (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={handleRegenerateImages}
-                >
-                  <ChevronLeft className="h-4 w-4 mr-2" />
-                  返回修改
-                </Button>
-                <h3 className="text-center font-medium">选择您喜欢的图片</h3>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2 max-h-[400px] overflow-y-auto">
-                {generatedImages.map((imageUrl, index) => (
-                  <div 
-                    key={index}
-                    className={`relative cursor-pointer rounded-md overflow-hidden transition-all ${
-                      selectedGeneratedImage === imageUrl ? 'ring-2 ring-primary' : ''
-                    }`}
-                  >
-                    <AspectRatio ratio={aspectRatio}>
-                      <img 
-                        src={imageUrl} 
-                        alt={`生成图${index + 1}`} 
-                        className="w-full h-full object-cover"
-                        onClick={() => handleSelectGeneratedImage(imageUrl)}
-                      />
-                    </AspectRatio>
-                    
-                    <Button
-                      variant="secondary"
-                      size="icon"
-                      className="absolute top-1 right-1 h-6 w-6 bg-black/50 hover:bg-black/70"
-                      onClick={() => handleOpenLightbox(imageUrl)}
-                    >
-                      <Expand className="h-3 w-3 text-white" />
-                    </Button>
-                    
-                    {selectedGeneratedImage === imageUrl && (
-                      <div className="absolute top-1 left-1 bg-primary rounded-full p-0.5">
-                        <Check className="h-4 w-4 text-white" />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-              
-              <DialogFooter>
-                <Button 
-                  onClick={handleConfirmGeneratedImage}
-                  disabled={!selectedGeneratedImage}
-                >
-                  使用选中图片
-                </Button>
-              </DialogFooter>
-            </div>
+            <AiResultsView
+              generatedImages={generatedImages}
+              selectedGeneratedImage={selectedGeneratedImage}
+              onSelectImage={handleSelectGeneratedImage}
+              onOpenLightbox={handleOpenLightbox}
+              onRegenerateImages={handleRegenerateImages}
+              onConfirmImage={handleConfirmGeneratedImage}
+              aspectRatio={aspectRatio}
+            />
           ) : (
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid grid-cols-3 mb-4">
@@ -237,172 +164,44 @@ const ImageSelectorDialog: React.FC<ImageSelectorDialogProps> = ({
                 <TabsTrigger value="ai">AI生成</TabsTrigger>
               </TabsList>
               
-              {/* URL Tab */}
-              <TabsContent value="url" className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="image-url">图片URL</Label>
-                  <Input 
-                    id="image-url" 
-                    placeholder="https://example.com/image.jpg" 
-                    value={urlInput}
-                    onChange={(e) => setUrlInput(e.target.value)}
-                  />
-                </div>
-                
-                {urlInput && (
-                  <div className="border rounded-md overflow-hidden">
-                    <AspectRatio ratio={aspectRatio}>
-                      <img 
-                        src={urlInput} 
-                        alt="预览" 
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = "https://via.placeholder.com/400x600?text=加载失败";
-                        }}
-                      />
-                    </AspectRatio>
-                  </div>
-                )}
-                
-                <DialogFooter>
-                  <Button onClick={handleUrlConfirm} disabled={!urlInput.trim()}>确认</Button>
-                </DialogFooter>
+              <TabsContent value="url">
+                <UrlTab
+                  urlInput={urlInput}
+                  setUrlInput={setUrlInput}
+                  handleUrlConfirm={handleUrlConfirm}
+                  aspectRatio={aspectRatio}
+                />
               </TabsContent>
               
-              {/* Upload Tab */}
-              <TabsContent value="upload" className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="image-upload">上传图片</Label>
-                  <div className="grid w-full items-center gap-1.5">
-                    <label 
-                      htmlFor="image-upload" 
-                      className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-md cursor-pointer bg-muted/50 hover:bg-muted/80 transition-colors"
-                    >
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        <Upload className="w-8 h-8 text-muted-foreground mb-2" />
-                        <p className="mb-2 text-sm text-muted-foreground">
-                          <span className="font-semibold">点击上传</span> 或拖放图片
-                        </p>
-                      </div>
-                      <input 
-                        id="image-upload" 
-                        type="file" 
-                        accept="image/*" 
-                        className="hidden" 
-                        onChange={handleFileChange}
-                      />
-                    </label>
-                  </div>
-                </div>
-                
-                {filePreview && (
-                  <div className="border rounded-md overflow-hidden">
-                    <AspectRatio ratio={aspectRatio}>
-                      <img 
-                        src={filePreview} 
-                        alt="预览" 
-                        className="w-full h-full object-cover"
-                      />
-                    </AspectRatio>
-                  </div>
-                )}
-                
-                <DialogFooter>
-                  <Button onClick={handleFileUpload} disabled={!filePreview}>上传</Button>
-                </DialogFooter>
+              <TabsContent value="upload">
+                <UploadTab
+                  filePreview={filePreview}
+                  handleFileChange={handleFileChange}
+                  handleFileUpload={handleFileUpload}
+                  aspectRatio={aspectRatio}
+                />
               </TabsContent>
               
-              {/* AI Generation Tab */}
-              <TabsContent value="ai" className="space-y-4">
-                {/* Style Selection */}
-                <div className="space-y-2">
-                  <Label>选择风格</Label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {IMAGE_STYLES.map((style) => (
-                      <div 
-                        key={style.id}
-                        className={`relative cursor-pointer rounded-md overflow-hidden transition-all ${
-                          selectedStyle === style.id ? 'ring-2 ring-primary' : ''
-                        }`}
-                        onClick={() => setSelectedStyle(style.id)}
-                      >
-                        <AspectRatio ratio={1}>
-                          <img 
-                            src={style.previewUrl} 
-                            alt={style.name} 
-                            className="w-full h-full object-cover"
-                          />
-                        </AspectRatio>
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity">
-                          <span className="text-white font-medium">{style.name}</span>
-                        </div>
-                        {selectedStyle === style.id && (
-                          <div className="absolute top-1 right-1 bg-primary rounded-full p-0.5">
-                            <Check className="h-4 w-4 text-white" />
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Prompt Input */}
-                <div className="space-y-2">
-                  <Label htmlFor="ai-prompt">描述你想要的图片</Label>
-                  <Input 
-                    id="ai-prompt" 
-                    placeholder="例如：一个身穿红色长袍的女巫，站在神秘的魔法森林中" 
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                  />
-                </div>
-                
-                {/* Generate Button */}
-                <Button 
-                  onClick={handleGenerateImages} 
-                  disabled={!prompt || !selectedStyle || isGenerating}
-                  className="w-full"
-                >
-                  {isGenerating ? (
-                    <>
-                      <RefreshCcw className="h-4 w-4 mr-2 animate-spin" />
-                      生成中...
-                    </>
-                  ) : (
-                    <>
-                      <Wand2 className="h-4 w-4 mr-2" />
-                      生成图片
-                    </>
-                  )}
-                </Button>
+              <TabsContent value="ai">
+                <AiTab
+                  prompt={prompt}
+                  setPrompt={setPrompt}
+                  selectedStyle={selectedStyle}
+                  setSelectedStyle={setSelectedStyle}
+                  imageStyles={IMAGE_STYLES}
+                  isGenerating={isGenerating}
+                  handleGenerateImages={handleGenerateImages}
+                />
               </TabsContent>
             </Tabs>
           )}
         </DialogContent>
       </Dialog>
 
-      {/* Lightbox Modal */}
-      {lightboxImage && (
-        <Dialog open={!!lightboxImage} onOpenChange={() => setLightboxImage(null)}>
-          <DialogContent className="max-w-3xl p-0 overflow-hidden bg-black/90">
-            <div className="relative">
-              <img 
-                src={lightboxImage} 
-                alt="放大预览" 
-                className="w-full h-auto"
-              />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white"
-                onClick={handleCloseLightbox}
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
+      <LightboxDialog
+        imageUrl={lightboxImage}
+        onClose={handleCloseLightbox}
+      />
     </>
   );
 };

@@ -1,89 +1,84 @@
 
-import React from "react";
-import { Button } from "@/components/ui/button";
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { DialogueTaskElement, Character, ValueChange } from "@/utils/types";
-import { MessageSquare } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { DialogueTaskElement } from '@/utils/types';
+import { useStory } from '@/components/Layout';
+import { User } from 'lucide-react';
 
 interface DialogueTaskPreviewProps {
   element: DialogueTaskElement;
-  getCharacter: (characterId: string) => Character | undefined;
-  handleChoiceSelect: (nextSceneId: string, valueChanges?: ValueChange[]) => void;
+  onSuccess: () => void;
+  onFailure: () => void;
 }
 
 const DialogueTaskPreview: React.FC<DialogueTaskPreviewProps> = ({ 
   element, 
-  getCharacter, 
-  handleChoiceSelect 
+  onSuccess,
+  onFailure
 }) => {
-  const targetCharacter = getCharacter(element.targetCharacterId);
+  const [userInput, setUserInput] = useState('');
+  const { story } = useStory();
+  
+  const targetCharacter = story?.characters.find(c => c.id === element.targetCharacterId);
+  if (!targetCharacter) return null;
+  
+  // Check for profile picture - update from portrait to profilePicture
+  const hasProfileImage = !!targetCharacter.profilePicture;
+  const profileImageUrl = targetCharacter.profilePicture || "https://via.placeholder.com/200?text=No+Image";
+  
+  // This is a mock implementation - in a real app, you would have more complex dialogue matching
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Mock success criteria (any input of 5+ characters)
+    if (userInput.trim().length >= 5) {
+      onSuccess();
+    } else {
+      onFailure();
+    }
+  };
   
   return (
-    <div className="p-4 bg-indigo-50 dark:bg-indigo-950/40 rounded-md border border-indigo-200 dark:border-indigo-800 my-2 animate-fade-in">
-      <div className="flex items-center mb-2">
-        <MessageSquare className="h-4 w-4 text-indigo-600 mr-2" />
-        <p className="text-xs font-medium text-indigo-600 dark:text-indigo-400">对话任务</p>
-      </div>
-      <p className="text-sm mb-1 bg-white dark:bg-indigo-950/60 p-2 rounded-md border border-indigo-100 dark:border-indigo-900">
-        <span className="font-semibold text-indigo-700 dark:text-indigo-300">目标:</span> {element.goal}
-      </p>
-
-      <div className="flex items-center my-2 bg-indigo-100/50 dark:bg-indigo-900/30 p-2 rounded-md">
-        <Avatar className="h-8 w-8 mr-2 border border-indigo-200 dark:border-indigo-700">
-          {targetCharacter?.portrait ? (
-            <AvatarImage
-              src={targetCharacter.portrait}
-              alt={targetCharacter.name}
+    <Card className="animate-in fade-in-0 duration-300">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Avatar className="h-8 w-8 border">
+            {hasProfileImage ? (
+              <AvatarImage src={profileImageUrl} alt={targetCharacter.name} />
+            ) : (
+              <AvatarFallback>
+                <User className="h-4 w-4" />
+              </AvatarFallback>
+            )}
+          </Avatar>
+          {targetCharacter.name}
+        </CardTitle>
+        <CardDescription>{element.openingLine || '...'}</CardDescription>
+      </CardHeader>
+      
+      <CardContent>
+        <div className="text-sm mb-4">{element.goal}</div>
+        
+        <form onSubmit={handleSubmit}>
+          <div className="flex gap-2">
+            <Input 
+              placeholder="输入你的对话..."
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              className="flex-1"
             />
-          ) : (
-            <AvatarFallback className="bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
-              {targetCharacter?.name?.charAt(0) || "?"}
-            </AvatarFallback>
-          )}
-        </Avatar>
-        <p className="text-xs text-muted-foreground">
-          与 <span className="font-medium text-foreground">{targetCharacter?.name || "Unknown Character"}</span> 交谈
-        </p>
-      </div>
-
-      {element.openingLine && (
-        <div className="mb-3 p-2 bg-white dark:bg-indigo-950/50 rounded-md border border-indigo-100 dark:border-indigo-900">
-          <p className="text-xs font-medium text-indigo-700 dark:text-indigo-300">
-            {targetCharacter?.name || "Character"}:
-          </p>
-          <p className="text-sm">{element.openingLine}</p>
-        </div>
-      )}
-
-      <div className="flex space-x-2 mt-4">
-        <Button
-          variant="default"
-          size="sm"
-          className="bg-green-600 hover:bg-green-700 text-white flex-1"
-          onClick={() =>
-            handleChoiceSelect(
-              element.success.sceneId,
-              element.success.valueChanges
-            )
-          }
-        >
-          Success
-        </Button>
-        <Button
-          variant="default"
-          size="sm"
-          className="bg-red-600 hover:bg-red-700 text-white flex-1"
-          onClick={() =>
-            handleChoiceSelect(
-              element.failure.sceneId,
-              element.failure.valueChanges
-            )
-          }
-        >
-          Failure
-        </Button>
-      </div>
-    </div>
+            <Button type="submit">发送</Button>
+          </div>
+        </form>
+      </CardContent>
+      
+      <CardFooter className="text-xs text-muted-foreground">
+        提示：尝试回答NPC的问题或满足他们的请求
+      </CardFooter>
+    </Card>
   );
 };
 

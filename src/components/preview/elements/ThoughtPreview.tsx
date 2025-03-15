@@ -1,41 +1,45 @@
 
-import React from "react";
+import React from 'react';
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { ThoughtElement, Character } from "@/utils/types";
-import { Lightbulb } from "lucide-react";
+import { ThoughtElement } from '@/utils/types';
+import { useStory } from '@/components/Layout';
+import { User } from 'lucide-react';
 
 interface ThoughtPreviewProps {
   element: ThoughtElement;
-  getCharacter: (characterId: string) => Character | undefined;
+  onNext?: () => void;
 }
 
-const ThoughtPreview: React.FC<ThoughtPreviewProps> = ({ element, getCharacter }) => {
-  const thinker = getCharacter(element.characterId);
+const ThoughtPreview: React.FC<ThoughtPreviewProps> = ({ element, onNext }) => {
+  const { story } = useStory();
+  const character = story?.characters.find(c => c.id === element.characterId);
+  
+  if (!character) return null;
+  
+  // Check for profile picture - update from portrait to profilePicture
+  const hasProfileImage = !!character.profilePicture;
+  const profileImageUrl = character.profilePicture || "https://via.placeholder.com/200?text=No+Image";
   
   return (
-    <div className="p-4 bg-purple-50 dark:bg-purple-950/40 rounded-md border border-purple-200 dark:border-purple-800 my-2 animate-fade-in">
-      <div className="flex items-center mb-2">
-        <Lightbulb className="h-4 w-4 text-purple-600 mr-2" />
-        <p className="text-xs font-medium text-purple-600 dark:text-purple-400">思考</p>
-      </div>
-      <div className="flex items-center mb-2">
-        <Avatar className="h-8 w-8 mr-2 border border-purple-200 dark:border-purple-700">
-          {thinker?.portrait ? (
-            <AvatarImage src={thinker.portrait} alt={thinker.name} />
+    <Card className="animate-in fade-in-0 duration-300 cursor-pointer bg-muted/50 border-dashed" onClick={onNext}>
+      <CardContent className="pt-6 pb-4 flex items-start gap-3">
+        <Avatar className="h-10 w-10 border opacity-70">
+          {hasProfileImage ? (
+            <AvatarImage src={profileImageUrl} alt={character.name} />
           ) : (
-            <AvatarFallback className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
-              {thinker?.name?.charAt(0) || "?"}
+            <AvatarFallback>
+              <User className="h-5 w-5" />
             </AvatarFallback>
           )}
         </Avatar>
-        <p className="text-xs font-bold text-purple-600 dark:text-purple-400">
-          {thinker?.name || "Unknown"} 的想法
-        </p>
-      </div>
-      <p className="text-sm italic text-purple-700 dark:text-purple-300 bg-white dark:bg-purple-950/60 p-2 rounded-md border border-purple-100 dark:border-purple-900">
-        "{element.text}"
-      </p>
-    </div>
+        
+        <div className="flex-1 space-y-1.5">
+          <div className="text-sm font-medium text-muted-foreground">{character.name}的想法</div>
+          <div className="text-sm italic">{element.text}</div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
