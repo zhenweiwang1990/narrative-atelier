@@ -29,23 +29,43 @@ const ActionQteFields: React.FC<ActionQteFieldsProps> = ({
     if (!keySequence) return;
 
     const timer = setTimeout(() => {
-      const minLength = isDoubleChar ? 2 : 3;
-      const maxLength = isDoubleChar ? 3 : 6;
-      
-      if (keySequence.length > 0 && (keySequence.length < minLength || keySequence.length > maxLength)) {
-        setIsValidSequence(false);
-        setValidationMessage(
-          keySequence.length < minLength 
-            ? `按键序列至少需要${minLength}个字符` 
-            : `按键序列最多${maxLength}个字符`
-        );
-      } else {
-        setIsValidSequence(true);
-        setValidationMessage('');
+      if (isDoubleChar) {
+        // Count the number of key groups (separated by spaces) for double character mode
+        const keyGroups = keySequence.split(' ').filter(key => key.trim() !== '');
         
-        // Only update the element when validation passes
-        if (keySequence !== element.keySequence) {
-          onUpdate(element.id, { keySequence });
+        if (keyGroups.length < 2 || keyGroups.length > 6) {
+          setIsValidSequence(false);
+          setValidationMessage(
+            keyGroups.length < 2 
+              ? '按键序列至少需要2个按键组合' 
+              : '按键序列最多6个按键组合'
+          );
+        } else {
+          setIsValidSequence(true);
+          setValidationMessage('');
+          
+          // Only update the element when validation passes
+          if (keySequence !== element.keySequence) {
+            onUpdate(element.id, { keySequence });
+          }
+        }
+      } else {
+        // For single character mode, validate character count (3-6)
+        if (keySequence.length < 3 || keySequence.length > 6) {
+          setIsValidSequence(false);
+          setValidationMessage(
+            keySequence.length < 3 
+              ? '按键序列至少需要3个字符' 
+              : '按键序列最多6个字符'
+          );
+        } else {
+          setIsValidSequence(true);
+          setValidationMessage('');
+          
+          // Only update the element when validation passes
+          if (keySequence !== element.keySequence) {
+            onUpdate(element.id, { keySequence });
+          }
         }
       }
     }, 3000); // 3 second debounce
@@ -95,7 +115,7 @@ const ActionQteFields: React.FC<ActionQteFieldsProps> = ({
       <div>
         <Label className="text-xs">
           {isDoubleChar 
-            ? '按键序列（2-3个双字符按键）' 
+            ? '按键序列（2-6个按键组合）' 
             : '按键序列（3-6个单字符按键）'}
         </Label>
         <div className="relative">
