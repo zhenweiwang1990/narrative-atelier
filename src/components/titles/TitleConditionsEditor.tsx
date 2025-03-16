@@ -72,7 +72,7 @@ const TitleConditionsEditor: React.FC<TitleConditionsEditorProps> = ({
 
       {conditions.length === 0 ? (
         <div className="text-center py-2 text-xs text-muted-foreground bg-muted/20 rounded-md">
-          没有条件意味着所有玩家都将获得此称号。添加条件来控制谁可以解锁此称号。
+          没有条件意味着所有玩家都将获得此成就。添加条件来控制谁可以解锁此成就。
         </div>
       ) : (
         <div className="space-y-2">

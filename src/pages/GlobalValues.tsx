@@ -1,3 +1,4 @@
+
 import React from "react";
 import GlobalValues from "@/components/GlobalValues";
 import GlobalValuesModificationsTable from "@/components/GlobalValuesModificationsTable";
@@ -135,10 +136,10 @@ const GlobalValuesPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 max-w-full">
-      <h1 className="text-2xl font-bold mb-6">全局变量与称号</h1>
+      <h1 className="text-2xl font-bold mb-6">全局变量与成就</h1>
       <p className="text-muted-foreground mb-6">
         全局变量可用于跟踪剧情中各场景之间的数值变化。
-        称号可以根据游戏结束时的全局变量值来奖励玩家。
+        成就可以根据游戏结束时的全局变量值来奖励玩家。
       </p>
 
       <div className="flex gap-8 mb-8">
@@ -151,9 +152,9 @@ const GlobalValuesPage: React.FC = () => {
         </div>
         
         <div className="flex-1">
-          <h2 className="text-xl font-bold mb-4">称号管理</h2>
+          <h2 className="text-xl font-bold mb-4">成就管理</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            称号是玩家完成游戏后获得的成就，基于最终全局变量值判定。
+            成就是玩家完成游戏后获得的奖励，基于最终全局变量值判定。
           </p>
           <TitlesList 
             titles={story?.titles || []}

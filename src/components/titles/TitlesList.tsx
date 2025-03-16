@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2, Award } from 'lucide-react';
+import { Plus, Trash2, Trophy } from 'lucide-react';
 import { Title, GlobalValue } from '@/utils/types';
 import { generateId } from '@/utils/storage';
 import TitleConditionsEditor from './TitleConditionsEditor';
@@ -14,22 +15,34 @@ interface TitlesListProps {
   onChange: (titles: Title[]) => void;
 }
 
-const titleCardColors = [
-  'bg-blue-50 border-blue-200',
-  'bg-green-50 border-green-200',
-  'bg-purple-50 border-purple-200',
-  'bg-amber-50 border-amber-200',
-  'bg-rose-50 border-rose-200',
-  'bg-teal-50 border-teal-200',
-  'bg-indigo-50 border-indigo-200',
-  'bg-orange-50 border-orange-200',
-];
+const titleCardColors = {
+  light: [
+    'bg-blue-50 border-blue-200',
+    'bg-green-50 border-green-200',
+    'bg-purple-50 border-purple-200',
+    'bg-amber-50 border-amber-200',
+    'bg-rose-50 border-rose-200',
+    'bg-teal-50 border-teal-200',
+    'bg-indigo-50 border-indigo-200',
+    'bg-orange-50 border-orange-200',
+  ],
+  dark: [
+    'dark:bg-blue-950/40 dark:border-blue-800/50',
+    'dark:bg-green-950/40 dark:border-green-800/50',
+    'dark:bg-purple-950/40 dark:border-purple-800/50',
+    'dark:bg-amber-950/40 dark:border-amber-800/50',
+    'dark:bg-rose-950/40 dark:border-rose-800/50',
+    'dark:bg-teal-950/40 dark:border-teal-800/50',
+    'dark:bg-indigo-950/40 dark:border-indigo-800/50',
+    'dark:bg-orange-950/40 dark:border-orange-800/50',
+  ]
+};
 
 const TitlesList: React.FC<TitlesListProps> = ({ titles, globalValues, onChange }) => {
   const addTitle = () => {
     const newTitle: Title = {
       id: generateId('title'),
-      name: `称号 ${titles.length + 1}`,
+      name: `成就 ${titles.length + 1}`,
       description: '',
       conditions: []
     };
@@ -55,15 +68,15 @@ const TitlesList: React.FC<TitlesListProps> = ({ titles, globalValues, onChange 
   };
 
   const getTitleCardColor = (index: number): string => {
-    return titleCardColors[index % titleCardColors.length];
+    return `${titleCardColors.light[index % titleCardColors.light.length]} ${titleCardColors.dark[index % titleCardColors.dark.length]}`;
   };
 
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
-          <Award className="h-5 w-5 text-primary" />
-          <h3 className="text-lg font-medium">称号管理</h3>
+          <Trophy className="h-5 w-5 text-primary" />
+          <h3 className="text-lg font-medium">成就管理</h3>
         </div>
         <Button 
           variant="outline" 
@@ -71,13 +84,13 @@ const TitlesList: React.FC<TitlesListProps> = ({ titles, globalValues, onChange 
           onClick={addTitle}
           className="h-8 text-xs flex items-center"
         >
-          <Plus className="h-3.5 w-3.5 mr-1" /> 添加称号
+          <Plus className="h-3.5 w-3.5 mr-1" /> 添加成就
         </Button>
       </div>
 
       {titles.length === 0 ? (
         <div className="text-center py-4 text-sm text-muted-foreground border rounded-md p-6">
-          尚未定义称号。添加一个称号来奖励玩家的游戏结果。
+          尚未定义成就。添加一个成就来奖励玩家的游戏结果。
         </div>
       ) : (
         <div className="flex flex-wrap gap-4">
@@ -88,7 +101,7 @@ const TitlesList: React.FC<TitlesListProps> = ({ titles, globalValues, onChange 
             >
               <div className="flex gap-2 items-start mb-3">
                 <div className="flex-1">
-                  <Label htmlFor={`title-name-${title.id}`} className="text-xs">称号名称</Label>
+                  <Label htmlFor={`title-name-${title.id}`} className="text-xs">成就名称</Label>
                   <Input
                     id={`title-name-${title.id}`}
                     value={title.name}
@@ -109,13 +122,13 @@ const TitlesList: React.FC<TitlesListProps> = ({ titles, globalValues, onChange 
               </div>
               
               <div className="mb-3">
-                <Label htmlFor={`title-desc-${title.id}`} className="text-xs">称号描述</Label>
+                <Label htmlFor={`title-desc-${title.id}`} className="text-xs">成就描述</Label>
                 <Input
                   id={`title-desc-${title.id}`}
                   value={title.description || ''}
                   onChange={(e) => updateTitle(title.id, { description: e.target.value })}
                   className="h-8 text-sm"
-                  placeholder="描述这个称号代表什么..."
+                  placeholder="描述这个成就代表什么..."
                 />
               </div>
               
