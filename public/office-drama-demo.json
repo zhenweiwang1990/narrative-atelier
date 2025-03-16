@@ -75,6 +75,43 @@
       "background": "https://aishen-s3-1309519128.cos.ap-shanghai.myqcloud.com/moment_upload_image/01K2G6MPKTCMGRJNZQNV12HD67.png"
     }
   ],
+  "globalValues": [
+    {
+      "id": "value-1",
+      "name": "工作能力",
+      "description": "反映刘一飞的职场表现和专业能力",
+      "initialValue": 60,
+      "type": "skill"
+    },
+    {
+      "id": "value-2",
+      "name": "与张敏的关系",
+      "description": "刘一飞与张敏之间的关系状态",
+      "initialValue": 20,
+      "type": "relationship"
+    },
+    {
+      "id": "value-3",
+      "name": "团队声誉",
+      "description": "刘一飞在团队中的声誉和影响力",
+      "initialValue": 50,
+      "type": "social"
+    },
+    {
+      "id": "value-4",
+      "name": "个人压力",
+      "description": "刘一飞的心理压力水平",
+      "initialValue": 40,
+      "type": "mental"
+    },
+    {
+      "id": "value-5",
+      "name": "项目进度",
+      "description": "当前负责项目的完成进度",
+      "initialValue": 0,
+      "type": "progress"
+    }
+  ],
   "scenes": [
     {
       "id": "scene_1687654321",
