@@ -48,7 +48,11 @@ export const SplitSceneDialog: React.FC<SplitSceneDialogProps> = ({
     // Store the next scene of the original scene
     const originalNextSceneId = currentScene.nextSceneId;
     
-    // Create the new scene
+    // Create a default position if one doesn't exist
+    const defaultPosition = { x: 0, y: 0 };
+    const currentPosition = currentScene.position || defaultPosition;
+    
+    // Create the new scene with a position offset from the current scene
     const newScene: Scene = {
       id: newSceneId,
       title: `${currentScene.title} (拆分)`,
@@ -56,8 +60,8 @@ export const SplitSceneDialog: React.FC<SplitSceneDialogProps> = ({
       locationId: currentScene.locationId,
       elements: newSceneElements,
       position: {
-        x: currentScene.position.x + 250,
-        y: currentScene.position.y
+        x: currentPosition.x + 250,
+        y: currentPosition.y
       },
       nextSceneId: originalNextSceneId,
       entranceEffect: currentScene.entranceEffect,
