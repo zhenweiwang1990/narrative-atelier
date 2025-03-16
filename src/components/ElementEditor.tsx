@@ -1,17 +1,14 @@
 
-import { useState, useEffect } from "react";
-import { Accordion } from "@/components/ui/accordion";
+import { useState } from "react";
 import { useStory } from "./Layout";
-import { ElementContainer } from "./elements/ElementContainer";
 import { useElementManagement } from "@/hooks/useElementManagement";
-import ElementTypeButtons from "./elements/ElementTypeButtons";
-import EmptyElementsState from "./elements/EmptyElementsState";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { Button } from "./ui/button";
-import { Scissors } from "lucide-react";
 import { SplitSceneDialog } from "./flow/editor/SplitSceneDialog";
 import { generateAiStory } from "@/services/aiStoryService";
 import { toast } from "sonner";
+import { ElementEditorProvider } from "./elements/editor/ElementEditorContext";
+import EditorToolbar from "./elements/editor/EditorToolbar";
+import ElementListContainer from "./elements/editor/ElementListContainer";
+import SelectElementEventHandler from "./elements/editor/SelectElementEventHandler";
 
 interface ElementEditorProps {
   sceneId: string;
@@ -39,6 +36,13 @@ const ElementEditor = ({
     validateTimeLimit,
     validateKeySequence,
   } = useElementManagement(sceneId, story, setStory);
+
+  if (!story) return null;
+
+  // Get necessary data and state
+  const globalValues = story.globalValues || [];
+  const currentScene = story.scenes.find(scene => scene.id === sceneId);
+  const isEndingScene = currentScene?.type === "ending" || currentScene?.type === "bad-ending";
 
   // Handle AI content generation
   const handleAiGenerate = async (elementId: string) => {
@@ -99,126 +103,50 @@ const ElementEditor = ({
     }
   };
 
-  // 处理拖放重新排序
-  const handleDragEnd = (result: any) => {
-    if (!result.destination) return;
-    
-    const sourceIndex = result.source.index;
-    const destinationIndex = result.destination.index;
-    
-    if (sourceIndex !== destinationIndex) {
-      reorderElements(sourceIndex, destinationIndex);
-    }
+  // Create context value for provider
+  const contextValue = {
+    sceneId,
+    elements,
+    selectedElementId,
+    story,
+    onSelectElement: handleSelectElement,
+    onAddElement: handleAddElement,
+    onDeleteElement: handleDeleteElement,
+    onAiGenerate: handleAiGenerate
   };
 
-  // Listen for selectElement custom event
-  useEffect(() => {
-    const handleSelectElementEvent = (event: CustomEvent) => {
-      if (event.detail.sceneId === sceneId && event.detail.elementId && onSelectElement) {
-        onSelectElement(event.detail.elementId);
-      }
-    };
-    
-    window.addEventListener('selectElement', handleSelectElementEvent as EventListener);
-    
-    return () => {
-      window.removeEventListener('selectElement', handleSelectElementEvent as EventListener);
-    };
-  }, [sceneId, onSelectElement]);
-
-  if (!story) return null;
-
-  // 从剧情中获取全局变量
-  const globalValues = story.globalValues || [];
-  
-  // Check if current scene is an ending scene
-  const currentScene = story.scenes.find(scene => scene.id === sceneId);
-  const isEndingScene = currentScene?.type === "ending" || currentScene?.type === "bad-ending";
-
   return (
-    <div className="space-y-3">
-      <div className="flex gap-2 justify-between">
-        <ElementTypeButtons onAddElement={handleAddElement} />
-        {!isEndingScene && (
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => setShowSplitDialog(true)}
-            className="flex items-center gap-1"
-          >
-            <Scissors className="h-3.5 w-3.5" />
-            拆分场景
-          </Button>
-        )}
-      </div>
-
-      <div className="space-y-2 overflow-y-auto h-[calc(100vh-14rem)]">
-        {elements.length === 0 ? (
-          <EmptyElementsState />
-        ) : (
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <Droppable droppableId="elements">
-              {(provided) => (
-                <Accordion
-                  type="multiple"
-                  className="space-y-2"
-                  value={selectedElementId ? [selectedElementId] : []}
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                >
-                  {elements.map((element, index) => (
-                    <Draggable 
-                      key={element.id} 
-                      draggableId={element.id} 
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                        >
-                          <ElementContainer
-                            key={element.id}
-                            element={element}
-                            index={index}
-                            totalElements={elements.length}
-                            selectedElementId={selectedElementId}
-                            characters={story.characters}
-                            scenes={story.scenes}
-                            globalValues={globalValues}
-                            onSelect={handleSelectElement}
-                            onDelete={handleDeleteElement}
-                            onUpdate={updateElement}
-                            onAiGenerate={handleAiGenerate}
-                            onAddChoiceOption={addChoiceOption}
-                            onDeleteChoiceOption={deleteChoiceOption}
-                            onUpdateChoiceOption={updateChoiceOption}
-                            validateTimeLimit={validateTimeLimit}
-                            validateKeySequence={validateKeySequence}
-                            dragHandleProps={provided.dragHandleProps}
-                            isDragging={snapshot.isDragging}
-                          />
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </Accordion>
-              )}
-            </Droppable>
-          </DragDropContext>
-        )}
-      </div>
-
-      {!isEndingScene && (
-        <SplitSceneDialog 
-          open={showSplitDialog} 
-          onOpenChange={setShowSplitDialog}
-          sceneId={sceneId}
-          elements={elements}
+    <ElementEditorProvider value={contextValue}>
+      <div className="space-y-3">
+        <EditorToolbar 
+          isEndingScene={isEndingScene}
+          onSplitScene={() => setShowSplitDialog(true)}
         />
-      )}
-    </div>
+
+        <div className="space-y-2 overflow-y-auto h-[calc(100vh-14rem)]">
+          <ElementListContainer 
+            reorderElements={reorderElements}
+            onAddChoiceOption={addChoiceOption}
+            onDeleteChoiceOption={deleteChoiceOption}
+            onUpdateChoiceOption={updateChoiceOption}
+            updateElement={updateElement}
+            validateTimeLimit={validateTimeLimit}
+            validateKeySequence={validateKeySequence}
+          />
+        </div>
+
+        <SelectElementEventHandler />
+
+        {!isEndingScene && (
+          <SplitSceneDialog 
+            open={showSplitDialog} 
+            onOpenChange={setShowSplitDialog}
+            sceneId={sceneId}
+            elements={elements}
+          />
+        )}
+      </div>
+    </ElementEditorProvider>
   );
 };
 
