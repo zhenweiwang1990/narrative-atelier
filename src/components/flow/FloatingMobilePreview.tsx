@@ -48,10 +48,17 @@ const FloatingMobilePreview = ({
     null
   );
 
+  // Use draggable hook for preview window
   const { position, isDragging, elementRef, handleMouseDown } = useDraggable({
     x: window.innerWidth - 700,
     y: 80,
   });
+
+  // Calculate editor position relative to preview position
+  const editorPosition = {
+    x: position.x + 352, // Width of the preview
+    y: position.y,
+  };
 
   const handleElementSelect = (elementId: string | null) => {
     setCurrentElementId(elementId);
@@ -101,7 +108,8 @@ const FloatingMobilePreview = ({
       popup.addEventListener('load', () => {
         popup.postMessage({
           type: 'storyData',
-          story: story
+          story: story,
+          currentElementId: currentElementId
         }, window.location.origin);
       });
     }
@@ -161,7 +169,7 @@ const FloatingMobilePreview = ({
         <FloatingElementEditor
           sceneId={selectedSceneId}
           currentElementId={currentElementId}
-          position={position}
+          position={editorPosition}
           onClose={() => setCurrentElementId(null)}
           isOpen={true}
           validateTimeLimit={validateTimeLimit}

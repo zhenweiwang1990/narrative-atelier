@@ -80,7 +80,7 @@ const Popup = () => {
   
   return (
     <StoryContext.Provider value={contextValue}>
-      <div className="min-h-screen bg-background p-8">
+      <div className="min-h-screen bg-background">
         {type === 'preview' && selectedSceneId && (
           <FloatingMobilePreview
             selectedSceneId={selectedSceneId}

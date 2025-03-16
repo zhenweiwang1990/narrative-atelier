@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useStory } from "@/components/Layout";
 import { useElementManagement } from "@/hooks/useElementManagement";
@@ -54,7 +55,7 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
 
   // Use draggable hook for editor window
   const { position: editorPosition, isDragging, elementRef, handleMouseDown } = useDraggable({
-    x: position.x + 380, // Position editor to the right of preview
+    x: position.x, // We now get the position directly from the parent
     y: position.y
   });
 
