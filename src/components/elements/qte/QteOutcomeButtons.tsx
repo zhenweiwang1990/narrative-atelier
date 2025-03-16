@@ -6,7 +6,7 @@ import { GitBranch, BookText } from 'lucide-react';
 interface QteOutcomeButtonsProps {
   onOpenAiDialog: (type: 'branch' | 'ending', outcomeType: 'success' | 'failure') => void;
   outcomeType: 'success' | 'failure';
-  sceneId: string; // Add a sceneId prop to check if a scene is already selected
+  sceneId: string; // The sceneId prop to check if a scene is already selected
 }
 
 const QteOutcomeButtons: React.FC<QteOutcomeButtonsProps> = ({ 
@@ -14,7 +14,7 @@ const QteOutcomeButtons: React.FC<QteOutcomeButtonsProps> = ({
   outcomeType,
   sceneId 
 }) => {
-  // Only render the buttons if no scene is selected (sceneId is empty)
+  // Only render the buttons if no scene is selected (sceneId is empty or 'none')
   if (sceneId && sceneId !== 'none') {
     return null;
   }

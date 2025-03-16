@@ -2,7 +2,7 @@
 import React from 'react';
 import { QteElement } from '@/utils/types';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import QteDescription from './QteDescription';
 import ActionQteFields from './types/ActionQteFields';
 import ComboQteFields from './types/ComboQteFields';
@@ -25,8 +25,10 @@ const QteFields: React.FC<QteFieldsProps> = ({
 
   // Handle QTE type change
   const handleQteTypeChange = (value: string) => {
-    const qteType = value as 'action' | 'combo' | 'unlock';
-    onUpdate(element.id, { qteType });
+    if (value) {
+      const qteType = value as 'action' | 'combo' | 'unlock';
+      onUpdate(element.id, { qteType });
+    }
   };
 
   // Render the specific QTE type fields based on selected type
@@ -66,21 +68,18 @@ const QteFields: React.FC<QteFieldsProps> = ({
     <div className="space-y-2">
       <QteDescription element={element} onUpdate={onUpdate} />
       
-      <div className="mb-2">
-        <Label className="text-xs mb-1 block">QTE类型</Label>
-        <Select 
+      <div className="mb-4">
+        <Label className="text-xs mb-2 block">QTE类型</Label>
+        <ToggleGroup 
+          type="single" 
           value={qteType} 
           onValueChange={handleQteTypeChange}
+          className="flex justify-start"
         >
-          <SelectTrigger className="h-7 text-xs">
-            <SelectValue placeholder="选择QTE类型" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="action">QTE动作</SelectItem>
-            <SelectItem value="combo">QTE连击</SelectItem>
-            <SelectItem value="unlock">QTE解锁</SelectItem>
-          </SelectContent>
-        </Select>
+          <ToggleGroupItem value="action" className="text-xs">QTE动作</ToggleGroupItem>
+          <ToggleGroupItem value="combo" className="text-xs">QTE连击</ToggleGroupItem>
+          <ToggleGroupItem value="unlock" className="text-xs">QTE解锁</ToggleGroupItem>
+        </ToggleGroup>
       </div>
       
       {renderQteTypeFields()}

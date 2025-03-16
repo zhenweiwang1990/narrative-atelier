@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -88,7 +89,7 @@ export const getElementTypeLabel = (type: ElementType) => {
 
 // Function to get content preview based on element type
 export const getElementContentPreview = (element: SceneElement): string => {
-  const maxLength = 26;
+  const maxLength = 40;
   const truncate = (text: string): string => {
     return text.length > maxLength
       ? `${text.substring(0, maxLength)}...`

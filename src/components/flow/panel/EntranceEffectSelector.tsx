@@ -1,13 +1,10 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Search } from "lucide-react";
 
 // Mock data for effects
 const entranceEffects = [
@@ -27,22 +24,50 @@ const EntranceEffectSelector: React.FC<EntranceEffectSelectorProps> = ({
   effect,
   updateEffect
 }) => {
+  const [open, setOpen] = useState(false);
+  
+  const getEffectName = () => {
+    const selectedEffect = entranceEffects.find(e => e.id === effect);
+    return selectedEffect ? selectedEffect.label : "淡入淡出";
+  };
+
   return (
     <div className="space-y-1 mt-4">
       <Label htmlFor="entranceEffect">入场特效</Label>
-      <Select 
-        defaultValue={effect || "fade"}
-        onValueChange={(value) => updateEffect(value)}
-      >
-        <SelectTrigger id="entranceEffect" className="h-9">
-          <SelectValue placeholder="选择入场特效" />
-        </SelectTrigger>
-        <SelectContent className="z-[200]">
-          {entranceEffects.map((effect) => (
-            <SelectItem key={effect.id} value={effect.id}>{effect.label}</SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-full justify-between h-9 mt-1"
+          >
+            {getEffectName()}
+            <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-0" align="start">
+          <Command>
+            <CommandInput placeholder="搜索特效..." />
+            <CommandEmpty>没有找到特效</CommandEmpty>
+            <CommandGroup>
+              {entranceEffects.map((effect) => (
+                <CommandItem
+                  key={effect.id}
+                  value={effect.id}
+                  onSelect={() => {
+                    updateEffect(effect.id);
+                    setOpen(false);
+                  }}
+                >
+                  {effect.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 };
