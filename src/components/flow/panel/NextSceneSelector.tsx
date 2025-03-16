@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Label } from "@/components/ui/label";
-import { Story, Scene } from "@/utils/types";
+import { Scene } from "@/utils/types";
 import {
   Select,
   SelectContent,
@@ -12,15 +12,15 @@ import {
 
 interface NextSceneSelectorProps {
   nextSceneId: string | undefined;
-  selectedSceneId: string;
-  story: Story;
+  selectedSceneId: string | null;
+  scenes: Scene[];
   updateNextScene: (nextSceneId: string) => void;
 }
 
 const NextSceneSelector: React.FC<NextSceneSelectorProps> = ({
   nextSceneId,
   selectedSceneId,
-  story,
+  scenes,
   updateNextScene
 }) => {
   return (
@@ -39,7 +39,7 @@ const NextSceneSelector: React.FC<NextSceneSelectorProps> = ({
         </SelectTrigger>
         <SelectContent position="popper" className="z-[100]">
           <SelectItem value="none">无（结束或基于选择）</SelectItem>
-          {story.scenes
+          {scenes
             .filter((scene) => scene.id !== selectedSceneId)
             .map((scene) => (
               <SelectItem key={scene.id} value={scene.id}>

@@ -42,6 +42,7 @@ const SceneFlowSection: React.FC<SceneFlowSectionProps> = ({
             <RevivalPointSelector
               revivalPointId={selectedScene.revivalPointId}
               scenes={story.scenes}
+              selectedSceneId={selectedSceneId}
               updateRevivalPoint={updateRevivalPoint}
             />
           )}

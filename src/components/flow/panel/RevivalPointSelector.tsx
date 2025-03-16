@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Label } from "@/components/ui/label";
-import { Story } from "@/utils/types";
+import { Scene } from "@/utils/types";
 import { RotateCcw } from "lucide-react";
 import {
   Select,
@@ -13,15 +13,15 @@ import {
 
 interface RevivalPointSelectorProps {
   revivalPointId: string | undefined;
-  selectedSceneId: string;
-  story: Story;
+  selectedSceneId: string | null;
+  scenes: Scene[];
   updateRevivalPoint: (sceneId: string) => void;
 }
 
 const RevivalPointSelector: React.FC<RevivalPointSelectorProps> = ({
   revivalPointId,
   selectedSceneId,
-  story,
+  scenes,
   updateRevivalPoint
 }) => {
   return (
@@ -40,7 +40,7 @@ const RevivalPointSelector: React.FC<RevivalPointSelectorProps> = ({
         </SelectTrigger>
         <SelectContent position="popper" className="z-[100]">
           <SelectItem value="none">无</SelectItem>
-          {story.scenes
+          {scenes
             .filter(
               (scene) =>
                 scene.id !== selectedSceneId && scene.type !== "bad-ending"
