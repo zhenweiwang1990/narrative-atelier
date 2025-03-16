@@ -23,7 +23,9 @@ interface FlowTabContentProps {
   updateSceneEntrance?: (effect: string) => void;
   updateSceneEnvironment?: (effect: string) => void;
   updateEndingName?: (name: string) => void;
+  updateEndingPoster?: (url: string) => void; // Add the missing property
   updateBackgroundMusic?: (music: { id: string; name: string; url: string }) => void;
+  updateSceneUnlockPrice?: (price: number | undefined) => void;
 }
 
 const FlowTabContent = ({
@@ -41,7 +43,9 @@ const FlowTabContent = ({
   updateSceneEntrance,
   updateSceneEnvironment,
   updateEndingName,
-  updateBackgroundMusic
+  updateEndingPoster, // Add it to the destructured props
+  updateBackgroundMusic,
+  updateSceneUnlockPrice
 }: FlowTabContentProps) => {
   return (
     <>
@@ -59,7 +63,9 @@ const FlowTabContent = ({
             updateSceneEntrance={updateSceneEntrance}
             updateSceneEnvironment={updateSceneEnvironment}
             updateEndingName={updateEndingName}
+            updateEndingPoster={updateEndingPoster} // Pass the prop to ScenePropertiesPanel
             updateBackgroundMusic={updateBackgroundMusic}
+            updateSceneUnlockPrice={updateSceneUnlockPrice}
           />
         ) : (
           <div className="text-center flex-1 flex items-center justify-center p-3 bg-muted/30 rounded-md mx-2 mb-2">

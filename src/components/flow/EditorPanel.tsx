@@ -22,7 +22,9 @@ interface EditorPanelProps {
   updateSceneEntrance?: (effect: string) => void;
   updateSceneEnvironment?: (effect: string) => void;
   updateEndingName?: (name: string) => void;
+  updateEndingPoster?: (url: string) => void; // Add the missing property
   updateBackgroundMusic?: (music: { id: string; name: string; url: string }) => void;
+  updateSceneUnlockPrice?: (price: number | undefined) => void;
 }
 
 const EditorPanel = ({
@@ -41,7 +43,9 @@ const EditorPanel = ({
   updateSceneEntrance,
   updateSceneEnvironment,
   updateEndingName,
+  updateEndingPoster, // Add it to the destructured props
   updateBackgroundMusic,
+  updateSceneUnlockPrice,
 }: EditorPanelProps) => {
   return (
     <Card className="overflow-hidden h-full max-w-[500px]">
@@ -91,7 +95,9 @@ const EditorPanel = ({
           updateSceneEntrance={updateSceneEntrance}
           updateSceneEnvironment={updateSceneEnvironment}
           updateEndingName={updateEndingName}
+          updateEndingPoster={updateEndingPoster} // Pass the prop to FlowTabContent
           updateBackgroundMusic={updateBackgroundMusic}
+          updateSceneUnlockPrice={updateSceneUnlockPrice}
         />
       </Tabs>
     </Card>
