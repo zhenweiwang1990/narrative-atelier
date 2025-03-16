@@ -1,8 +1,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { FloatingMobilePreview } from "@/components/flow/FloatingMobilePreview";
-import { FloatingElementEditor } from "@/components/flow/FloatingElementEditor";
+import FloatingMobilePreview from "@/components/flow/FloatingMobilePreview";
+import FloatingElementEditor from "@/components/flow/FloatingElementEditor";
 import { StoryContext } from "@/contexts/StoryContext";
 import { Story } from "@/utils/types";
 
@@ -63,8 +63,23 @@ const Popup = () => {
     y: 40
   };
   
+  // Provide all required properties for StoryContext
+  const contextValue = {
+    story,
+    setStory,
+    stories: [],
+    setStories: () => {},
+    handleSave: async () => false,
+    handleImport: () => {},
+    handleExport: () => {},
+    createNewStory: () => {},
+    deleteStory: () => {},
+    loading: false,
+    error: null
+  };
+  
   return (
-    <StoryContext.Provider value={{ story, setStory, stories: [], setStories: () => {}, loading: false }}>
+    <StoryContext.Provider value={contextValue}>
       <div className="min-h-screen bg-background p-8">
         {type === 'preview' && selectedSceneId && (
           <FloatingMobilePreview
