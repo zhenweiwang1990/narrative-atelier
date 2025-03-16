@@ -76,9 +76,9 @@ const QteFields: React.FC<QteFieldsProps> = ({
           onValueChange={handleQteTypeChange}
           className="flex justify-start"
         >
-          <ToggleGroupItem value="action" className="text-xs">QTE动作</ToggleGroupItem>
-          <ToggleGroupItem value="combo" className="text-xs">QTE连击</ToggleGroupItem>
-          <ToggleGroupItem value="unlock" className="text-xs">QTE解锁</ToggleGroupItem>
+          <ToggleGroupItem value="action" className="text-xs px-3 py-1">QTE动作</ToggleGroupItem>
+          <ToggleGroupItem value="combo" className="text-xs px-3 py-1">QTE连击</ToggleGroupItem>
+          <ToggleGroupItem value="unlock" className="text-xs px-3 py-1">QTE解锁</ToggleGroupItem>
         </ToggleGroup>
       </div>
       

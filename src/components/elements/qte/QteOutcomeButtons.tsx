@@ -15,7 +15,8 @@ const QteOutcomeButtons: React.FC<QteOutcomeButtonsProps> = ({
   sceneId 
 }) => {
   // Only render the buttons if no scene is selected (sceneId is empty or 'none')
-  if (sceneId && sceneId !== 'none') {
+  // We need explicit check against empty string, 'none', null, and undefined
+  if (sceneId && sceneId !== 'none' && sceneId !== '') {
     return null;
   }
 

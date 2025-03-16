@@ -32,8 +32,10 @@ const RevivalPointSelector: React.FC<RevivalPointSelectorProps> = ({
     return "无";
   };
 
+  // Make sure we have a valid scenes array
   const availableScenes = scenes
-    .filter(scene => scene.id !== selectedSceneId && scene.type !== "bad-ending");
+    ? scenes.filter(scene => scene.id !== selectedSceneId && scene.type !== "bad-ending")
+    : [];
 
   return (
     <div>

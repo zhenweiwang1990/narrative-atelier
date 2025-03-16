@@ -32,7 +32,8 @@ const NextSceneSelector: React.FC<NextSceneSelectorProps> = ({
     return "无（结束或基于选择）";
   };
 
-  const availableScenes = scenes.filter(scene => scene.id !== selectedSceneId);
+  // Make sure we have a valid scenes array
+  const availableScenes = scenes?.filter(scene => scene.id !== selectedSceneId) || [];
 
   return (
     <div>

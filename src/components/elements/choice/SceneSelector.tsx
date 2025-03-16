@@ -26,12 +26,15 @@ const SceneSelector: React.FC<SceneSelectorProps> = ({
     if (nextSceneId === "ai-branch") return "AI 写支线";
     if (nextSceneId === "ai-ending") return "AI 写结局";
     
-    const scene = scenes.find(s => s.id === nextSceneId);
+    const scene = scenes ? scenes.find(s => s.id === nextSceneId) : null;
     if (scene) {
       return `${scene.title} (${scene.type === "start" ? "开始" : scene.type === "ending" ? "正常结局" : scene.type === "bad-ending" ? "异常结局" : "普通"})`;
     }
     return "不指定";
   };
+
+  // Make sure we have a valid scenes array
+  const availableScenes = scenes || [];
 
   return (
     <div>
@@ -83,7 +86,7 @@ const SceneSelector: React.FC<SceneSelectorProps> = ({
               >
                 AI 写结局
               </CommandItem>
-              {scenes.map((scene) => (
+              {availableScenes.map((scene) => (
                 <CommandItem
                   key={scene.id}
                   value={scene.id}

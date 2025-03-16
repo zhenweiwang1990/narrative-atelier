@@ -20,11 +20,14 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   
+  // Make sure we have a valid locations array
+  const locations = story?.locations || [];
+  
   // Determine if we should show locations as buttons
-  const showLocationsAsButtons = story.locations.length < 6;
+  const showLocationsAsButtons = locations.length < 6;
   
   const getLocationName = () => {
-    const location = story.locations.find(loc => loc.id === locationId);
+    const location = locations.find(loc => loc.id === locationId);
     return location ? location.name : "选择位置";
   };
 
@@ -36,7 +39,7 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
       
       {showLocationsAsButtons ? (
         <div className="flex flex-wrap gap-2">
-          {story.locations.map((location) => (
+          {locations.map((location) => (
             <Button
               key={location.id}
               size="sm"
@@ -66,7 +69,7 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
               <CommandInput placeholder="搜索位置..." />
               <CommandEmpty>没有找到位置</CommandEmpty>
               <CommandGroup>
-                {story.locations.map((location) => (
+                {locations.map((location) => (
                   <CommandItem
                     key={location.id}
                     value={location.id}
