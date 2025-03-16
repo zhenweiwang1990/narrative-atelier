@@ -1,23 +1,24 @@
 
 import { useState } from 'react';
-import { Scene, GlobalValue } from '@/utils/types';
 
-export const useOutcomeHandling = (
-  elementId = '' // Optional element ID for AI story tracking
-) => {
+export const useOutcomeHandling = (elementId: string) => {
   const [aiDialogOpen, setAiDialogOpen] = useState(false);
   const [aiDialogType, setAiDialogType] = useState<'branch' | 'ending'>('branch');
   const [isSuccess, setIsSuccess] = useState(true);
-
+  
+  // Open the AI dialog with the specified type and success/failure flag
   const handleOpenAiDialog = (type: 'branch' | 'ending', success: boolean) => {
     setAiDialogType(type);
     setIsSuccess(success);
     setAiDialogOpen(true);
   };
-
-  const getAiButtonsVisibility = (sceneId: string) => {
-    // Only show AI buttons when no scene is selected
-    return !sceneId || sceneId === 'none';
+  
+  // Determine if AI buttons should be shown based on scene ID
+  const getAiButtonsVisibility = (sceneId?: string) => {
+    // Show AI buttons if a valid element ID exists and either:
+    // - No scene is selected (can create a new one)
+    // - A scene is selected (can modify an existing one)
+    return !!elementId;
   };
   
   return {
@@ -26,7 +27,6 @@ export const useOutcomeHandling = (
     aiDialogType,
     isSuccess,
     handleOpenAiDialog,
-    getAiButtonsVisibility,
-    elementId
+    getAiButtonsVisibility
   };
 };

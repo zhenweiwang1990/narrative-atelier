@@ -18,44 +18,17 @@ import {
   moveElementDown as moveElementDownUtil,
   updateElement as updateElementUtil
 } from './element-utils';
+import { useElementsState } from './useElementsState';
+import { useElementUpdater } from './useElementUpdater';
 
 export const useElementManagement = (
   sceneId: string,
   story: Story | null,
   setStory: React.Dispatch<React.SetStateAction<Story | null>> | null
 ) => {
-  const [elements, setElements] = useState<SceneElement[]>([]);
-  
-  // Get current scene and its elements
-  useEffect(() => {
-    if (!story) return;
-    
-    const currentScene = story.scenes.find(scene => scene.id === sceneId);
-    if (currentScene) {
-      // No longer need to sort by order, just use array as is
-      setElements([...currentScene.elements]);
-    }
-  }, [story, sceneId]);
-
-  // Update story when elements change
-  const updateStory = (updatedElements: SceneElement[]) => {
-    if (!story || !setStory) return;
-    
-    const updatedScenes = story.scenes.map(scene => {
-      if (scene.id === sceneId) {
-        return {
-          ...scene,
-          elements: updatedElements
-        };
-      }
-      return scene;
-    });
-    
-    setStory({
-      ...story,
-      scenes: updatedScenes
-    });
-  };
+  // Use custom hooks for state management and element update operations
+  const { elements, setElements } = useElementsState(sceneId, story);
+  const { updateStory } = useElementUpdater(sceneId, story, setStory);
 
   // Add new element with optional specific position index
   const addElement = (type: ElementType, position?: number) => {
