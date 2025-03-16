@@ -7,6 +7,9 @@ import { useElementManagement } from "@/hooks/useElementManagement";
 import ElementTypeButtons from "./elements/ElementTypeButtons";
 import EmptyElementsState from "./elements/EmptyElementsState";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { Button } from "./ui/button";
+import { Scissors } from "lucide-react";
+import { SplitSceneDialog } from "./flow/editor/SplitSceneDialog";
 
 interface ElementEditorProps {
   sceneId: string;
@@ -20,6 +23,7 @@ const ElementEditor = ({
   onSelectElement,
 }: ElementEditorProps) => {
   const { story, setStory } = useStory();
+  const [showSplitDialog, setShowSplitDialog] = useState(false);
 
   const {
     elements,
@@ -99,7 +103,18 @@ const ElementEditor = ({
 
   return (
     <div className="space-y-3">
-      <ElementTypeButtons onAddElement={handleAddElement} />
+      <div className="flex gap-2 justify-between">
+        <ElementTypeButtons onAddElement={handleAddElement} />
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => setShowSplitDialog(true)}
+          className="flex items-center gap-1"
+        >
+          <Scissors className="h-3.5 w-3.5" />
+          拆分场景
+        </Button>
+      </div>
 
       <div className="space-y-2 overflow-y-auto h-[calc(100vh-14rem)]">
         {elements.length === 0 ? (
@@ -157,6 +172,13 @@ const ElementEditor = ({
           </DragDropContext>
         )}
       </div>
+
+      <SplitSceneDialog 
+        open={showSplitDialog} 
+        onOpenChange={setShowSplitDialog}
+        sceneId={sceneId}
+        elements={elements}
+      />
     </div>
   );
 };
