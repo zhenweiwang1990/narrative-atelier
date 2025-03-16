@@ -23,6 +23,13 @@ interface ChoiceOptionProps {
   disableDelete: boolean;
 }
 
+// Option background and border colors based on index
+const optionColors = [
+  { bg: "bg-blue-50/50 dark:bg-blue-950/20", border: "border-blue-200 dark:border-blue-800" },
+  { bg: "bg-green-50/50 dark:bg-green-950/20", border: "border-green-200 dark:border-green-800" },
+  { bg: "bg-purple-50/50 dark:bg-purple-950/20", border: "border-purple-200 dark:border-purple-800" },
+];
+
 const ChoiceOption: React.FC<ChoiceOptionProps> = ({
   option,
   optIdx,
@@ -37,6 +44,10 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
 }) => {
   const [aiDialogOpen, setAiDialogOpen] = useState(false);
   const [aiDialogType, setAiDialogType] = useState<'branch' | 'ending'>('branch');
+
+  // Get color based on option index (cycle through colors if more than the available colors)
+  const colorIndex = optIdx % optionColors.length;
+  const { bg, border } = optionColors[colorIndex];
 
   const handleSceneChange = (value: string) => {
     if (value === "ai-branch") {
@@ -80,7 +91,7 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
   };
 
   return (
-    <div className="p-3 border rounded-md bg-muted/20">
+    <div className={`p-3 border rounded-md ${bg} ${border}`}>
       <OptionHeader 
         optIdx={optIdx}
         onDelete={() => onDeleteOption(option.id)}
@@ -117,20 +128,21 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
             onRemoveValueChange={onRemoveValueChange}
           />
         </div>
+      </div>
 
-        {/* Lock Price Settings - only show when locked */}
-        {option.locked && (
-          <div className="bg-amber-50/50 dark:bg-amber-950/20 p-2 rounded-md border border-amber-200 dark:border-amber-800">
+      {/* Lock Settings - only show when locked */}
+      {option.locked && (
+        <div className="grid grid-cols-10 gap-2 mt-2">
+          {/* Lock Price Settings - 30% width */}
+          <div className="col-span-3 bg-amber-50/50 dark:bg-amber-950/20 p-2 rounded-md border border-amber-200 dark:border-amber-800">
             <LockPriceSection 
               option={option}
               onUpdateOption={onUpdateOption}
             />
           </div>
-        )}
 
-        {/* Lock Conditions - only show when locked */}
-        {option.locked && (
-          <div className="bg-amber-50/50 dark:bg-amber-950/20 p-2 rounded-md border border-amber-200 dark:border-amber-800">
+          {/* Lock Conditions - 70% width */}
+          <div className="col-span-7 bg-amber-50/50 dark:bg-amber-950/20 p-2 rounded-md border border-amber-200 dark:border-amber-800">
             <UnlockConditionsEditor
               unlockConditions={option.unlockConditions}
               globalValues={globalValues}
@@ -162,8 +174,8 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
               }}
             />
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {option.locked && !option.unlockPrice && (!option.unlockConditions || option.unlockConditions.length === 0) && (
         <p className="text-xs text-amber-600 mt-2">

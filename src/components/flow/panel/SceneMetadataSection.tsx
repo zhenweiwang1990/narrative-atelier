@@ -31,42 +31,52 @@ const SceneMetadataSection: React.FC<SceneMetadataSectionProps> = ({
 }) => {
   return (
     <div className="space-y-3">
-      <SceneTitleInput 
-        title={selectedScene.title} 
-        updateSceneTitle={updateSceneTitle} 
-      />
+      <div className="p-3 border rounded-md bg-muted/10">
+        <h3 className="text-sm font-medium mb-2">基本信息</h3>
+        <div className="space-y-3">
+          <SceneTitleInput 
+            title={selectedScene.title} 
+            updateSceneTitle={updateSceneTitle} 
+          />
 
-      <SceneTypeSelector 
-        type={selectedScene.type} 
-        updateSceneType={updateSceneType}
-      />
+          <SceneTypeSelector 
+            type={selectedScene.type} 
+            updateSceneType={updateSceneType}
+          />
 
-      <LocationSelector 
-        locationId={selectedScene.locationId} 
-        story={story}
-        updateSceneLocation={updateSceneLocation}
-      />
+          <LocationSelector 
+            locationId={selectedScene.locationId} 
+            story={story}
+            updateSceneLocation={updateSceneLocation}
+          />
+        </div>
+      </div>
 
-      {updateSceneEntrance && (
-        <EntranceEffectSelector
-          effect={selectedScene.entranceEffect || "fade"}
-          updateEffect={updateSceneEntrance}
-        />
-      )}
+      <div className="p-3 border rounded-md bg-muted/10">
+        <h3 className="text-sm font-medium mb-2">视觉和音效</h3>
+        <div className="space-y-3">
+          {updateSceneEntrance && (
+            <EntranceEffectSelector
+              effect={selectedScene.entranceEffect || "fade"}
+              updateEffect={updateSceneEntrance}
+            />
+          )}
 
-      {updateSceneEnvironment && (
-        <EnvironmentEffectSelector
-          effect={selectedScene.environmentEffect || "none"}
-          updateEffect={updateSceneEnvironment}
-        />
-      )}
+          {updateSceneEnvironment && (
+            <EnvironmentEffectSelector
+              effect={selectedScene.environmentEffect || "none"}
+              updateEffect={updateSceneEnvironment}
+            />
+          )}
 
-      {updateBackgroundMusic && (
-        <BackgroundMusicSelector
-          backgroundMusic={selectedScene.backgroundMusic}
-          updateBackgroundMusic={updateBackgroundMusic}
-        />
-      )}
+          {updateBackgroundMusic && (
+            <BackgroundMusicSelector
+              backgroundMusic={selectedScene.backgroundMusic}
+              updateBackgroundMusic={updateBackgroundMusic}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };
