@@ -1,4 +1,3 @@
-
 export interface Story {
   id: string;
   title: string;
@@ -9,6 +8,7 @@ export interface Story {
   locations: Location[];
   scenes: Scene[];
   globalValues: GlobalValue[];
+  titles?: Title[];
   chapters?: Chapter[];
   // Add missing properties
   coverPhoto?: string;
@@ -190,4 +190,17 @@ export interface DialogueTaskElement extends SceneElement {
   dialogueTopics?: string[]; // 新增对话话题属性
   success: ElementOutcome;
   failure: ElementOutcome;
+}
+
+export interface Title {
+  id: string;
+  name: string;
+  description?: string;
+  conditions: TitleCondition[];
+}
+
+export interface TitleCondition {
+  valueId: string;
+  operator: 'gt' | 'lt' | 'eq' | 'gte' | 'lte'; // greater than, less than, equal, greater than or equal, less than or equal
+  targetValue: number;
 }

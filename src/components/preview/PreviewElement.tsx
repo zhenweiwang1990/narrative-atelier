@@ -5,6 +5,7 @@ import {
   Character,
   ValueChange,
   GlobalValue,
+  Title,
 } from "@/utils/types";
 import {
   NarrationPreview,
@@ -15,6 +16,7 @@ import {
   DialogueTaskPreview,
   DefaultPreview
 } from "./elements";
+import ValuesDisplay from "./ValuesDisplay";
 
 interface PreviewElementProps {
   currentElement: SceneElement | null;
@@ -25,6 +27,7 @@ interface PreviewElementProps {
   ) => void;
   getCharacter: (characterId: string) => Character | undefined;
   globalValues?: GlobalValue[];
+  titles?: Title[];
 }
 
 const PreviewElement: React.FC<PreviewElementProps> = ({
@@ -33,6 +36,7 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
   handleChoiceSelect,
   getCharacter,
   globalValues = [],
+  titles = [],
 }) => {
   if (!currentElement) {
     return <DefaultPreview />;

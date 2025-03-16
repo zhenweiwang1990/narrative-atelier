@@ -2,8 +2,10 @@
 import React from "react";
 import GlobalValues from "@/components/GlobalValues";
 import GlobalValuesModificationsTable from "@/components/GlobalValuesModificationsTable";
+import TitlesList from "@/components/titles/TitlesList";
+import TitleEvaluator from "@/components/titles/TitleEvaluator";
 import { useStory } from "@/components/Layout";
-import { GlobalValue, Story } from "@/utils/types";
+import { GlobalValue, Story, Title } from "@/utils/types";
 import { ValueModification } from "@/components/globalValues/types";
 import { toast } from "sonner";
 
@@ -15,6 +17,14 @@ const GlobalValuesPage: React.FC = () => {
     setStory({
       ...story,
       globalValues: values,
+    });
+  };
+
+  const handleTitlesChange = (titles: Title[]) => {
+    if (!story) return;
+    setStory({
+      ...story,
+      titles: titles,
     });
   };
 
@@ -125,17 +135,42 @@ const GlobalValuesPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 max-w-full">
-      <h1 className="text-2xl font-bold mb-6">全局变量</h1>
+      <h1 className="text-2xl font-bold mb-6">全局变量与称号</h1>
       <p className="text-muted-foreground mb-6">
         全局变量可用于跟踪剧情中各场景之间的数值变化。
-        这些值可以根据用户选择而改变，并会影响剧情进展。
+        称号可以根据游戏结束时的全局变量值来奖励玩家。
       </p>
 
-      <div className="max-w-[300px] mb-8">
-        <GlobalValues
-          values={story?.globalValues || []}
-          onChange={handleGlobalValuesChange}
-        />
+      <div className="grid md:grid-cols-2 gap-8 mb-8">
+        <div>
+          <h2 className="text-xl font-bold mb-4">全局变量</h2>
+          <div className="max-w-[300px]">
+            <GlobalValues
+              values={story?.globalValues || []}
+              onChange={handleGlobalValuesChange}
+            />
+          </div>
+          
+          {/* Add title evaluator here */}
+          {story?.titles && story.titles.length > 0 && (
+            <TitleEvaluator 
+              titles={story.titles} 
+              globalValues={story?.globalValues || []} 
+            />
+          )}
+        </div>
+        
+        <div>
+          <h2 className="text-xl font-bold mb-4">称号管理</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            称号是玩家完成游戏后获得的成就，基于最终全局变量值判定。
+          </p>
+          <TitlesList 
+            titles={story?.titles || []}
+            globalValues={story?.globalValues || []}
+            onChange={handleTitlesChange}
+          />
+        </div>
       </div>
       
       <div className="mt-8">
