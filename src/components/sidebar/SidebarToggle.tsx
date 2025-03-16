@@ -1,6 +1,6 @@
 
 import React from "react";
-import { PanelLeft, Moon, Sun, Settings } from "lucide-react";
+import { PanelLeft, Moon, Sun, Settings, Monitor } from "lucide-react";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
@@ -13,7 +13,19 @@ export const SidebarToggle = () => {
   const navigate = useNavigate();
 
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    if (theme === "dark") {
+      setTheme("light");
+    } else if (theme === "light") {
+      setTheme("system");
+    } else {
+      setTheme("dark");
+    }
+  };
+
+  const getThemeIcon = () => {
+    if (theme === "dark") return <Sun className="h-4 w-4" />;
+    if (theme === "light") return <Monitor className="h-4 w-4" />;
+    return <Moon className="h-4 w-4" />;
   };
 
   const goToSettings = () => {
@@ -47,7 +59,7 @@ export const SidebarToggle = () => {
                 className="bg-background shadow-md"
                 onClick={toggleTheme}
               >
-                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                {getThemeIcon()}
               </Button>
             </TooltipTrigger>
             <TooltipContent side="right">切换主题</TooltipContent>

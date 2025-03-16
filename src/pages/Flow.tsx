@@ -8,10 +8,12 @@ import { useSceneManagementHook } from "@/hooks/useSceneManagementHook";
 import EditorPanel from "@/components/flow/EditorPanel";
 import FloatingMobilePreview from "@/components/flow/FloatingMobilePreview";
 import { SceneType } from "@/utils/types";
+import FloatingEditorWrapper from "@/components/flow/editor/FloatingEditorWrapper";
 
 const Flow = () => {
   const { story, setStory } = useStory();
   const [isPreviewOpen, setIsPreviewOpen] = useState(true);
+  const [isEditorOpen, setIsEditorOpen] = useState(true);
   const [selectedElementId, setSelectedElementId] = useState<string>("");
 
   const {
@@ -152,7 +154,7 @@ const Flow = () => {
           </AlertDescription>
         </Alert>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-[1fr,auto] gap-3 h-full">
+        <div className="h-full w-full">
           <div className="border rounded-md overflow-hidden h-full">
             <FlowEditor
               onSceneSelect={handleSceneSelect}
@@ -160,30 +162,37 @@ const Flow = () => {
               onAddSceneWithType={handleAddSceneWithType}
             />
           </div>
-
-          <div className="h-full w-full max-w-[500px]">
-            <EditorPanel
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              selectedSceneId={selectedSceneId}
-              selectedScene={selectedScene}
-              story={story}
-              updateSceneTitle={handleUpdateSceneTitle}
-              updateSceneType={handleUpdateSceneType}
-              updateSceneLocation={handleUpdateSceneLocation}
-              updateNextScene={handleUpdateNextScene}
-              updateRevivalPoint={handleUpdateRevivalPoint}
-              selectedElementId={selectedElementId}
-              setSelectedElementId={setSelectedElementId}
-              updateSceneEntrance={handleUpdateSceneEntrance}
-              updateSceneEnvironment={handleUpdateSceneEnvironment}
-              updateEndingName={handleUpdateEndingName}
-              updateEndingPoster={handleUpdateEndingPoster}
-              updateBackgroundMusic={handleUpdateBackgroundMusic}
-              updateSceneUnlockPrice={handleUpdateSceneUnlockPrice}
-            />
-          </div>
         </div>
+      )}
+
+      {/* Floating Editor Panel */}
+      {selectedSceneId && (
+        <FloatingEditorWrapper
+          isOpen={isEditorOpen && !!selectedSceneId}
+          position={{ x: 0, y: 0 }}
+          isPopup={true}
+        >
+          <EditorPanel
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            selectedSceneId={selectedSceneId}
+            selectedScene={selectedScene}
+            story={story}
+            updateSceneTitle={handleUpdateSceneTitle}
+            updateSceneType={handleUpdateSceneType}
+            updateSceneLocation={handleUpdateSceneLocation}
+            updateNextScene={handleUpdateNextScene}
+            updateRevivalPoint={handleUpdateRevivalPoint}
+            selectedElementId={selectedElementId}
+            setSelectedElementId={setSelectedElementId}
+            updateSceneEntrance={handleUpdateSceneEntrance}
+            updateSceneEnvironment={handleUpdateSceneEnvironment}
+            updateEndingName={handleUpdateEndingName}
+            updateEndingPoster={handleUpdateEndingPoster}
+            updateBackgroundMusic={handleUpdateBackgroundMusic}
+            updateSceneUnlockPrice={handleUpdateSceneUnlockPrice}
+          />
+        </FloatingEditorWrapper>
       )}
 
       <FloatingMobilePreview
