@@ -15,7 +15,7 @@ import 'reactflow/dist/style.css';
 import { SceneNodeData } from './flowTypes';
 import { FlowControls } from './FlowControls';
 import FlowPanel from './FlowPanel';
-import { SceneFilterOption } from './FlowEditor';
+import { SceneFilterOption } from './types/flowTypes';
 import FlowFilterPanel from './FlowFilterPanel';
 
 interface FlowCanvasProps {
@@ -27,7 +27,7 @@ interface FlowCanvasProps {
   onConnect: (params: Connection) => void;
   onNodeClick: (event: React.MouseEvent, node: Node) => void;
   selectedNode: Node<SceneNodeData> | null;
-  onAddScene: () => void;
+  onAddScene: (type?: any) => void;
   onDeleteScene: () => void;
   onPreviewToggle?: () => void;
   onAutoArrange?: () => void;

@@ -72,8 +72,8 @@ const FlowEditor = ({ onSceneSelect, onPreviewToggle, onAddSceneWithType }: Flow
   }, [nodes, edges, setNodes]);
 
   // Handler for adding scenes with specific type
-  const handleAddScene = useCallback((type) => {
-    if (onAddSceneWithType) {
+  const handleAddScene = useCallback((type?: SceneType) => {
+    if (onAddSceneWithType && type) {
       onAddSceneWithType(type);
     } else {
       addScene(type);

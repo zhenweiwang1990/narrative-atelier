@@ -1,8 +1,9 @@
+
 import React from "react";
 import { Panel } from "reactflow";
 import { Button } from "@/components/ui/button";
 import { Filter, CheckSquare, XSquare, PlusSquare } from "lucide-react";
-import { SceneFilterOption } from "./FlowEditor";
+import { SceneFilterOption } from "./types/flowTypes";
 
 interface FlowFilterPanelProps {
   filterOption: SceneFilterOption;
