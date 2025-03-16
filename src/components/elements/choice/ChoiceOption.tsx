@@ -157,7 +157,7 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
           id={`locked-${option.id}`}
           checked={!!option.locked}
           onCheckedChange={toggleLocked}
-          size="sm"
+          className="h-5 w-9"
         />
       </div>
 
