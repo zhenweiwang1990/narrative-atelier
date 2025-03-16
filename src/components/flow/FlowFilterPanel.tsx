@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Panel } from "reactflow";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ interface FlowFilterPanelProps {
 
 const FlowFilterPanel: React.FC<FlowFilterPanelProps> = ({
   filterOption,
-  onFilterChange
+  onFilterChange,
 }) => {
   return (
     <Panel
@@ -25,30 +24,30 @@ const FlowFilterPanel: React.FC<FlowFilterPanelProps> = ({
       </div>
 
       <Button
-        variant={filterOption === 'all' ? "default" : "outline"}
+        variant={filterOption === "all" ? "default" : "outline"}
         size="sm"
-        onClick={() => onFilterChange('all')}
+        onClick={() => onFilterChange("all")}
         className="h-8 text-xs"
       >
-        <PlusSquare className="h-4 w-4 mr-1" /> 全部场景
+        全部场景
       </Button>
 
       <Button
-        variant={filterOption === 'endings' ? "default" : "outline"}
+        variant={filterOption === "endings" ? "default" : "outline"}
         size="sm"
-        onClick={() => onFilterChange('endings')}
+        onClick={() => onFilterChange("endings")}
         className="h-8 text-xs"
       >
-        <CheckSquare className="h-4 w-4 mr-1" /> 只显示结局
+        只显示结局
       </Button>
 
       <Button
-        variant={filterOption === 'incomplete' ? "default" : "outline"}
+        variant={filterOption === "incomplete" ? "default" : "outline"}
         size="sm"
-        onClick={() => onFilterChange('incomplete')}
+        onClick={() => onFilterChange("incomplete")}
         className="h-8 text-xs"
       >
-        <XSquare className="h-4 w-4 mr-1" /> 只显示未完待续
+        只显示未完待续
       </Button>
     </Panel>
   );

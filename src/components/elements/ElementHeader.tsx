@@ -88,7 +88,7 @@ export const getElementTypeLabel = (type: ElementType) => {
 
 // Function to get content preview based on element type
 export const getElementContentPreview = (element: SceneElement): string => {
-  const maxLength = 24;
+  const maxLength = 22;
   const truncate = (text: string): string => {
     return text.length > maxLength
       ? `${text.substring(0, maxLength)}...`

@@ -1,0 +1,1398 @@
+{
+  "id": "story-1",
+  "title": "办公室风云",
+  "author": "AI剧本Demo",
+  "description": "这是一个关于现代职场女性刘一飞与敌人明争暗斗，最终成为闺蜜的故事。",
+  "type": "interactive",
+  "protagonistName": "刘一飞",
+  "protagonistGender": "female",
+  "orientation": "none",
+  "tags": ["职场", "友情", "竞争", "成长"],
+  "uiStyle": "modern",
+  "characters": [
+    {
+      "id": "char-1",
+      "name": "刘一飞",
+      "gender": "female",
+      "role": "protagonist",
+      "bio": "28岁，毕业于顶尖大学，聪明能干但性格直率，在星辉公司担任市场部副经理。",
+      "profilePicture": "/placeholder.svg"
+    },
+    {
+      "id": "char-2",
+      "name": "张敏",
+      "gender": "female",
+      "role": "supporting",
+      "bio": "30岁，职场老手，表面优雅内心锋利，是星辉公司市场部经理，刘一飞的直接上司。",
+      "profilePicture": "/placeholder.svg"
+    },
+    {
+      "id": "char-3",
+      "name": "王总",
+      "gender": "male",
+      "role": "supporting",
+      "bio": "45岁，星辉公司总经理，性格严肃但公正，看重能力胜过关系。",
+      "profilePicture": "/placeholder.svg"
+    },
+    {
+      "id": "char-4",
+      "name": "李晓",
+      "gender": "female",
+      "role": "supporting",
+      "bio": "27岁，刘一飞的大学室友，现在是竞争对手锐光公司的员工，性格温和，善解人意。",
+      "profilePicture": "/placeholder.svg"
+    },
+    {
+      "id": "char-5",
+      "name": "陈明",
+      "gender": "male",
+      "role": "supporting",
+      "bio": "29岁，市场部同事，性格开朗，办公室八卦传播者，对刘一飞有好感。",
+      "profilePicture": "/placeholder.svg"
+    }
+  ],
+  "locations": [
+    {
+      "id": "loc-1",
+      "name": "星辉公司办公室",
+      "description": "现代化的办公环境，宽敞明亮，玻璃隔断的办公区和会议室。",
+      "scenes": [
+        "scene-1",
+        "scene-2",
+        "scene-3",
+        "scene-5",
+        "scene-8",
+        "scene-12",
+        "scene-14",
+        "scene-18",
+        "scene-21"
+      ],
+      "background": "/placeholder.svg"
+    },
+    {
+      "id": "loc-2",
+      "name": "咖啡厅",
+      "description": "公司附近的小咖啡厅，是员工们午休和小型会议的常去场所。",
+      "scenes": ["scene-4", "scene-7", "scene-9", "scene-17"],
+      "background": "/placeholder.svg"
+    },
+    {
+      "id": "loc-3",
+      "name": "刘一飞家",
+      "description": "简约风格的单身公寓，干净整洁，体现了主人的品味。",
+      "scenes": ["scene-6", "scene-10", "scene-16", "scene-19"],
+      "background": "/placeholder.svg"
+    },
+    {
+      "id": "loc-4",
+      "name": "会议中心",
+      "description": "大型会议和展览的场所，宽敞气派，设备先进。",
+      "scenes": ["scene-11", "scene-13"],
+      "background": "/placeholder.svg"
+    },
+    {
+      "id": "loc-5",
+      "name": "医院",
+      "description": "现代化医院，干净明亮，安静的病房和走廊。",
+      "scenes": ["scene-15", "scene-20"],
+      "background": "/placeholder.svg"
+    }
+  ],
+  "globalValues": [
+    {
+      "id": "value-1",
+      "name": "工作能力",
+      "description": "反映刘一飞的职场表现和专业能力",
+      "initialValue": 60,
+      "type": "skill"
+    },
+    {
+      "id": "value-2",
+      "name": "与张敏的关系",
+      "description": "刘一飞与张敏之间的关系状态",
+      "initialValue": 20,
+      "type": "relationship"
+    },
+    {
+      "id": "value-3",
+      "name": "团队声誉",
+      "description": "刘一飞在团队中的声誉和影响力",
+      "initialValue": 50,
+      "type": "social"
+    },
+    {
+      "id": "value-4",
+      "name": "个人压力",
+      "description": "刘一飞的心理压力水平",
+      "initialValue": 40,
+      "type": "mental"
+    },
+    {
+      "id": "value-5",
+      "name": "项目进度",
+      "description": "当前负责项目的完成进度",
+      "initialValue": 0,
+      "type": "progress"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene-1",
+      "title": "新的一天",
+      "type": "start",
+      "locationId": "loc-1",
+      "position": { "x": 50, "y": 50 },
+      "elements": [
+        {
+          "id": "elem-1-1",
+          "type": "narration",
+          "text": "星辉公司的早晨总是忙碌的。刘一飞提前半小时到达办公室，打开电脑准备开始一天的工作。"
+        },
+        {
+          "id": "elem-1-2",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "今天是季度报告准备的最后一天，一定要确保所有数据准确无误。"
+        },
+        {
+          "id": "elem-1-3",
+          "type": "dialogue",
+          "characterId": "char-5",
+          "text": "早啊一飞，又是第一个到啊？听说王总今天要检查季度报告，张经理已经在会议室等着了。"
+        },
+        {
+          "id": "elem-1-4",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "啊？提前了？预定不是下午吗？"
+        },
+        {
+          "id": "elem-1-5",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "张敏一定是故意不告诉我时间变更的...这不是第一次了。"
+        },
+        {
+          "id": "elem-1-6",
+          "type": "choice",
+          "text": "你会如何应对这个突发情况？",
+          "options": [
+            {
+              "id": "opt-1-6-1",
+              "text": "立刻加快速度整理数据，努力赶在会议前完成",
+              "nextSceneId": "scene-2",
+              "valueChanges": [
+                { "valueId": "value-1", "change": 5 },
+                { "valueId": "value-4", "change": 10 }
+              ]
+            },
+            {
+              "id": "opt-1-6-2",
+              "text": "找张敏询问为什么不通知你时间变更",
+              "nextSceneId": "scene-3",
+              "valueChanges": [
+                { "valueId": "value-2", "change": -5 },
+                { "valueId": "value-3", "change": -3 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-2",
+      "title": "紧急准备",
+      "type": "normal",
+      "locationId": "loc-1",
+      "position": { "x": 200, "y": 0 },
+      "elements": [
+        {
+          "id": "elem-2-1",
+          "type": "narration",
+          "text": "刘一飞立刻投入工作，手指在键盘上飞快地敲打着。"
+        },
+        {
+          "id": "elem-2-2",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "不能慌，按照之前的准备，只需要再核对一遍数据就可以了。"
+        },
+        {
+          "id": "elem-2-3",
+          "type": "dialogue",
+          "characterId": "char-5",
+          "text": "需要帮忙吗？我可以帮你检查一部分数据。"
+        },
+        {
+          "id": "elem-2-4",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "太感谢了！你帮我看一下东区的销售数据吧。"
+        },
+        {
+          "id": "elem-2-5",
+          "type": "qte",
+          "description": "快速整理数据",
+          "qteType": "action",
+          "keySequence": "ASDW",
+          "timeLimit": 5,
+          "introText": "快速按下显示的按键序列！",
+          "success": {
+            "sceneId": "scene-4",
+            "valueChanges": [
+              { "valueId": "value-1", "change": 10 },
+              { "valueId": "value-5", "change": 20 }
+            ]
+          },
+          "failure": {
+            "sceneId": "scene-5",
+            "valueChanges": [
+              { "valueId": "value-1", "change": -5 },
+              { "valueId": "value-5", "change": 5 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene-3",
+      "title": "直面质问",
+      "type": "normal",
+      "locationId": "loc-1",
+      "position": { "x": 200, "y": 100 },
+      "elements": [
+        {
+          "id": "elem-3-1",
+          "type": "narration",
+          "text": "刘一飞快步走向会议室，张敏正在整理文件。"
+        },
+        {
+          "id": "elem-3-2",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "张经理，为什么会议时间提前了没有通知我？"
+        },
+        {
+          "id": "elem-3-3",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "我发了邮件给所有人，你没收到吗？真是奇怪。不过作为副经理，你应该随时准备好应对变化，不是吗？"
+        },
+        {
+          "id": "elem-3-4",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "她绝对是故意的，但我现在没有证据。"
+        },
+        {
+          "id": "elem-3-5",
+          "type": "choice",
+          "text": "你要如何回应张敏？",
+          "options": [
+            {
+              "id": "opt-3-5-1",
+              "text": "保持冷静，表示会立即准备好材料",
+              "nextSceneId": "scene-5",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 5 },
+                { "valueId": "value-3", "change": 5 }
+              ]
+            },
+            {
+              "id": "opt-3-5-2",
+              "text": "坚持表示自己没有收到任何通知",
+              "nextSceneId": "scene-6",
+              "valueChanges": [
+                { "valueId": "value-2", "change": -10 },
+                { "valueId": "value-4", "change": 15 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-4",
+      "title": "成功汇报",
+      "type": "normal",
+      "locationId": "loc-2",
+      "position": { "x": 350, "y": 0 },
+      "elements": [
+        {
+          "id": "elem-4-1",
+          "type": "narration",
+          "text": "会议结束后，刘一飞的表现获得了一致好评，数据准确且分析深入。"
+        },
+        {
+          "id": "elem-4-2",
+          "type": "dialogue",
+          "characterId": "char-3",
+          "text": "刘副经理，你的报告做得很好，特别是对市场趋势的分析很有见地。"
+        },
+        {
+          "id": "elem-4-3",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "谢谢王总，这是团队共同努力的结果。"
+        },
+        {
+          "id": "elem-4-4",
+          "type": "thought",
+          "characterId": "char-2",
+          "text": "她比我想象的要更有能力...看来我需要重新评估。"
+        },
+        {
+          "id": "elem-4-5",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "是的，报告做得不错。不过，我们应该更关注竞争对手锐光最近的动向，他们可能在准备新产品。"
+        },
+        {
+          "id": "elem-4-6",
+          "type": "choice",
+          "text": "如何回应张敏的补充？",
+          "options": [
+            {
+              "id": "opt-4-6-1",
+              "text": "表示感谢并承诺进一步调查锐光的动向",
+              "nextSceneId": "scene-7",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 10 },
+                { "valueId": "value-3", "change": 5 }
+              ]
+            },
+            {
+              "id": "opt-4-6-2",
+              "text": "礼貌地指出你的报告已经包含了这部分内容",
+              "nextSceneId": "scene-8",
+              "valueChanges": [
+                { "valueId": "value-1", "change": 5 },
+                { "valueId": "value-2", "change": -5 }
+              ]
+            }
+          ]
+        }
+      ],
+      "nextSceneId": "scene-7"
+    },
+    {
+      "id": "scene-5",
+      "title": "临时应对",
+      "type": "normal",
+      "locationId": "loc-1",
+      "position": { "x": 350, "y": 100 },
+      "elements": [
+        {
+          "id": "elem-5-1",
+          "type": "narration",
+          "text": "刘一飞匆忙整理材料，会议开始了，但她的报告还没有完全准备好。"
+        },
+        {
+          "id": "elem-5-2",
+          "type": "dialogue",
+          "characterId": "char-3",
+          "text": "刘副经理，请开始你的报告。"
+        },
+        {
+          "id": "elem-5-3",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "只能临场发挥了，希望不会出太大问题。"
+        },
+        {
+          "id": "elem-5-4",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "是的王总，根据我们的季度数据分析，市场份额有所增长，但东区销售略有下滑..."
+        },
+        {
+          "id": "elem-5-5",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "刘副经理，东区的数据似乎不太准确，我这里有最新的统计。"
+        },
+        {
+          "id": "elem-5-6",
+          "type": "choice",
+          "text": "面对张敏的\"纠正\"，你会怎么做？",
+          "options": [
+            {
+              "id": "opt-5-6-1",
+              "text": "接受张敏的数据，并表示感谢",
+              "nextSceneId": "scene-8",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 5 },
+                { "valueId": "value-1", "change": -5 }
+              ]
+            },
+            {
+              "id": "opt-5-6-2",
+              "text": "坚持自己的数据，解释你的来源更可靠",
+              "nextSceneId": "scene-9",
+              "valueChanges": [
+                { "valueId": "value-1", "change": -10 },
+                { "valueId": "value-3", "change": -5 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-6",
+      "title": "回家思考",
+      "type": "normal",
+      "locationId": "loc-3",
+      "position": { "x": 350, "y": 200 },
+      "elements": [
+        {
+          "id": "elem-6-1",
+          "type": "narration",
+          "text": "会议结束后，刘一飞情绪低落地回到家中。"
+        },
+        {
+          "id": "elem-6-2",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "今天真是糟糕透了。会议上出了不少错，张敏还在王总面前表现得比我强很多。"
+        },
+        {
+          "id": "elem-6-3",
+          "type": "dialogue",
+          "characterId": "char-4",
+          "text": "视频通话：嘿，一飞，怎么了？看起来心情不好？"
+        },
+        {
+          "id": "elem-6-4",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "李晓，我今天在公司遇到了麻烦...感觉张敏故意针对我。"
+        },
+        {
+          "id": "elem-6-5",
+          "type": "dialogue",
+          "characterId": "char-4",
+          "text": "我们锐光也有这种办公室政治，很烦人。不过，你知道吗？我们公司正在计划一个新项目，可能会对你们星辉造成冲击。"
+        },
+        {
+          "id": "elem-6-6",
+          "type": "choice",
+          "text": "李晓透露的信息可能对你有用，你会怎么做？",
+          "options": [
+            {
+              "id": "opt-6-6-1",
+              "text": "询问更多关于锐光新项目的详情",
+              "nextSceneId": "scene-10",
+              "valueChanges": [
+                { "valueId": "value-5", "change": 15 },
+                { "valueId": "value-4", "change": -5 }
+              ]
+            },
+            {
+              "id": "opt-6-6-2",
+              "text": "婉拒这个话题，不想利用朋友获取商业机密",
+              "nextSceneId": "scene-11",
+              "valueChanges": [
+                { "valueId": "value-3", "change": 10 },
+                { "valueId": "value-5", "change": -5 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-7",
+      "title": "咖啡厅交谈",
+      "type": "normal",
+      "locationId": "loc-2",
+      "position": { "x": 500, "y": 0 },
+      "elements": [
+        {
+          "id": "elem-7-1",
+          "type": "narration",
+          "text": "几天后，刘一飞在咖啡厅意外遇到了张敏。"
+        },
+        {
+          "id": "elem-7-2",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "一飞，巧啊。一个人？"
+        },
+        {
+          "id": "elem-7-3",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "是啊，来整理一下思路，上次会议后我一直在调查锐光的动向。"
+        },
+        {
+          "id": "elem-7-4",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "有什么发现吗？说实话，你上次的报告做得很不错，王总对你印象很好。"
+        },
+        {
+          "id": "elem-7-5",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "她是真心夸我，还是有什么目的？"
+        },
+        {
+          "id": "elem-7-6",
+          "type": "choice",
+          "text": "如何回应张敏？",
+          "options": [
+            {
+              "id": "opt-7-6-1",
+              "text": "分享你对锐光的一些发现，但保留关键信息",
+              "nextSceneId": "scene-12",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 5 },
+                { "valueId": "value-5", "change": 5 }
+              ]
+            },
+            {
+              "id": "opt-7-6-2",
+              "text": "坦诚分享所有发现，尝试建立合作关系",
+              "nextSceneId": "scene-13",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 15 },
+                { "valueId": "value-5", "change": 15 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-8",
+      "title": "办公室紧张",
+      "type": "normal",
+      "locationId": "loc-1",
+      "position": { "x": 500, "y": 100 },
+      "elements": [
+        {
+          "id": "elem-8-1",
+          "type": "narration",
+          "text": "接下来的几天，办公室的气氛变得紧张起来。"
+        },
+        {
+          "id": "elem-8-2",
+          "type": "dialogue",
+          "characterId": "char-5",
+          "text": "一飞，听说张经理要把新项目交给市场部其他组负责，跳过我们组？"
+        },
+        {
+          "id": "elem-8-3",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "她这是在用工作上的事情报复我吗？整个团队都要受影响。"
+        },
+        {
+          "id": "elem-8-4",
+          "type": "dialogue",
+          "characterId": "char-3",
+          "text": "刘副经理，下午3点开会讨论新项目分配，请准备好你的提案。"
+        },
+        {
+          "id": "elem-8-5",
+          "type": "choice",
+          "text": "如何为下午的会议准备？",
+          "options": [
+            {
+              "id": "opt-8-5-1",
+              "text": "准备一份高质量的提案，证明你的团队最适合这个项目",
+              "nextSceneId": "scene-14",
+              "valueChanges": [
+                { "valueId": "value-1", "change": 10 },
+                { "valueId": "value-4", "change": 5 }
+              ]
+            },
+            {
+              "id": "opt-8-5-2",
+              "text": "找张敏私下谈谈，了解她的真实想法",
+              "nextSceneId": "scene-15",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 5 },
+                { "valueId": "value-4", "change": -5 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-9",
+      "title": "咖啡厅反思",
+      "type": "normal",
+      "locationId": "loc-2",
+      "position": { "x": 500, "y": 200 },
+      "elements": [
+        {
+          "id": "elem-9-1",
+          "type": "narration",
+          "text": "会议后，刘一飞在咖啡厅独自反思。王总对她的表现并不满意。"
+        },
+        {
+          "id": "elem-9-2",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "我需要找到一种方式证明自己，不能让张敏一直占上风。"
+        },
+        {
+          "id": "elem-9-3",
+          "type": "dialogue",
+          "characterId": "char-5",
+          "text": "嘿，一飞，没事吧？会议确实有点紧张，但别太放在心上。"
+        },
+        {
+          "id": "elem-9-4",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "谢谢关心，陈明。我只是在想如何改进我的工作。"
+        },
+        {
+          "id": "elem-9-5",
+          "type": "dialogue",
+          "characterId": "char-5",
+          "text": "其实...我有个消息可能对你有帮助。张经理正在准备一个关于锐光的报告，但她的数据似乎有些过时了。"
+        },
+        {
+          "id": "elem-9-6",
+          "type": "choice",
+          "text": "如何利用这个信息？",
+          "options": [
+            {
+              "id": "opt-9-6-1",
+              "text": "感谢陈明，决定收集更准确的数据自己准备一份报告",
+              "nextSceneId": "scene-16",
+              "valueChanges": [
+                { "valueId": "value-1", "change": 15 },
+                { "valueId": "value-5", "change": 10 }
+              ]
+            },
+            {
+              "id": "opt-9-6-2",
+              "text": "婉拒这种办公室政治，决定靠自己的实力赢得尊重",
+              "nextSceneId": "scene-17",
+              "valueChanges": [
+                { "valueId": "value-3", "change": 10 },
+                { "valueId": "value-4", "change": -5 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-10",
+      "title": "获取信息",
+      "type": "normal",
+      "locationId": "loc-3",
+      "position": { "x": 650, "y": 200 },
+      "elements": [
+        {
+          "id": "elem-10-1",
+          "type": "narration",
+          "text": "刘一飞决定从李晓那里获取更多关于锐光新项目的信息。"
+        },
+        {
+          "id": "elem-10-2",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "李晓，能告诉我更多关于那个新项目的事吗？我保证只是为了做好准备，不会告诉任何人是从你这里得到的信息。"
+        },
+        {
+          "id": "elem-10-3",
+          "type": "dialogue",
+          "characterId": "char-4",
+          "text": "好吧...但你要小心使用。锐光计划在下个季度推出一款全新的智能家居系统，目标客户群与星辉重叠。"
+        },
+        {
+          "id": "elem-10-4",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "这对星辉来说是个潜在威胁，如果能提前做好应对准备，或许能给公司带来优势，也能证明我的价值。"
+        },
+        {
+          "id": "elem-10-5",
+          "type": "qte",
+          "description": "快速记录关键信息",
+          "qteType": "combo",
+          "keySequence": ["A", "S", "D", "F"],
+          "timeLimit": 6,
+          "introText": "连续按下显示的按键组合！",
+          "success": {
+            "sceneId": "scene-18",
+            "valueChanges": [
+              { "valueId": "value-1", "change": 10 },
+              { "valueId": "value-5", "change": 20 }
+            ]
+          },
+          "failure": {
+            "sceneId": "scene-19",
+            "valueChanges": [{ "valueId": "value-5", "change": 5 }]
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene-11",
+      "title": "行业展会",
+      "type": "normal",
+      "locationId": "loc-4",
+      "position": { "x": 650, "y": 300 },
+      "elements": [
+        {
+          "id": "elem-11-1",
+          "type": "narration",
+          "text": "一周后，刘一飞参加了一个行业展会，意外地，她在那里看到了张敏。"
+        },
+        {
+          "id": "elem-11-2",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "刘副经理，没想到在这里遇见你。"
+        },
+        {
+          "id": "elem-11-3",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "张经理，我来收集一些行业动态和竞争对手的信息。"
+        },
+        {
+          "id": "elem-11-4",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "我也是。看，那边是锐光的展台，他们似乎在展示一款新产品。"
+        },
+        {
+          "id": "elem-11-5",
+          "type": "choice",
+          "text": "如何与张敏互动？",
+          "options": [
+            {
+              "id": "opt-11-5-1",
+              "text": "提议一起去看看锐光的展台，合作收集信息",
+              "nextSceneId": "scene-13",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 15 },
+                { "valueId": "value-5", "change": 10 }
+              ]
+            },
+            {
+              "id": "opt-11-5-2",
+              "text": "礼貌告别，自己去调查锐光的展台",
+              "nextSceneId": "scene-20",
+              "valueChanges": [
+                { "valueId": "value-2", "change": -5 },
+                { "valueId": "value-5", "change": 5 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-12",
+      "title": "部分合作",
+      "type": "normal",
+      "locationId": "loc-1",
+      "position": { "x": 650, "y": 0 },
+      "elements": [
+        {
+          "id": "elem-12-1",
+          "type": "narration",
+          "text": "刘一飞决定与张敏分享部分信息，测试她的反应。"
+        },
+        {
+          "id": "elem-12-2",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "我发现锐光最近在社交媒体上增加了营销投入，可能在为新产品做准备。"
+        },
+        {
+          "id": "elem-12-3",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "有意思，我也注意到了这一点。你有什么具体的数据吗？"
+        },
+        {
+          "id": "elem-12-4",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "她似乎真的对我的发现感兴趣，或许我们可以在工作上合作？"
+        },
+        {
+          "id": "elem-12-5",
+          "type": "dialogue",
+          "characterId": "char-3",
+          "text": "电话铃响：刘副经理，我需要你和张经理立即到我办公室来，有紧急事情讨论。"
+        },
+        {
+          "id": "elem-12-6",
+          "type": "choice",
+          "text": "在去王总办公室的路上，你会怎么做？",
+          "options": [
+            {
+              "id": "opt-12-6-1",
+              "text": "向张敏表示希望未来能够更多合作",
+              "nextSceneId": "scene-13",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 10 },
+                { "valueId": "value-3", "change": 5 }
+              ]
+            },
+            {
+              "id": "opt-12-6-2",
+              "text": "保持沉默，等待王总说明情况",
+              "nextSceneId": "scene-14",
+              "valueChanges": [{ "valueId": "value-4", "change": 5 }]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-13",
+      "title": "意外合作",
+      "type": "normal",
+      "locationId": "loc-4",
+      "position": { "x": 800, "y": 0 },
+      "elements": [
+        {
+          "id": "elem-13-1",
+          "type": "narration",
+          "text": "在王总的办公室，刘一飞和张敏得知公司即将面临一个重大挑战。"
+        },
+        {
+          "id": "elem-13-2",
+          "type": "dialogue",
+          "characterId": "char-3",
+          "text": "锐光公司可能会在下个月推出直接竞争我们主打产品的新系统。我需要你们两个联手准备应对策略。"
+        },
+        {
+          "id": "elem-13-3",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "王总，我和刘副经理正好有一些相关发现，我们可以立即开始准备。"
+        },
+        {
+          "id": "elem-13-4",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "张敏主动提到我们的合作，这是个好兆头。"
+        },
+        {
+          "id": "elem-13-5",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "是的，王总，我们会制定一份全面的应对方案。"
+        },
+        {
+          "id": "elem-13-6",
+          "type": "qte",
+          "description": "紧急头脑风暴",
+          "qteType": "action",
+          "keySequence": "SPACE",
+          "timeLimit": 3,
+          "introText": "快速按下空格键！",
+          "success": {
+            "sceneId": "scene-21",
+            "valueChanges": [
+              { "valueId": "value-1", "change": 15 },
+              { "valueId": "value-2", "change": 15 },
+              { "valueId": "value-5", "change": 25 }
+            ]
+          },
+          "failure": {
+            "sceneId": "scene-18",
+            "valueChanges": [
+              { "valueId": "value-1", "change": 5 },
+              { "valueId": "value-2", "change": 5 },
+              { "valueId": "value-5", "change": 10 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene-14",
+      "title": "项目角逐",
+      "type": "normal",
+      "locationId": "loc-1",
+      "position": { "x": 800, "y": 100 },
+      "elements": [
+        {
+          "id": "elem-14-1",
+          "type": "narration",
+          "text": "在会议室里，刘一飞和张敏分别介绍了他们对新项目的提案。"
+        },
+        {
+          "id": "elem-14-2",
+          "type": "dialogue",
+          "characterId": "char-3",
+          "text": "两份提案都很有见地。刘副经理的方案针对性强，张经理的计划更全面。"
+        },
+        {
+          "id": "elem-14-3",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "王总似乎在权衡两个方案的优缺点，这是个证明自己的机会。"
+        },
+        {
+          "id": "elem-14-4",
+          "type": "dialogue",
+          "characterId": "char-3",
+          "text": "我决定让你们两个共同负责这个项目，优势互补。刘副经理主导市场策略，张经理负责整体协调。"
+        },
+        {
+          "id": "elem-14-5",
+          "type": "choice",
+          "text": "你如何看待这个决定？",
+          "options": [
+            {
+              "id": "opt-14-5-1",
+              "text": "接受并积极表示会与张敏良好合作",
+              "nextSceneId": "scene-18",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 10 },
+                { "valueId": "value-3", "change": 5 },
+                { "valueId": "value-4", "change": -5 }
+              ]
+            },
+            {
+              "id": "opt-14-5-2",
+              "text": "勉强接受，但内心担忧与张敏的合作会有问题",
+              "nextSceneId": "scene-17",
+              "valueChanges": [
+                { "valueId": "value-2", "change": -5 },
+                { "valueId": "value-4", "change": 10 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-15",
+      "title": "私下交谈",
+      "type": "normal",
+      "locationId": "loc-5",
+      "position": { "x": 800, "y": 200 },
+      "elements": [
+        {
+          "id": "elem-15-1",
+          "type": "narration",
+          "text": "刘一飞找到正在休息室喝咖啡的张敏，决定坦诚交流。"
+        },
+        {
+          "id": "elem-15-2",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "张经理，我想了解你为什么要把新项目分给其他组？我们组有什么问题吗？"
+        },
+        {
+          "id": "elem-15-3",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "刘一飞，坦白说，我认为你有潜力，但太过自信。有时候团队协作比个人能力更重要。"
+        },
+        {
+          "id": "elem-15-4",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "她是在给我上课还是真心建议？不过她说的可能有点道理..."
+        },
+        {
+          "id": "elem-15-5",
+          "type": "dialogue",
+          "characterId": "char-3",
+          "text": "进入休息室：啊，正好你们两个都在。我刚收到消息，锐光将在下个月推出与我们直接竞争的产品。我需要你们联手应对。"
+        },
+        {
+          "id": "elem-15-6",
+          "type": "choice",
+          "text": "面对突如其来的合作任务，你会怎么做？",
+          "options": [
+            {
+              "id": "opt-15-6-1",
+              "text": "立即表示愿意放下分歧，与张敏合作应对挑战",
+              "nextSceneId": "scene-20",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 15 },
+                { "valueId": "value-3", "change": 10 },
+                { "valueId": "value-4", "change": -5 }
+              ]
+            },
+            {
+              "id": "opt-15-6-2",
+              "text": "建议分工合作，各自负责不同部分",
+              "nextSceneId": "scene-16",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 5 },
+                { "valueId": "value-4", "change": -5 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-16",
+      "title": "独立准备",
+      "type": "normal",
+      "locationId": "loc-3",
+      "position": { "x": 950, "y": 200 },
+      "elements": [
+        {
+          "id": "elem-16-1",
+          "type": "narration",
+          "text": "晚上，刘一飞在家埋头准备她的分析报告，希望能给公司带来真正的价值。"
+        },
+        {
+          "id": "elem-16-2",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "我必须做出最好的方案，不仅是为了赢过张敏，更是为了公司的未来。"
+        },
+        {
+          "id": "elem-16-3",
+          "type": "dialogue",
+          "characterId": "char-5",
+          "text": "电话：一飞，听说你在准备关于锐光的报告？张经理也在做类似的事，你们不会又要竞争吧？"
+        },
+        {
+          "id": "elem-16-4",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "不是刻意竞争，陈明。我只是想做好自己的工作，拿出最好的方案。"
+        },
+        {
+          "id": "elem-16-5",
+          "type": "dialogue",
+          "characterId": "char-5",
+          "text": "我明白...不过，也许你们可以尝试合作？两个人的视角总比一个人全面。"
+        },
+        {
+          "id": "elem-16-6",
+          "type": "choice",
+          "text": "陈明的建议让你思考，你会怎么做？",
+          "options": [
+            {
+              "id": "opt-16-6-1",
+              "text": "决定第二天找张敏谈谈，尝试合作",
+              "nextSceneId": "scene-18",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 10 },
+                { "valueId": "value-3", "change": 5 },
+                { "valueId": "value-5", "change": 10 }
+              ]
+            },
+            {
+              "id": "opt-16-6-2",
+              "text": "坚持独立完成报告，但会在提交前与张敏沟通",
+              "nextSceneId": "scene-19",
+              "valueChanges": [
+                { "valueId": "value-1", "change": 10 },
+                { "valueId": "value-5", "change": 5 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-17",
+      "title": "咖啡馆思考",
+      "type": "normal",
+      "locationId": "loc-2",
+      "position": { "x": 950, "y": 300 },
+      "elements": [
+        {
+          "id": "elem-17-1",
+          "type": "narration",
+          "text": "周末，刘一飞独自在咖啡馆思考着职场上的各种关系和挑战。"
+        },
+        {
+          "id": "elem-17-2",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "和张敏的竞争让我很疲惫，或许我该换个角度看待这个关系？"
+        },
+        {
+          "id": "elem-17-3",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "惊讶地出现：刘副经理，真巧啊。周末还在想工作？"
+        },
+        {
+          "id": "elem-17-4",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "张经理！没想到在这里遇见你...是的，在思考一些工作上的事情。"
+        },
+        {
+          "id": "elem-17-5",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "介意我加入吗？其实我一直想找个机会跟你聊聊，不是关于工作，而是...我们之间的关系。"
+        },
+        {
+          "id": "elem-17-6",
+          "type": "choice",
+          "text": "你会如何回应这个出乎意料的请求？",
+          "options": [
+            {
+              "id": "opt-17-6-1",
+              "text": "邀请张敏坐下，乐意听她说什么",
+              "nextSceneId": "scene-20",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 15 },
+                { "valueId": "value-4", "change": -10 }
+              ]
+            },
+            {
+              "id": "opt-17-6-2",
+              "text": "勉强同意，但保持警惕",
+              "nextSceneId": "scene-18",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 5 },
+                { "valueId": "value-4", "change": 5 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-18",
+      "title": "初步合作",
+      "type": "normal",
+      "locationId": "loc-1",
+      "position": { "x": 1100, "y": 150 },
+      "elements": [
+        {
+          "id": "elem-18-1",
+          "type": "narration",
+          "text": "星期一，刘一飞和张敏在会议室里共同准备应对锐光的策略。"
+        },
+        {
+          "id": "elem-18-2",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "我整理了锐光的历史动态，你的市场分析很到位，我们可以结合起来。"
+        },
+        {
+          "id": "elem-18-3",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "我也觉得你对竞争策略的理解很独到。我们的合作比想象中顺利。"
+        },
+        {
+          "id": "elem-18-4",
+          "type": "thought",
+          "characterId": "char-2",
+          "text": "或许之前我对她有些误解，她确实很有能力。"
+        },
+        {
+          "id": "elem-18-5",
+          "type": "dialogue",
+          "characterId": "char-3",
+          "text": "进入会议室：进展如何？时间紧迫，锐光已经开始市场预热了。"
+        },
+        {
+          "id": "elem-18-6",
+          "type": "choice",
+          "text": "如何向王总汇报？",
+          "options": [
+            {
+              "id": "opt-18-6-1",
+              "text": "让张敏主导汇报，展示团队合作精神",
+              "nextSceneId": "scene-21",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 20 },
+                { "valueId": "value-3", "change": 10 }
+              ]
+            },
+            {
+              "id": "opt-18-6-2",
+              "text": "共同汇报，各自强调自己的贡献",
+              "nextSceneId": "scene-21",
+              "valueChanges": [
+                { "valueId": "value-1", "change": 10 },
+                { "valueId": "value-2", "change": 10 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-19",
+      "title": "意外发现",
+      "type": "normal",
+      "locationId": "loc-3",
+      "position": { "x": 1100, "y": 250 },
+      "elements": [
+        {
+          "id": "elem-19-1",
+          "type": "narration",
+          "text": "深夜，刘一飞还在家中完善她的报告，突然收到一条匿名邮件。"
+        },
+        {
+          "id": "elem-19-2",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "这是...张敏过去在锐光工作的记录？还有她的内部联系人？这是真的吗？"
+        },
+        {
+          "id": "elem-19-3",
+          "type": "dialogue",
+          "characterId": "char-5",
+          "text": "电话：一飞，还没睡？我刚听说一个消息，张经理以前在锐光工作过，可能与他们还有联系。"
+        },
+        {
+          "id": "elem-19-4",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "陈明...我刚收到一些相关资料。这事很复杂，我需要时间思考。"
+        },
+        {
+          "id": "elem-19-5",
+          "type": "choice",
+          "text": "如何处理这些敏感信息？",
+          "options": [
+            {
+              "id": "opt-19-5-1",
+              "text": "直接向王总报告，让他来处理",
+              "nextSceneId": "scene-20",
+              "valueChanges": [
+                { "valueId": "value-2", "change": -20 },
+                { "valueId": "value-3", "change": -10 }
+              ]
+            },
+            {
+              "id": "opt-19-5-2",
+              "text": "先私下与张敏交谈，了解真相",
+              "nextSceneId": "scene-20",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 10 },
+                { "valueId": "value-4", "change": 10 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-20",
+      "title": "真相时刻",
+      "type": "normal",
+      "locationId": "loc-5",
+      "position": { "x": 1250, "y": 200 },
+      "elements": [
+        {
+          "id": "elem-20-1",
+          "type": "narration",
+          "text": "刘一飞找到张敏，决定坦诚面对所有问题。令她惊讶的是，张敏正在医院探望母亲。"
+        },
+        {
+          "id": "elem-20-2",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "张经理，抱歉打扰你。我不知道你母亲住院了..."
+        },
+        {
+          "id": "elem-20-3",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "刘一飞？你怎么会来这里...是的，我母亲病了很久，最近情况恶化。这就是我有时看起来压力很大的原因。"
+        },
+        {
+          "id": "elem-20-4",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "我完全误解了她...原来她背后有这么多我不知道的故事。"
+        },
+        {
+          "id": "elem-20-5",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "关于锐光的事，我确实曾在那里工作过，但我从未泄露星辉的任何信息。相反，我的经验能帮助我们更好地应对他们。"
+        },
+        {
+          "id": "elem-20-6",
+          "type": "choice",
+          "text": "这一刻你意识到了很多事情，你会怎么做？",
+          "options": [
+            {
+              "id": "opt-20-6-1",
+              "text": "坦诚道歉，提议从新开始，建立真正的友谊和合作关系",
+              "nextSceneId": "scene-21",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 30 },
+                { "valueId": "value-3", "change": 15 },
+                { "valueId": "value-4", "change": -15 }
+              ]
+            },
+            {
+              "id": "opt-20-6-2",
+              "text": "表示理解和支持，但仍保持一定职业距离",
+              "nextSceneId": "scene-21",
+              "valueChanges": [
+                { "valueId": "value-2", "change": 15 },
+                { "valueId": "value-3", "change": 5 },
+                { "valueId": "value-4", "change": -5 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "scene-21",
+      "title": "新的开始",
+      "type": "ending",
+      "locationId": "loc-1",
+      "position": { "x": 1400, "y": 150 },
+      "endingName": "携手向前",
+      "elements": [
+        {
+          "id": "elem-21-1",
+          "type": "narration",
+          "text": "三个月后，星辉公司成功应对了锐光的市场挑战，刘一飞和张敏的团队合作获得了公司上下的称赞。"
+        },
+        {
+          "id": "elem-21-2",
+          "type": "dialogue",
+          "characterId": "char-3",
+          "text": "感谢你们的出色工作。我决定提拔刘一飞为市场部联合经理，与张敏一起领导整个部门。"
+        },
+        {
+          "id": "elem-21-3",
+          "type": "dialogue",
+          "characterId": "char-2",
+          "text": "这是个明智的决定，王总。一飞的能力和创新思维是我们团队的宝贵资产。"
+        },
+        {
+          "id": "elem-21-4",
+          "type": "dialogue",
+          "characterId": "char-1",
+          "text": "感谢信任。我很期待与张敏继续合作，我们已经证明，团队合作比个人竞争更能创造价值。"
+        },
+        {
+          "id": "elem-21-5",
+          "type": "thought",
+          "characterId": "char-1",
+          "text": "从敌人到朋友，从竞争到合作，这段经历教会了我很多。真正的成功不是踩着别人上升，而是携手共进。"
+        },
+        {
+          "id": "elem-21-6",
+          "type": "narration",
+          "text": "会议结束后，刘一飞和张敏一起走出办公室，不再是竞争对手，而是朋友和合作伙伴，共同迎接未来的挑战。"
+        }
+      ]
+    }
+  ]
+}
