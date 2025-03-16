@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ElementType, SceneElement, NarrationElement, DialogueElement, ThoughtElement, ChoiceElement, QteElement, DialogueTaskElement } from '@/utils/types';
@@ -52,33 +51,28 @@ export const getElementTypeLabel = (type: ElementType) => {
 
 // Function to get content preview based on element type
 export const getElementContentPreview = (element: SceneElement): string => {
+  const maxLength = 40;
+  const truncate = (text: string): string => {
+    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+  };
+
   switch (element.type) {
     case 'narration':
       const narrationElem = element as NarrationElement;
-      return narrationElem.text ? 
-        (narrationElem.text.length > 40 ? `${narrationElem.text.substring(0, 40)}...` : narrationElem.text) : 
-        '(空内容)';
+      return narrationElem.text ? truncate(narrationElem.text) : '(空内容)';
     case 'dialogue':
     case 'thought':
       const textElem = element as DialogueElement | ThoughtElement;
-      return textElem.text ? 
-        (textElem.text.length > 40 ? `${textElem.text.substring(0, 40)}...` : textElem.text) : 
-        '(空内容)';
+      return textElem.text ? truncate(textElem.text) : '(空内容)';
     case 'choice':
       const choiceElem = element as ChoiceElement;
-      return choiceElem.text ? 
-        (choiceElem.text.length > 40 ? `${choiceElem.text.substring(0, 40)}...` : choiceElem.text) : 
-        '(选项提示)';
+      return choiceElem.text ? truncate(choiceElem.text) : '(选项提示)';
     case 'qte':
       const qteElem = element as QteElement;
-      return qteElem.description ? 
-        (qteElem.description.length > 40 ? `${qteElem.description.substring(0, 40)}...` : qteElem.description) : 
-        '(QTE描述)';
+      return qteElem.description ? truncate(qteElem.description) : '(QTE描述)';
     case 'dialogueTask':
       const dialogueTaskElem = element as DialogueTaskElement;
-      return dialogueTaskElem.goal ? 
-        (dialogueTaskElem.goal.length > 40 ? `${dialogueTaskElem.goal.substring(0, 40)}...` : dialogueTaskElem.goal) : 
-        '(对话任务)';
+      return dialogueTaskElem.goal ? truncate(dialogueTaskElem.goal) : '(对话任务)';
     default:
       return '(无预览)';
   }
