@@ -106,12 +106,32 @@ const Flow = () => {
 
     setStory({ ...story, scenes: updatedScenes });
   };
+  
+  const handleUpdateEndingPoster = (url: string) => {
+    if (!selectedSceneId || !story || !setStory) return;
+
+    const updatedScenes = story.scenes.map((scene) =>
+      scene.id === selectedSceneId ? { ...scene, endingPoster: url } : scene
+    );
+
+    setStory({ ...story, scenes: updatedScenes });
+  };
 
   const handleUpdateBackgroundMusic = (music: { id: string; name: string; url: string }) => {
     if (!selectedSceneId || !story || !setStory) return;
 
     const updatedScenes = story.scenes.map((scene) =>
       scene.id === selectedSceneId ? { ...scene, backgroundMusic: music } : scene
+    );
+
+    setStory({ ...story, scenes: updatedScenes });
+  };
+  
+  const handleUpdateSceneUnlockPrice = (price: number | undefined) => {
+    if (!selectedSceneId || !story || !setStory) return;
+
+    const updatedScenes = story.scenes.map((scene) =>
+      scene.id === selectedSceneId ? { ...scene, unlockPrice: price } : scene
     );
 
     setStory({ ...story, scenes: updatedScenes });
@@ -158,7 +178,9 @@ const Flow = () => {
               updateSceneEntrance={handleUpdateSceneEntrance}
               updateSceneEnvironment={handleUpdateSceneEnvironment}
               updateEndingName={handleUpdateEndingName}
+              updateEndingPoster={handleUpdateEndingPoster}
               updateBackgroundMusic={handleUpdateBackgroundMusic}
+              updateSceneUnlockPrice={handleUpdateSceneUnlockPrice}
             />
           </div>
         </div>

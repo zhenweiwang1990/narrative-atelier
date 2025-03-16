@@ -10,7 +10,6 @@ export interface Story {
   globalValues: GlobalValue[];
   titles?: Title[];
   chapters?: Chapter[];
-  // Add missing properties
   coverPhoto?: string;
   protagonistName?: string;
   protagonistGender?: string;
@@ -40,7 +39,7 @@ export interface Character {
   bio: string;
   profilePicture?: string;
   fullBody?: string;
-  voice?: string; // 新增的角色音色属性
+  voice?: string;
 }
 
 export interface Location {
@@ -62,17 +61,17 @@ export interface Scene {
   nextSceneId?: string;
   revivalPointId?: string;
   position: { x: number; y: number };
-  // New fields
   entranceEffect?: string;
   environmentEffect?: string;
   endingName?: string;
+  endingPoster?: string;
   explorationItems?: ExplorationItem[];
   backgroundMusic?: {
     id: string;
     name: string;
     url: string;
   };
-  unlockPrice?: number; // 新增场景解锁价格字段
+  unlockPrice?: number;
 }
 
 export interface ExplorationItem {
@@ -87,7 +86,6 @@ export interface SceneElement {
   id: string;
   type: ElementType;
   order?: number;
-  // Add common properties used by specific element types
   text?: string;
   characterId?: string;
   description?: string;
@@ -133,31 +131,29 @@ export interface ChoiceOption {
   text: string;
   nextSceneId?: string;
   valueChanges?: ValueChange[];
-  // 新增解锁条件相关字段
   locked?: boolean;
-  unlockPrice?: number; // 钻石解锁价格
-  unlockConditions?: UnlockCondition[]; // 基于全局变量的解锁条件
+  unlockPrice?: number;
+  unlockConditions?: UnlockCondition[];
 }
 
-// 新增解锁条件类型
 export interface UnlockCondition {
   valueId: string;
-  operator: 'gt' | 'lt' | 'eq' | 'gte' | 'lte'; // greater than, less than, equal, greater than or equal, less than or equal
+  operator: 'gt' | 'lt' | 'eq' | 'gte' | 'lte';
   targetValue: number;
 }
 
 export interface QteElement extends SceneElement {
   type: 'qte';
   description: string;
-  qteType: 'action' | 'combo' | 'unlock'; // QTE type
-  keySequence?: string | string[]; // Updated to support both string and string[] for backward compatibility
-  directionSequence?: string; // For combo type, e.g. "UDLR" (Up, Down, Left, Right)
-  unlockPattern?: 'C' | 'L' | 'M' | 'N' | 'O' | 'S' | 'U' | 'Z'; // For unlock type
+  qteType: 'action' | 'combo' | 'unlock';
+  keySequence?: string | string[];
+  directionSequence?: string;
+  unlockPattern?: 'C' | 'L' | 'M' | 'N' | 'O' | 'S' | 'U' | 'Z';
   timeLimit: number;
   introText?: string;
   success: ElementOutcome;
   failure: ElementOutcome;
-  isDoubleChar?: boolean; // This will be kept for backward compatibility
+  isDoubleChar?: boolean;
 }
 
 export interface ElementOutcome {
@@ -186,8 +182,8 @@ export interface DialogueTaskElement extends SceneElement {
   targetCharacterId: string;
   openingLine?: string;
   background?: string;
-  characterIntro?: string; // 新增角色介绍属性
-  dialogueTopics?: string[]; // 新增对话话题属性
+  characterIntro?: string;
+  dialogueTopics?: string[];
   success: ElementOutcome;
   failure: ElementOutcome;
 }
@@ -201,6 +197,6 @@ export interface Title {
 
 export interface TitleCondition {
   valueId: string;
-  operator: 'gt' | 'lt' | 'eq' | 'gte' | 'lte'; // greater than, less than, equal, greater than or equal, less than or equal
+  operator: 'gt' | 'lt' | 'eq' | 'gte' | 'lte';
   targetValue: number;
 }

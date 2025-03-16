@@ -19,6 +19,7 @@ const ScenePropertiesPanel = ({
   updateSceneEntrance,
   updateSceneEnvironment,
   updateEndingName,
+  updateEndingPoster,
   updateBackgroundMusic,
   updateSceneUnlockPrice,
 }: ScenePropertiesPanelProps) => {
@@ -46,6 +47,7 @@ const ScenePropertiesPanel = ({
         updateNextScene={updateNextScene}
         updateRevivalPoint={updateRevivalPoint}
         updateEndingName={updateEndingName}
+        updateEndingPoster={updateEndingPoster}
         updateSceneUnlockPrice={updateSceneUnlockPrice}
       />
 

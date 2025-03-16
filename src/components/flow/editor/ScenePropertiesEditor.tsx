@@ -99,6 +99,17 @@ const ScenePropertiesEditor: React.FC<ScenePropertiesEditorProps> = ({
       ),
     });
   };
+  
+  const updateEndingPoster = (url: string) => {
+    setStory({
+      ...story,
+      scenes: story.scenes.map((scene) =>
+        scene.id === sceneId
+          ? { ...scene, endingPoster: url }
+          : scene
+      ),
+    });
+  };
 
   const updateBackgroundMusic = (music: { id: string; name: string; url: string }) => {
     setStory({
@@ -135,6 +146,7 @@ const ScenePropertiesEditor: React.FC<ScenePropertiesEditorProps> = ({
       updateSceneEntrance={updateSceneEntrance}
       updateSceneEnvironment={updateSceneEnvironment}
       updateEndingName={updateEndingName}
+      updateEndingPoster={updateEndingPoster}
       updateBackgroundMusic={updateBackgroundMusic}
       updateSceneUnlockPrice={updateSceneUnlockPrice}
     />

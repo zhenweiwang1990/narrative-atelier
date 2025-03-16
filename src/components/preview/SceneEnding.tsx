@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
 import { Scene } from "@/utils/types";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface SceneEndingProps {
   scene: Scene;
@@ -15,9 +16,22 @@ const SceneEnding: React.FC<SceneEndingProps> = ({ scene, handleRevival, lastEle
     return null;
   }
   
+  const showEndingPoster = scene.endingPoster && (scene.type === "ending" || scene.type === "bad-ending");
+  
   if (scene.type === "bad-ending") {
     return (
       <div className="p-4 text-center">
+        {showEndingPoster && (
+          <div className="mb-4">
+            <AspectRatio ratio={16/9} className="overflow-hidden rounded-md">
+              <img 
+                src={scene.endingPoster} 
+                alt="结局海报" 
+                className="w-full h-full object-cover"
+              />
+            </AspectRatio>
+          </div>
+        )}
         <p className="text-sm font-bold text-red-600 mb-3">异常结局</p>
         <p className="text-sm mb-4">剧情已经达到了一个消极的结局。</p>
         {scene.revivalPointId && (
@@ -35,8 +49,22 @@ const SceneEnding: React.FC<SceneEndingProps> = ({ scene, handleRevival, lastEle
   } else if (scene.type === "ending") {
     return (
       <div className="p-4 text-center">
+        {showEndingPoster && (
+          <div className="mb-4">
+            <AspectRatio ratio={16/9} className="overflow-hidden rounded-md">
+              <img 
+                src={scene.endingPoster} 
+                alt="结局海报" 
+                className="w-full h-full object-cover"
+              />
+            </AspectRatio>
+          </div>
+        )}
         <p className="text-sm font-bold text-green-600 mb-3">结局</p>
         <p className="text-sm">恭喜！您已完成这个剧情路径。</p>
+        {scene.endingName && (
+          <p className="text-sm font-medium mt-2">「{scene.endingName}」</p>
+        )}
       </div>
     );
   } else if (!scene.nextSceneId) {

@@ -13,6 +13,7 @@ export interface ScenePropertiesPanelProps {
   updateSceneEntrance?: (effect: string) => void;
   updateSceneEnvironment?: (effect: string) => void;
   updateEndingName?: (name: string) => void;
+  updateEndingPoster?: (url: string) => void;
   updateBackgroundMusic?: (music: { id: string; name: string; url: string }) => void;
   updateSceneUnlockPrice?: (price: number | undefined) => void;
 }

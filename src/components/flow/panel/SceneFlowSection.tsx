@@ -4,6 +4,7 @@ import { Scene, Story } from "@/utils/types";
 import NextSceneSelector from "./NextSceneSelector";
 import RevivalPointSelector from "./RevivalPointSelector";
 import EndingNameSelector from "./EndingNameSelector";
+import EndingPosterSelector from "./EndingPosterSelector";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
@@ -14,6 +15,7 @@ interface SceneFlowSectionProps {
   updateNextScene: (nextSceneId: string) => void;
   updateRevivalPoint?: (revivalPointId: string) => void;
   updateEndingName?: (name: string) => void;
+  updateEndingPoster?: (url: string) => void;
   updateSceneUnlockPrice?: (price: number | undefined) => void;
 }
 
@@ -24,8 +26,11 @@ const SceneFlowSection: React.FC<SceneFlowSectionProps> = ({
   updateNextScene,
   updateRevivalPoint,
   updateEndingName,
+  updateEndingPoster,
   updateSceneUnlockPrice
 }) => {
+  const isEndingScene = selectedScene.type === "ending" || selectedScene.type === "bad-ending";
+
   return (
     <div className="space-y-3">
       <div className="p-3 border rounded-md bg-muted/10">
@@ -47,10 +52,17 @@ const SceneFlowSection: React.FC<SceneFlowSectionProps> = ({
             />
           )}
           
-          {updateEndingName && selectedScene.type === "ending" && (
+          {updateEndingName && isEndingScene && (
             <EndingNameSelector
               endingName={selectedScene.endingName || ""}
               updateEndingName={updateEndingName}
+            />
+          )}
+          
+          {updateEndingPoster && isEndingScene && (
+            <EndingPosterSelector
+              endingPoster={selectedScene.endingPoster}
+              updateEndingPoster={updateEndingPoster}
             />
           )}
         </div>
