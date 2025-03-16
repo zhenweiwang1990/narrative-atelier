@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -25,9 +24,14 @@ export const SidebarNavigation = () => {
 
   const menuItems = [
     {
-      title: "剧情",
+      title: "剧情概览",
       icon: BookOpen,
       path: "/",
+    },
+    {
+      title: "场景流程",
+      icon: GitBranch,
+      path: "/flow",
     },
     {
       title: "角色",
@@ -48,16 +52,6 @@ export const SidebarNavigation = () => {
       title: "全局变量",
       icon: Database,
       path: "/global-values",
-    },
-    {
-      title: "流程",
-      icon: GitBranch,
-      path: "/flow",
-    },
-    {
-      title: "设置",
-      icon: Settings,
-      path: "/settings",
     },
   ];
 
