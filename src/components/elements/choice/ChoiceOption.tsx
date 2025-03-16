@@ -3,21 +3,13 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Trash2, Wand, Lock, Unlock } from "lucide-react";
-import { ChoiceOption as ChoiceOptionType, Scene, GlobalValue, UnlockCondition } from "@/utils/types";
+import { Trash2 } from "lucide-react";
+import { ChoiceOption as ChoiceOptionType, Scene, GlobalValue } from "@/utils/types";
 import ValueChangeEditor from "./ValueChangeEditor";
+import LockSettingsSection from "./LockSettingsSection";
+import SceneSelector from "./SceneSelector";
 import AiStoryDialog from "../shared/AiStoryDialog";
 import { toast } from "sonner";
-import { Switch } from "@/components/ui/switch";
-import UnlockConditionsEditor from "./UnlockConditionsEditor";
 
 interface ChoiceOptionProps {
   option: ChoiceOptionType;
@@ -78,50 +70,6 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
     });
   };
 
-  const toggleLocked = () => {
-    onUpdateOption(option.id, { 
-      locked: !option.locked,
-      // Initialize unlock conditions with defaults if turning on lock
-      unlockConditions: !option.locked && !option.unlockConditions 
-        ? [] 
-        : option.unlockConditions
-    });
-  };
-
-  const handleUnlockPriceChange = (value: string) => {
-    const price = value === '' ? undefined : Number(value);
-    onUpdateOption(option.id, { unlockPrice: price });
-  };
-
-  const addUnlockCondition = () => {
-    if (!globalValues.length) return;
-    
-    const currentConditions = option.unlockConditions || [];
-    const defaultCondition: UnlockCondition = {
-      valueId: globalValues[0].id,
-      operator: 'gte',
-      targetValue: 1
-    };
-    
-    onUpdateOption(option.id, { 
-      unlockConditions: [...currentConditions, defaultCondition] 
-    });
-  };
-
-  const updateUnlockCondition = (index: number, updates: Partial<UnlockCondition>) => {
-    const currentConditions = [...(option.unlockConditions || [])];
-    currentConditions[index] = { ...currentConditions[index], ...updates };
-    
-    onUpdateOption(option.id, { unlockConditions: currentConditions });
-  };
-
-  const removeUnlockCondition = (index: number) => {
-    const currentConditions = [...(option.unlockConditions || [])];
-    currentConditions.splice(index, 1);
-    
-    onUpdateOption(option.id, { unlockConditions: currentConditions });
-  };
-
   return (
     <div className="p-2 border rounded-md bg-muted/20">
       <div className="flex justify-between items-start mb-1">
@@ -145,117 +93,21 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
         placeholder="选项文本"
       />
 
-      {/* 解锁相关设置 */}
-      <div className="flex items-center justify-between mt-2 mb-1">
-        <div className="flex items-center space-x-2">
-          {option.locked ? <Lock className="h-3 w-3 text-amber-500" /> : <Unlock className="h-3 w-3 text-green-500" />}
-          <Label className="text-xs" htmlFor={`locked-${option.id}`}>
-            {option.locked ? "锁定选项" : "未锁定"}
-          </Label>
-        </div>
-        <Switch
-          id={`locked-${option.id}`}
-          checked={!!option.locked}
-          onCheckedChange={toggleLocked}
-          className="h-5 w-9"
-        />
-      </div>
+      {/* Lock Settings Section */}
+      <LockSettingsSection 
+        option={option}
+        globalValues={globalValues}
+        onUpdateOption={onUpdateOption}
+      />
 
-      {option.locked && (
-        <div className="mt-2 mb-2 p-2 border rounded-md bg-amber-50 dark:bg-amber-950/20">
-          <div>
-            <Label className="text-xs mb-1 block">钻石解锁价格</Label>
-            <Input
-              type="number"
-              min="0"
-              placeholder="钻石数量"
-              value={option.unlockPrice ?? ''}
-              onChange={(e) => handleUnlockPriceChange(e.target.value)}
-              className="h-7 text-xs mb-2"
-            />
-          </div>
+      {/* Scene Selector */}
+      <SceneSelector 
+        nextSceneId={option.nextSceneId}
+        scenes={scenes}
+        onSceneChange={handleSceneChange}
+      />
 
-          {/* 解锁条件编辑器 */}
-          <UnlockConditionsEditor
-            unlockConditions={option.unlockConditions}
-            globalValues={globalValues}
-            onAddCondition={addUnlockCondition}
-            onUpdateCondition={updateUnlockCondition}
-            onRemoveCondition={removeUnlockCondition}
-          />
-
-          {!option.unlockPrice && (!option.unlockConditions || option.unlockConditions.length === 0) && (
-            <p className="text-xs text-amber-600 mt-2">
-              警告：此选项已锁定但未设置任何解锁条件，将无法被选择
-            </p>
-          )}
-        </div>
-      )}
-
-      <div>
-        <Label className="text-xs">下一个场景</Label>
-        <Select
-          value={option.nextSceneId || "none"}
-          onValueChange={handleSceneChange}
-        >
-          <SelectTrigger className="mt-1 h-7 text-xs">
-            <SelectValue placeholder="选择下一个场景" />
-          </SelectTrigger>
-          <SelectContent className="z-[1100]">
-            <SelectGroup>
-              <SelectItem value="none">不指定</SelectItem>
-              <SelectItem value="ai-branch" className="text-blue-600">AI 写支线</SelectItem>
-              <SelectItem value="ai-ending" className="text-purple-600">AI 写结局</SelectItem>
-              {scenes.map((scene) => (
-                <SelectItem key={scene.id} value={scene.id}>
-                  {scene.title} (
-                  {scene.type === "start"
-                    ? "开始"
-                    : scene.type === "ending"
-                    ? "正常结局"
-                    : scene.type === "bad-ending"
-                    ? "异常结局"
-                    : "普通"}
-                  )
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-
-        {/* Add AI buttons when no scene is selected */}
-        {option.nextSceneId === "none" || !option.nextSceneId ? (
-          <div className="flex gap-1 mt-1">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="gap-1 text-xs flex-1 text-blue-600"
-              onClick={() => {
-                setAiDialogType('branch');
-                setAiDialogOpen(true);
-              }}
-            >
-              <Wand className="h-3 w-3" />
-              AI 写支线
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="gap-1 text-xs flex-1 text-purple-600"
-              onClick={() => {
-                setAiDialogType('ending');
-                setAiDialogOpen(true);
-              }}
-            >
-              <Wand className="h-3 w-3" />
-              AI 写结局
-            </Button>
-          </div>
-        ) : null}
-      </div>
-
+      {/* Value Change Editor */}
       <ValueChangeEditor
         optionId={option.id}
         valueChanges={option.valueChanges}
@@ -265,6 +117,7 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
         onRemoveValueChange={onRemoveValueChange}
       />
 
+      {/* AI Story Dialog */}
       <AiStoryDialog 
         isOpen={aiDialogOpen}
         onClose={() => setAiDialogOpen(false)}
