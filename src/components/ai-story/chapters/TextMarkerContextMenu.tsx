@@ -6,6 +6,9 @@ import {
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuTrigger,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
 } from "@/components/ui/context-menu";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -69,34 +72,35 @@ const TextMarkerContextMenu: React.FC<TextMarkerContextMenuProps> = ({
         
         <ContextMenuSeparator />
         
-        <ContextMenuItem onClick={(e) => {
-          const textArea = document.activeElement as HTMLTextAreaElement;
-          insertAtCursor(textArea, '<<QTE1 START>>');
-        }}>
-          插入 QTE 开始标记
-        </ContextMenuItem>
+        <ContextMenuSub>
+          <ContextMenuSubTrigger>插入 QTE 标记</ContextMenuSubTrigger>
+          <ContextMenuSubContent className="w-48">
+            <ContextMenuItem onClick={(e) => {
+              const textArea = document.activeElement as HTMLTextAreaElement;
+              insertAtCursor(textArea, '<<QTE1 START>>\n玩家需要快速按下按键序列。\n<<QTE1 END>>');
+            }}>
+              QTE动作 (按键序列)
+            </ContextMenuItem>
+            <ContextMenuItem onClick={(e) => {
+              const textArea = document.activeElement as HTMLTextAreaElement;
+              insertAtCursor(textArea, '<<QTE1 START>>\n玩家需要快速完成方向连击。\n<<QTE1 END>>');
+            }}>
+              QTE连击 (方向序列)
+            </ContextMenuItem>
+            <ContextMenuItem onClick={(e) => {
+              const textArea = document.activeElement as HTMLTextAreaElement;
+              insertAtCursor(textArea, '<<QTE1 START>>\n玩家需要快速完成图案解锁。\n<<QTE1 END>>');
+            }}>
+              QTE解锁 (图案)
+            </ContextMenuItem>
+          </ContextMenuSubContent>
+        </ContextMenuSub>
         
         <ContextMenuItem onClick={(e) => {
           const textArea = document.activeElement as HTMLTextAreaElement;
-          insertAtCursor(textArea, '<<QTE1 END>>');
+          insertAtCursor(textArea, '<<DialogueTask START>>\n对话任务内容\n<<DialogueTask END>>');
         }}>
-          插入 QTE 结束标记
-        </ContextMenuItem>
-        
-        <ContextMenuSeparator />
-        
-        <ContextMenuItem onClick={(e) => {
-          const textArea = document.activeElement as HTMLTextAreaElement;
-          insertAtCursor(textArea, '<<DialogueTask START>>');
-        }}>
-          插入对话任务开始标记
-        </ContextMenuItem>
-        
-        <ContextMenuItem onClick={(e) => {
-          const textArea = document.activeElement as HTMLTextAreaElement;
-          insertAtCursor(textArea, '<<DialogueTask END>>');
-        }}>
-          插入对话任务结束标记
+          插入对话任务标记
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>

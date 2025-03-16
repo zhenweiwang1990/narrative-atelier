@@ -22,9 +22,15 @@ export const QteElement: React.FC<QteElementProps> = ({
   validateTimeLimit, 
   validateKeySequence 
 }) => {
+  // Make sure element has a qteType property for backwards compatibility
+  const updatedElement = {
+    ...element,
+    qteType: element.qteType || 'action'
+  };
+
   return (
     <QteElementContainer
-      element={element}
+      element={updatedElement}
       scenes={scenes}
       globalValues={globalValues}
       story={story}

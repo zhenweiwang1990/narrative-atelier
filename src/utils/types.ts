@@ -137,7 +137,10 @@ export interface ChoiceOption {
 export interface QteElement extends SceneElement {
   type: 'qte';
   description: string;
-  keySequence: string;
+  qteType: 'action' | 'combo' | 'unlock'; // New field to specify QTE type
+  keySequence?: string; // For action type
+  directionSequence?: string; // For combo type, e.g. "UDLR" (Up, Down, Left, Right)
+  unlockPattern?: 'C' | 'L' | 'M' | 'N' | 'O' | 'S' | 'U' | 'Z'; // For unlock type
   timeLimit: number;
   introText?: string;
   success: ElementOutcome;

@@ -7,7 +7,11 @@ interface ChapterPreviewProps {
 }
 
 const getSceneClass = (scene: string, isQte: boolean, isDialogueTask: boolean) => {
-  if (isQte) return 'bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800';
+  if (isQte) {
+    if (scene.includes('连击')) return 'bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800';
+    if (scene.includes('解锁')) return 'bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800';
+    return 'bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800';
+  }
   if (isDialogueTask) return 'bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800';
   if (scene.includes('## 对话')) return 'bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800';
   if (scene.includes('## 旁白')) return 'bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800';
@@ -41,6 +45,13 @@ const ChapterPreview: React.FC<ChapterPreviewProps> = ({ content }) => {
         const isQte = scene.includes('<<QTE') && scene.includes('START>>') && scene.includes('END>>');
         const isDialogueTask = scene.includes('<<DialogueTask START>>') && scene.includes('<<DialogueTask END>>');
         const hasChoices = scene.includes('<<') && scene.includes('>>') && !isQte && !isDialogueTask;
+        
+        // Determine QTE type
+        let qteType = 'action';
+        if (isQte) {
+          if (scene.includes('连击')) qteType = 'combo';
+          else if (scene.includes('解锁')) qteType = 'unlock';
+        }
         
         // Remove the special markers for display
         let cleanContent = scene
@@ -80,8 +91,13 @@ const ChapterPreview: React.FC<ChapterPreviewProps> = ({ content }) => {
             
             {/* QTE indicator */}
             {isQte && (
-              <div className="mt-2 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100 px-2 py-1 rounded text-xs inline-block">
-                QTE 快速反应事件
+              <div className="mt-2 px-2 py-1 rounded text-xs inline-block" 
+                style={{ 
+                  backgroundColor: qteType === 'combo' ? '#dbeafe' : (qteType === 'unlock' ? '#fef3c7' : '#fee2e2'),
+                  color: qteType === 'combo' ? '#2563eb' : (qteType === 'unlock' ? '#d97706' : '#dc2626')
+                }}
+              >
+                {qteType === 'combo' ? 'QTE 方向连击' : (qteType === 'unlock' ? 'QTE 图案解锁' : 'QTE 快速反应')}
               </div>
             )}
             

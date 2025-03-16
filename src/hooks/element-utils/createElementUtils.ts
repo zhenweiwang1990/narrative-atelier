@@ -68,10 +68,13 @@ export const createNewElement = (type: ElementType, story: Story): Partial<Scene
       
       return {
         ...baseElement,
-        description: '玩家必须在时间限制内完成按键序列',
-        introText: '快速按键!',
+        description: '玩家必须在时间限制内完成要求',
+        introText: '快速反应!',
+        qteType: 'action', // Default to action type
+        keySequence: 'ABC', // For action type
+        directionSequence: 'UDLR', // For combo type
+        unlockPattern: 'Z', // For unlock type
         timeLimit: 3,
-        keySequence: 'ABC',
         success: defaultSuccess,
         failure: defaultFailure
       } as Partial<QteElement>;
