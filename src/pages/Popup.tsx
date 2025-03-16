@@ -5,9 +5,9 @@ import { Story } from "@/utils/types";
 import FloatingMobilePreview from "@/components/flow/FloatingMobilePreview";
 import FloatingElementEditor from "@/components/flow/FloatingElementEditor";
 import { StoryContext } from "@/contexts/StoryContext";
-import { Toast } from "@/components/ui/toast";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
+import { ThemeProvider } from "next-themes";
 
 const Popup = () => {
   const [searchParams] = useSearchParams();
@@ -103,32 +103,34 @@ const Popup = () => {
   }
   
   return (
-    <StoryContext.Provider value={contextValue}>
-      <div className="min-h-screen bg-background flex items-start justify-start p-6">
-        {mode === "preview" && (
-          <FloatingMobilePreview
-            selectedSceneId={sceneId}
-            setSelectedSceneId={handleSceneChange}
-            isOpen={true}
-            onToggle={handleClose}
-          />
-        )}
-        
-        {mode === "editor" && sceneId && (
-          <FloatingElementEditor
-            sceneId={sceneId}
-            currentElementId={elementId}
-            position={{ x: 20, y: 20 }}
-            onClose={handleClose}
-            isOpen={true}
-            showSceneProperties={!elementId}
-            isPopup={true}
-          />
-        )}
-      </div>
-      <Toaster />
-      <Sonner />
-    </StoryContext.Provider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <StoryContext.Provider value={contextValue}>
+        <div className="min-h-screen bg-background flex items-start justify-start p-6">
+          {mode === "preview" && (
+            <FloatingMobilePreview
+              selectedSceneId={sceneId}
+              setSelectedSceneId={handleSceneChange}
+              isOpen={true}
+              onToggle={handleClose}
+            />
+          )}
+          
+          {mode === "editor" && sceneId && (
+            <FloatingElementEditor
+              sceneId={sceneId}
+              currentElementId={elementId}
+              position={{ x: 20, y: 20 }}
+              onClose={handleClose}
+              isOpen={true}
+              showSceneProperties={!elementId}
+              isPopup={true}
+            />
+          )}
+        </div>
+        <Toaster />
+        <Sonner />
+      </StoryContext.Provider>
+    </ThemeProvider>
   );
 };
 

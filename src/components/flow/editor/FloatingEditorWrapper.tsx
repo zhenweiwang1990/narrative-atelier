@@ -68,7 +68,7 @@ const FloatingEditorWrapper: React.FC<FloatingEditorWrapperProps> = ({
   return (
     <Card
       className={cn(
-        "shadow-lg border rounded-md overflow-hidden",
+        "shadow-lg border rounded-md overflow-hidden bg-card text-card-foreground",
         isMobile ? "w-auto" : "",
         isPopup ? "popup-editor" : ""
       )}
