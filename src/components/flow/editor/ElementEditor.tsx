@@ -7,7 +7,6 @@ import { ThoughtElement } from "@/components/elements/ThoughtElement";
 import { ChoiceElement } from "@/components/elements/ChoiceElement";
 import { QteElement } from "@/components/elements/QteElement";
 import { DialogueTaskElement } from "@/components/elements/DialogueTaskElement";
-import SoundEffectSelector from "@/components/elements/shared/SoundEffectSelector";
 
 interface ElementEditorProps {
   element: SceneElement;
@@ -39,12 +38,6 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
     if (!disabled) {
       updateElement(id, updates);
     }
-  };
-
-  // Handle sound effect update
-  const handleSoundEffectUpdate = (effect: { category: string; name: string; url: string } | undefined) => {
-    if (disabled) return;
-    handleUpdate(element.id, { soundEffect: effect });
   };
 
   // Determine which element type component to render
@@ -121,17 +114,6 @@ const ElementEditor: React.FC<ElementEditorProps> = ({
   return (
     <div className="space-y-4">
       {renderElementTypeComponent()}
-      
-      {/* Only show Sound Effect Selector for narration elements */}
-      {element.type === 'narration' && (
-        <div className="mt-4 pt-4 border-t">
-          <SoundEffectSelector
-            selectedEffect={element.soundEffect}
-            onSelect={handleSoundEffectUpdate}
-            disabled={disabled}
-          />
-        </div>
-      )}
     </div>
   );
 };
