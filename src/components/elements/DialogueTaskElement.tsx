@@ -1,14 +1,13 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Separator } from '@/components/ui/separator';
 import { DialogueTaskElement as DialogueTaskElementType, Character, Scene, GlobalValue } from '@/utils/types';
 import DialogueTaskFields from './dialogueTask/DialogueTaskFields';
 import SuccessFailureLayout from './shared/SuccessFailureLayout';
 import OutcomeSection from './shared/OutcomeSection';
 import { useElementOutcomes } from '@/hooks/useElementOutcomes';
-import AiStoryDialog from './shared/AiStoryDialog';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
+import useDialogueTaskAi from '@/hooks/useDialogueTaskAi';
+import DialogueTaskAiControl from './dialogueTask/DialogueTaskAiControl';
 
 interface DialogueTaskElementProps {
   element: DialogueTaskElementType;
@@ -25,10 +24,6 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
   globalValues,
   onUpdate 
 }) => {
-  const [aiDialogOpen, setAiDialogOpen] = useState(false);
-  const [aiDialogType, setAiDialogType] = useState<'branch' | 'ending'>('branch');
-  const [aiDialogFor, setAiDialogFor] = useState<'success' | 'failure'>('success');
-
   const {
     safeElement,
     updateSuccessSceneId,
@@ -40,41 +35,14 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
     removeValueChange
   } = useElementOutcomes(element, onUpdate);
   
-  const handleOpenAiDialog = (type: 'branch' | 'ending', outcomeType: 'success' | 'failure') => {
-    setAiDialogType(type);
-    setAiDialogFor(outcomeType);
-    setAiDialogOpen(true);
-  };
-
-  const handleAiStorySubmit = (prompt: string, convergenceSceneId?: string, endingType?: 'normal' | 'bad') => {
-    // TODO: Implement API call to generate AI story content
-    // The API should be called with the following parameters:
-    // - prompt: User's input prompt for story generation
-    // - type: Either 'branch' or 'ending'
-    // - elementId: element.id
-    // - outcomeType: Either 'success' or 'failure'
-    // - convergenceSceneId: Optional ID of scene where branch should converge
-    // - endingType: Optional type of ending ('normal' or 'bad')
-    
-    toast.promise(
-      // This would be replaced with the actual API call
-      new Promise((resolve) => setTimeout(resolve, 1500)), 
-      {
-        loading: aiDialogType === 'branch' ? '正在生成支线...' : '正在生成结局...',
-        success: aiDialogType === 'branch' ? 'AI 支线生成成功！' : 'AI 结局生成成功！',
-        error: '生成失败，请重试。',
-      }
-    );
-
-    console.log('AI Story Request:', {
-      type: aiDialogType,
-      for: aiDialogFor,
-      prompt,
-      convergenceSceneId,
-      endingType,
-      elementId: element.id
-    });
-  };
+  const {
+    aiDialogOpen,
+    aiDialogType,
+    aiDialogFor,
+    handleOpenAiDialog,
+    handleCloseAiDialog,
+    handleAiStorySubmit
+  } = useDialogueTaskAi(element.id);
   
   // If no global values, don't show outcomes section
   if (globalValues.length === 0) {
@@ -120,24 +88,15 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
               removeValueChange={removeValueChange}
               showSuccessOnly={true}
             />
-            <div className="flex gap-2 mt-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="w-full text-xs"
-                onClick={() => handleOpenAiDialog('branch', 'success')}
-              >
-                AI 写支线
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="w-full text-xs"
-                onClick={() => handleOpenAiDialog('ending', 'success')}
-              >
-                AI 写结局
-              </Button>
-            </div>
+            <DialogueTaskAiControl
+              aiDialogOpen={aiDialogOpen && aiDialogFor === 'success'}
+              aiDialogType={aiDialogType}
+              aiDialogFor="success"
+              scenes={scenes}
+              onOpenAiDialog={handleOpenAiDialog}
+              onCloseAiDialog={handleCloseAiDialog}
+              onAiStorySubmit={handleAiStorySubmit}
+            />
           </>
         }
         failureChildren={
@@ -158,35 +117,17 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
               removeValueChange={removeValueChange}
               showFailureOnly={true}
             />
-            <div className="flex gap-2 mt-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="w-full text-xs"
-                onClick={() => handleOpenAiDialog('branch', 'failure')}
-              >
-                AI 写支线
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="w-full text-xs"
-                onClick={() => handleOpenAiDialog('ending', 'failure')}
-              >
-                AI 写结局
-              </Button>
-            </div>
+            <DialogueTaskAiControl
+              aiDialogOpen={aiDialogOpen && aiDialogFor === 'failure'}
+              aiDialogType={aiDialogType}
+              aiDialogFor="failure"
+              scenes={scenes}
+              onOpenAiDialog={handleOpenAiDialog}
+              onCloseAiDialog={handleCloseAiDialog}
+              onAiStorySubmit={handleAiStorySubmit}
+            />
           </>
         }
-      />
-
-      <AiStoryDialog 
-        isOpen={aiDialogOpen}
-        onClose={() => setAiDialogOpen(false)}
-        onSubmit={handleAiStorySubmit}
-        type={aiDialogType}
-        scenes={scenes}
-        showConvergenceSelector={aiDialogType === 'branch'}
       />
     </div>
   );
