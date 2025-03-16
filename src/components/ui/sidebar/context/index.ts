@@ -1,7 +1,6 @@
 
-// This file is now just re-exporting from the context directory
-export {
-  SidebarProvider,
+export { 
+  SidebarContext,
   useSidebar,
   SIDEBAR_WIDTH,
   SIDEBAR_WIDTH_MOBILE,
@@ -9,4 +8,5 @@ export {
   SIDEBAR_COOKIE_NAME,
   SIDEBAR_COOKIE_MAX_AGE,
   SIDEBAR_KEYBOARD_SHORTCUT
-} from "./context";
+} from "./SidebarContext";
+export { SidebarProvider } from "./SidebarProvider";
