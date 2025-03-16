@@ -1,3 +1,4 @@
+
 export interface Story {
   id: string;
   title: string;
@@ -71,6 +72,7 @@ export interface Scene {
     name: string;
     url: string;
   };
+  unlockPrice?: number; // 新增场景解锁价格字段
 }
 
 export interface ExplorationItem {
@@ -131,6 +133,17 @@ export interface ChoiceOption {
   text: string;
   nextSceneId?: string;
   valueChanges?: ValueChange[];
+  // 新增解锁条件相关字段
+  locked?: boolean;
+  unlockPrice?: number; // 钻石解锁价格
+  unlockConditions?: UnlockCondition[]; // 基于全局变量的解锁条件
+}
+
+// 新增解锁条件类型
+export interface UnlockCondition {
+  valueId: string;
+  operator: 'gt' | 'lt' | 'eq' | 'gte' | 'lte'; // greater than, less than, equal, greater than or equal, less than or equal
+  targetValue: number;
 }
 
 export interface QteElement extends SceneElement {

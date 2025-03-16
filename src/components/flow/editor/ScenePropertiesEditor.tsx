@@ -111,6 +111,17 @@ const ScenePropertiesEditor: React.FC<ScenePropertiesEditorProps> = ({
     });
   };
 
+  const updateSceneUnlockPrice = (price: number | undefined) => {
+    setStory({
+      ...story,
+      scenes: story.scenes.map((scene) =>
+        scene.id === sceneId
+          ? { ...scene, unlockPrice: price }
+          : scene
+      ),
+    });
+  };
+
   return (
     <ScenePropertiesPanel
       selectedScene={selectedScene}
@@ -125,6 +136,7 @@ const ScenePropertiesEditor: React.FC<ScenePropertiesEditorProps> = ({
       updateSceneEnvironment={updateSceneEnvironment}
       updateEndingName={updateEndingName}
       updateBackgroundMusic={updateBackgroundMusic}
+      updateSceneUnlockPrice={updateSceneUnlockPrice}
     />
   );
 };

@@ -82,6 +82,9 @@ const MobilePreview = ({
 
   const locationBackground = location?.background || "/placeholder.svg";
 
+  // 显示解锁价格信息
+  const showUnlockPrice = scene.unlockPrice !== undefined && scene.unlockPrice > 0;
+
   return (
     <Card className="MobilePreview-container w-full h-full border overflow-hidden flex flex-col bg-white dark:bg-card">
       <div className="relative w-full flex-1 overflow-hidden">
@@ -98,6 +101,17 @@ const MobilePreview = ({
         
         <div className="relative flex flex-col h-full z-10">
           <div className="flex-1 overflow-auto p-4">
+            {/* 显示场景解锁价格信息 */}
+            {showUnlockPrice && (
+              <div className="bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 p-2 rounded-md mb-3 flex items-center justify-between">
+                <span className="text-xs">需要解锁此场景</span>
+                <div className="flex items-center">
+                  <span className="text-xs font-medium mr-1">{scene.unlockPrice}</span>
+                  <span className="text-xs">钻石</span>
+                </div>
+              </div>
+            )}
+
             {!currentElement && location && (
               <div className="text-center mb-4 bg-background/70 p-2 rounded-md">
                 <p className="text-sm text-foreground">
@@ -111,6 +125,7 @@ const MobilePreview = ({
                 handleNext={handleNext}
                 handleChoiceSelect={handleChoiceSelect}
                 getCharacter={getCharacter}
+                globalValues={globalValues}
               />
               <SceneEnding 
                 scene={scene} 

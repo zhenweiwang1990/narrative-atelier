@@ -4,6 +4,7 @@ import {
   SceneElement,
   Character,
   ValueChange,
+  GlobalValue,
 } from "@/utils/types";
 import {
   NarrationPreview,
@@ -23,6 +24,7 @@ interface PreviewElementProps {
     valueChanges?: ValueChange[]
   ) => void;
   getCharacter: (characterId: string) => Character | undefined;
+  globalValues?: GlobalValue[];
 }
 
 const PreviewElement: React.FC<PreviewElementProps> = ({
@@ -30,6 +32,7 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
   handleNext,
   handleChoiceSelect,
   getCharacter,
+  globalValues = [],
 }) => {
   if (!currentElement) {
     return <DefaultPreview />;
@@ -46,7 +49,13 @@ const PreviewElement: React.FC<PreviewElementProps> = ({
       return <ThoughtPreview element={currentElement as any} getCharacter={getCharacter} />; // Using type assertion to fix TypeScript error
 
     case "choice":
-      return <ChoicePreview element={currentElement as any} handleChoiceSelect={handleChoiceSelect} />; // Using type assertion to fix TypeScript error
+      return (
+        <ChoicePreview 
+          element={currentElement as any} 
+          handleChoiceSelect={handleChoiceSelect} 
+          globalValues={globalValues}
+        />
+      ); // Using type assertion to fix TypeScript error
 
     case "qte":
       return <QtePreview element={currentElement as any} handleChoiceSelect={handleChoiceSelect} />; // Using type assertion to fix TypeScript error

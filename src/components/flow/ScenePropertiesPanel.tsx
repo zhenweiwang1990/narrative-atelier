@@ -6,6 +6,8 @@ import IncompleteSceneAlert from "./panel/IncompleteSceneAlert";
 import SceneMetadataSection from "./panel/SceneMetadataSection";
 import SceneFlowSection from "./panel/SceneFlowSection";
 import SceneEditHint from "./panel/SceneEditHint";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const ScenePropertiesPanel = ({
   selectedScene,
@@ -20,6 +22,7 @@ const ScenePropertiesPanel = ({
   updateSceneEnvironment,
   updateEndingName,
   updateBackgroundMusic,
+  updateSceneUnlockPrice,
 }: ScenePropertiesPanelProps) => {
   const sceneIsIncomplete = checkSceneCompletion(selectedScene);
   
@@ -46,6 +49,25 @@ const ScenePropertiesPanel = ({
         updateRevivalPoint={updateRevivalPoint}
         updateEndingName={updateEndingName}
       />
+
+      {/* 场景解锁价格设置 */}
+      <div className="space-y-2 p-2 border rounded-md bg-muted/20">
+        <Label className="text-xs">场景解锁价格</Label>
+        <div className="flex items-center gap-2">
+          <Input 
+            type="number" 
+            min="0"
+            value={selectedScene.unlockPrice ?? ''} 
+            onChange={(e) => updateSceneUnlockPrice?.(e.target.value === '' ? undefined : Number(e.target.value))}
+            placeholder="需要的钻石数量"
+            className="text-xs"
+          />
+          <span className="text-xs text-muted-foreground">钻石</span>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          设置后，玩家需要支付相应钻石才能解锁此场景。不设置则默认免费。
+        </p>
+      </div>
 
       <SceneEditHint />
     </div>
