@@ -57,7 +57,7 @@ const QteElementContainer: React.FC<QteElementContainerProps> = ({
         failureTitle="失败结果"
         successChildren={
           <QteSuccessOutcome
-            element={outcomeState.safeElement}
+            element={outcomeState.safeElement as QteElementType}
             scenes={scenes}
             globalValues={globalValues}
             updateSuccessSceneId={outcomeState.updateSuccessSceneId}
@@ -70,7 +70,7 @@ const QteElementContainer: React.FC<QteElementContainerProps> = ({
         }
         failureChildren={
           <QteFailureOutcome
-            element={outcomeState.safeElement}
+            element={outcomeState.safeElement as QteElementType}
             scenes={scenes}
             globalValues={globalValues}
             updateFailureSceneId={outcomeState.updateFailureSceneId}
