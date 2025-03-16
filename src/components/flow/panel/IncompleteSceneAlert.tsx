@@ -15,7 +15,7 @@ const IncompleteSceneAlert: React.FC<IncompleteSceneAlertProps> = ({ isIncomplet
     <Alert variant="destructive" className="bg-amber-50 border-amber-200 text-amber-800">
       <AlertCircle className="h-4 w-4" />
       <AlertDescription className="text-xs">
-        此场景处于未完待续状态，没有指定后续场景。
+        此场景处于未完待续状态，没有指定任何后续场景。
       </AlertDescription>
     </Alert>
   );
