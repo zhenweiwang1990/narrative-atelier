@@ -16,17 +16,19 @@ export const getElementTypeName = (type: string): string => {
 // Helper function to get value name from ID
 export const getValueName = (story: Story | null, valueId: string): string => {
   if (!story) return valueId;
-  const value = story.globalValues.find(v => v.id === valueId);
+  const value = story.globalValues?.find(v => v.id === valueId);
   return value ? value.name : valueId;
 };
 
 // Process story data to get all possible options/outcomes, including those without value changes
 export const getAllPossibleOptions = (story: Story | null): Partial<ValueModification>[] => {
-  if (!story) return [];
+  if (!story || !story.scenes) return [];
   
   const allOptions: Partial<ValueModification>[] = [];
   
   story.scenes.forEach(scene => {
+    if (!scene.elements) return;
+    
     // Get elements that can have value changes (choice, qte, dialogueTask)
     const relevantElements = scene.elements.filter(
       element => ['choice', 'qte', 'dialogueTask'].includes(element.type)
@@ -37,6 +39,8 @@ export const getAllPossibleOptions = (story: Story | null): Partial<ValueModific
       
       if (element.type === 'choice') {
         const choiceElement = element as ChoiceElement;
+        
+        if (!choiceElement.options) return;
         
         choiceElement.options.forEach((option) => {
           allOptions.push({
@@ -120,15 +124,19 @@ export const getAllPossibleOptions = (story: Story | null): Partial<ValueModific
 
 // Process story data to get all value modifications
 export const extractValueModifications = (story: Story | null): ValueModification[] => {
-  if (!story) return [];
+  if (!story || !story.scenes) return [];
   
   const modifications: ValueModification[] = [];
   
   story.scenes.forEach(scene => {
+    if (!scene.elements) return;
+    
     // We use the array index directly instead of sorting by order
     scene.elements.forEach((element, index) => {
       if (element.type === 'choice') {
         const choiceElement = element as ChoiceElement;
+        
+        if (!choiceElement.options) return;
         
         choiceElement.options.forEach((option) => {
           if (option.valueChanges && option.valueChanges.length > 0) {

@@ -68,17 +68,19 @@ const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTablePro
         </TableHeader>
         <TableBody>
           {Object.entries(elementGroups).map(([elementKey, options]) => {
-            if (!options.length) return null;
+            if (!options || !options.length) return null;
             // Get the first option to access element info
             const firstOption = options[0];
+            if (!firstOption) return null;
+            
             const elementRowKey = `element-${elementKey}`;
             
             return (
               <React.Fragment key={elementRowKey}>
                 {/* Element row */}
                 <TableRow className="bg-muted/20">
-                  <TableCell className="font-medium py-1 px-2">{firstOption.sceneTitle}</TableCell>
-                  <TableCell className="py-1 px-2">{firstOption.elementIndex + 1}</TableCell>
+                  <TableCell className="font-medium py-1 px-2">{firstOption.sceneTitle || 'Unknown'}</TableCell>
+                  <TableCell className="py-1 px-2">{(firstOption.elementIndex !== undefined ? firstOption.elementIndex + 1 : 'N/A')}</TableCell>
                   <TableCell className="py-1 px-2">
                     <div className="flex items-center gap-1">
                       <div 
@@ -86,7 +88,7 @@ const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTablePro
                       >
                         {getElementTypeLabel(firstOption.elementType || '')}
                       </div>
-                      <span className="text-xs truncate max-w-[200px]">{firstOption.elementTitle}</span>
+                      <span className="text-xs truncate max-w-[200px]">{firstOption.elementTitle || 'Unknown'}</span>
                     </div>
                   </TableCell>
                   <TableCell colSpan={2}></TableCell>
@@ -94,6 +96,8 @@ const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTablePro
                 
                 {/* Option/Outcome rows */}
                 {options.map((option) => {
+                  if (!option) return null;
+                  
                   const outcomeType = option.outcomeType as 'choice' | 'success' | 'failure';
                   const optionKey = outcomeType === 'choice' && option.choiceOptionId 
                     ? option.choiceOptionId 
@@ -111,19 +115,21 @@ const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTablePro
                       <TableCell className="py-1 px-2"></TableCell>
                       <TableCell className="font-medium py-1 px-2">
                         {outcomeType === 'choice' ? (
-                          <span className="text-xs">{option.optionOrOutcome}</span>
+                          <span className="text-xs">{option.optionOrOutcome || 'No text'}</span>
                         ) : (
                           <Badge 
                             variant={outcomeType === 'success' ? 'default' : 'destructive'}
                             className="text-xs py-0 px-1"
                           >
-                            {option.optionOrOutcome}
+                            {option.optionOrOutcome || (outcomeType === 'success' ? '成功' : '失败')}
                           </Badge>
                         )}
                       </TableCell>
                       <TableCell className="py-1 px-2">
                         <div className="flex flex-wrap gap-1 items-center">
                           {modifications.map((modification) => {
+                            if (!modification || !modification.valueId) return null;
+                            
                             const value = getDisplayValue(modification);
                             const isPositive = value > 0;
                             const isNegative = value < 0;
@@ -161,7 +167,7 @@ const GlobalValuesModificationsTable: React.FC<GlobalValuesModificationsTablePro
                             )
                           })}
                           
-                          {story.globalValues.length > modifications.length && (
+                          {story.globalValues && story.globalValues.length > modifications.length && (
                             <Button
                               variant="ghost"
                               size="sm"
