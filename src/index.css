@@ -45,9 +45,9 @@
     
     --sidebar-text: 240 10% 20%;
     
-    --preview-header: 220 20% 96%;
-    --preview-border: 220 13% 91%;
-    --preview-shadow: 210 20% 80% / 0.15;
+    --preview-header: 220 20% 85%; /* Darker in light mode */
+    --preview-border: 220 20% 80%; /* Darker in light mode */
+    --preview-shadow: 210 30% 60% / 0.2; /* More pronounced shadow */
   }
 
   .dark {
@@ -90,9 +90,9 @@
     
     --sidebar-text: 240 5% 90%;
     
-    --preview-header: 236 23% 19%;
-    --preview-border: 236 25% 25%;
-    --preview-shadow: 0 0% 0% / 0.4;
+    --preview-header: 236 30% 30%; /* Lighter in dark mode */
+    --preview-border: 236 30% 35%; /* Lighter in dark mode */
+    --preview-shadow: 0 0% 0% / 0.5; /* Stronger shadow for dark mode */
   }
 }
 
@@ -161,12 +161,17 @@
 /* Mobile Preview Colors - Fix for dark mode */
 .MobilePreview-container {
   @apply bg-card text-card-foreground border-[hsl(var(--preview-border))];
-  box-shadow: 0 4px 20px hsl(var(--preview-shadow));
+  box-shadow: 0 8px 25px hsl(var(--preview-shadow));
 }
 
 /* Preview Header Styling */
 .preview-header {
   @apply bg-[hsl(var(--preview-header))] border-b border-[hsl(var(--preview-border))];
+}
+
+/* Preview header content styling */
+.preview-header-content {
+  @apply text-foreground font-medium;
 }
 
 /* Sidebar Menu Text Color Fixes */

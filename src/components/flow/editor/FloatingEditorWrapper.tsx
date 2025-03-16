@@ -71,11 +71,14 @@ const FloatingEditorWrapper: React.FC<FloatingEditorWrapperProps> = ({
   return (
     <Card
       className={cn(
-        "shadow-lg border rounded-md overflow-hidden bg-card text-card-foreground",
+        "shadow-lg border rounded-md overflow-hidden bg-card text-card-foreground border-[hsl(var(--preview-border))]",
         isMobile ? "w-auto" : "",
         isPopup ? "popup-editor" : ""
       )}
-      style={editorStyle}
+      style={{
+        ...editorStyle,
+        boxShadow: "0 8px 25px hsl(var(--preview-shadow))"
+      }}
     >
       {children}
     </Card>
