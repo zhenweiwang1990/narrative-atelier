@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useStory } from "./Layout";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import PreviewElement from "./preview/PreviewElement";
 import SceneEnding from "./preview/SceneEnding";
 import { usePreviewState } from "./preview/usePreviewState";
@@ -84,6 +84,11 @@ const MobilePreview = ({
 
   // 显示解锁价格信息
   const showUnlockPrice = scene.unlockPrice !== undefined && scene.unlockPrice > 0;
+  
+  // Calculate progress
+  const totalElements = sortedElements.length;
+  const currentProgress = currentElementIndex + 1;
+  const progressPercentage = totalElements > 0 ? Math.round((currentProgress / totalElements) * 100) : 0;
 
   return (
     <Card className="MobilePreview-container w-full h-full border overflow-hidden flex flex-col bg-white dark:bg-card">
@@ -113,13 +118,13 @@ const MobilePreview = ({
             )}
 
             {!currentElement && location && (
-              <div className="text-center mb-4 bg-background/70 p-2 rounded-md">
+              <div className="text-center mb-4 bg-background/90 p-2 rounded-md">
                 <p className="text-sm text-foreground">
                   地点: {location.name || "未知"}
                 </p>
               </div>
             )}
-            <div className="bg-background/70 rounded-md p-3">
+            <div className="bg-background/90 rounded-md p-3">
               <PreviewElement
                 currentElement={currentElement}
                 handleNext={handleNext}
@@ -133,27 +138,31 @@ const MobilePreview = ({
                 lastElementShown={lastElementShown}
               />
             </div>
-
-            {/* 添加全局变量显示 */}
-            {story.globalValues && story.globalValues.length > 0 && (
-              <ValuesDisplay values={globalValues} />
-            )}
           </div>
 
-          <div className="p-3 border-t bg-background/80 flex items-center gap-2 z-20">
+          <div className="p-3 border-t bg-background/90 flex items-center gap-2 z-20">
             <Button
               variant="secondary"
-              size="sm"
-              className="flex-1"
+              size="icon"
+              className="h-9 w-9"
               onClick={handlePrevious}
               disabled={currentElementIndex <= 0}
+              title="上一步"
             >
-              <ChevronLeft className="h-4 w-4 mr-1" /> 上一步
+              <ChevronLeft className="h-4 w-4" />
             </Button>
+            
+            {/* Values display in bottom bar */}
+            <div className="flex-1 overflow-x-auto">
+              {story.globalValues && story.globalValues.length > 0 && (
+                <ValuesDisplay values={globalValues} compact={true} />
+              )}
+            </div>
+            
             <Button
               variant="secondary"
               size="sm"
-              className="flex-1"
+              className="px-3 h-9"
               onClick={handleNext}
               disabled={
                 (lastElementShown &&

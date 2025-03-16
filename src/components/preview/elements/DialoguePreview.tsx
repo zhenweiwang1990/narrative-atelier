@@ -21,7 +21,7 @@ const DialoguePreview: React.FC<DialoguePreviewProps> = ({
   }
 
   return (
-    <div className="flex items-start gap-3 py-2">
+    <div className="flex items-start gap-3 py-2 bg-white/90 dark:bg-black/30 p-3 rounded-md">
       <div className="shrink-0 w-10 h-10 rounded-full overflow-hidden">
         {speakingCharacter.profilePicture ? (
           <img 

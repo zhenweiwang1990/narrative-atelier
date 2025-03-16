@@ -44,6 +44,14 @@ const FloatingMobilePreview = ({
 
   const selectedScene = selectedSceneId ? story?.scenes.find(s => s.id === selectedSceneId) : null;
   const sceneTitle = selectedScene?.title;
+  
+  // Get total element count for progress display
+  const totalElements = selectedScene?.elements?.length || 0;
+  
+  // Get current element index for progress
+  const currentElementIndex = currentElementId && selectedScene?.elements 
+    ? selectedScene.elements.findIndex(e => e.id === currentElementId) + 1 
+    : 0;
 
   // Handle popup window
   const handlePopout = () => {
@@ -123,6 +131,11 @@ const FloatingMobilePreview = ({
           onClose={onToggle}
           onMouseDown={handleMouseDown}
           onPopout={handlePopout}
+          progress={
+            selectedSceneId && totalElements > 0 
+              ? { current: currentElementIndex || 0, total: totalElements } 
+              : undefined
+          }
         />
 
         {!minimized && (

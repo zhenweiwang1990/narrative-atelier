@@ -21,7 +21,7 @@ const ThoughtPreview: React.FC<ThoughtPreviewProps> = ({
   }
 
   return (
-    <div className="flex items-start gap-3 py-2">
+    <div className="flex items-start gap-3 py-2 bg-slate-50/90 dark:bg-slate-900/80 p-3 rounded-md">
       <div className="shrink-0 w-10 h-10 rounded-full overflow-hidden border-2 border-dashed border-slate-300 dark:border-slate-600">
         {thinkingCharacter.profilePicture ? (
           <img 

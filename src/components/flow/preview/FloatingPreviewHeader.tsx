@@ -2,6 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { MapPin, X, Minimize, Maximize, ExternalLink } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 interface FloatingPreviewHeaderProps {
   title: string;
@@ -11,6 +12,7 @@ interface FloatingPreviewHeaderProps {
   onClose: () => void;
   onMouseDown: (e: React.MouseEvent) => void;
   onPopout?: () => void; // New prop for popup functionality
+  progress?: { current: number; total: number }; // New prop for progress display
 }
 
 const FloatingPreviewHeader: React.FC<FloatingPreviewHeaderProps> = ({
@@ -21,7 +23,13 @@ const FloatingPreviewHeader: React.FC<FloatingPreviewHeaderProps> = ({
   onClose,
   onMouseDown,
   onPopout,
+  progress,
 }) => {
+  // Calculate progress percentage
+  const progressPercentage = progress && progress.total > 0 
+    ? Math.round((progress.current / progress.total) * 100) 
+    : 0;
+
   return (
     <div
       className="px-3 py-2 preview-header flex items-center cursor-move"
@@ -33,6 +41,13 @@ const FloatingPreviewHeader: React.FC<FloatingPreviewHeaderProps> = ({
         {sceneTitle && (
           <span className="text-xs font-normal text-foreground/70 ml-2">
             {sceneTitle}
+          </span>
+        )}
+        
+        {/* Progress indicator */}
+        {progress && progress.total > 0 && (
+          <span className="text-xs font-normal text-foreground/70 ml-2">
+            {progress.current}/{progress.total}
           </span>
         )}
       </h3>

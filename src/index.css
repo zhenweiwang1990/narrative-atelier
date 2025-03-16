@@ -124,6 +124,16 @@
   @apply bg-story-accent/50;
 }
 
+/* Hide scrollbars in compact value displays */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 /* Flow Editor Styles */
 .react-flow__node {
   @apply rounded-lg border border-border bg-card shadow-sm transition-shadow font-medium text-sm;
@@ -177,6 +187,11 @@
 /* Sidebar Menu Text Color Fixes */
 .sidebar-text {
   @apply text-[hsl(var(--sidebar-text))] font-medium;
+}
+
+/* Compact values display for bottom bar */
+.value-item-compact {
+  @apply bg-white/80 dark:bg-slate-800/80 shadow-sm;
 }
 
 /* Variable Value Display - Fix for dark mode */
