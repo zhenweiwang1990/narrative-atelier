@@ -75,7 +75,7 @@ const SingleOutcomeSection: React.FC<SingleOutcomeSectionProps> = ({
         onRemoveValueChange={removeValueChange}
       />
 
-      {showAiButtons && (
+      {showAiButtons && (!sceneId || sceneId === 'none') && (
         <div className="flex gap-2 mt-3">
           <Button 
             variant="outline" 

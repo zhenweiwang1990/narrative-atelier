@@ -49,6 +49,7 @@ const QteSuccessOutcome: React.FC<QteSuccessOutcomeProps> = ({
       <QteOutcomeButtons 
         onOpenAiDialog={onOpenAiDialog} 
         outcomeType="success" 
+        sceneId={element.success.sceneId}
       />
     </>
   );

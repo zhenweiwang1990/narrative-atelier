@@ -49,6 +49,7 @@ const QteFailureOutcome: React.FC<QteFailureOutcomeProps> = ({
       <QteOutcomeButtons 
         onOpenAiDialog={onOpenAiDialog} 
         outcomeType="failure" 
+        sceneId={element.failure.sceneId}
       />
     </>
   );
