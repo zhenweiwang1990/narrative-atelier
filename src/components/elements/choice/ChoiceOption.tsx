@@ -1,14 +1,12 @@
 
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
 import { ChoiceOption as ChoiceOptionType, Scene, GlobalValue } from "@/utils/types";
 import ValueChangeEditor from "./ValueChangeEditor";
 import LockSettingsSection from "./LockSettingsSection";
 import SceneSelector from "./SceneSelector";
 import AiStoryDialog from "../shared/AiStoryDialog";
+import OptionHeader from "./OptionHeader";
 import { toast } from "sonner";
 
 interface ChoiceOptionProps {
@@ -72,19 +70,11 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
 
   return (
     <div className="p-2 border rounded-md bg-muted/20">
-      <div className="flex justify-between items-start mb-1">
-        <Label className="text-xs">选项 {optIdx + 1}</Label>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-5 w-5 text-destructive"
-          onClick={() => onDeleteOption(option.id)}
-          disabled={disableDelete}
-        >
-          <Trash2 className="h-3 w-3" />
-        </Button>
-      </div>
+      <OptionHeader 
+        optIdx={optIdx}
+        onDelete={() => onDeleteOption(option.id)}
+        disableDelete={disableDelete}
+      />
 
       <Input
         value={option.text}

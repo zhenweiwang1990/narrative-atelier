@@ -1,3 +1,4 @@
+
 export * from './NarrationElement';
 export * from './DialogueElement';
 export * from './ThoughtElement';
@@ -11,6 +12,7 @@ export * from './dialogueTask/DialogueTaskFields';
 export * from './shared/OutcomeSection';
 export * from './choice/ChoiceOption';
 export * from './choice/ValueChangeEditor';
+export * from './choice/OptionHeader';
 
 // Additional exports for the new components
 export * from './shared/SingleOutcomeSection';
