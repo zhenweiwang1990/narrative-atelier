@@ -77,7 +77,7 @@ const FloatingEditorWrapper: React.FC<FloatingEditorWrapperProps> = ({
       )}
       style={{
         ...editorStyle,
-        boxShadow: "0 8px 25px hsl(var(--preview-shadow))"
+        boxShadow: "0 10px 30px hsl(var(--preview-shadow))"
       }}
     >
       {children}

@@ -169,16 +169,11 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
       <EditorHeader 
         title={showSceneProperties ? '编辑场景' : '编辑元素'} 
         onClose={onClose}
-        onAddElement={!showSceneProperties && currentElement ? 
-          // Fix: Pass a function that matches the expected signature
-          // Either define it as a no-argument function that calls handleAddElement internally
-          () => {} // Placeholder that will be properly implemented in EditorHeader.tsx
-          : undefined}
+        handleAddElement={handleAddElement}
         showElementActions={!showSceneProperties && !!currentElement}
         elementType={currentElement?.type}
         onAiGenerate={!showSceneProperties && currentElement ? handleAiGenerate : undefined}
         onPopout={!isPopup ? handlePopout : undefined}
-        handleAddElement={handleAddElement} // Pass the actual function with type and position params
       />
 
       <EditorContent 

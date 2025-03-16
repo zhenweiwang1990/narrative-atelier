@@ -124,6 +124,7 @@ const MobilePreview = ({
                 </p>
               </div>
             )}
+            
             <div className="bg-background/90 rounded-md p-3">
               <PreviewElement
                 currentElement={currentElement}
@@ -138,13 +139,22 @@ const MobilePreview = ({
                 lastElementShown={lastElementShown}
               />
             </div>
+            
+            {/* Values display inside the preview area, floating at bottom */}
+            {story.globalValues && story.globalValues.length > 0 && (
+              <div className="absolute bottom-16 left-0 right-0 px-4">
+                <div className="bg-background/80 backdrop-blur-sm border border-border/30 rounded-md p-2 shadow-md">
+                  <ValuesDisplay values={globalValues} compact={true} />
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="p-3 border-t bg-background/90 flex items-center gap-2 z-20">
             <Button
-              variant="secondary"
+              variant="outline"
               size="icon"
-              className="h-9 w-9"
+              className="h-9 w-9 shrink-0"
               onClick={handlePrevious}
               disabled={currentElementIndex <= 0}
               title="上一步"
@@ -152,17 +162,12 @@ const MobilePreview = ({
               <ChevronLeft className="h-4 w-4" />
             </Button>
             
-            {/* Values display in bottom bar */}
-            <div className="flex-1 overflow-x-auto">
-              {story.globalValues && story.globalValues.length > 0 && (
-                <ValuesDisplay values={globalValues} compact={true} />
-              )}
-            </div>
+            <div className="flex-1"></div>
             
             <Button
-              variant="secondary"
+              variant="default"
               size="sm"
-              className="px-3 h-9"
+              className="px-3 h-9 bg-primary text-primary-foreground hover:bg-primary/90 font-medium"
               onClick={handleNext}
               disabled={
                 (lastElementShown &&

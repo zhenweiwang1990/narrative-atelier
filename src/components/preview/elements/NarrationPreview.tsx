@@ -9,7 +9,7 @@ interface NarrationPreviewProps {
 
 const NarrationPreview: React.FC<NarrationPreviewProps> = ({ element }) => {
   return (
-    <div className="p-4 bg-blue-50/95 dark:bg-blue-950/80 rounded-md border border-blue-200 dark:border-blue-800 my-2 animate-fade-in">
+    <div className="p-4 bg-blue-50/95 dark:bg-blue-950/90 rounded-md border border-blue-200 dark:border-blue-800 my-2 animate-fade-in">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center">
           <BookOpen className="h-4 w-4 text-blue-500 mr-2" />
