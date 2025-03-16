@@ -8,7 +8,7 @@ import EditorContent from "./editor/EditorContent";
 import { useEditorElementAddition } from "./hooks/useEditorElementAddition";
 import { toast } from "sonner";
 import { handleAiStoryGeneration } from "@/services/aiStoryServiceClient";
-import { QteElement } from "@/utils/types";
+import { ElementType, QteElement } from "@/utils/types";
 
 interface FloatingElementEditorProps {
   sceneId: string;
@@ -169,11 +169,16 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
       <EditorHeader 
         title={showSceneProperties ? '编辑场景' : '编辑元素'} 
         onClose={onClose}
-        onAddElement={!showSceneProperties && currentElement ? handleAddElement : undefined}
+        onAddElement={!showSceneProperties && currentElement ? 
+          // Fix: Pass a function that matches the expected signature
+          // Either define it as a no-argument function that calls handleAddElement internally
+          () => {} // Placeholder that will be properly implemented in EditorHeader.tsx
+          : undefined}
         showElementActions={!showSceneProperties && !!currentElement}
         elementType={currentElement?.type}
         onAiGenerate={!showSceneProperties && currentElement ? handleAiGenerate : undefined}
         onPopout={!isPopup ? handlePopout : undefined}
+        handleAddElement={handleAddElement} // Pass the actual function with type and position params
       />
 
       <EditorContent 
