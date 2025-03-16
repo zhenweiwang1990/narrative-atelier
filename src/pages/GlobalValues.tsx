@@ -141,18 +141,16 @@ const GlobalValuesPage: React.FC = () => {
         称号可以根据游戏结束时的全局变量值来奖励玩家。
       </p>
 
-      <div className="grid md:grid-cols-2 gap-8 mb-8">
-        <div>
+      <div className="flex gap-8 mb-8">
+        <div className="w-[300px] flex-shrink-0">
           <h2 className="text-xl font-bold mb-4">全局变量</h2>
-          <div className="max-w-[300px]">
-            <GlobalValues
-              values={story?.globalValues || []}
-              onChange={handleGlobalValuesChange}
-            />
-          </div>
+          <GlobalValues
+            values={story?.globalValues || []}
+            onChange={handleGlobalValuesChange}
+          />
         </div>
         
-        <div>
+        <div className="flex-1">
           <h2 className="text-xl font-bold mb-4">称号管理</h2>
           <p className="text-sm text-muted-foreground mb-4">
             称号是玩家完成游戏后获得的成就，基于最终全局变量值判定。

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -14,6 +13,17 @@ interface TitlesListProps {
   globalValues: GlobalValue[];
   onChange: (titles: Title[]) => void;
 }
+
+const titleCardColors = [
+  'bg-blue-50 border-blue-200',
+  'bg-green-50 border-green-200',
+  'bg-purple-50 border-purple-200',
+  'bg-amber-50 border-amber-200',
+  'bg-rose-50 border-rose-200',
+  'bg-teal-50 border-teal-200',
+  'bg-indigo-50 border-indigo-200',
+  'bg-orange-50 border-orange-200',
+];
 
 const TitlesList: React.FC<TitlesListProps> = ({ titles, globalValues, onChange }) => {
   const addTitle = () => {
@@ -44,6 +54,10 @@ const TitlesList: React.FC<TitlesListProps> = ({ titles, globalValues, onChange 
     onChange(titles.filter(title => title.id !== id));
   };
 
+  const getTitleCardColor = (index: number): string => {
+    return titleCardColors[index % titleCardColors.length];
+  };
+
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-4">
@@ -67,8 +81,11 @@ const TitlesList: React.FC<TitlesListProps> = ({ titles, globalValues, onChange 
         </div>
       ) : (
         <div className="flex flex-wrap gap-4">
-          {titles.map(title => (
-            <Card key={title.id} className="p-4 w-[350px] mb-2">
+          {titles.map((title, index) => (
+            <Card 
+              key={title.id} 
+              className={`p-4 w-[350px] mb-2 ${getTitleCardColor(index)}`}
+            >
               <div className="flex gap-2 items-start mb-3">
                 <div className="flex-1">
                   <Label htmlFor={`title-name-${title.id}`} className="text-xs">称号名称</Label>
