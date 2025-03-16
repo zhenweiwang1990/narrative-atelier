@@ -16,7 +16,6 @@ import TextProcessing from "./pages/StoryCreation/TextProcessing";
 import InteractionMarking from "./pages/StoryCreation/InteractionMarking";
 import StoryConversion from "./pages/StoryCreation/StoryConversion";
 import Music from "./pages/Music";
-import Popup from "./pages/Popup";
 
 const queryClient = new QueryClient();
 
@@ -48,7 +47,6 @@ const App = () => (
                 element={<StoryConversion />}
               />
               <Route path="/music" element={<Music />} />
-              <Route path="/popup" element={<Popup />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>

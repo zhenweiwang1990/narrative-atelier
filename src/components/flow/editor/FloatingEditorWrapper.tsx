@@ -1,5 +1,5 @@
 
-import React, { ReactNode, forwardRef } from "react";
+import React, { ReactNode } from "react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -11,12 +11,12 @@ interface FloatingEditorWrapperProps {
   isMobile?: boolean;
 }
 
-const FloatingEditorWrapper = forwardRef<HTMLDivElement, FloatingEditorWrapperProps>(({
+const FloatingEditorWrapper: React.FC<FloatingEditorWrapperProps> = ({
   children,
   position,
   isOpen,
   isMobile: forceMobile,
-}, ref) => {
+}) => {
   const isMobileDevice = useIsMobile();
   const isMobile = forceMobile || isMobileDevice;
 
@@ -35,7 +35,7 @@ const FloatingEditorWrapper = forwardRef<HTMLDivElement, FloatingEditorWrapperPr
         flexDirection: "column" as const,
       }
     : {
-        left: `${position.x}px`, // No longer adding the 380px offset here - position is passed directly
+        left: `${position.x + 380}px`, // 380px accounts for the wider preview (352px) plus some margin
         top: `${position.y}px`,
         position: "fixed" as const,
         zIndex: 30, // Reduced from 40 to 30
@@ -47,7 +47,6 @@ const FloatingEditorWrapper = forwardRef<HTMLDivElement, FloatingEditorWrapperPr
 
   return (
     <Card
-      ref={ref}
       className={cn(
         "shadow-lg border rounded-md overflow-hidden",
         isMobile ? "w-auto" : ""
@@ -57,8 +56,6 @@ const FloatingEditorWrapper = forwardRef<HTMLDivElement, FloatingEditorWrapperPr
       {children}
     </Card>
   );
-});
-
-FloatingEditorWrapper.displayName = "FloatingEditorWrapper";
+};
 
 export default FloatingEditorWrapper;

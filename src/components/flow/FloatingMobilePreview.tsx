@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import MobilePreview from "@/components/MobilePreview";
 import FloatingElementEditor from "./FloatingElementEditor";
@@ -17,21 +16,6 @@ interface FloatingMobilePreviewProps {
   onToggle: () => void;
 }
 
-// Create a custom event for scene selection that works across windows
-const broadcastSceneSelection = (sceneId: string) => {
-  const event = new CustomEvent('sceneSelected', { detail: { sceneId } });
-  window.dispatchEvent(event);
-  
-  // If this is a popup window, also try to send to the opener
-  if (window.opener && !window.opener.closed) {
-    try {
-      window.opener.dispatchEvent(new CustomEvent('sceneSelected', { detail: { sceneId } }));
-    } catch (e) {
-      console.error('Failed to send event to opener:', e);
-    }
-  }
-};
-
 const FloatingMobilePreview = ({
   selectedSceneId,
   setSelectedSceneId,
@@ -48,17 +32,10 @@ const FloatingMobilePreview = ({
     null
   );
 
-  // Use draggable hook for preview window
   const { position, isDragging, elementRef, handleMouseDown } = useDraggable({
     x: window.innerWidth - 700,
     y: 80,
   });
-
-  // Calculate editor position relative to preview position
-  const editorPosition = {
-    x: position.x + 352, // Width of the preview
-    y: position.y,
-  };
 
   const handleElementSelect = (elementId: string | null) => {
     setCurrentElementId(elementId);
@@ -66,54 +43,6 @@ const FloatingMobilePreview = ({
 
   const selectedScene = selectedSceneId ? story?.scenes.find(s => s.id === selectedSceneId) : null;
   const sceneTitle = selectedScene?.title;
-
-  // Listen for scene selection events from other windows
-  useEffect(() => {
-    const handleSceneSelected = (e: CustomEvent) => {
-      if (e.detail && e.detail.sceneId) {
-        setSelectedSceneId(e.detail.sceneId);
-      }
-    };
-    
-    window.addEventListener('sceneSelected', handleSceneSelected as EventListener);
-    
-    return () => {
-      window.removeEventListener('sceneSelected', handleSceneSelected as EventListener);
-    };
-  }, [setSelectedSceneId]);
-
-  // Intercept setSelectedSceneId to broadcast the event
-  const handleSceneChange = (sceneId: string) => {
-    setSelectedSceneId(sceneId);
-    broadcastSceneSelection(sceneId);
-  };
-
-  // Handler for pop-out functionality
-  const handlePopOut = () => {
-    const url = new URL('/popup', window.location.origin);
-    url.searchParams.append('type', 'preview');
-    if (selectedSceneId) {
-      url.searchParams.append('sceneId', selectedSceneId);
-    }
-    
-    // Open the popup window
-    const popup = window.open(
-      url.toString(),
-      'PreviewPopup',
-      'width=950,height=700,toolbar=0,location=0,menubar=0'
-    );
-    
-    // Transfer current story data to popup
-    if (popup) {
-      popup.addEventListener('load', () => {
-        popup.postMessage({
-          type: 'storyData',
-          story: story,
-          currentElementId: currentElementId
-        }, window.location.origin);
-      });
-    }
-  };
 
   if (!isOpen) return null;
 
@@ -143,7 +72,6 @@ const FloatingMobilePreview = ({
           onToggleMinimize={() => setMinimized(!minimized)}
           onClose={onToggle}
           onMouseDown={handleMouseDown}
-          onPopOut={handlePopOut}
         />
 
         {!minimized && (
@@ -151,7 +79,7 @@ const FloatingMobilePreview = ({
             {selectedSceneId ? (
               <MobilePreview
                 sceneId={selectedSceneId}
-                onSceneChange={handleSceneChange}
+                onSceneChange={setSelectedSceneId}
                 onElementSelect={handleElementSelect}
               />
             ) : (
@@ -169,7 +97,7 @@ const FloatingMobilePreview = ({
         <FloatingElementEditor
           sceneId={selectedSceneId}
           currentElementId={currentElementId}
-          position={editorPosition}
+          position={position}
           onClose={() => setCurrentElementId(null)}
           isOpen={true}
           validateTimeLimit={validateTimeLimit}
