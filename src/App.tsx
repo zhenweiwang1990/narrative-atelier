@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +17,7 @@ import TextProcessing from "./pages/StoryCreation/TextProcessing";
 import InteractionMarking from "./pages/StoryCreation/InteractionMarking";
 import StoryConversion from "./pages/StoryCreation/StoryConversion";
 import Music from "./pages/Music";
+import Popup from "./pages/Popup";
 
 const queryClient = new QueryClient();
 
@@ -26,30 +28,29 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/characters" element={<Characters />} />
-              <Route path="/locations" element={<Locations />} />
-              <Route path="/global-values" element={<GlobalValues />} />
-              <Route path="/flow" element={<Flow />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route
-                path="/story-creation/text-processing"
-                element={<TextProcessing />}
-              />
-              <Route
-                path="/story-creation/interaction-marking"
-                element={<InteractionMarking />}
-              />
-              <Route
-                path="/story-creation/conversion"
-                element={<StoryConversion />}
-              />
-              <Route path="/music" element={<Music />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
+          <Routes>
+            <Route path="/" element={<Layout><Index /></Layout>} />
+            <Route path="/characters" element={<Layout><Characters /></Layout>} />
+            <Route path="/locations" element={<Layout><Locations /></Layout>} />
+            <Route path="/global-values" element={<Layout><GlobalValues /></Layout>} />
+            <Route path="/flow" element={<Layout><Flow /></Layout>} />
+            <Route path="/settings" element={<Layout><Settings /></Layout>} />
+            <Route
+              path="/story-creation/text-processing"
+              element={<Layout><TextProcessing /></Layout>}
+            />
+            <Route
+              path="/story-creation/interaction-marking"
+              element={<Layout><InteractionMarking /></Layout>}
+            />
+            <Route
+              path="/story-creation/conversion"
+              element={<Layout><StoryConversion /></Layout>}
+            />
+            <Route path="/music" element={<Layout><Music /></Layout>} />
+            <Route path="/popup" element={<Popup />} />
+            <Route path="*" element={<Layout><NotFound /></Layout>} />
+          </Routes>
         </BrowserRouter>
       </TooltipProvider>
     </ThemeProvider>

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import MobilePreview from "@/components/MobilePreview";
@@ -44,6 +45,55 @@ const FloatingMobilePreview = ({
   const selectedScene = selectedSceneId ? story?.scenes.find(s => s.id === selectedSceneId) : null;
   const sceneTitle = selectedScene?.title;
 
+  // Handle popup window
+  const handlePopout = () => {
+    if (!story || !selectedSceneId) return;
+    
+    // Open a new window with the popup route
+    const popupWindow = window.open(
+      `/popup?mode=preview&sceneId=${selectedSceneId}`,
+      'StoryPreviewPopup',
+      'width=1000,height=800,menubar=no,toolbar=no,location=no,resizable=yes,scrollbars=yes,status=no'
+    );
+    
+    // Setup communication between windows
+    if (popupWindow) {
+      // When the popup window is loaded, send the story data
+      popupWindow.addEventListener('load', () => {
+        popupWindow.postMessage({
+          type: 'STORY_DATA',
+          payload: {
+            story: JSON.stringify(story),
+            sceneId: selectedSceneId
+          }
+        }, window.location.origin);
+      });
+      
+      // Listen for scene changes in the main window
+      const handleSceneChange = () => {
+        if (popupWindow && !popupWindow.closed && selectedSceneId) {
+          popupWindow.postMessage({
+            type: 'SCENE_CHANGE',
+            payload: {
+              sceneId: selectedSceneId
+            }
+          }, window.location.origin);
+        }
+      };
+      
+      // Setup observer to watch for scene changes
+      window.addEventListener('sceneSelected', handleSceneChange as EventListener);
+      
+      // Cleanup when the popup is closed
+      const checkPopupClosed = setInterval(() => {
+        if (popupWindow.closed) {
+          window.removeEventListener('sceneSelected', handleSceneChange as EventListener);
+          clearInterval(checkPopupClosed);
+        }
+      }, 1000);
+    }
+  };
+
   if (!isOpen) return null;
 
   const previewHeight = minimized ? "40px" : "625px";
@@ -72,6 +122,7 @@ const FloatingMobilePreview = ({
           onToggleMinimize={() => setMinimized(!minimized)}
           onClose={onToggle}
           onMouseDown={handleMouseDown}
+          onPopout={handlePopout}
         />
 
         {!minimized && (

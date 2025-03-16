@@ -19,6 +19,7 @@ interface FloatingElementEditorProps {
   validateTimeLimit?: (value: number) => number;
   validateKeySequence?: (value: string) => string;
   showSceneProperties?: boolean;
+  isPopup?: boolean; // New prop to indicate if this is in a popup window
 }
 
 const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
@@ -29,7 +30,8 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
   isOpen,
   validateTimeLimit = (v) => v,
   validateKeySequence = (v) => v,
-  showSceneProperties = false
+  showSceneProperties = false,
+  isPopup = false
 }) => {
   const { story, setStory } = useStory();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -62,6 +64,51 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
     updateElement,
     onClose,
   });
+
+  // Handle popup functionality
+  const handlePopout = () => {
+    if (!story || !sceneId) return;
+    
+    const popupWindow = window.open(
+      `/popup?mode=editor&sceneId=${sceneId}&elementId=${currentElementId || ""}`,
+      'StoryEditorPopup',
+      'width=1000,height=800,menubar=no,toolbar=no,location=no,resizable=yes,scrollbars=yes,status=no'
+    );
+    
+    if (popupWindow) {
+      // When the popup window is loaded, send the story data
+      popupWindow.addEventListener('load', () => {
+        popupWindow.postMessage({
+          type: 'STORY_DATA',
+          payload: {
+            story: JSON.stringify(story),
+            sceneId: sceneId,
+            elementId: currentElementId
+          }
+        }, window.location.origin);
+      });
+      
+      // Setup listener for element changes in main window
+      const handleElementChange = (event: CustomEvent) => {
+        if (popupWindow && !popupWindow.closed && event.detail) {
+          popupWindow.postMessage({
+            type: 'ELEMENT_CHANGE',
+            payload: event.detail
+          }, window.location.origin);
+        }
+      };
+      
+      window.addEventListener('selectElement', handleElementChange as EventListener);
+      
+      // Cleanup when popup is closed
+      const checkPopupClosed = setInterval(() => {
+        if (popupWindow.closed) {
+          window.removeEventListener('selectElement', handleElementChange as EventListener);
+          clearInterval(checkPopupClosed);
+        }
+      }, 1000);
+    }
+  };
 
   // Handle AI content generation
   const handleAiGenerate = async () => {
@@ -118,7 +165,7 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
   };
 
   return (
-    <FloatingEditorWrapper position={position} isOpen={isOpen}>
+    <FloatingEditorWrapper position={position} isOpen={isOpen} isPopup={isPopup}>
       <EditorHeader 
         title={showSceneProperties ? '编辑场景' : '编辑元素'} 
         onClose={onClose}
@@ -126,6 +173,7 @@ const FloatingElementEditor: React.FC<FloatingElementEditorProps> = ({
         showElementActions={!showSceneProperties && !!currentElement}
         elementType={currentElement?.type}
         onAiGenerate={!showSceneProperties && currentElement ? handleAiGenerate : undefined}
+        onPopout={!isPopup ? handlePopout : undefined}
       />
 
       <EditorContent 
