@@ -130,20 +130,26 @@ const ElementEditor = ({
 
   // 从剧情中获取全局变量
   const globalValues = story.globalValues || [];
+  
+  // Check if current scene is an ending scene
+  const currentScene = story.scenes.find(scene => scene.id === sceneId);
+  const isEndingScene = currentScene?.type === "ending" || currentScene?.type === "bad-ending";
 
   return (
     <div className="space-y-3">
       <div className="flex gap-2 justify-between">
         <ElementTypeButtons onAddElement={handleAddElement} />
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={() => setShowSplitDialog(true)}
-          className="flex items-center gap-1"
-        >
-          <Scissors className="h-3.5 w-3.5" />
-          拆分场景
-        </Button>
+        {!isEndingScene && (
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setShowSplitDialog(true)}
+            className="flex items-center gap-1"
+          >
+            <Scissors className="h-3.5 w-3.5" />
+            拆分场景
+          </Button>
+        )}
       </div>
 
       <div className="space-y-2 overflow-y-auto h-[calc(100vh-14rem)]">
@@ -204,12 +210,14 @@ const ElementEditor = ({
         )}
       </div>
 
-      <SplitSceneDialog 
-        open={showSplitDialog} 
-        onOpenChange={setShowSplitDialog}
-        sceneId={sceneId}
-        elements={elements}
-      />
+      {!isEndingScene && (
+        <SplitSceneDialog 
+          open={showSplitDialog} 
+          onOpenChange={setShowSplitDialog}
+          sceneId={sceneId}
+          elements={elements}
+        />
+      )}
     </div>
   );
 };
