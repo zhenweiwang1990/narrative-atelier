@@ -24,7 +24,7 @@ const FloatingPreviewHeader: React.FC<FloatingPreviewHeaderProps> = ({
 }) => {
   return (
     <div
-      className="px-3 py-2 border-b bg-muted/50 flex items-center cursor-move"
+      className="px-3 py-2 preview-header flex items-center cursor-move"
       onMouseDown={onMouseDown}
     >
       <MapPin className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />

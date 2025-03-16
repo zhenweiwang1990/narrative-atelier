@@ -104,7 +104,7 @@ const FloatingMobilePreview = ({
       <Card
         ref={elementRef}
         className={cn(
-          "fixed shadow-lg border rounded-md overflow-hidden z-40",
+          "fixed shadow-lg border rounded-md overflow-hidden z-40 MobilePreview-container",
           minimized ? "w-16 h-10" : ""
         )}
         style={{

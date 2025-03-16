@@ -56,36 +56,38 @@ const FlowCanvas: React.FC<FlowCanvasProps> = ({
   onFilterChange
 }) => {
   return (
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      onNodeClick={onNodeClick}
-      nodeTypes={nodeTypes}
-      defaultEdgeOptions={edgeOptions}
-      fitView
-      minZoom={0.5}
-      maxZoom={2}
-      defaultViewport={{ x: 0, y: 0, zoom: 1 }}
-    >
-      <Background />
-      <FlowControls />
-      
-      <FlowPanel
-        selectedNode={selectedNode}
-        onAddScene={onAddScene}
-        onDeleteScene={onDeleteScene}
-        onPreviewToggle={onPreviewToggle}
-        onAutoArrange={onAutoArrange}
-      />
-      
-      <FlowFilterPanel 
-        filterOption={filterOption}
-        onFilterChange={onFilterChange}
-      />
-    </ReactFlow>
+    <main className="w-full h-full overflow-hidden">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onNodeClick={onNodeClick}
+        nodeTypes={nodeTypes}
+        defaultEdgeOptions={edgeOptions}
+        fitView
+        minZoom={0.5}
+        maxZoom={2}
+        defaultViewport={{ x: 0, y: 0, zoom: 1 }}
+      >
+        <Background />
+        <FlowControls />
+        
+        <FlowPanel
+          selectedNode={selectedNode}
+          onAddScene={onAddScene}
+          onDeleteScene={onDeleteScene}
+          onPreviewToggle={onPreviewToggle}
+          onAutoArrange={onAutoArrange}
+        />
+        
+        <FlowFilterPanel 
+          filterOption={filterOption}
+          onFilterChange={onFilterChange}
+        />
+      </ReactFlow>
+    </main>
   );
 };
 

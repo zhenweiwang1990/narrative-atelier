@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -57,7 +58,7 @@ export const SidebarNavigation = () => {
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>导航</SidebarGroupLabel>
+      <SidebarGroupLabel className="sidebar-text">导航</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
           {menuItems.map((item) => (
@@ -65,10 +66,10 @@ export const SidebarNavigation = () => {
               <Link
                 to={item.path}
                 className={cn(
-                  "flex items-center gap-3 text-sm py-2",
+                  "flex items-center gap-3 text-sm py-2 sidebar-text",
                   location.pathname === item.path
                     ? "text-primary font-medium"
-                    : "text-muted-foreground"
+                    : ""
                 )}
               >
                 <SidebarMenuButton className="w-full justify-start">

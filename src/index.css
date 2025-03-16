@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -43,6 +42,12 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    --sidebar-text: 240 10% 20%;
+    
+    --preview-header: 220 20% 96%;
+    --preview-border: 220 13% 91%;
+    --preview-shadow: 210 20% 80% / 0.15;
   }
 
   .dark {
@@ -82,6 +87,12 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 236 23% 19%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    --sidebar-text: 240 5% 90%;
+    
+    --preview-header: 236 23% 19%;
+    --preview-border: 236 25% 25%;
+    --preview-shadow: 0 0% 0% / 0.4;
   }
 }
 
@@ -148,8 +159,9 @@
 }
 
 /* Mobile Preview Colors - Fix for dark mode */
-.dark .MobilePreview-container {
-  @apply bg-card text-card-foreground;
+.MobilePreview-container {
+  @apply bg-card text-card-foreground border-[hsl(var(--preview-border))];
+  box-shadow: 0 4px 20px hsl(var(--preview-shadow));
 }
 
 /* Variable Value Display - Fix for dark mode */
@@ -244,4 +256,14 @@
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 300ms, transform 300ms;
+}
+
+/* Sidebar Menu Text Color Fixes */
+.sidebar-text {
+  @apply text-[hsl(var(--sidebar-text))];
+}
+
+/* Mobile Preview Header Styling */
+.preview-header {
+  @apply bg-[hsl(var(--preview-header))] border-b border-[hsl(var(--preview-border))];
 }

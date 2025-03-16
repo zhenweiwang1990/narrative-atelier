@@ -95,26 +95,24 @@ const FlowEditor = ({ onSceneSelect, onPreviewToggle, onAddSceneWithType }: Flow
   const filteredNodes = getFilteredNodes();
 
   return (
-    <div className="w-full h-full border rounded-lg bg-white shadow-sm overflow-hidden">
-      <FlowCanvas
-        nodes={filteredNodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        onNodeClick={onNodeClick}
-        selectedNode={selectedNode}
-        onAddScene={handleAddScene}
-        onDeleteScene={deleteSelectedScene}
-        onPreviewToggle={onPreviewToggle}
-        onAutoArrange={handleAutoArrange}
-        edgeOptions={edgeOptions}
-        revivalEdgeOptions={revivalEdgeOptions}
-        filterOption={filterOption}
-        onFilterChange={handleFilterChange}
-      />
-    </div>
+    <FlowCanvas
+      nodes={filteredNodes}
+      edges={edges}
+      nodeTypes={nodeTypes}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      onConnect={onConnect}
+      onNodeClick={onNodeClick}
+      selectedNode={selectedNode}
+      onAddScene={handleAddScene}
+      onDeleteScene={deleteSelectedScene}
+      onPreviewToggle={onPreviewToggle}
+      onAutoArrange={handleAutoArrange}
+      edgeOptions={edgeOptions}
+      revivalEdgeOptions={revivalEdgeOptions}
+      filterOption={filterOption}
+      onFilterChange={handleFilterChange}
+    />
   );
 };
 
