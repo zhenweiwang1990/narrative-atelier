@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -43,7 +42,6 @@ const MobilePreview = ({
     sortedElements
   } = usePreviewState(sceneId, story, onSceneChange);
 
-  // Update currentElementId whenever currentElement changes
   useEffect(() => {
     setCurrentElementId(currentElement?.id || null);
     if (onElementSelect) {
@@ -51,21 +49,17 @@ const MobilePreview = ({
     }
   }, [currentElement, onElementSelect]);
 
-  // When scene changes, ensure scene properties are shown if no element is selected
   useEffect(() => {
     if (!currentElement && onElementSelect) {
       onElementSelect(null); // Signal to show scene properties
     }
   }, [sceneId, currentElement, onElementSelect]);
 
-  // Listen for previewElement events
   useEffect(() => {
     const handlePreviewElement = (event: CustomEvent) => {
       if (event.detail && event.detail.elementId && event.detail.sceneId === sceneId) {
-        // Find the index of the element to preview
         const elementIndex = sortedElements.findIndex(el => el.id === event.detail.elementId);
         if (elementIndex !== -1) {
-          // Set the current element index to show the requested element
           setCurrentElementIndex(elementIndex);
         }
       }
@@ -82,10 +76,8 @@ const MobilePreview = ({
 
   const locationBackground = location?.background || "/placeholder.svg";
 
-  // 显示解锁价格信息
   const showUnlockPrice = scene.unlockPrice !== undefined && scene.unlockPrice > 0;
   
-  // Calculate progress
   const totalElements = sortedElements.length;
   const currentProgress = currentElementIndex + 1;
   const progressPercentage = totalElements > 0 ? Math.round((currentProgress / totalElements) * 100) : 0;
@@ -93,20 +85,18 @@ const MobilePreview = ({
   return (
     <Card className="MobilePreview-container w-full h-full border overflow-hidden flex flex-col bg-white dark:bg-card">
       <div className="relative w-full flex-1 overflow-hidden">
-        {/* Background image container with fixed positioning */}
         <div 
           className="absolute inset-0 bg-center bg-no-repeat bg-cover"
           style={{ 
             backgroundImage: `url(${locationBackground})`,
             opacity: 0.5,
-            height: 'calc(100% - 60px)', // Reserve space for bottom controls
+            height: 'calc(100% - 60px)',
             zIndex: 0
           }}
         />
         
         <div className="relative flex flex-col h-full z-10">
           <div className="flex-1 overflow-auto p-4">
-            {/* 显示场景解锁价格信息 */}
             {showUnlockPrice && (
               <div className="bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 p-2 rounded-md mb-3 flex items-center justify-between">
                 <span className="text-xs">需要解锁此场景</span>
@@ -140,7 +130,6 @@ const MobilePreview = ({
               />
             </div>
             
-            {/* Values display inside the preview area, floating at bottom */}
             {story.globalValues && story.globalValues.length > 0 && (
               <div className="absolute bottom-16 left-0 right-0 px-4">
                 <div className="bg-background/80 backdrop-blur-sm border border-border/30 rounded-md p-2 shadow-md">
@@ -153,21 +142,19 @@ const MobilePreview = ({
           <div className="p-3 border-t bg-background/90 flex items-center gap-2 z-20">
             <Button
               variant="outline"
-              size="icon"
-              className="h-9 w-9 shrink-0"
+              size="sm"
+              className="flex-1 h-9"
               onClick={handlePrevious}
               disabled={currentElementIndex <= 0}
               title="上一步"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4 mr-1" /> 上一步
             </Button>
-            
-            <div className="flex-1"></div>
             
             <Button
               variant="default"
               size="sm"
-              className="px-3 h-9 bg-primary text-primary-foreground hover:bg-primary/90 font-medium"
+              className="flex-1 h-9 bg-primary text-primary-foreground hover:bg-primary/90 font-medium"
               onClick={handleNext}
               disabled={
                 (lastElementShown &&
