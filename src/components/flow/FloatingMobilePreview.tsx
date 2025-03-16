@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import MobilePreview from "@/components/MobilePreview";
 import FloatingElementEditor from "./FloatingElementEditor";
@@ -15,6 +16,21 @@ interface FloatingMobilePreviewProps {
   isOpen: boolean;
   onToggle: () => void;
 }
+
+// Create a custom event for scene selection that works across windows
+const broadcastSceneSelection = (sceneId: string) => {
+  const event = new CustomEvent('sceneSelected', { detail: { sceneId } });
+  window.dispatchEvent(event);
+  
+  // If this is a popup window, also try to send to the opener
+  if (window.opener && !window.opener.closed) {
+    try {
+      window.opener.dispatchEvent(new CustomEvent('sceneSelected', { detail: { sceneId } }));
+    } catch (e) {
+      console.error('Failed to send event to opener:', e);
+    }
+  }
+};
 
 const FloatingMobilePreview = ({
   selectedSceneId,
@@ -44,6 +60,53 @@ const FloatingMobilePreview = ({
   const selectedScene = selectedSceneId ? story?.scenes.find(s => s.id === selectedSceneId) : null;
   const sceneTitle = selectedScene?.title;
 
+  // Listen for scene selection events from other windows
+  useEffect(() => {
+    const handleSceneSelected = (e: CustomEvent) => {
+      if (e.detail && e.detail.sceneId) {
+        setSelectedSceneId(e.detail.sceneId);
+      }
+    };
+    
+    window.addEventListener('sceneSelected', handleSceneSelected as EventListener);
+    
+    return () => {
+      window.removeEventListener('sceneSelected', handleSceneSelected as EventListener);
+    };
+  }, [setSelectedSceneId]);
+
+  // Intercept setSelectedSceneId to broadcast the event
+  const handleSceneChange = (sceneId: string) => {
+    setSelectedSceneId(sceneId);
+    broadcastSceneSelection(sceneId);
+  };
+
+  // Handler for pop-out functionality
+  const handlePopOut = () => {
+    const url = new URL('/popup', window.location.origin);
+    url.searchParams.append('type', 'preview');
+    if (selectedSceneId) {
+      url.searchParams.append('sceneId', selectedSceneId);
+    }
+    
+    // Open the popup window
+    const popup = window.open(
+      url.toString(),
+      'PreviewPopup',
+      'width=950,height=700,toolbar=0,location=0,menubar=0'
+    );
+    
+    // Transfer current story data to popup
+    if (popup) {
+      popup.addEventListener('load', () => {
+        popup.postMessage({
+          type: 'storyData',
+          story: story
+        }, window.location.origin);
+      });
+    }
+  };
+
   if (!isOpen) return null;
 
   const previewHeight = minimized ? "40px" : "625px";
@@ -72,6 +135,7 @@ const FloatingMobilePreview = ({
           onToggleMinimize={() => setMinimized(!minimized)}
           onClose={onToggle}
           onMouseDown={handleMouseDown}
+          onPopOut={handlePopOut}
         />
 
         {!minimized && (
@@ -79,7 +143,7 @@ const FloatingMobilePreview = ({
             {selectedSceneId ? (
               <MobilePreview
                 sceneId={selectedSceneId}
-                onSceneChange={setSelectedSceneId}
+                onSceneChange={handleSceneChange}
                 onElementSelect={handleElementSelect}
               />
             ) : (

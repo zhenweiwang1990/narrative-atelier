@@ -1,15 +1,16 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { MapPin, X, Minimize, Maximize } from "lucide-react";
+import { MapPin, X, Minimize, Maximize, ExternalLink } from "lucide-react";
 
 interface FloatingPreviewHeaderProps {
   title: string;
-  sceneTitle?: string; // Added sceneTitle prop
+  sceneTitle?: string;
   minimized: boolean;
   onToggleMinimize: () => void;
   onClose: () => void;
   onMouseDown: (e: React.MouseEvent) => void;
+  onPopOut?: () => void; // New prop for pop-out functionality
 }
 
 const FloatingPreviewHeader: React.FC<FloatingPreviewHeaderProps> = ({
@@ -19,6 +20,7 @@ const FloatingPreviewHeader: React.FC<FloatingPreviewHeaderProps> = ({
   onToggleMinimize,
   onClose,
   onMouseDown,
+  onPopOut,
 }) => {
   return (
     <div
@@ -36,6 +38,17 @@ const FloatingPreviewHeader: React.FC<FloatingPreviewHeaderProps> = ({
       </h3>
 
       <div className="flex items-center space-x-1">
+        {onPopOut && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6"
+            onClick={onPopOut}
+            title="在新窗口打开"
+          >
+            <ExternalLink className="h-3 w-3" />
+          </Button>
+        )}
         <Button
           variant="ghost"
           size="icon"

@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useStory } from "@/components/Layout";
 import FlowEditor from "@/components/flow/FlowEditor";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -38,6 +38,43 @@ const Flow = () => {
   React.useEffect(() => {
     setSelectedElementId("");
   }, [selectedSceneId]);
+
+  // Listen for scene selection events from popup windows
+  useEffect(() => {
+    const handleSceneSelected = (e: CustomEvent) => {
+      if (e.detail && e.detail.sceneId) {
+        setSelectedSceneId(e.detail.sceneId);
+      }
+    };
+    
+    window.addEventListener('sceneSelected', handleSceneSelected as EventListener);
+    
+    return () => {
+      window.removeEventListener('sceneSelected', handleSceneSelected as EventListener);
+    };
+  }, [setSelectedSceneId]);
+
+  // Share story data with popup windows
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+      
+      // Share story data when requested
+      if (event.data && event.data.type === 'requestStoryData' && event.source) {
+        const popup = event.source as Window;
+        popup.postMessage({
+          type: 'storyData',
+          story
+        }, window.location.origin);
+      }
+    };
+    
+    window.addEventListener('message', handleMessage);
+    
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [story]);
 
   const handleAddSceneWithType = (type?: SceneType) => {
     handleAddScene(type || "normal");

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { PencilLine, X, Plus, ArrowLeft, ArrowRight, Wand2 } from "lucide-react";
+import { PencilLine, X, Plus, ArrowLeft, ArrowRight, Wand2, ExternalLink } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -19,6 +19,8 @@ interface EditorHeaderProps {
   showElementActions?: boolean;
   elementType?: ElementType;
   onAiGenerate?: () => void;
+  onMouseDown?: (e: React.MouseEvent) => void; // New prop for drag functionality
+  onPopOut?: () => void; // New prop for pop-out functionality
 }
 
 const ElementTypeOptions: ElementType[] = [
@@ -45,10 +47,15 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
   onAddElement,
   showElementActions = false,
   elementType,
-  onAiGenerate
+  onAiGenerate,
+  onMouseDown,
+  onPopOut
 }) => {
   return (
-    <div className="px-3 py-2 border-b bg-muted/50 flex items-center">
+    <div 
+      className="px-3 py-2 border-b bg-muted/50 flex items-center cursor-move"
+      onMouseDown={onMouseDown} // Added for drag functionality
+    >
       {elementType ? (
         <div 
           className={cn(
@@ -123,9 +130,22 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
         </div>
       )}
 
-      <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onClose}>
-        <X className="h-3 w-3" />
-      </Button>
+      <div className="flex items-center space-x-1">
+        {onPopOut && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6"
+            onClick={onPopOut}
+            title="在新窗口打开"
+          >
+            <ExternalLink className="h-3 w-3" />
+          </Button>
+        )}
+        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onClose}>
+          <X className="h-3 w-3" />
+        </Button>
+      </div>
     </div>
   );
 };
