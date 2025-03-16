@@ -13,6 +13,7 @@ export * from './shared/OutcomeSection';
 export * from './choice/ChoiceOption';
 export * from './choice/ValueChangeEditor';
 export * from './choice/OptionHeader';
+export * from './choice/LockPriceSection';
 
 // Additional exports for the new components
 export * from './shared/SingleOutcomeSection';
