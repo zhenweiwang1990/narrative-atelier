@@ -1,3 +1,4 @@
+
 import { ElementType, Story, SceneElement, ElementOutcome, QteElement, DialogueTaskElement, NarrationElement, DialogueElement, ThoughtElement, ChoiceElement } from '@/utils/types';
 import { generateId } from '@/utils/storage';
 
@@ -97,6 +98,8 @@ export const createNewElement = (type: ElementType, story: Story): Partial<Scene
         targetCharacterId: targetCharacter,
         background: '对话发生的背景...',
         openingLine: '目标角色的第一句话...',
+        characterIntro: '在这里描述角色的背景、性格、动机等信息...',
+        dialogueTopics: ['第一个对话话题'],
         success: taskSuccess,
         failure: taskFailure
       } as Partial<DialogueTaskElement>;

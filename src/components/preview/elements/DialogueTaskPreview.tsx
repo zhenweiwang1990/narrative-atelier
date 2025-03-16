@@ -1,7 +1,8 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Character, DialogueTaskElement, ValueChange } from "@/utils/types";
 import { Button } from "@/components/ui/button";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 export interface DialogueTaskPreviewProps {
   element: DialogueTaskElement;
@@ -16,6 +17,8 @@ const DialogueTaskPreview: React.FC<DialogueTaskPreviewProps> = ({
   getCharacter,
   handleChoiceSelect 
 }) => {
+  const [showDetails, setShowDetails] = useState(false);
+  
   // Use either the provided character or get it using the getCharacter function
   const targetCharacter = character || (getCharacter && element.targetCharacterId ? getCharacter(element.targetCharacterId) : undefined);
   
@@ -36,6 +39,11 @@ const DialogueTaskPreview: React.FC<DialogueTaskPreviewProps> = ({
         element.failure.valueChanges
       );
     }
+  };
+
+  // Toggle showing additional details
+  const toggleDetails = () => {
+    setShowDetails(!showDetails);
   };
 
   return (
@@ -64,6 +72,38 @@ const DialogueTaskPreview: React.FC<DialogueTaskPreviewProps> = ({
       {element.openingLine && (
         <div className="mb-3 italic text-muted-foreground">
           "{element.openingLine}"
+        </div>
+      )}
+      
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        onClick={toggleDetails} 
+        className="mb-3 w-full flex justify-between items-center text-xs"
+      >
+        {showDetails ? "隐藏详情" : "显示详情"}
+        {showDetails ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+      </Button>
+      
+      {showDetails && (
+        <div className="mb-4 space-y-3 text-sm">
+          {element.characterIntro && (
+            <div>
+              <h4 className="font-medium text-xs">角色介绍：</h4>
+              <p className="text-muted-foreground">{element.characterIntro}</p>
+            </div>
+          )}
+          
+          {element.dialogueTopics && element.dialogueTopics.length > 0 && (
+            <div>
+              <h4 className="font-medium text-xs">对话话题：</h4>
+              <ul className="list-disc list-inside text-muted-foreground">
+                {element.dialogueTopics.map((topic, index) => (
+                  <li key={index}>{topic}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       )}
       

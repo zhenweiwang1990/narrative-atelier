@@ -73,7 +73,6 @@ export interface Scene {
   };
 }
 
-// New exploration item interface
 export interface ExplorationItem {
   id: string;
   type: 'item' | 'knowledge';
@@ -174,6 +173,8 @@ export interface DialogueTaskElement extends SceneElement {
   targetCharacterId: string;
   openingLine?: string;
   background?: string;
+  characterIntro?: string; // 新增角色介绍属性
+  dialogueTopics?: string[]; // 新增对话话题属性
   success: ElementOutcome;
   failure: ElementOutcome;
 }

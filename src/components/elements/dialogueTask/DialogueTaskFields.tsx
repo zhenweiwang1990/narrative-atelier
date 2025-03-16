@@ -5,6 +5,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { DialogueTaskElement, Character } from '@/utils/types';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { X } from 'lucide-react';
 
 interface DialogueTaskFieldsProps {
   element: DialogueTaskElement;
@@ -17,6 +19,31 @@ const DialogueTaskFields: React.FC<DialogueTaskFieldsProps> = ({
   characters,
   onUpdate
 }) => {
+  // Handle adding a new dialogue topic
+  const addDialogueTopic = () => {
+    const currentTopics = element.dialogueTopics || [];
+    if (currentTopics.length < 5) { // Limit to 5 topics
+      onUpdate(element.id, { 
+        dialogueTopics: [...currentTopics, ''] 
+      });
+    }
+  };
+
+  // Handle removing a dialogue topic
+  const removeDialogueTopic = (index: number) => {
+    const currentTopics = element.dialogueTopics || [];
+    const updatedTopics = currentTopics.filter((_, i) => i !== index);
+    onUpdate(element.id, { dialogueTopics: updatedTopics });
+  };
+
+  // Handle updating a dialogue topic
+  const updateDialogueTopic = (index: number, value: string) => {
+    const currentTopics = element.dialogueTopics || [];
+    const updatedTopics = [...currentTopics];
+    updatedTopics[index] = value;
+    onUpdate(element.id, { dialogueTopics: updatedTopics });
+  };
+
   return (
     <div className="space-y-2">
       <div>
@@ -51,12 +78,22 @@ const DialogueTaskFields: React.FC<DialogueTaskFieldsProps> = ({
 
       <div>
         <Label className="text-xs">开场白</Label>
-        <Textarea
+        <Input
           value={element.openingLine || ''}
           onChange={(e) => onUpdate(element.id, { openingLine: e.target.value })}
-          className="mt-1 text-sm"
-          rows={2}
+          className="mt-1 h-7 text-xs"
           placeholder="这个角色首先说什么？"
+        />
+      </div>
+      
+      <div>
+        <Label className="text-xs">角色介绍 (约100字)</Label>
+        <Textarea
+          value={element.characterIntro || ''}
+          onChange={(e) => onUpdate(element.id, { characterIntro: e.target.value })}
+          className="mt-1 text-sm"
+          rows={3}
+          placeholder="描述这个角色的背景、性格、动机等信息..."
         />
       </div>
       
@@ -68,6 +105,43 @@ const DialogueTaskFields: React.FC<DialogueTaskFieldsProps> = ({
           className="mt-1 text-sm"
           rows={2}
         />
+      </div>
+      
+      <div className="space-y-2">
+        <div className="flex justify-between items-center">
+          <Label className="text-xs">对话话题 (最多5项，每项不超过30字)</Label>
+          <Button 
+            type="button" 
+            variant="outline" 
+            size="sm" 
+            onClick={addDialogueTopic}
+            disabled={(element.dialogueTopics || []).length >= 5}
+            className="h-6 text-xs px-2"
+          >
+            添加话题
+          </Button>
+        </div>
+        
+        {(element.dialogueTopics || []).map((topic, index) => (
+          <div key={index} className="flex gap-2 items-center">
+            <Input
+              value={topic}
+              onChange={(e) => updateDialogueTopic(index, e.target.value)}
+              className="h-7 text-xs"
+              maxLength={30}
+              placeholder={`话题 ${index + 1}`}
+            />
+            <Button 
+              type="button" 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => removeDialogueTopic(index)}
+              className="h-7 w-7 p-0"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        ))}
       </div>
     </div>
   );
