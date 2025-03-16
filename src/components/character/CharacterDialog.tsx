@@ -4,8 +4,13 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Checkbox } from "../ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import {
   Dialog,
   DialogContent,
@@ -63,45 +68,37 @@ const CharacterDialog: React.FC<CharacterDialogProps> = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="role" className="block mb-2">角色类型</Label>
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="role-protagonist" 
-                  checked={formData.role === "protagonist"}
-                  onCheckedChange={(checked) => {
-                    onSelectChange("role", checked ? "protagonist" : "supporting");
-                  }}
-                />
-                <Label 
-                  htmlFor="role-protagonist" 
-                  className="text-sm cursor-pointer"
-                >
-                  主角
-                </Label>
-              </div>
+              <Label htmlFor="role">角色类型</Label>
+              <Select
+                value={formData.role}
+                onValueChange={(value) => onSelectChange("role", value)}
+              >
+                <SelectTrigger id="role">
+                  <SelectValue placeholder="选择角色类型" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="protagonist">主角</SelectItem>
+                  <SelectItem value="supporting">配角</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="gender" className="block mb-2">性别</Label>
-            <RadioGroup
-              value={formData.gender || "male"}
+            <Label htmlFor="gender">性别</Label>
+            <Select
+              value={formData.gender}
               onValueChange={(value) => onSelectChange("gender", value)}
-              className="flex space-x-4"
             >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="male" id="gender-male" />
-                <Label htmlFor="gender-male" className="cursor-pointer">男</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="female" id="gender-female" />
-                <Label htmlFor="gender-female" className="cursor-pointer">女</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="other" id="gender-other" />
-                <Label htmlFor="gender-other" className="cursor-pointer">其他</Label>
-              </div>
-            </RadioGroup>
+              <SelectTrigger id="gender">
+                <SelectValue placeholder="选择性别" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="male">男</SelectItem>
+                <SelectItem value="female">女</SelectItem>
+                <SelectItem value="other">其他</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <VoiceSelector 
