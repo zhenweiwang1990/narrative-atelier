@@ -13,6 +13,7 @@ import { SceneFilterOption, FlowEditorProps } from './types/flowTypes';
 import { edgeOptions, revivalEdgeOptions } from './configs/edgeConfigs';
 import { getLayoutedElements } from './utils/layoutUtils';
 import { useNodeFiltering } from './hooks/useNodeFiltering';
+import { SceneType } from '@/utils/types';
 
 // Custom Node Types
 const nodeTypes: NodeTypes = {
