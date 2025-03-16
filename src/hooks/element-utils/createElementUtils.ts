@@ -1,4 +1,3 @@
-
 import { ElementType, Story, SceneElement, ElementOutcome, QteElement, DialogueTaskElement, NarrationElement, DialogueElement, ThoughtElement, ChoiceElement } from '@/utils/types';
 import { generateId } from '@/utils/storage';
 
@@ -71,13 +70,12 @@ export const createNewElement = (type: ElementType, story: Story): Partial<Scene
         description: '玩家必须在时间限制内完成要求',
         introText: '快速反应!',
         qteType: 'action', // Default to action type
-        keySequence: 'ABC', // For action type
+        keySequence: ['A', 'B', 'C'], // Updated to use array format
         directionSequence: 'UDLR', // For combo type
         unlockPattern: 'Z', // For unlock type
         timeLimit: 3,
         success: defaultSuccess,
-        failure: defaultFailure,
-        isDoubleChar: false // Default to single character mode
+        failure: defaultFailure
       } as Partial<QteElement>;
       
     case 'dialogueTask':

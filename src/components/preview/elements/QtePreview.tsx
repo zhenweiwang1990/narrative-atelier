@@ -11,7 +11,6 @@ interface QtePreviewProps {
 
 const QtePreview: React.FC<QtePreviewProps> = ({ element, handleChoiceSelect }) => {
   const qteType = element.qteType || 'action'; // Default to 'action' for backwards compatibility
-  const isDoubleChar = element.isDoubleChar || false;
   
   // Get the icon based on QTE type
   const getQteIcon = () => {
@@ -56,32 +55,24 @@ const QtePreview: React.FC<QtePreviewProps> = ({ element, handleChoiceSelect }) 
   const renderKeySequence = () => {
     if (qteType !== 'action' || !element.keySequence) return null;
     
-    if (isDoubleChar) {
-      // Split by space for double character mode
-      const keys = element.keySequence.split(' ').filter(key => key.trim() !== '');
-      
-      return (
-        <div className="flex space-x-1 items-center">
-          <Keyboard className="h-3 w-3 mr-1 text-red-500" />
-          <span>按键序列:</span>
-          <div className="flex gap-1">
-            {keys.map((key, index) => (
-              <span key={index} className="bg-white dark:bg-red-950/60 px-1.5 py-0.5 rounded text-xs border border-red-200 dark:border-red-800">
-                {key}
-              </span>
-            ))}
-          </div>
+    // Handle both string and array formats
+    const keys = Array.isArray(element.keySequence) 
+      ? element.keySequence 
+      : element.keySequence.split(' ').filter(key => key.trim() !== '');
+    
+    return (
+      <div className="flex space-x-1 items-center">
+        <Keyboard className="h-3 w-3 mr-1 text-red-500" />
+        <span>按键序列:</span>
+        <div className="flex gap-1">
+          {keys.map((key, index) => (
+            <span key={index} className="bg-white dark:bg-red-950/60 px-1.5 py-0.5 rounded text-xs border border-red-200 dark:border-red-800">
+              {key}
+            </span>
+          ))}
         </div>
-      );
-    } else {
-      // Regular single character display
-      return (
-        <div className="flex items-center">
-          <Keyboard className="h-3 w-3 mr-1 text-red-500" />
-          <span>按键序列: {element.keySequence}</span>
-        </div>
-      );
-    }
+      </div>
+    );
   };
   
   // Render the content specific to QTE type

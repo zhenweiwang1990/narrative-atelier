@@ -4,7 +4,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { QteElement } from '@/utils/types';
 import { cn } from '@/lib/utils';
-import { Switch } from '@/components/ui/switch';
+import { Button } from '@/components/ui/button';
+import { X } from 'lucide-react';
 
 interface ActionQteFieldsProps {
   element: QteElement;
@@ -19,69 +20,60 @@ const ActionQteFields: React.FC<ActionQteFieldsProps> = ({
   validateTimeLimit,
   validateKeySequence
 }) => {
-  const [keySequence, setKeySequence] = useState(element.keySequence || '');
-  const [isValidSequence, setIsValidSequence] = useState(true);
+  // Convert string to array if it's still in the old format
+  const initialKeySequence = element.keySequence 
+    ? (typeof element.keySequence === 'string' ? element.keySequence.split(' ').filter(key => key.trim() !== '') : element.keySequence)
+    : [];
+  
+  const [keyArray, setKeyArray] = useState<string[]>(initialKeySequence);
+  const [currentKey, setCurrentKey] = useState('');
+  const [isValidInput, setIsValidInput] = useState(true);
   const [validationMessage, setValidationMessage] = useState('');
-  const isDoubleChar = element.isDoubleChar || false;
 
-  // Validate key sequence
+  // Update the element when keyArray changes
   useEffect(() => {
-    if (!keySequence) return;
+    // Validate key array length
+    if (keyArray.length >= 3 && keyArray.length <= 6) {
+      onUpdate(element.id, { keySequence: keyArray });
+    }
+  }, [keyArray, element.id, onUpdate]);
 
-    const timer = setTimeout(() => {
-      if (isDoubleChar) {
-        // Count the number of key groups (separated by spaces) for double character mode
-        const keyGroups = keySequence.split(' ').filter(key => key.trim() !== '');
-        
-        if (keyGroups.length < 2 || keyGroups.length > 6) {
-          setIsValidSequence(false);
-          setValidationMessage(
-            keyGroups.length < 2 
-              ? '按键序列至少需要2个按键组合' 
-              : '按键序列最多6个按键组合'
-          );
-        } else {
-          setIsValidSequence(true);
-          setValidationMessage('');
-          
-          // Only update the element when validation passes
-          if (keySequence !== element.keySequence) {
-            onUpdate(element.id, { keySequence });
-          }
-        }
-      } else {
-        // For single character mode, validate character count (3-6)
-        if (keySequence.length < 3 || keySequence.length > 6) {
-          setIsValidSequence(false);
-          setValidationMessage(
-            keySequence.length < 3 
-              ? '按键序列至少需要3个字符' 
-              : '按键序列最多6个字符'
-          );
-        } else {
-          setIsValidSequence(true);
-          setValidationMessage('');
-          
-          // Only update the element when validation passes
-          if (keySequence !== element.keySequence) {
-            onUpdate(element.id, { keySequence });
-          }
-        }
-      }
-    }, 3000); // 3 second debounce
+  // Handle adding a new key to the sequence
+  const handleAddKey = () => {
+    if (!currentKey.trim()) return;
     
-    return () => clearTimeout(timer);
-  }, [keySequence, element.id, element.keySequence, onUpdate, isDoubleChar]);
+    // Validate the current input
+    if (currentKey.length > 2) {
+      setIsValidInput(false);
+      setValidationMessage('每个按键最多2个字符');
+      return;
+    }
+    
+    // Check if adding would exceed max length
+    if (keyArray.length >= 6) {
+      setIsValidInput(false);
+      setValidationMessage('按键序列最多6个按键');
+      return;
+    }
+    
+    setKeyArray([...keyArray, currentKey.trim()]);
+    setCurrentKey('');
+    setIsValidInput(true);
+    setValidationMessage('');
+  };
 
-  // Handle double character mode toggle
-  const handleDoubleCharToggle = (checked: boolean) => {
-    // Update the element with the new double character setting
-    onUpdate(element.id, { isDoubleChar: checked });
-    
-    // If we're switching modes, we might need to adjust the key sequence
-    if (keySequence) {
-      // Reset the key sequence if it might be invalid in the new mode
-      setKeySequence('');
+  // Handle removing a key from the sequence
+  const handleRemoveKey = (index: number) => {
+    const newKeyArray = [...keyArray];
+    newKeyArray.splice(index, 1);
+    setKeyArray(newKeyArray);
+  };
+
+  // Handle key press event for adding keys
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddKey();
     }
   };
 
@@ -101,48 +93,61 @@ const ActionQteFields: React.FC<ActionQteFieldsProps> = ({
         />
       </div>
       
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="double-char-mode"
-          checked={isDoubleChar}
-          onCheckedChange={handleDoubleCharToggle}
-        />
-        <Label htmlFor="double-char-mode" className="text-xs cursor-pointer">
-          双字符按键模式
-        </Label>
-      </div>
-      
       <div>
-        <Label className="text-xs">
-          {isDoubleChar 
-            ? '按键序列（2-6个按键组合）' 
-            : '按键序列（3-6个单字符按键）'}
-        </Label>
-        <div className="relative">
+        <Label className="text-xs">按键序列（3-6个按键，每个按键1-2字符）</Label>
+        <div className="flex items-center gap-2 mt-1">
           <Input
-            value={keySequence}
-            onChange={(e) => setKeySequence(e.target.value)}
+            value={currentKey}
+            onChange={(e) => {
+              setCurrentKey(e.target.value);
+              setIsValidInput(true);
+              setValidationMessage('');
+            }}
+            onKeyPress={handleKeyPress}
             className={cn(
-              "mt-1 h-7 text-xs",
-              !isValidSequence && "border-red-500 focus-visible:ring-red-500"
+              "h-7 text-xs",
+              !isValidInput && "border-red-500 focus-visible:ring-red-500"
             )}
-            placeholder={isDoubleChar ? "QW ER" : "ABC"}
+            placeholder="输入1-2个字符"
+            maxLength={2}
           />
-          {!isValidSequence && (
-            <p className="text-xs text-red-500 mt-1">{validationMessage}</p>
-          )}
-          {isDoubleChar && keySequence && (
-            <div className="mt-1 flex gap-1">
-              {keySequence.split(' ').map((key, index) => (
-                key && (
-                  <div key={index} className="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs">
-                    {key}
-                  </div>
-                )
-              ))}
-            </div>
-          )}
+          <Button
+            type="button"
+            size="sm"
+            onClick={handleAddKey}
+            className="h-7 px-2"
+          >
+            添加
+          </Button>
         </div>
+        
+        {!isValidInput && (
+          <p className="text-xs text-red-500 mt-1">{validationMessage}</p>
+        )}
+        
+        {keyArray.length < 3 && (
+          <p className="text-xs text-amber-500 mt-1">请添加至少3个按键</p>
+        )}
+        
+        {keyArray.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {keyArray.map((key, index) => (
+              <div 
+                key={index} 
+                className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded text-sm flex items-center gap-1 group"
+              >
+                {key}
+                <button
+                  type="button"
+                  onClick={() => handleRemoveKey(index)}
+                  className="opacity-50 hover:opacity-100 transition-opacity"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
