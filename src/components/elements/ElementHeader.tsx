@@ -114,7 +114,7 @@ export const ElementHeader: React.FC<ElementHeaderProps> = ({
         {getElementTypeLabel(element.type)}
       </div>
       
-      <div className="flex-1 truncate">
+      <div className="flex-1 min-w-0">
         <p className="font-medium text-sm truncate">
           {getElementContentPreview(element)}
         </p>
