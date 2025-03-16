@@ -6,10 +6,6 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { toast } from "sonner";
 import {
@@ -23,6 +19,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const SidebarActions = () => {
   const { story, handleSave, handleImport, handleExport } = useStory();
@@ -65,72 +63,80 @@ export const SidebarActions = () => {
     <SidebarGroup>
       <SidebarGroupLabel>操作</SidebarGroupLabel>
       <SidebarGroupContent>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <div className="w-full">
-              <SidebarMenuButton
-                onClick={handleSaveAction}
-                className="w-full justify-start"
-              >
-                <Save className="h-4 w-4" />
-                <span>保存</span>
-              </SidebarMenuButton>
-            </div>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <div className="w-full">
-              <SidebarMenuButton
-                onClick={triggerImport}
-                className="w-full justify-start"
-              >
-                <Upload className="h-4 w-4" />
-                <span>导入</span>
-              </SidebarMenuButton>
-              <input
-                type="file"
-                ref={fileInputRef}
-                accept=".json"
-                className="hidden"
-                onChange={handleImport}
-              />
-            </div>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <div className="w-full">
-              <SidebarMenuButton
-                onClick={handleExport}
-                className="w-full justify-start"
-              >
-                <Download className="h-4 w-4" />
-                <span>导出</span>
-              </SidebarMenuButton>
-            </div>
-          </SidebarMenuItem>
+        <div className="p-2">
+          <div className="grid grid-cols-2 gap-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handleSaveAction}
+                  variant="outline"
+                  className="w-full h-20 flex flex-col items-center justify-center gap-1"
+                >
+                  <Save className="h-6 w-6" />
+                  <span className="text-xs">保存</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>保存当前剧情</TooltipContent>
+            </Tooltip>
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => setPublishDialogOpen(true)}
+                  variant="outline"
+                  className="w-full h-20 flex flex-col items-center justify-center gap-1"
+                >
+                  <Share2 className="h-6 w-6" />
+                  <span className="text-xs">发布</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>发布剧情</TooltipContent>
+            </Tooltip>
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={triggerImport}
+                  variant="outline"
+                  className="w-full h-20 flex flex-col items-center justify-center gap-1"
+                >
+                  <Upload className="h-6 w-6" />
+                  <span className="text-xs">导入</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>导入剧情文件</TooltipContent>
+            </Tooltip>
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept=".json"
+              className="hidden"
+              onChange={handleImport}
+            />
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handleExport}
+                  variant="outline"
+                  className="w-full h-20 flex flex-col items-center justify-center gap-1"
+                >
+                  <Download className="h-6 w-6" />
+                  <span className="text-xs">导出</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>导出剧情文件</TooltipContent>
+            </Tooltip>
+          </div>
           
-          <SidebarSeparator className="my-2" />
-          
-          <SidebarMenuItem>
-            <div className="w-full">
-              <SidebarMenuButton
-                onClick={() => setPublishDialogOpen(true)}
-                className="w-full justify-start"
-              >
-                <Share2 className="h-4 w-4" />
-                <span>发布</span>
-              </SidebarMenuButton>
+          <div className="flex items-center justify-between mt-3 px-2 py-1.5 text-sm">
+            <div className="flex items-center">
+              <Tag className="h-4 w-4 mr-2 text-muted-foreground" />
+              <span className="text-muted-foreground">版本</span>
             </div>
-          </SidebarMenuItem>
-          
-          <SidebarMenuItem>
-            <div className="w-full flex items-center justify-between px-2 py-1.5 text-sm">
-              <div className="flex items-center">
-                <Tag className="h-4 w-4 mr-2 text-muted-foreground" />
-                <span className="text-muted-foreground">版本</span>
-              </div>
-              <Badge variant="outline" className="ml-auto">v{version}</Badge>
-            </div>
-          </SidebarMenuItem>
-        </SidebarMenu>
+            <Badge variant="outline" className="ml-auto">v{version}</Badge>
+          </div>
+        </div>
       </SidebarGroupContent>
       
       <AlertDialog open={publishDialogOpen} onOpenChange={setPublishDialogOpen}>
