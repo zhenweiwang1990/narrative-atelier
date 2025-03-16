@@ -164,6 +164,16 @@
   box-shadow: 0 4px 20px hsl(var(--preview-shadow));
 }
 
+/* Preview Header Styling */
+.preview-header {
+  @apply bg-[hsl(var(--preview-header))] border-b border-[hsl(var(--preview-border))];
+}
+
+/* Sidebar Menu Text Color Fixes */
+.sidebar-text {
+  @apply text-[hsl(var(--sidebar-text))] font-medium;
+}
+
 /* Variable Value Display - Fix for dark mode */
 .dark .values-display {
   @apply bg-muted/30 border-muted;
@@ -256,14 +266,4 @@
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 300ms, transform 300ms;
-}
-
-/* Sidebar Menu Text Color Fixes */
-.sidebar-text {
-  @apply text-[hsl(var(--sidebar-text))];
-}
-
-/* Mobile Preview Header Styling */
-.preview-header {
-  @apply bg-[hsl(var(--preview-header))] border-b border-[hsl(var(--preview-border))];
 }
