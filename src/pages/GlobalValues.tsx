@@ -1,9 +1,7 @@
-
 import React from "react";
 import GlobalValues from "@/components/GlobalValues";
 import GlobalValuesModificationsTable from "@/components/GlobalValuesModificationsTable";
 import TitlesList from "@/components/titles/TitlesList";
-import TitleEvaluator from "@/components/titles/TitleEvaluator";
 import { useStory } from "@/components/Layout";
 import { GlobalValue, Story, Title } from "@/utils/types";
 import { ValueModification } from "@/components/globalValues/types";
@@ -152,13 +150,6 @@ const GlobalValuesPage: React.FC = () => {
               onChange={handleGlobalValuesChange}
             />
           </div>
-          
-          {story?.titles && story.titles.length > 0 && (
-            <TitleEvaluator 
-              titles={story.titles} 
-              globalValues={story?.globalValues || []} 
-            />
-          )}
         </div>
         
         <div>

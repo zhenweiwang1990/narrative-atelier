@@ -45,8 +45,8 @@ const TitlesList: React.FC<TitlesListProps> = ({ titles, globalValues, onChange 
   };
 
   return (
-    <Card className="p-4 space-y-4">
-      <div className="flex justify-between items-center">
+    <div className="w-full">
+      <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
           <Award className="h-5 w-5 text-primary" />
           <h3 className="text-lg font-medium">称号管理</h3>
@@ -62,14 +62,14 @@ const TitlesList: React.FC<TitlesListProps> = ({ titles, globalValues, onChange 
       </div>
 
       {titles.length === 0 ? (
-        <div className="text-center py-4 text-sm text-muted-foreground">
+        <div className="text-center py-4 text-sm text-muted-foreground border rounded-md p-6">
           尚未定义称号。添加一个称号来奖励玩家的游戏结果。
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="flex flex-wrap gap-4">
           {titles.map(title => (
-            <div key={title.id} className="space-y-3 border-b pb-4 last:border-b-0">
-              <div className="flex gap-2 items-start">
+            <Card key={title.id} className="p-4 w-[350px] mb-2">
+              <div className="flex gap-2 items-start mb-3">
                 <div className="flex-1">
                   <Label htmlFor={`title-name-${title.id}`} className="text-xs">称号名称</Label>
                   <Input
@@ -91,7 +91,7 @@ const TitlesList: React.FC<TitlesListProps> = ({ titles, globalValues, onChange 
                 </div>
               </div>
               
-              <div>
+              <div className="mb-3">
                 <Label htmlFor={`title-desc-${title.id}`} className="text-xs">称号描述</Label>
                 <Input
                   id={`title-desc-${title.id}`}
@@ -108,11 +108,11 @@ const TitlesList: React.FC<TitlesListProps> = ({ titles, globalValues, onChange 
                 globalValues={globalValues}
                 onChange={(conditions) => updateTitleConditions(title.id, conditions)}
               />
-            </div>
+            </Card>
           ))}
         </div>
       )}
-    </Card>
+    </div>
   );
 };
 
