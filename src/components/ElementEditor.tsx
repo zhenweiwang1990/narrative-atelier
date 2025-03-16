@@ -53,7 +53,7 @@ const ElementEditor = ({
       // Mock service call for AI generation
       const request = {
         prompt: "Generate content for this element",
-        type: "branch",
+        type: "branch" as "branch" | "ending", // Fixed type with explicit type assertion
         elementId: elementId,
         story: story
       };
