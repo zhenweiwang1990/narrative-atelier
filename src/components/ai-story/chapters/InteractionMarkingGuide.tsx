@@ -9,6 +9,7 @@ const InteractionMarkingGuide: React.FC = () => (
     <p>- QTE动作：使用 {"<<QTE1 START>>"} 和 {"<<QTE1 END>>"} 包围QTE内容</p>
     <p>- QTE连击：在QTE内容中添加"方向连击"或"连击"等字样</p>
     <p>- QTE解锁：在QTE内容中添加"图案解锁"或"解锁"等字样</p>
+    <p>- QTE双字符：在QTE内容中添加"双字符"或"双键"等字样</p>
     <p>- 对话任务：使用 {"<<DialogueTask START>>"} 和 {"<<DialogueTask END>>"} 包围对话任务内容</p>
   </div>
 );

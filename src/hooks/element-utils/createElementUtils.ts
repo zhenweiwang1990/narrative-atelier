@@ -76,7 +76,8 @@ export const createNewElement = (type: ElementType, story: Story): Partial<Scene
         unlockPattern: 'Z', // For unlock type
         timeLimit: 3,
         success: defaultSuccess,
-        failure: defaultFailure
+        failure: defaultFailure,
+        isDoubleChar: false // Default to single character mode
       } as Partial<QteElement>;
       
     case 'dialogueTask':

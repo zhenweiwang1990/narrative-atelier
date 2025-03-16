@@ -137,7 +137,7 @@ export interface ChoiceOption {
 export interface QteElement extends SceneElement {
   type: 'qte';
   description: string;
-  qteType: 'action' | 'combo' | 'unlock'; // New field to specify QTE type
+  qteType: 'action' | 'combo' | 'unlock'; // QTE type
   keySequence?: string; // For action type
   directionSequence?: string; // For combo type, e.g. "UDLR" (Up, Down, Left, Right)
   unlockPattern?: 'C' | 'L' | 'M' | 'N' | 'O' | 'S' | 'U' | 'Z'; // For unlock type
@@ -145,6 +145,7 @@ export interface QteElement extends SceneElement {
   introText?: string;
   success: ElementOutcome;
   failure: ElementOutcome;
+  isDoubleChar?: boolean; // New field for double character mode
 }
 
 export interface ElementOutcome {

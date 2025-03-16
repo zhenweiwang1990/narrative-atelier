@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, KeyRound } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Switch } from '@/components/ui/switch';
 
 interface QteFieldsProps {
   element: QteElement;
@@ -27,6 +28,7 @@ const QteFields: React.FC<QteFieldsProps> = ({
   const [isValidSequence, setIsValidSequence] = useState(true);
   const [validationMessage, setValidationMessage] = useState('');
   const qteType = element.qteType || 'action'; // Default to 'action' for backwards compatibility
+  const isDoubleChar = element.isDoubleChar || false;
 
   // Direction options for the combo type
   const directionOptions = [
@@ -41,10 +43,15 @@ const QteFields: React.FC<QteFieldsProps> = ({
     if (qteType !== 'action' || !keySequence) return;
 
     const timer = setTimeout(() => {
-      if (keySequence.length > 0 && (keySequence.length < 3 || keySequence.length > 6)) {
+      const minLength = isDoubleChar ? 2 : 3;
+      const maxLength = isDoubleChar ? 3 : 6;
+      
+      if (keySequence.length > 0 && (keySequence.length < minLength || keySequence.length > maxLength)) {
         setIsValidSequence(false);
         setValidationMessage(
-          keySequence.length < 3 ? '按键序列至少需要3个字符' : '按键序列最多6个字符'
+          keySequence.length < minLength 
+            ? `按键序列至少需要${minLength}个字符` 
+            : `按键序列最多${maxLength}个字符`
         );
       } else {
         setIsValidSequence(true);
@@ -58,7 +65,7 @@ const QteFields: React.FC<QteFieldsProps> = ({
     }, 3000); // 3 second debounce
     
     return () => clearTimeout(timer);
-  }, [keySequence, element.id, element.keySequence, onUpdate, qteType]);
+  }, [keySequence, element.id, element.keySequence, onUpdate, qteType, isDoubleChar]);
 
   // Validate direction sequence for combo type
   useEffect(() => {
@@ -95,6 +102,18 @@ const QteFields: React.FC<QteFieldsProps> = ({
     onUpdate(element.id, { 
       unlockPattern: value as 'C' | 'L' | 'M' | 'N' | 'O' | 'S' | 'U' | 'Z' 
     });
+  };
+
+  // Handle double character mode toggle
+  const handleDoubleCharToggle = (checked: boolean) => {
+    // Update the element with the new double character setting
+    onUpdate(element.id, { isDoubleChar: checked });
+    
+    // If we're switching modes, we might need to adjust the key sequence
+    if (keySequence) {
+      // Reset the key sequence if it might be invalid in the new mode
+      setKeySequence('');
+    }
   };
 
   // Add direction to the sequence
@@ -151,7 +170,7 @@ const QteFields: React.FC<QteFieldsProps> = ({
       </div>
       
       {qteType === 'action' && (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="space-y-3">
           <div>
             <Label className="text-xs">时间限制（3-6秒）</Label>
             <Input
@@ -166,8 +185,23 @@ const QteFields: React.FC<QteFieldsProps> = ({
             />
           </div>
           
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="double-char-mode"
+              checked={isDoubleChar}
+              onCheckedChange={handleDoubleCharToggle}
+            />
+            <Label htmlFor="double-char-mode" className="text-xs cursor-pointer">
+              双字符按键模式
+            </Label>
+          </div>
+          
           <div>
-            <Label className="text-xs">按键序列（3-6个字符）</Label>
+            <Label className="text-xs">
+              {isDoubleChar 
+                ? '按键序列（2-3个双字符按键）' 
+                : '按键序列（3-6个单字符按键）'}
+            </Label>
             <div className="relative">
               <Input
                 value={keySequence}
@@ -176,10 +210,21 @@ const QteFields: React.FC<QteFieldsProps> = ({
                   "mt-1 h-7 text-xs",
                   !isValidSequence && "border-red-500 focus-visible:ring-red-500"
                 )}
-                placeholder="ABC"
+                placeholder={isDoubleChar ? "QW ER" : "ABC"}
               />
               {!isValidSequence && (
                 <p className="text-xs text-red-500 mt-1">{validationMessage}</p>
+              )}
+              {isDoubleChar && keySequence && (
+                <div className="mt-1 flex gap-1">
+                  {keySequence.split(' ').map((key, index) => (
+                    key && (
+                      <div key={index} className="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-xs">
+                        {key}
+                      </div>
+                    )
+                  ))}
+                </div>
               )}
             </div>
           </div>
