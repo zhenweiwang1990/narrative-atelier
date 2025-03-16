@@ -1,4 +1,3 @@
-
 export * from './NarrationElement';
 export * from './DialogueElement';
 export * from './ThoughtElement';
@@ -17,3 +16,6 @@ export * from './choice/ValueChangeEditor';
 export * from './shared/SingleOutcomeSection';
 export * from './shared/DualOutcomeSection';
 export * from './shared/OutcomeAiDialog';
+
+// QTE components
+export * from './qte';
