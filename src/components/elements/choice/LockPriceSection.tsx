@@ -9,7 +9,7 @@ interface LockPriceSectionProps {
   onUpdateOption: (optionId: string, updates: Partial<ChoiceOption>) => void;
 }
 
-const LockPriceSection: React.FC<LockPriceSectionProps> = ({
+export const LockPriceSection: React.FC<LockPriceSectionProps> = ({
   option,
   onUpdateOption,
 }) => {

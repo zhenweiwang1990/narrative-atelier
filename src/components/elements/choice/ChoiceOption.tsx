@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { ChoiceOption as ChoiceOptionType, Scene, GlobalValue } from "@/utils/types";
 import ValueChangeEditor from "./ValueChangeEditor";
-import LockSettingsSection from "./LockSettingsSection";
 import SceneSelector from "./SceneSelector";
 import AiStoryDialog from "../shared/AiStoryDialog";
 import OptionHeader from "./OptionHeader";
+import LockPriceSection from "./LockPriceSection";
+import UnlockConditionsEditor from "./UnlockConditionsEditor";
 import { toast } from "sonner";
 
 interface ChoiceOptionProps {
@@ -139,7 +140,7 @@ const ChoiceOption: React.FC<ChoiceOptionProps> = ({
                 const currentConditions = option.unlockConditions || [];
                 const defaultCondition = {
                   valueId: globalValues[0].id,
-                  operator: 'gte',
+                  operator: 'gte' as const,
                   targetValue: 1
                 };
                 

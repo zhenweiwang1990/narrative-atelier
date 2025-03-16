@@ -14,6 +14,7 @@ export * from './choice/ChoiceOption';
 export * from './choice/ValueChangeEditor';
 export * from './choice/OptionHeader';
 export * from './choice/LockPriceSection';
+export * from './choice/UnlockConditionsEditor';
 
 // Additional exports for the new components
 export * from './shared/SingleOutcomeSection';

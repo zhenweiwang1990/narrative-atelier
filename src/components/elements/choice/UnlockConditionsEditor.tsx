@@ -21,7 +21,7 @@ interface UnlockConditionsEditorProps {
   onRemoveCondition: (index: number) => void;
 }
 
-const operatorLabels = {
+const operatorLabels: Record<UnlockCondition['operator'], string> = {
   'gt': '大于',
   'lt': '小于',
   'eq': '等于',
@@ -29,7 +29,7 @@ const operatorLabels = {
   'lte': '小于等于'
 };
 
-const UnlockConditionsEditor: React.FC<UnlockConditionsEditorProps> = ({
+export const UnlockConditionsEditor: React.FC<UnlockConditionsEditorProps> = ({
   unlockConditions = [],
   globalValues,
   onAddCondition,
@@ -79,7 +79,7 @@ const UnlockConditionsEditor: React.FC<UnlockConditionsEditorProps> = ({
           <Select
             value={condition.operator}
             onValueChange={(value) => onUpdateCondition(index, { 
-              operator: value as 'gt' | 'lt' | 'eq' | 'gte' | 'lte' 
+              operator: value as UnlockCondition['operator']
             })}
           >
             <SelectTrigger className="h-7 text-xs w-[80px]">
