@@ -24,7 +24,7 @@ const GlobalValuesPage: React.FC = () => {
     if (!story) return;
     setStory({
       ...story,
-      titles: titles,
+      titles: titles || [],
     });
   };
 
@@ -32,17 +32,19 @@ const GlobalValuesPage: React.FC = () => {
     if (!story) return;
     
     const updatedStory = { ...story };
-    const scene = updatedStory.scenes.find(s => s.id === modification.sceneId);
+    const scene = updatedStory.scenes?.find(s => s.id === modification.sceneId);
     
     if (!scene) return;
     
-    const element = scene.elements.find(e => e.id === modification.elementId);
+    const element = scene.elements?.find(e => e.id === modification.elementId);
     
     if (!element) return;
     
     // Update the value based on the element type and outcome type
     if (element.type === 'choice' && modification.outcomeType === 'choice') {
       const choiceElement = element as any;
+      if (!choiceElement.options) return;
+      
       const option = choiceElement.options.find((o: any) => o.id === modification.choiceOptionId);
       
       if (option) {
@@ -151,7 +153,6 @@ const GlobalValuesPage: React.FC = () => {
             />
           </div>
           
-          {/* Add title evaluator here */}
           {story?.titles && story.titles.length > 0 && (
             <TitleEvaluator 
               titles={story.titles} 
