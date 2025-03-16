@@ -226,7 +226,7 @@
           "description": "发送你的情感控制光波",
           "introText": "准备开始...",
           "timeLimit": 5,
-          "keySequence": "逗挑指闪眨",
+          "keySequence": ["逗", "挑", "指"],
           "success": {
             "sceneId": "scene_1741995884799_9b94nfs",
             "transition": "你的光波发出，周生辰一阵眩晕。",
