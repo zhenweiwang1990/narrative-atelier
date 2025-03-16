@@ -37,6 +37,6 @@ export {
   SidebarMenuItem,
   SidebarMenuSkeleton,
   SidebarMenuSub,
-  SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "./SidebarMenu";
+  SidebarMenuSubButton,
+} from "./menu";
