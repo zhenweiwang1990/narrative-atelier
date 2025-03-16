@@ -1,16 +1,35 @@
 
 // Export all sidebar components from a single entry point
 export {
-  Sidebar,
-  SidebarContent,
+  SidebarProvider,
+  useSidebar,
+} from "./SidebarProvider";
+
+// Core components
+export { Sidebar } from "./core/Sidebar";
+export { SidebarTrigger } from "./core/SidebarTrigger";
+export { SidebarRail } from "./core/SidebarRail";
+export { SidebarInset } from "./core/SidebarInset";
+
+// Structure components
+export {
+  SidebarInput,
+  SidebarHeader,
   SidebarFooter,
+  SidebarSeparator,
+  SidebarContent,
+} from "./structure/SidebarStructure";
+
+// Group components
+export {
   SidebarGroup,
+  SidebarGroupLabel,
   SidebarGroupAction,
   SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarInput,
-  SidebarInset,
+} from "./group/SidebarGroup";
+
+// Menu components
+export {
   SidebarMenu,
   SidebarMenuAction,
   SidebarMenuBadge,
@@ -20,9 +39,4 @@ export {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarProvider,
-  SidebarRail,
-  SidebarSeparator,
-  SidebarTrigger,
-  useSidebar,
-} from "./SidebarProvider";
+} from "./SidebarMenu";
