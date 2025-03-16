@@ -31,17 +31,17 @@ export const SplitSceneDialog: React.FC<SplitSceneDialogProps> = ({
       return;
     }
 
-    // Get the current scene
+    // Get the current scene (A)
     const currentScene = story.scenes.find(scene => scene.id === sceneId);
     if (!currentScene) {
       toast.error("无法找到当前场景");
       return;
     }
 
-    // Create a new scene ID
+    // Create a new scene ID for the new scene (B)
     const newSceneId = generateId("scene");
     
-    // Create elements for the original and new scenes
+    // Create elements for the original (A) and new scenes (B)
     const originalSceneElements = elements.slice(0, splitElementIndex);
     const newSceneElements = elements.slice(splitElementIndex);
     
@@ -52,7 +52,7 @@ export const SplitSceneDialog: React.FC<SplitSceneDialogProps> = ({
     const defaultPosition = { x: 0, y: 0 };
     const currentPosition = currentScene.position || defaultPosition;
     
-    // Create the new scene with a position offset from the current scene
+    // Create the new scene (B) with a position offset from the current scene
     const newScene: Scene = {
       id: newSceneId,
       title: `${currentScene.title} (拆分)`,
@@ -63,16 +63,16 @@ export const SplitSceneDialog: React.FC<SplitSceneDialogProps> = ({
         x: currentPosition.x + 250,
         y: currentPosition.y
       },
-      nextSceneId: originalNextSceneId,
+      nextSceneId: originalNextSceneId, // B.next = A.next
       entranceEffect: currentScene.entranceEffect,
       environmentEffect: currentScene.environmentEffect
     };
     
-    // Update the original scene
+    // Update the original scene (A)
     const updatedOriginalScene = {
       ...currentScene,
       elements: originalSceneElements,
-      nextSceneId: newSceneId  // Point to the new scene
+      nextSceneId: newSceneId  // A.next = B
     };
     
     // Update the scenes in the story
