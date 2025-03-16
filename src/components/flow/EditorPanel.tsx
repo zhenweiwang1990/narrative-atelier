@@ -22,7 +22,7 @@ interface EditorPanelProps {
   updateSceneEntrance?: (effect: string) => void;
   updateSceneEnvironment?: (effect: string) => void;
   updateEndingName?: (name: string) => void;
-  updateEndingPoster?: (url: string) => void; // Add the missing property
+  updateEndingPoster?: (url: string) => void;
   updateBackgroundMusic?: (music: { id: string; name: string; url: string }) => void;
   updateSceneUnlockPrice?: (price: number | undefined) => void;
 }
@@ -43,18 +43,18 @@ const EditorPanel = ({
   updateSceneEntrance,
   updateSceneEnvironment,
   updateEndingName,
-  updateEndingPoster, // Add it to the destructured props
+  updateEndingPoster,
   updateBackgroundMusic,
   updateSceneUnlockPrice,
 }: EditorPanelProps) => {
   return (
-    <Card className="overflow-hidden h-full max-w-[500px]">
+    <Card className="overflow-hidden h-full max-w-[500px] flex flex-col">
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
         className="h-full flex flex-col"
       >
-        <div className="px-2 pt-2">
+        <div className="px-2 pt-2 flex-shrink-0">
           <TabsList className="grid grid-cols-3 mb-2 h-9">
             <TabsTrigger
               value="properties"
@@ -80,25 +80,27 @@ const EditorPanel = ({
           </TabsList>
         </div>
 
-        <FlowTabContent
-          activeTab={activeTab}
-          selectedSceneId={selectedSceneId}
-          selectedScene={selectedScene}
-          story={story}
-          updateSceneTitle={updateSceneTitle}
-          updateSceneType={updateSceneType}
-          updateSceneLocation={updateSceneLocation}
-          updateNextScene={updateNextScene}
-          updateRevivalPoint={updateRevivalPoint}
-          selectedElementId={selectedElementId}
-          setSelectedElementId={setSelectedElementId}
-          updateSceneEntrance={updateSceneEntrance}
-          updateSceneEnvironment={updateSceneEnvironment}
-          updateEndingName={updateEndingName}
-          updateEndingPoster={updateEndingPoster} // Pass the prop to FlowTabContent
-          updateBackgroundMusic={updateBackgroundMusic}
-          updateSceneUnlockPrice={updateSceneUnlockPrice}
-        />
+        <div className="flex-1 overflow-hidden">
+          <FlowTabContent
+            activeTab={activeTab}
+            selectedSceneId={selectedSceneId}
+            selectedScene={selectedScene}
+            story={story}
+            updateSceneTitle={updateSceneTitle}
+            updateSceneType={updateSceneType}
+            updateSceneLocation={updateSceneLocation}
+            updateNextScene={updateNextScene}
+            updateRevivalPoint={updateRevivalPoint}
+            selectedElementId={selectedElementId}
+            setSelectedElementId={setSelectedElementId}
+            updateSceneEntrance={updateSceneEntrance}
+            updateSceneEnvironment={updateSceneEnvironment}
+            updateEndingName={updateEndingName}
+            updateEndingPoster={updateEndingPoster}
+            updateBackgroundMusic={updateBackgroundMusic}
+            updateSceneUnlockPrice={updateSceneUnlockPrice}
+          />
+        </div>
       </Tabs>
     </Card>
   );

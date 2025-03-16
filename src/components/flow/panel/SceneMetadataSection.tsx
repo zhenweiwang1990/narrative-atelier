@@ -30,30 +30,27 @@ const SceneMetadataSection: React.FC<SceneMetadataSectionProps> = ({
   updateBackgroundMusic
 }) => {
   return (
-    <div className="space-y-3">
-      <div className="p-3 border rounded-md bg-muted/10">
-        <h3 className="text-sm font-medium mb-2">基本信息</h3>
-        <div className="space-y-3">
-          <SceneTitleInput 
-            title={selectedScene.title} 
-            updateSceneTitle={updateSceneTitle} 
-          />
+    <div className="space-y-4">
+      <div className="space-y-3">
+        <SceneTitleInput 
+          title={selectedScene.title} 
+          updateSceneTitle={updateSceneTitle} 
+        />
 
-          <SceneTypeSelector 
-            type={selectedScene.type} 
-            updateSceneType={updateSceneType}
-          />
+        <SceneTypeSelector 
+          type={selectedScene.type} 
+          updateSceneType={updateSceneType}
+        />
 
-          <LocationSelector 
-            locationId={selectedScene.locationId} 
-            story={story}
-            updateSceneLocation={updateSceneLocation}
-          />
-        </div>
+        <LocationSelector 
+          locationId={selectedScene.locationId} 
+          story={story}
+          updateSceneLocation={updateSceneLocation}
+        />
       </div>
 
-      <div className="p-3 border rounded-md bg-muted/10">
-        <h3 className="text-sm font-medium mb-2">视觉和音效</h3>
+      <div className="border-t pt-4">
+        <h3 className="text-sm font-medium mb-3">视觉和音效</h3>
         <div className="space-y-3">
           {updateSceneEntrance && (
             <EntranceEffectSelector

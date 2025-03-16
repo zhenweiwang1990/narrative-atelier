@@ -6,6 +6,7 @@ import IncompleteSceneAlert from "./panel/IncompleteSceneAlert";
 import SceneMetadataSection from "./panel/SceneMetadataSection";
 import SceneFlowSection from "./panel/SceneFlowSection";
 import SceneEditHint from "./panel/SceneEditHint";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const ScenePropertiesPanel = ({
   selectedScene,
@@ -26,32 +27,61 @@ const ScenePropertiesPanel = ({
   const sceneIsIncomplete = checkSceneCompletion(selectedScene);
   
   return (
-    <div className="p-3 space-y-3 flex-1 overflow-y-auto">
+    <div className="space-y-3">
       <IncompleteSceneAlert isIncomplete={sceneIsIncomplete} />
       
-      <SceneMetadataSection
-        selectedScene={selectedScene}
-        story={story}
-        updateSceneTitle={updateSceneTitle}
-        updateSceneType={updateSceneType}
-        updateSceneLocation={updateSceneLocation}
-        updateSceneEntrance={updateSceneEntrance}
-        updateSceneEnvironment={updateSceneEnvironment}
-        updateBackgroundMusic={updateBackgroundMusic}
-      />
-      
-      <SceneFlowSection
-        selectedScene={selectedScene}
-        story={story}
-        selectedSceneId={selectedSceneId}
-        updateNextScene={updateNextScene}
-        updateRevivalPoint={updateRevivalPoint}
-        updateEndingName={updateEndingName}
-        updateEndingPoster={updateEndingPoster}
-        updateSceneUnlockPrice={updateSceneUnlockPrice}
-      />
-
-      <SceneEditHint />
+      <Accordion type="multiple" defaultValue={["metadata", "flow", "help"]} className="space-y-3">
+        <AccordionItem value="metadata" className="border rounded-md overflow-hidden">
+          <AccordionTrigger className="px-3 py-2 hover:no-underline">
+            <span className="text-sm font-medium">基本信息</span>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="px-3 pb-3">
+              <SceneMetadataSection
+                selectedScene={selectedScene}
+                story={story}
+                updateSceneTitle={updateSceneTitle}
+                updateSceneType={updateSceneType}
+                updateSceneLocation={updateSceneLocation}
+                updateSceneEntrance={updateSceneEntrance}
+                updateSceneEnvironment={updateSceneEnvironment}
+                updateBackgroundMusic={updateBackgroundMusic}
+              />
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        
+        <AccordionItem value="flow" className="border rounded-md overflow-hidden">
+          <AccordionTrigger className="px-3 py-2 hover:no-underline">
+            <span className="text-sm font-medium">流程控制</span>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="px-3 pb-3">
+              <SceneFlowSection
+                selectedScene={selectedScene}
+                story={story}
+                selectedSceneId={selectedSceneId}
+                updateNextScene={updateNextScene}
+                updateRevivalPoint={updateRevivalPoint}
+                updateEndingName={updateEndingName}
+                updateEndingPoster={updateEndingPoster}
+                updateSceneUnlockPrice={updateSceneUnlockPrice}
+              />
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        
+        <AccordionItem value="help" className="border rounded-md overflow-hidden">
+          <AccordionTrigger className="px-3 py-2 hover:no-underline">
+            <span className="text-sm font-medium">编辑帮助</span>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="px-3 pb-3">
+              <SceneEditHint />
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 };

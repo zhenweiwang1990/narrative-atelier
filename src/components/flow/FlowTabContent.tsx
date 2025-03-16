@@ -6,6 +6,7 @@ import { Scene } from '@/utils/types';
 import ScenePropertiesPanel from './ScenePropertiesPanel';
 import ExplorationPanel from './ExplorationPanel';
 import { Story } from '@/utils/types';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface FlowTabContentProps {
   activeTab: string;
@@ -23,7 +24,7 @@ interface FlowTabContentProps {
   updateSceneEntrance?: (effect: string) => void;
   updateSceneEnvironment?: (effect: string) => void;
   updateEndingName?: (name: string) => void;
-  updateEndingPoster?: (url: string) => void; // Add the missing property
+  updateEndingPoster?: (url: string) => void;
   updateBackgroundMusic?: (music: { id: string; name: string; url: string }) => void;
   updateSceneUnlockPrice?: (price: number | undefined) => void;
 }
@@ -43,30 +44,34 @@ const FlowTabContent = ({
   updateSceneEntrance,
   updateSceneEnvironment,
   updateEndingName,
-  updateEndingPoster, // Add it to the destructured props
+  updateEndingPoster,
   updateBackgroundMusic,
   updateSceneUnlockPrice
 }: FlowTabContentProps) => {
   return (
     <>
-      <TabsContent value="properties" className="data-[state=active]:flex flex-col h-full overflow-hidden">
+      <TabsContent value="properties" className="data-[state=active]:flex flex-col h-full m-0 overflow-hidden">
         {selectedScene ? (
-          <ScenePropertiesPanel 
-            selectedScene={selectedScene}
-            story={story}
-            updateSceneTitle={updateSceneTitle}
-            updateSceneType={updateSceneType}
-            updateSceneLocation={updateSceneLocation}
-            updateNextScene={updateNextScene}
-            updateRevivalPoint={updateRevivalPoint}
-            selectedSceneId={selectedSceneId || ''}
-            updateSceneEntrance={updateSceneEntrance}
-            updateSceneEnvironment={updateSceneEnvironment}
-            updateEndingName={updateEndingName}
-            updateEndingPoster={updateEndingPoster} // Pass the prop to ScenePropertiesPanel
-            updateBackgroundMusic={updateBackgroundMusic}
-            updateSceneUnlockPrice={updateSceneUnlockPrice}
-          />
+          <ScrollArea className="h-full">
+            <div className="p-3">
+              <ScenePropertiesPanel 
+                selectedScene={selectedScene}
+                story={story}
+                updateSceneTitle={updateSceneTitle}
+                updateSceneType={updateSceneType}
+                updateSceneLocation={updateSceneLocation}
+                updateNextScene={updateNextScene}
+                updateRevivalPoint={updateRevivalPoint}
+                selectedSceneId={selectedSceneId || ''}
+                updateSceneEntrance={updateSceneEntrance}
+                updateSceneEnvironment={updateSceneEnvironment}
+                updateEndingName={updateEndingName}
+                updateEndingPoster={updateEndingPoster}
+                updateBackgroundMusic={updateBackgroundMusic}
+                updateSceneUnlockPrice={updateSceneUnlockPrice}
+              />
+            </div>
+          </ScrollArea>
         ) : (
           <div className="text-center flex-1 flex items-center justify-center p-3 bg-muted/30 rounded-md mx-2 mb-2">
             <p className="text-sm text-muted-foreground">Select a scene to edit its properties.</p>
@@ -74,15 +79,17 @@ const FlowTabContent = ({
         )}
       </TabsContent>
       
-      <TabsContent value="elements" className="data-[state=active]:flex flex-col h-full overflow-hidden">
+      <TabsContent value="elements" className="data-[state=active]:flex flex-col h-full m-0 overflow-hidden">
         {selectedSceneId ? (
-          <div className="p-3 h-full overflow-y-auto">
-            <ElementEditor 
-              sceneId={selectedSceneId} 
-              selectedElementId={selectedElementId}
-              onSelectElement={setSelectedElementId ? setSelectedElementId : () => {}}
-            />
-          </div>
+          <ScrollArea className="h-full">
+            <div className="p-3">
+              <ElementEditor 
+                sceneId={selectedSceneId} 
+                selectedElementId={selectedElementId}
+                onSelectElement={setSelectedElementId ? setSelectedElementId : () => {}}
+              />
+            </div>
+          </ScrollArea>
         ) : (
           <div className="text-center flex-1 flex items-center justify-center p-3 bg-muted/30 rounded-md mx-2 mb-2">
             <p className="text-sm text-muted-foreground">Select a scene to edit its elements.</p>
@@ -90,14 +97,16 @@ const FlowTabContent = ({
         )}
       </TabsContent>
 
-      <TabsContent value="exploration" className="data-[state=active]:flex flex-col h-full overflow-hidden">
+      <TabsContent value="exploration" className="data-[state=active]:flex flex-col h-full m-0 overflow-hidden">
         {selectedSceneId ? (
-          <div className="p-3 h-full overflow-y-auto">
-            <ExplorationPanel 
-              sceneId={selectedSceneId}
-              story={story}
-            />
-          </div>
+          <ScrollArea className="h-full">
+            <div className="p-3">
+              <ExplorationPanel 
+                sceneId={selectedSceneId}
+                story={story}
+              />
+            </div>
+          </ScrollArea>
         ) : (
           <div className="text-center flex-1 flex items-center justify-center p-3 bg-muted/30 rounded-md mx-2 mb-2">
             <p className="text-sm text-muted-foreground">Select a scene to edit its exploration items.</p>

@@ -30,6 +30,9 @@ const FloatingEditorWrapper: React.FC<FloatingEditorWrapperProps> = ({
         left: "16px",
         position: "fixed" as const,
         zIndex: 40, // Reduced from 51 to 40
+        maxHeight: "calc(100vh - 100px)", // Set max height for mobile
+        display: "flex",
+        flexDirection: "column" as const,
       }
     : {
         left: `${position.x + 380}px`, // 380px accounts for the wider preview (352px) plus some margin
@@ -37,7 +40,9 @@ const FloatingEditorWrapper: React.FC<FloatingEditorWrapperProps> = ({
         position: "fixed" as const,
         zIndex: 40, // Reduced from 100 to 40
         width: "520px",
-        minHeight: "625px",
+        maxHeight: "calc(100vh - 40px)", // Set max height for desktop
+        display: "flex",
+        flexDirection: "column" as const,
       };
 
   return (
