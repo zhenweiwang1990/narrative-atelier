@@ -1,14 +1,12 @@
 
 import React from 'react';
-import { Separator } from '@/components/ui/separator';
 import { QteElement as QteElementType, Scene, GlobalValue, Story } from '@/utils/types';
 import SuccessFailureLayout from '../shared/SuccessFailureLayout';
-import QteFields from './QteFields';
-import OutcomeSection from '../shared/OutcomeSection';
 import AiStoryDialog from '../shared/AiStoryDialog';
-import QteOutcomeButtons from './QteOutcomeButtons';
-import { useQteAiDialog } from '@/hooks/ai-dialog/useQteAiDialog';
-import { useElementOutcomes } from '@/hooks/useElementOutcomes';
+import { useQteElementContainerState } from '@/hooks/qte/useQteElementContainerState';
+import QteBasicFields from './QteBasicFields';
+import QteSuccessOutcome from './QteSuccessOutcome';
+import QteFailureOutcome from './QteFailureOutcome';
 
 interface QteElementContainerProps {
   element: QteElementType;
@@ -29,31 +27,13 @@ const QteElementContainer: React.FC<QteElementContainerProps> = ({
   validateTimeLimit, 
   validateKeySequence 
 }) => {
-  const {
-    aiDialogOpen,
-    setAiDialogOpen,
-    aiDialogType,
-    aiDialogFor,
-    handleOpenAiDialog,
-    handleAiStorySubmit
-  } = useQteAiDialog(element.id, story);
-  
-  const {
-    safeElement,
-    updateSuccessSceneId,
-    updateFailureSceneId,
-    updateSuccessTransition,
-    updateFailureTransition,
-    addValueChange,
-    updateValueChange,
-    removeValueChange
-  } = useElementOutcomes(element, onUpdate);
+  const { aiDialogState, outcomeState } = useQteElementContainerState(element, onUpdate, story);
   
   // If no global values, don't show outcomes section
   if (globalValues.length === 0) {
     return (
       <div className="space-y-2">
-        <QteFields 
+        <QteBasicFields 
           element={element}
           onUpdate={onUpdate}
           validateTimeLimit={validateTimeLimit}
@@ -65,77 +45,51 @@ const QteElementContainer: React.FC<QteElementContainerProps> = ({
   
   return (
     <div className="space-y-2">
-      <QteFields 
+      <QteBasicFields 
         element={element}
         onUpdate={onUpdate}
         validateTimeLimit={validateTimeLimit}
         validateKeySequence={validateKeySequence}
       />
       
-      <Separator className="my-3" />
-      
       <SuccessFailureLayout
         successTitle="成功结果"
         failureTitle="失败结果"
         successChildren={
-          <>
-            <OutcomeSection
-              scenes={scenes}
-              globalValues={globalValues}
-              successSceneId={safeElement.success.sceneId}
-              failureSceneId=""
-              successTransition={safeElement.success.transition}
-              successValueChanges={safeElement.success.valueChanges}
-              updateSuccessSceneId={updateSuccessSceneId}
-              updateFailureSceneId={() => {}}
-              updateSuccessTransition={updateSuccessTransition}
-              updateFailureTransition={() => {}}
-              addValueChange={addValueChange}
-              updateValueChange={updateValueChange}
-              removeValueChange={removeValueChange}
-              showSuccessOnly={true}
-              elementId={element.id}
-            />
-            <QteOutcomeButtons 
-              onOpenAiDialog={handleOpenAiDialog} 
-              outcomeType="success" 
-            />
-          </>
+          <QteSuccessOutcome
+            element={outcomeState.safeElement}
+            scenes={scenes}
+            globalValues={globalValues}
+            updateSuccessSceneId={outcomeState.updateSuccessSceneId}
+            updateSuccessTransition={outcomeState.updateSuccessTransition}
+            addValueChange={outcomeState.addValueChange}
+            updateValueChange={outcomeState.updateValueChange}
+            removeValueChange={outcomeState.removeValueChange}
+            onOpenAiDialog={aiDialogState.handleOpenAiDialog}
+          />
         }
         failureChildren={
-          <>
-            <OutcomeSection
-              scenes={scenes}
-              globalValues={globalValues}
-              successSceneId=""
-              failureSceneId={safeElement.failure.sceneId}
-              failureTransition={safeElement.failure.transition}
-              failureValueChanges={safeElement.failure.valueChanges}
-              updateSuccessSceneId={() => {}}
-              updateFailureSceneId={updateFailureSceneId}
-              updateSuccessTransition={() => {}}
-              updateFailureTransition={updateFailureTransition}
-              addValueChange={addValueChange}
-              updateValueChange={updateValueChange}
-              removeValueChange={removeValueChange}
-              showFailureOnly={true}
-              elementId={element.id}
-            />
-            <QteOutcomeButtons 
-              onOpenAiDialog={handleOpenAiDialog} 
-              outcomeType="failure" 
-            />
-          </>
+          <QteFailureOutcome
+            element={outcomeState.safeElement}
+            scenes={scenes}
+            globalValues={globalValues}
+            updateFailureSceneId={outcomeState.updateFailureSceneId}
+            updateFailureTransition={outcomeState.updateFailureTransition}
+            addValueChange={outcomeState.addValueChange}
+            updateValueChange={outcomeState.updateValueChange}
+            removeValueChange={outcomeState.removeValueChange}
+            onOpenAiDialog={aiDialogState.handleOpenAiDialog}
+          />
         }
       />
 
       <AiStoryDialog 
-        isOpen={aiDialogOpen}
-        onClose={() => setAiDialogOpen(false)}
-        onSubmit={handleAiStorySubmit}
-        type={aiDialogType}
+        isOpen={aiDialogState.aiDialogOpen}
+        onClose={() => aiDialogState.setAiDialogOpen(false)}
+        onSubmit={aiDialogState.handleAiStorySubmit}
+        type={aiDialogState.aiDialogType}
         scenes={scenes}
-        showConvergenceSelector={aiDialogType === 'branch'}
+        showConvergenceSelector={aiDialogState.aiDialogType === 'branch'}
       />
     </div>
   );
