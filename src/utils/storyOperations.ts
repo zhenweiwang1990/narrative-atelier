@@ -1,5 +1,4 @@
-
-import { Story } from '@/utils/types';
+import { Story } from '@/types';
 import { createBlankStory, generateId } from '@/utils/storage';
 import { saveAllStories } from './storyLoading';
 import { toast } from 'sonner';

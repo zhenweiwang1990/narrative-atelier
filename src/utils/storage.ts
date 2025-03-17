@@ -1,4 +1,4 @@
-import { Story } from "./types";
+import { Story } from '@/types';
 
 const STORY_STORAGE_KEY = "interactive-story-editor";
 

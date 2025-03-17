@@ -1,6 +1,6 @@
 
 import { useEffect } from 'react';
-import { Story } from '@/utils/types';
+import { Story } from '@/types';
 
 export function useStoryPersistence(story: Story | null) {
   // Save the current story ID to localStorage whenever it changes
