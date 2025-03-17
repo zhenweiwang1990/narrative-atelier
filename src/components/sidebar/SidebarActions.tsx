@@ -21,12 +21,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useNavigate } from "react-router-dom";
 
 export const SidebarActions = () => {
   const { story, handleSave, handleImport, handleExport } = useStory();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [publishDialogOpen, setPublishDialogOpen] = useState(false);
   const version = "0.1.0"; // 默认版本号
+  const navigate = useNavigate();
 
   const triggerImport = () => {
     if (fileInputRef.current) {
@@ -43,15 +45,29 @@ export const SidebarActions = () => {
     }
   };
   
+  const generateVersionNumber = () => {
+    // 生成新版本号（基于当前版本递增）
+    const parts = version.split('.');
+    const minor = parseInt(parts[2]) + 1;
+    return `${parts[0]}.${parts[1]}.${minor}`;
+  };
+  
   const handlePublish = async () => {
     setPublishDialogOpen(false);
+    const newVersion = generateVersionNumber();
     
     toast.promise(
       // 这里会是一个真实的 API 请求
       new Promise(resolve => setTimeout(resolve, 1500)),
       {
-        loading: '正在发布剧情...',
-        success: '剧情发布成功',
+        loading: `正在发布剧情 v${newVersion}...`,
+        success: () => {
+          setTimeout(() => {
+            // 发布成功后导航到版本历史页面
+            navigate('/version-history');
+          }, 1000);
+          return `剧情 v${newVersion} 发布成功，已提交审核`;
+        },
         error: '发布失败，请重试',
       }
     );
@@ -84,10 +100,10 @@ export const SidebarActions = () => {
                 <Button
                   onClick={() => setPublishDialogOpen(true)}
                   variant="outline"
-                  className="w-full h-20 flex flex-col items-center justify-center gap-1"
+                  className="w-full h-20 flex flex-col items-center justify-center gap-1 bg-primary/5 hover:bg-primary/10 border-primary/20"
                 >
-                  <Share2 className="h-6 w-6" />
-                  <span className="text-xs">发布</span>
+                  <Share2 className="h-6 w-6 text-primary" />
+                  <span className="text-xs font-medium text-primary">发布</span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>发布剧情</TooltipContent>
@@ -144,7 +160,7 @@ export const SidebarActions = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>确认发布</AlertDialogTitle>
             <AlertDialogDescription>
-              您确定要发布当前剧情吗？发布后将创建一个新的版本，并可以被其他用户访问。
+              您确定要发布当前剧情吗？发布后将创建一个新的版本 v{generateVersionNumber()}，并提交审核。审核通过后可被其他用户访问。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

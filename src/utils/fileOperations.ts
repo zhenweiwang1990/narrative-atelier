@@ -1,4 +1,5 @@
-import { Story } from "./types";
+
+import { Story, Scene, Location } from "./types";
 import { generateId } from "./storage";
 import { migrateStoryElementsToNewFormat } from './storyLoading';
 
@@ -58,13 +59,48 @@ export const readStoryFile = (
   reader.readAsText(file);
 };
 
+// Optimize story data for export
+const optimizeStoryForExport = (story: Story): any => {
+  // Deep clone the story to avoid modifying the original
+  const optimizedStory = JSON.parse(JSON.stringify(story));
+  
+  // 1. Remove position data from scenes
+  if (optimizedStory.scenes && optimizedStory.scenes.length > 0) {
+    optimizedStory.scenes = optimizedStory.scenes.map((scene: Scene) => {
+      const { position, ...sceneWithoutPosition } = scene;
+      return sceneWithoutPosition;
+    });
+  }
+  
+  // 2. Remove scenes arrays from locations
+  if (optimizedStory.locations && optimizedStory.locations.length > 0) {
+    optimizedStory.locations = optimizedStory.locations.map((location: Location) => {
+      const { scenes, ...locationWithoutScenes } = location;
+      return locationWithoutScenes;
+    });
+  }
+  
+  // 3. Remove type from global values
+  if (optimizedStory.globalValues && optimizedStory.globalValues.length > 0) {
+    optimizedStory.globalValues = optimizedStory.globalValues.map((value: any) => {
+      const { type, ...valueWithoutType } = value;
+      return valueWithoutType;
+    });
+  }
+  
+  return optimizedStory;
+};
+
 // Export story as JSON file
 export const exportStoryAsFile = (story: Story): void => {
   try {
     // Use the migrated story to ensure it's in the latest format
     const updatedStory = migrateStoryElementsToNewFormat(story);
     
-    const storyJson = JSON.stringify(updatedStory, null, 2);
+    // Optimize story for export
+    const optimizedStory = optimizeStoryForExport(updatedStory);
+    
+    const storyJson = JSON.stringify(optimizedStory, null, 2);
     const blob = new Blob([storyJson], { type: "application/json" });
     const url = URL.createObjectURL(blob);
 

@@ -10,6 +10,7 @@ import {
   Settings,
   Database,
   Music,
+  History,
 } from "lucide-react";
 import {
   SidebarGroup,
@@ -53,6 +54,11 @@ export const SidebarNavigation = () => {
       title: "全局变量",
       icon: Database,
       path: "/global-values",
+    },
+    {
+      title: "版本历史",
+      icon: History,
+      path: "/version-history",
     },
   ];
 

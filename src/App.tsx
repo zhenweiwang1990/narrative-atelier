@@ -18,6 +18,7 @@ import InteractionMarking from "./pages/StoryCreation/InteractionMarking";
 import StoryConversion from "./pages/StoryCreation/StoryConversion";
 import Music from "./pages/Music";
 import Popup from "./pages/Popup";
+import VersionHistory from "./pages/VersionHistory";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/global-values" element={<Layout><GlobalValues /></Layout>} />
             <Route path="/flow" element={<Layout><Flow /></Layout>} />
             <Route path="/settings" element={<Layout><Settings /></Layout>} />
+            <Route path="/version-history" element={<Layout><VersionHistory /></Layout>} />
             <Route
               path="/story-creation/text-processing"
               element={<Layout><TextProcessing /></Layout>}
