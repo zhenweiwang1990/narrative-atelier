@@ -75,10 +75,10 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
             <OutcomeSection
               scenes={scenes}
               globalValues={globalValues}
-              successSceneId={safeElement.success.sceneId || ""}
+              successSceneId={safeElement.success.sceneId}
               failureSceneId=""
               successTransition={safeElement.success.transition || ""}
-              successValueChanges={safeElement.success.valueChanges || []}
+              successValueChanges={safeElement.success.valueChanges}
               updateSuccessSceneId={updateSuccessSceneId}
               updateFailureSceneId={() => {}}
               updateSuccessTransition={updateSuccessTransition}
@@ -105,9 +105,9 @@ export const DialogueTaskElement: React.FC<DialogueTaskElementProps> = ({
               scenes={scenes}
               globalValues={globalValues}
               successSceneId=""
-              failureSceneId={safeElement.failure.sceneId || ""}
+              failureSceneId={safeElement.failure.sceneId}
               failureTransition={safeElement.failure.transition || ""}
-              failureValueChanges={safeElement.failure.valueChanges || []}
+              failureValueChanges={safeElement.failure.valueChanges}
               updateSuccessSceneId={() => {}}
               updateFailureSceneId={updateFailureSceneId}
               updateSuccessTransition={() => {}}

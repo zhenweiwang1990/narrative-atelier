@@ -30,8 +30,6 @@ const SceneFlowSection: React.FC<SceneFlowSectionProps> = ({
   updateSceneUnlockPrice
 }) => {
   const isEndingScene = selectedScene.type === "ending" || selectedScene.type === "bad-ending";
-  // Only show revival point selector for bad-ending type scenes
-  const shouldShowRevivalPoint = selectedScene.type === "bad-ending";
 
   return (
     <div className="space-y-4">
@@ -43,7 +41,7 @@ const SceneFlowSection: React.FC<SceneFlowSectionProps> = ({
           updateNextScene={updateNextScene}
         />
         
-        {updateRevivalPoint && shouldShowRevivalPoint && (
+        {updateRevivalPoint && (
           <RevivalPointSelector
             revivalPointId={selectedScene.revivalPointId}
             scenes={story.scenes}
