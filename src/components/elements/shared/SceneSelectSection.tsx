@@ -36,32 +36,31 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
       onOpenAiDialog('ending', isSuccess);
     } else {
       if (isSuccess) {
-        onUpdateSuccessScene(value);
+        onUpdateSuccessScene(value === "none" ? "" : value);
       } else {
-        onUpdateFailureScene(value);
+        onUpdateFailureScene(value === "none" ? "" : value);
       }
     }
   };
 
   const renderSceneSelect = (isSuccess: boolean) => {
     const sceneId = isSuccess ? successSceneId : failureSceneId;
-    const onUpdateScene = isSuccess ? onUpdateSuccessScene : onUpdateFailureScene;
     const showAiButtons = isSuccess ? showSuccessAiButtons : showFailureAiButtons;
     
     return (
       <div className="space-y-1">
         <div className="flex justify-between">
-          <Label>{isSuccess ? '成功场景' : '失败场景'}</Label>
+          <Label>{isSuccess ? '成功场景' : '失败跳转场景'}</Label>
         </div>
         
         <Select
           value={sceneId || "none"}
           onValueChange={(value) => handleSceneChange(value, isSuccess)}
         >
-          <SelectTrigger>
-            <SelectValue placeholder={isSuccess ? "选择成功场景" : "选择失败场景"} />
+          <SelectTrigger id={isSuccess ? "successScene" : "failureScene"} className="h-8 text-sm">
+            <SelectValue placeholder={isSuccess ? "选择成功场景" : "选择失败跳转场景"} />
           </SelectTrigger>
-          <SelectContent className="z-[1100]">
+          <SelectContent position="popper" className="z-[100]">
             <SelectItem value="none">不指定</SelectItem>
             <SelectItem value="ai-branch" className="text-blue-600">AI 写支线</SelectItem>
             <SelectItem value="ai-ending" className="text-purple-600">AI 写结局</SelectItem>
@@ -81,7 +80,7 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
           </SelectContent>
         </Select>
         
-        {showAiButtons && sceneId === "none" && (
+        {showAiButtons && !sceneId && (
           <div className="flex gap-1 mt-1">
             <Button
               type="button"
@@ -110,7 +109,7 @@ const SceneSelectSection: React.FC<SceneSelectSectionProps> = ({
   };
 
   if (showSingleColumn) {
-    if (successSceneId !== '') {
+    if (successSceneId !== '' || (successSceneId === '' && failureSceneId === '')) {
       return renderSceneSelect(true);
     }
     

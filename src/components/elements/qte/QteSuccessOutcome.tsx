@@ -32,10 +32,10 @@ const QteSuccessOutcome: React.FC<QteSuccessOutcomeProps> = ({
       <OutcomeSection
         scenes={scenes}
         globalValues={globalValues}
-        successSceneId={element.success.sceneId}
+        successSceneId={element.success?.sceneId || ""}
         failureSceneId=""
-        successTransition={element.success.transition}
-        successValueChanges={element.success.valueChanges}
+        successTransition={element.success?.transition || ""}
+        successValueChanges={element.success?.valueChanges || []}
         updateSuccessSceneId={updateSuccessSceneId}
         updateFailureSceneId={() => {}}
         updateSuccessTransition={updateSuccessTransition}
@@ -49,7 +49,7 @@ const QteSuccessOutcome: React.FC<QteSuccessOutcomeProps> = ({
       <QteOutcomeButtons 
         onOpenAiDialog={onOpenAiDialog} 
         outcomeType="success" 
-        sceneId={element.success.sceneId}
+        sceneId={element.success?.sceneId || ""}
       />
     </>
   );

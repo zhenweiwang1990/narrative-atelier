@@ -2,7 +2,7 @@
 import React from 'react';
 import { QteElement } from '@/utils/types';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import QteDescription from './QteDescription';
 import ActionQteFields from './types/ActionQteFields';
 import ComboQteFields from './types/ComboQteFields';
@@ -68,19 +68,24 @@ const QteFields: React.FC<QteFieldsProps> = ({
       
       <div className="mb-2">
         <Label className="text-xs mb-1 block">QTE类型</Label>
-        <Select 
+        <RadioGroup 
           value={qteType} 
           onValueChange={handleQteTypeChange}
+          className="flex flex-wrap gap-2 mt-1"
         >
-          <SelectTrigger className="h-7 text-xs">
-            <SelectValue placeholder="选择QTE类型" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="action">QTE动作</SelectItem>
-            <SelectItem value="combo">QTE连击</SelectItem>
-            <SelectItem value="unlock">QTE解锁</SelectItem>
-          </SelectContent>
-        </Select>
+          <div className="flex items-center space-x-1 bg-muted/50 px-2 py-1 rounded-md">
+            <RadioGroupItem value="action" id="action" className="size-3" />
+            <Label htmlFor="action" className="text-xs cursor-pointer">QTE动作</Label>
+          </div>
+          <div className="flex items-center space-x-1 bg-muted/50 px-2 py-1 rounded-md">
+            <RadioGroupItem value="combo" id="combo" className="size-3" />
+            <Label htmlFor="combo" className="text-xs cursor-pointer">QTE连击</Label>
+          </div>
+          <div className="flex items-center space-x-1 bg-muted/50 px-2 py-1 rounded-md">
+            <RadioGroupItem value="unlock" id="unlock" className="size-3" />
+            <Label htmlFor="unlock" className="text-xs cursor-pointer">QTE解锁</Label>
+          </div>
+        </RadioGroup>
       </div>
       
       {renderQteTypeFields()}
