@@ -20,7 +20,7 @@ const ComboQteFields: React.FC<ComboQteFieldsProps> = ({
   const [isValidSequence, setIsValidSequence] = useState(true);
   const [validationMessage, setValidationMessage] = useState('');
 
-  // Direction options for the combo type
+  // 连击类型的方向选项
   const directionOptions = [
     { value: 'U', label: '上', icon: <ArrowUp className="w-4 h-4" /> },
     { value: 'D', label: '下', icon: <ArrowDown className="w-4 h-4" /> },
@@ -28,7 +28,7 @@ const ComboQteFields: React.FC<ComboQteFieldsProps> = ({
     { value: 'R', label: '右', icon: <ArrowRight className="w-4 h-4" /> },
   ];
 
-  // Validate direction sequence
+  // 验证方向序列
   useEffect(() => {
     if (!directionSequence) return;
 
@@ -42,17 +42,17 @@ const ComboQteFields: React.FC<ComboQteFieldsProps> = ({
         setIsValidSequence(true);
         setValidationMessage('');
         
-        // Only update the element when validation passes
+        // 只有在验证通过时才更新元素
         if (directionSequence !== element.directionSequence) {
           onUpdate(element.id, { directionSequence });
         }
       }
-    }, 3000); // 3 second debounce
+    }, 3000); // 3秒延迟
     
     return () => clearTimeout(timer);
   }, [directionSequence, element.id, element.directionSequence, onUpdate]);
 
-  // Add direction to the sequence
+  // 向序列添加方向
   const addDirection = (direction: string) => {
     if (directionSequence.length >= 6) return;
     const newSequence = directionSequence + direction;
@@ -60,7 +60,7 @@ const ComboQteFields: React.FC<ComboQteFieldsProps> = ({
     onUpdate(element.id, { directionSequence: newSequence });
   };
 
-  // Clear direction sequence
+  // 清除方向序列
   const clearDirections = () => {
     setDirectionSequence('');
     onUpdate(element.id, { directionSequence: '' });

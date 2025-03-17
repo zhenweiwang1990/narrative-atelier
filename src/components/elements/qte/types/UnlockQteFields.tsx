@@ -17,7 +17,7 @@ const UnlockQteFields: React.FC<UnlockQteFieldsProps> = ({
   onUpdate,
   validateTimeLimit
 }) => {
-  // Handle unlock pattern change
+  // 处理解锁图案变更
   const handleUnlockPatternChange = (value: string) => {
     onUpdate(element.id, { 
       unlockPattern: value as 'C' | 'L' | 'M' | 'N' | 'O' | 'S' | 'U' | 'Z' 

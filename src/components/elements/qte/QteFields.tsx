@@ -21,15 +21,15 @@ const QteFields: React.FC<QteFieldsProps> = ({
   validateTimeLimit,
   validateKeySequence
 }) => {
-  const qteType = element.qteType || 'action'; // Default to 'action' for backwards compatibility
+  const qteType = element.qteType || 'action'; // 默认为'action'以兼容旧版本
 
-  // Handle QTE type change
+  // 处理QTE类型变更
   const handleQteTypeChange = (value: string) => {
     const qteType = value as 'action' | 'combo' | 'unlock';
     onUpdate(element.id, { qteType });
   };
 
-  // Render the specific QTE type fields based on selected type
+  // 根据选定的类型渲染特定的QTE类型字段
   const renderQteTypeFields = () => {
     switch (qteType) {
       case 'action':

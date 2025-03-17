@@ -20,7 +20,7 @@ const ActionQteFields: React.FC<ActionQteFieldsProps> = ({
   validateTimeLimit,
   validateKeySequence
 }) => {
-  // Convert string to array if it's still in the old format
+  // 如果仍然是旧格式，将字符串转换为数组
   const initialKeySequence = element.keySequence 
     ? (typeof element.keySequence === 'string' ? element.keySequence.split(' ').filter(key => key.trim() !== '') : element.keySequence)
     : [];
@@ -30,26 +30,26 @@ const ActionQteFields: React.FC<ActionQteFieldsProps> = ({
   const [isValidInput, setIsValidInput] = useState(true);
   const [validationMessage, setValidationMessage] = useState('');
 
-  // Update the element when keyArray changes
+  // 当keyArray改变时更新元素
   useEffect(() => {
-    // Validate key array length
+    // 验证按键数组长度
     if (keyArray.length >= 3 && keyArray.length <= 6) {
       onUpdate(element.id, { keySequence: keyArray });
     }
   }, [keyArray, element.id, onUpdate]);
 
-  // Handle adding a new key to the sequence
+  // 处理向序列添加新按键
   const handleAddKey = () => {
     if (!currentKey.trim()) return;
     
-    // Validate the current input
+    // 验证当前输入
     if (currentKey.length > 2) {
       setIsValidInput(false);
       setValidationMessage('每个按键最多2个字符');
       return;
     }
     
-    // Check if adding would exceed max length
+    // 检查添加是否会超过最大长度
     if (keyArray.length >= 6) {
       setIsValidInput(false);
       setValidationMessage('按键序列最多6个按键');
@@ -62,14 +62,14 @@ const ActionQteFields: React.FC<ActionQteFieldsProps> = ({
     setValidationMessage('');
   };
 
-  // Handle removing a key from the sequence
+  // 处理从序列中删除按键
   const handleRemoveKey = (index: number) => {
     const newKeyArray = [...keyArray];
     newKeyArray.splice(index, 1);
     setKeyArray(newKeyArray);
   };
 
-  // Handle key press event for adding keys
+  // 处理添加按键的按键按下事件
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();

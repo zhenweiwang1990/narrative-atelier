@@ -1,81 +1,81 @@
 
-# Outcome Section Components
+# 结果部分组件
 
-This directory contains components related to handling success and failure outcomes for interactive story elements.
+该目录包含与处理交互式故事元素的成功和失败结果相关的组件。
 
-## Component Overview
+## 组件概述
 
 ### OutcomeSection
 
-`OutcomeSection.tsx` is the main entry point that serves as a facade for the outcome UI system. It determines which rendering pattern to use based on props and delegates to either:
-- `SingleOutcomeSection` for elements that only need success-only or failure-only outcomes
-- `DualOutcomeSection` for elements that require both success and failure outcomes
+`OutcomeSection.tsx` 是作为结果UI系统门面的主入口点。它根据props确定使用哪种渲染模式，并将任务委托给：
+- `SingleOutcomeSection` 用于只需要成功或只需要失败结果的元素
+- `DualOutcomeSection` 用于需要同时显示成功和失败结果的元素
 
-It handles the shared logic for:
-- Determining which view to render (single or dual)
-- Managing the AI dialog state through the `useOutcomeHandling` hook
-- Passing appropriate props to child components
+它处理共享逻辑：
+- 确定要渲染的视图（单一或双重）
+- 通过 `useOutcomeHandling` 钩子管理AI对话状态
+- 将适当的props传递给子组件
 
 ### SingleOutcomeSection
 
-`SingleOutcomeSection.tsx` displays a focused view for either success or failure outcomes. It's used when an element only needs to show one type of outcome. It includes:
-- Scene selection
-- Transition text editing
-- Value changes management
-- AI generation buttons (for creating branches or endings)
+`SingleOutcomeSection.tsx` 为成功或失败结果提供专注视图。当元素只需要显示一种类型的结果时使用。它包括：
+- 场景选择
+- 过渡文本编辑
+- 值变更管理
+- AI生成按钮（用于创建分支或结局）
 
 ### DualOutcomeSection
 
-`DualOutcomeSection.tsx` provides a side-by-side view of both success and failure outcomes. It's used when elements need both outcome types, such as QTE elements or dialogue tasks. It includes:
-- Parallel scene selectors
-- Parallel transition text editors
-- Two-column layout for value changes
-- AI story generation for both outcomes
+`DualOutcomeSection.tsx` 提供成功和失败结果的并排视图。当元素需要两种结果类型时使用，如QTE元素或对话任务。它包括：
+- 并行场景选择器
+- 并行过渡文本编辑器
+- 值变更的两列布局
+- 两种结果的AI故事生成
 
-### Supporting Components
+### 支持组件
 
-These components handle specific parts of the outcome UI:
+这些组件处理结果UI的特定部分：
 
 #### SceneSelectSection
 
-`SceneSelectSection.tsx` provides UI for selecting which scene follows after the current element, with options for:
-- Normal scene selection
-- AI-assisted branching
-- AI-assisted ending creation
+`SceneSelectSection.tsx` 提供UI，用于选择当前元素后的场景，选项包括：
+- 普通场景选择
+- AI辅助分支
+- AI辅助结局创建
 
 #### TransitionTextsSection
 
-`TransitionTextsSection.tsx` provides text entry fields for narrative transitions between scenes, adapting its layout based on whether it's in single or dual view mode.
+`TransitionTextsSection.tsx` 提供场景之间叙事过渡的文本输入字段，根据是在单一还是双重视图模式下调整其布局。
 
 #### ValueChangesCollapsible & ValueChangesSection
 
-These components manage the UI for adding, editing, and removing changes to global values as a result of player actions.
+这些组件管理添加、编辑和删除玩家行动导致的全局值变更的UI。
 
 #### OutcomeAiDialog
 
-`OutcomeAiDialog.tsx` is a dialog interface for AI-assisted content generation, providing:
-- Prompt entry
-- Scene convergence selection (for branches)
-- Ending type selection (for endings)
+`OutcomeAiDialog.tsx` 是用于AI辅助内容生成的对话界面，提供：
+- 提示输入
+- 场景汇合选择（用于分支）
+- 结局类型选择（用于结局）
 
-## Hooks
+## 钩子
 
 ### useOutcomeHandling
 
-`useOutcomeHandling.ts` centralizes the state management for AI dialogs, tracking:
-- Dialog open state
-- Dialog type (branch or ending)
-- Success/failure context
-- Button visibility based on scene selection
+`useOutcomeHandling.ts` 集中管理AI对话的状态，跟踪：
+- 对话打开状态
+- 对话类型（分支或结局）
+- 成功/失败上下文
+- 基于场景选择的按钮可见性
 
 ### useElementOutcomes
 
-`useElementOutcomes.ts` (in the hooks directory) abstracts the data handling logic for element outcomes, providing functions for:
-- Updating scene IDs
-- Updating transition texts
-- Managing value changes
+`useElementOutcomes.ts`（在hooks目录中）抽象了元素结果的数据处理逻辑，提供函数以：
+- 更新场景ID
+- 更新过渡文本
+- 管理值变更
 
-## Component Relationships
+## 组件关系
 
 ```
 OutcomeSection
@@ -93,33 +93,33 @@ OutcomeSection
     └── AiStoryDialog
 ```
 
-## Usage Patterns
+## 使用模式
 
-1. **For QTE and Dialogue Task elements:**
-   - Use full `OutcomeSection` with both success and failure outcomes
+1. **对于QTE和对话任务元素：**
+   - 使用完整的 `OutcomeSection`，同时包含成功和失败结果
 
-2. **For elements with single outcomes:**
-   - Use `OutcomeSection` with `showSuccessOnly` or `showFailureOnly` props
+2. **对于单一结果的元素：**
+   - 使用带有 `showSuccessOnly` 或 `showFailureOnly` 属性的 `OutcomeSection`
 
-3. **For direct control over layouts:**
-   - Use `SingleOutcomeSection` or `DualOutcomeSection` directly
+3. **对于直接控制布局：**
+   - 直接使用 `SingleOutcomeSection` 或 `DualOutcomeSection`
 
-4. **For AI story generation:**
-   - Access through the "AI 写支线" and "AI 写结局" buttons
-   - Or through scene selection dropdown
+4. **对于AI故事生成：**
+   - 通过"AI 写支线"和"AI 写结局"按钮访问
+   - 或通过场景选择下拉菜单
 
-## Flow Control
+## 流程控制
 
-The typical flow for outcome handling is:
-1. Element event triggers success or failure
-2. OutcomeSection determines scene transitions
-3. Value changes are applied to global state
-4. Transition text is displayed
-5. Player is moved to the next scene
+结果处理的典型流程是：
+1. 元素事件触发成功或失败
+2. OutcomeSection确定场景转换
+3. 值变更应用于全局状态
+4. 显示过渡文本
+5. 玩家移动到下一个场景
 
-For AI-assisted generation, the flow is:
-1. User requests AI generation (branch or ending)
-2. Dialog appears for prompt input
-3. Selection of convergence point (for branches) or ending type
-4. AI generates content based on inputs
-5. New scenes are integrated into the story flow
+对于AI辅助生成，流程是：
+1. 用户请求AI生成（分支或结局）
+2. 对话框出现用于提示输入
+3. 选择汇合点（对于分支）或结局类型
+4. AI基于输入生成内容
+5. 新场景整合到故事流程中

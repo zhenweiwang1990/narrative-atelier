@@ -6,7 +6,7 @@ import { GitBranch, BookText } from 'lucide-react';
 interface QteOutcomeButtonsProps {
   onOpenAiDialog: (type: 'branch' | 'ending', outcomeType: 'success' | 'failure') => void;
   outcomeType: 'success' | 'failure';
-  sceneId: string; // Add a sceneId prop to check if a scene is already selected
+  sceneId: string; // 添加sceneId属性以检查场景是否已被选择
 }
 
 const QteOutcomeButtons: React.FC<QteOutcomeButtonsProps> = ({ 
@@ -14,7 +14,7 @@ const QteOutcomeButtons: React.FC<QteOutcomeButtonsProps> = ({
   outcomeType,
   sceneId 
 }) => {
-  // Only render the buttons if no scene is selected (sceneId is empty)
+  // 只有在没有选择场景时渲染按钮（sceneId为空）
   if (sceneId && sceneId !== 'none') {
     return null;
   }

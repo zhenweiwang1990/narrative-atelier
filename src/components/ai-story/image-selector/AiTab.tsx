@@ -28,7 +28,7 @@ const AiTab: React.FC<AiTabProps> = ({
 }) => {
   return (
     <div className="space-y-4">
-      {/* Style Selection */}
+      {/* 风格选择 */}
       <div className="space-y-2">
         <Label>选择风格</Label>
         <ImageStyleGrid 
@@ -38,7 +38,7 @@ const AiTab: React.FC<AiTabProps> = ({
         />
       </div>
       
-      {/* Prompt Input */}
+      {/* 提示输入 */}
       <div className="space-y-2">
         <Label htmlFor="ai-prompt">描述你想要的图片</Label>
         <div className="relative">
@@ -55,7 +55,7 @@ const AiTab: React.FC<AiTabProps> = ({
         </div>
       </div>
       
-      {/* Generate Button */}
+      {/* 生成按钮 */}
       <Button 
         onClick={handleGenerateImages} 
         disabled={!prompt || !selectedStyle || isGenerating}

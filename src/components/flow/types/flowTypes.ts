@@ -1,7 +1,7 @@
 
 import { SceneType } from "@/utils/types";
 
-// Filter options for scene display
+// 场景显示的过滤选项
 export type SceneFilterOption = 'all' | 'endings' | 'incomplete';
 
 export interface FlowEditorProps {

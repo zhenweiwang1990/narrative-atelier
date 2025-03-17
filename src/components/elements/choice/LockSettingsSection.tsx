@@ -1,6 +1,6 @@
 
-// This file is no longer needed and can be replaced with a simple stub
-// It's kept for now to avoid breaking imports, but can be removed later
+// 此文件不再需要，可以替换为简单的存根
+// 它被保留以避免破坏导入，但以后可以删除
 import React from "react";
 import { ChoiceOption, GlobalValue } from "@/utils/types";
 
