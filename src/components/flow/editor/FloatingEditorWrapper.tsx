@@ -1,4 +1,3 @@
-
 import React, { ReactNode } from "react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -26,7 +25,7 @@ const FloatingEditorWrapper: React.FC<FloatingEditorWrapperProps> = ({
 
   // Adjust position for popup mode, mobile devices, or default position
   let editorStyle;
-  
+
   if (isPopup) {
     // For popup window, use fixed position at the right side
     editorStyle = {
@@ -77,7 +76,7 @@ const FloatingEditorWrapper: React.FC<FloatingEditorWrapperProps> = ({
       )}
       style={{
         ...editorStyle,
-        boxShadow: "0 10px 30px hsl(var(--preview-shadow))"
+        boxShadow: "0 10px 30px hsl(var(--preview-shadow))",
       }}
     >
       {children}
