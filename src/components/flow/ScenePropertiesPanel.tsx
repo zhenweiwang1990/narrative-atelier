@@ -6,6 +6,7 @@ import IncompleteSceneAlert from "./panel/IncompleteSceneAlert";
 import SceneMetadataSection from "./panel/SceneMetadataSection";
 import SceneFlowSection from "./panel/SceneFlowSection";
 import SceneEditHint from "./panel/SceneEditHint";
+import SceneVisualEffectsSection from "./panel/SceneVisualEffectsSection";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const ScenePropertiesPanel = ({
@@ -30,7 +31,7 @@ const ScenePropertiesPanel = ({
     <div className="space-y-3">
       <IncompleteSceneAlert isIncomplete={sceneIsIncomplete} />
       
-      <Accordion type="multiple" defaultValue={["metadata", "flow", "help"]} className="space-y-3">
+      <Accordion type="multiple" defaultValue={["metadata", "visual", "flow", "help"]} className="space-y-3">
         <AccordionItem value="metadata" className="border rounded-md overflow-hidden">
           <AccordionTrigger className="px-3 py-2 hover:no-underline">
             <span className="text-sm font-medium">基本信息</span>
@@ -43,6 +44,19 @@ const ScenePropertiesPanel = ({
                 updateSceneTitle={updateSceneTitle}
                 updateSceneType={updateSceneType}
                 updateSceneLocation={updateSceneLocation}
+              />
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        
+        <AccordionItem value="visual" className="border rounded-md overflow-hidden">
+          <AccordionTrigger className="px-3 py-2 hover:no-underline">
+            <span className="text-sm font-medium">视觉和音效</span>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="px-3 pb-3">
+              <SceneVisualEffectsSection
+                selectedScene={selectedScene}
                 updateSceneEntrance={updateSceneEntrance}
                 updateSceneEnvironment={updateSceneEnvironment}
                 updateBackgroundMusic={updateBackgroundMusic}
