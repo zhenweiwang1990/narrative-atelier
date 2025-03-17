@@ -1,5 +1,5 @@
 
-import { SceneType } from "@/utils/types";
+import { SceneType } from "@/types";
 
 // Filter options for scene display
 export type SceneFilterOption = 'all' | 'endings' | 'incomplete';
