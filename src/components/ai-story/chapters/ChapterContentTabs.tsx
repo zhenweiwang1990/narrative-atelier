@@ -6,6 +6,7 @@ import { RefreshCw, Save, ArrowRight, Server } from "lucide-react";
 import TextMarkerContextMenu from './TextMarkerContextMenu';
 import InteractionMarkingGuide from './InteractionMarkingGuide';
 import ChapterPreview from './ChapterPreview';
+import AutomatedProcessingDialog from './AutomatedProcessingDialog';
 import { Chapter } from '@/utils/types';
 import { toast } from 'sonner';
 
@@ -24,6 +25,7 @@ const ChapterContentTabs: React.FC<ChapterContentTabsProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState("step1");
   const [isProcessingPreview, setIsProcessingPreview] = useState(false);
+  const [showProcessingDialog, setShowProcessingDialog] = useState(false);
 
   // 处理预览主线按钮
   const handlePreviewMainStory = async () => {
@@ -47,174 +49,201 @@ const ChapterContentTabs: React.FC<ChapterContentTabsProps> = ({
     }
   };
 
+  // 处理入库制作按钮
+  const handleMarkingToServerClick = () => {
+    setShowProcessingDialog(true);
+  };
+
+  // 处理自动处理完成后的回调
+  const handleProcessingComplete = async () => {
+    setShowProcessingDialog(false);
+    
+    try {
+      // 调用实际的入库方法
+      await onMarkingToServer(chapter.id);
+      toast.success('章节已成功入库，可进行人工优化');
+    } catch (error) {
+      console.error('入库失败', error);
+      toast.error('入库失败，请重试');
+    }
+  };
+
   return (
-    <Tabs 
-      defaultValue="step1" 
-      value={activeTab}
-      onValueChange={setActiveTab}
-      className="w-full"
-    >
-      <TabsList className="mb-4 w-full justify-start bg-background border-b rounded-none px-0 relative">
-        <div className="absolute h-[3px] bottom-0 left-0 right-0 bg-muted-foreground/20"></div>
-        <TabsTrigger 
-          value="step1" 
-          className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-4 relative"
-        >
-          1. 获得原文
-        </TabsTrigger>
-        <TabsTrigger 
-          value="step2" 
-          className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-4"
-          disabled={!chapter.isProcessed}
-        >
-          2. 处理文本
-        </TabsTrigger>
-        <TabsTrigger 
-          value="step3" 
-          className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-4"
-          disabled={!chapter.isProcessed}
-        >
-          3. 标记互动
-        </TabsTrigger>
-        <TabsTrigger 
-          value="step4" 
-          className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-4"
-          disabled={!chapter.isProcessed}
-        >
-          4. 主线入库
-        </TabsTrigger>
-      </TabsList>
+    <>
+      <Tabs 
+        defaultValue="step1" 
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="w-full"
+      >
+        <TabsList className="mb-4 w-full justify-start bg-background border-b rounded-none px-0 relative">
+          <div className="absolute h-[3px] bottom-0 left-0 right-0 bg-muted-foreground/20"></div>
+          <TabsTrigger 
+            value="step1" 
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-4 relative"
+          >
+            1. 获得原文
+          </TabsTrigger>
+          <TabsTrigger 
+            value="step2" 
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-4"
+            disabled={!chapter.isProcessed}
+          >
+            2. 处理文本
+          </TabsTrigger>
+          <TabsTrigger 
+            value="step3" 
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-4"
+            disabled={!chapter.isProcessed}
+          >
+            3. 标记互动
+          </TabsTrigger>
+          <TabsTrigger 
+            value="step4" 
+            className="data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none px-4"
+            disabled={!chapter.isProcessed}
+          >
+            4. 主线入库
+          </TabsTrigger>
+        </TabsList>
 
-      <TabsContent value="step1" className="space-y-4">
-        <TextMarkerContextMenu
-          rows={10}
-          value={chapter.originalContent}
-          onChange={(value) => onChapterChange(chapter.id, 'originalContent', value)}
-          className="w-full resize-none"
-          placeholder="输入章节内容..."
-        />
+        <TabsContent value="step1" className="space-y-4">
+          <TextMarkerContextMenu
+            rows={10}
+            value={chapter.originalContent}
+            onChange={(value) => onChapterChange(chapter.id, 'originalContent', value)}
+            className="w-full resize-none"
+            placeholder="输入章节内容..."
+          />
 
-        <div className="flex justify-between">
-          <div></div> {/* 空div用于对齐 */}
-          <div className="flex gap-2">
+          <div className="flex justify-between">
+            <div></div> {/* 空div用于对齐 */}
+            <div className="flex gap-2">
+              <Button 
+                onClick={() => onAIProcess(chapter.id)}
+                disabled={!chapter.originalContent}
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                AI文本处理
+              </Button>
+              {chapter.isProcessed && (
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setActiveTab("step2");
+                  }}
+                >
+                  下一步
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              )}
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="step2" className="space-y-4">
+          <TextMarkerContextMenu
+            rows={10}
+            value={chapter.mainStoryContent || ''}
+            onChange={(value) => onChapterChange(chapter.id, 'mainStoryContent', value)}
+            className="w-full resize-none"
+            placeholder="AI 处理后的主线剧情会显示在这里..."
+          />
+          
+          <div className="flex justify-between">
             <Button 
-              onClick={() => onAIProcess(chapter.id)}
-              disabled={!chapter.originalContent}
+              variant="outline" 
+              onClick={() => setActiveTab("step1")}
             >
-              <RefreshCw className="h-4 w-4 mr-2" />
-              AI文本处理
+              上一步
             </Button>
-            {chapter.isProcessed && (
+            <div className="flex gap-2">
+              <Button 
+                onClick={() => onAIProcess(chapter.id)}
+                disabled={!chapter.originalContent}
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                重新处理
+              </Button>
               <Button 
                 variant="outline" 
-                onClick={() => {
-                  setActiveTab("step2");
-                }}
+                onClick={() => setActiveTab("step3")}
               >
                 下一步
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
-            )}
+            </div>
           </div>
-        </div>
-      </TabsContent>
+        </TabsContent>
 
-      <TabsContent value="step2" className="space-y-4">
-        <TextMarkerContextMenu
-          rows={10}
-          value={chapter.mainStoryContent || ''}
-          onChange={(value) => onChapterChange(chapter.id, 'mainStoryContent', value)}
-          className="w-full resize-none"
-          placeholder="AI 处理后的主线剧情会显示在这里..."
-        />
-        
-        <div className="flex justify-between">
-          <Button 
-            variant="outline" 
-            onClick={() => setActiveTab("step1")}
-          >
-            上一步
-          </Button>
-          <div className="flex gap-2">
+        <TabsContent value="step3" className="space-y-4">
+          <InteractionMarkingGuide />
+          
+          <TextMarkerContextMenu
+            rows={10}
+            value={chapter.markedContent || chapter.mainStoryContent || ''}
+            onChange={(value) => onChapterChange(chapter.id, 'markedContent', value)}
+            className="w-full resize-none"
+            placeholder="在这里添加互动标记..."
+          />
+
+          <div className="flex justify-between">
             <Button 
-              onClick={() => onAIProcess(chapter.id)}
-              disabled={!chapter.originalContent}
+              variant="outline" 
+              onClick={() => setActiveTab("step2")}
             >
-              <RefreshCw className="h-4 w-4 mr-2" />
-              重新处理
+              上一步
             </Button>
+            <div className="flex gap-2">
+              <Button 
+                onClick={handlePreviewMainStory}
+                disabled={!chapter.markedContent && !chapter.mainStoryContent || isProcessingPreview}
+              >
+                {isProcessingPreview ? (
+                  <>
+                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                    处理中...
+                  </>
+                ) : (
+                  <>
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    预览主线
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="step4" className="space-y-4">
+          <div className="border rounded-md p-4 bg-muted/20">
+            <ChapterPreview content={chapter.markedContent || chapter.mainStoryContent || ''} />
+          </div>
+          
+          <div className="flex justify-between">
             <Button 
               variant="outline" 
               onClick={() => setActiveTab("step3")}
             >
-              下一步
-              <ArrowRight className="h-4 w-4 ml-2" />
+              上一步
             </Button>
-          </div>
-        </div>
-      </TabsContent>
-
-      <TabsContent value="step3" className="space-y-4">
-        <InteractionMarkingGuide />
-        
-        <TextMarkerContextMenu
-          rows={10}
-          value={chapter.markedContent || chapter.mainStoryContent || ''}
-          onChange={(value) => onChapterChange(chapter.id, 'markedContent', value)}
-          className="w-full resize-none"
-          placeholder="在这里添加互动标记..."
-        />
-
-        <div className="flex justify-between">
-          <Button 
-            variant="outline" 
-            onClick={() => setActiveTab("step2")}
-          >
-            上一步
-          </Button>
-          <div className="flex gap-2">
             <Button 
-              onClick={handlePreviewMainStory}
-              disabled={!chapter.markedContent && !chapter.mainStoryContent || isProcessingPreview}
+              onClick={handleMarkingToServerClick}
+              disabled={!chapter.markedContent && !chapter.mainStoryContent}
             >
-              {isProcessingPreview ? (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  处理中...
-                </>
-              ) : (
-                <>
-                  <ArrowRight className="h-4 w-4 mr-2" />
-                  预览主线
-                </>
-              )}
+              <Server className="h-4 w-4 mr-2" />
+              入库制作
             </Button>
           </div>
-        </div>
-      </TabsContent>
+        </TabsContent>
+      </Tabs>
       
-      <TabsContent value="step4" className="space-y-4">
-        <div className="border rounded-md p-4 bg-muted/20">
-          <ChapterPreview content={chapter.markedContent || chapter.mainStoryContent || ''} />
-        </div>
-        
-        <div className="flex justify-between">
-          <Button 
-            variant="outline" 
-            onClick={() => setActiveTab("step3")}
-          >
-            上一步
-          </Button>
-          <Button 
-            onClick={() => onMarkingToServer(chapter.id)}
-            disabled={!chapter.markedContent && !chapter.mainStoryContent}
-          >
-            <Server className="h-4 w-4 mr-2" />
-            入库制作
-          </Button>
-        </div>
-      </TabsContent>
-    </Tabs>
+      <AutomatedProcessingDialog 
+        isOpen={showProcessingDialog}
+        onClose={() => setShowProcessingDialog(false)}
+        onComplete={handleProcessingComplete}
+      />
+    </>
   );
 };
 

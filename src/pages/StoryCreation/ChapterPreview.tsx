@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { ArrowLeft, Save, FileJson } from "lucide-react";
 import ChapterPreview from '@/components/ai-story/chapters/ChapterPreview';
+import AutomatedProcessingDialog from '@/components/ai-story/chapters/AutomatedProcessingDialog';
 import { toast } from 'sonner';
 
 const ChapterPreviewPage = () => {
@@ -13,6 +14,7 @@ const ChapterPreviewPage = () => {
   const [chapterData, setChapterData] = useState<any>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showProcessingDialog, setShowProcessingDialog] = useState(false);
 
   useEffect(() => {
     // 从会话存储中获取章节数据
@@ -38,14 +40,18 @@ const ChapterPreviewPage = () => {
 
   const handleMergeToStory = async () => {
     setLoading(true);
+    setShowConfirmDialog(false);
+    
+    // 显示自动处理对话框
+    setShowProcessingDialog(true);
+  };
+
+  const handleProcessingComplete = async () => {
+    setShowProcessingDialog(false);
     
     try {
-      // TODO: 实际调用服务器将标记内容转换为JSON并合并到剧情中
-      // Mock: 假设等待1.5秒模拟服务器处理
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      // 模拟服务器处理完成
       toast.success('章节已成功合并到剧情中');
-      setShowConfirmDialog(false);
       
       // 清除会话存储中的章节数据
       sessionStorage.removeItem('previewChapter');
@@ -126,6 +132,12 @@ const ChapterPreviewPage = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      
+      <AutomatedProcessingDialog 
+        isOpen={showProcessingDialog}
+        onClose={() => setShowProcessingDialog(false)}
+        onComplete={handleProcessingComplete}
+      />
     </div>
   );
 };
