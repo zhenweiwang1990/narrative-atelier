@@ -27,6 +27,8 @@ const ExplorationPanel: React.FC<ExplorationPanelProps> = ({ sceneId, story }) =
     editName,
     editDescription,
     editIsCollectible,
+    editImage,
+    isImageSelectorOpen,
     getItemsByType,
     initNewItem,
     initEditItem,
@@ -36,7 +38,10 @@ const ExplorationPanel: React.FC<ExplorationPanelProps> = ({ sceneId, story }) =
     generateWithAI,
     setEditName,
     setEditDescription,
-    setEditIsCollectible
+    setEditIsCollectible,
+    openImageSelector,
+    closeImageSelector,
+    handleImageSelected
   } = useExplorationItems(sceneId);
 
   // Filter items by active tab type
@@ -64,6 +69,8 @@ const ExplorationPanel: React.FC<ExplorationPanelProps> = ({ sceneId, story }) =
             editName={editName}
             editDescription={editDescription}
             editIsCollectible={editIsCollectible}
+            editImage={editImage}
+            isImageSelectorOpen={isImageSelectorOpen}
             onAddNew={() => initNewItem("item")}
             onEditItem={initEditItem}
             onDeleteItem={deleteItem}
@@ -72,6 +79,9 @@ const ExplorationPanel: React.FC<ExplorationPanelProps> = ({ sceneId, story }) =
             onNameChange={setEditName}
             onDescriptionChange={setEditDescription}
             onCollectibleChange={setEditIsCollectible}
+            onOpenImageSelector={openImageSelector}
+            onCloseImageSelector={closeImageSelector}
+            onImageSelected={handleImageSelected}
           />
         </TabsContent>
 
@@ -84,6 +94,7 @@ const ExplorationPanel: React.FC<ExplorationPanelProps> = ({ sceneId, story }) =
             editName={editName}
             editDescription={editDescription}
             editIsCollectible={editIsCollectible}
+            isImageSelectorOpen={isImageSelectorOpen}
             onAddNew={() => initNewItem("knowledge")}
             onEditItem={initEditItem}
             onDeleteItem={deleteItem}
@@ -92,6 +103,9 @@ const ExplorationPanel: React.FC<ExplorationPanelProps> = ({ sceneId, story }) =
             onNameChange={setEditName}
             onDescriptionChange={setEditDescription}
             onCollectibleChange={setEditIsCollectible}
+            onOpenImageSelector={openImageSelector}
+            onCloseImageSelector={closeImageSelector}
+            onImageSelected={handleImageSelected}
           />
         </TabsContent>
       </Tabs>

@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UrlTab from "./image-selector/UrlTab";
 import UploadTab from "./image-selector/UploadTab";
 import AiTab from "./image-selector/AiTab";
+import MediaLibraryTab from "./image-selector/MediaLibraryTab";
 import AiResultsView from "./image-selector/AiResultsView";
 import LightboxDialog from "./image-selector/LightboxDialog";
 import { IMAGE_STYLES } from "./image-selector/constants";
@@ -158,10 +159,11 @@ const ImageSelectorDialog: React.FC<ImageSelectorDialogProps> = ({
             />
           ) : (
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid grid-cols-3 mb-4">
+              <TabsList className="grid grid-cols-4 mb-4">
                 <TabsTrigger value="url">输入网址</TabsTrigger>
                 <TabsTrigger value="upload">上传图片</TabsTrigger>
                 <TabsTrigger value="ai">AI生成</TabsTrigger>
+                <TabsTrigger value="library">素材库</TabsTrigger>
               </TabsList>
               
               <TabsContent value="url">
@@ -191,6 +193,13 @@ const ImageSelectorDialog: React.FC<ImageSelectorDialogProps> = ({
                   imageStyles={IMAGE_STYLES}
                   isGenerating={isGenerating}
                   handleGenerateImages={handleGenerateImages}
+                />
+              </TabsContent>
+              
+              <TabsContent value="library">
+                <MediaLibraryTab
+                  onImageSelected={onImageSelected}
+                  aspectRatio={aspectRatio}
                 />
               </TabsContent>
             </Tabs>

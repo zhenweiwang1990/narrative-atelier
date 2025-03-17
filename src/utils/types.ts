@@ -80,6 +80,7 @@ export interface ExplorationItem {
   name: string;
   description: string;
   isCollectible?: boolean;
+  image?: string;
 }
 
 export interface SceneElement {

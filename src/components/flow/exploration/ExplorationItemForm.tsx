@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Save, X } from "lucide-react";
+import { Save, X, Image } from "lucide-react";
 import { ExplorationItem } from "@/utils/types";
 
 interface ExplorationItemFormProps {
@@ -15,9 +15,11 @@ interface ExplorationItemFormProps {
   name: string;
   description: string;
   isCollectible: boolean;
+  itemImage?: string;
   onNameChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
   onCollectibleChange: (value: boolean) => void;
+  onOpenImageSelector?: () => void;
   onCancel: () => void;
   onSave: () => void;
 }
@@ -28,9 +30,11 @@ const ExplorationItemForm: React.FC<ExplorationItemFormProps> = ({
   name,
   description,
   isCollectible,
+  itemImage,
   onNameChange,
   onDescriptionChange,
   onCollectibleChange,
+  onOpenImageSelector,
   onCancel,
   onSave
 }) => {
@@ -62,14 +66,39 @@ const ExplorationItemForm: React.FC<ExplorationItemFormProps> = ({
           />
         </div>
         {type === "item" && (
-          <div className="flex items-center space-x-2 pt-2">
-            <Switch 
-              id="item-collectible"
-              checked={isCollectible}
-              onCheckedChange={onCollectibleChange}
-            />
-            <Label htmlFor="item-collectible">允许收集</Label>
-          </div>
+          <>
+            <div className="flex items-center space-x-2 pt-2">
+              <Switch 
+                id="item-collectible"
+                checked={isCollectible}
+                onCheckedChange={onCollectibleChange}
+              />
+              <Label htmlFor="item-collectible">允许收集</Label>
+            </div>
+            
+            <div className="space-y-2 pt-2">
+              <Label>物品图片</Label>
+              <div className="flex gap-2 items-center">
+                {itemImage ? (
+                  <div className="w-12 h-12 border rounded overflow-hidden">
+                    <img src={itemImage} alt={name} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="w-12 h-12 border rounded flex items-center justify-center bg-muted">
+                    <Image className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                )}
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={onOpenImageSelector}
+                  className="flex-1"
+                >
+                  {itemImage ? "更换图片" : "设置物品图片"}
+                </Button>
+              </div>
+            </div>
+          </>
         )}
       </CardContent>
       <CardFooter className="flex justify-between pt-0">

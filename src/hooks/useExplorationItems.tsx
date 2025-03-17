@@ -9,7 +9,8 @@ const initialItems: ExplorationItem[] = [
     type: "item", 
     name: "古老的钥匙", 
     description: "一把锈迹斑斑的钥匙，似乎可以打开某处的门锁。", 
-    isCollectible: true 
+    isCollectible: true,
+    image: "https://via.placeholder.com/300x300?text=古老的钥匙"
   },
   { 
     id: "item-2", 
@@ -34,6 +35,8 @@ export const useExplorationItems = (sceneId: string) => {
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editIsCollectible, setEditIsCollectible] = useState(false);
+  const [editImage, setEditImage] = useState<string | undefined>(undefined);
+  const [isImageSelectorOpen, setIsImageSelectorOpen] = useState(false);
 
   // Filter items by type
   const getItemsByType = (type: "item" | "knowledge") => {
@@ -46,6 +49,7 @@ export const useExplorationItems = (sceneId: string) => {
     setEditName("");
     setEditDescription("");
     setEditIsCollectible(type === "item");
+    setEditImage(undefined);
     setIsEditing(true);
   };
 
@@ -55,6 +59,7 @@ export const useExplorationItems = (sceneId: string) => {
     setEditName(item.name);
     setEditDescription(item.description);
     setEditIsCollectible(item.isCollectible || false);
+    setEditImage(item.image);
     setIsEditing(true);
   };
 
@@ -62,6 +67,17 @@ export const useExplorationItems = (sceneId: string) => {
   const cancelEdit = () => {
     setIsEditing(false);
     setEditingItem(null);
+  };
+
+  // Open image selector
+  const openImageSelector = () => {
+    setIsImageSelectorOpen(true);
+  };
+
+  // Handle image selection
+  const handleImageSelected = (imageUrl: string) => {
+    setEditImage(imageUrl);
+    setIsImageSelectorOpen(false);
   };
 
   // Save item (new or edited)
@@ -73,7 +89,10 @@ export const useExplorationItems = (sceneId: string) => {
       type: activeTab,
       name: editName.trim(),
       description: editDescription.trim(),
-      ...(activeTab === "item" && { isCollectible: editIsCollectible })
+      ...(activeTab === "item" && { 
+        isCollectible: editIsCollectible,
+        ...(editImage && { image: editImage })
+      })
     };
 
     if (editingItem) {
@@ -106,7 +125,8 @@ export const useExplorationItems = (sceneId: string) => {
           type: "item",
           name: "神秘的日记本",
           description: "一本泛黄的日记本，记载着主人公的秘密。翻开后可以了解更多剧情背景。",
-          isCollectible: true
+          isCollectible: true,
+          image: "https://via.placeholder.com/300x300?text=神秘日记本"
         },
         {
           id: `knowledge-${Date.now()}-1`,
@@ -129,6 +149,8 @@ export const useExplorationItems = (sceneId: string) => {
     editName,
     editDescription,
     editIsCollectible,
+    editImage,
+    isImageSelectorOpen,
     getItemsByType,
     initNewItem,
     initEditItem,
@@ -138,6 +160,10 @@ export const useExplorationItems = (sceneId: string) => {
     generateWithAI,
     setEditName,
     setEditDescription,
-    setEditIsCollectible
+    setEditIsCollectible,
+    setEditImage,
+    openImageSelector,
+    closeImageSelector: () => setIsImageSelectorOpen(false),
+    handleImageSelected
   };
 };

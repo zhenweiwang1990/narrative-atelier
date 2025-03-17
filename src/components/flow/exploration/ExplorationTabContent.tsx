@@ -5,6 +5,7 @@ import { PlusCircle, Wand2 } from "lucide-react";
 import { ExplorationItem } from "@/utils/types";
 import ExplorationItemForm from "./ExplorationItemForm";
 import ExplorationItemsList from "./ExplorationItemsList";
+import ImageSelectorDialog from "@/components/ai-story/ImageSelectorDialog";
 
 interface ExplorationTabContentProps {
   type: "item" | "knowledge";
@@ -14,6 +15,8 @@ interface ExplorationTabContentProps {
   editName: string;
   editDescription: string;
   editIsCollectible: boolean;
+  editImage?: string;
+  isImageSelectorOpen: boolean;
   onAddNew: () => void;
   onEditItem: (item: ExplorationItem) => void;
   onDeleteItem: (id: string) => void;
@@ -22,6 +25,9 @@ interface ExplorationTabContentProps {
   onNameChange: (value: string) => void;
   onDescriptionChange: (value: string) => void;
   onCollectibleChange: (value: boolean) => void;
+  onOpenImageSelector: () => void;
+  onCloseImageSelector: () => void;
+  onImageSelected: (imageUrl: string) => void;
 }
 
 const ExplorationTabContent: React.FC<ExplorationTabContentProps> = ({
@@ -32,6 +38,8 @@ const ExplorationTabContent: React.FC<ExplorationTabContentProps> = ({
   editName,
   editDescription,
   editIsCollectible,
+  editImage,
+  isImageSelectorOpen,
   onAddNew,
   onEditItem,
   onDeleteItem,
@@ -39,7 +47,10 @@ const ExplorationTabContent: React.FC<ExplorationTabContentProps> = ({
   onSave,
   onNameChange,
   onDescriptionChange,
-  onCollectibleChange
+  onCollectibleChange,
+  onOpenImageSelector,
+  onCloseImageSelector,
+  onImageSelected
 }) => {
   return (
     <div className="space-y-4 mt-2">
@@ -62,9 +73,11 @@ const ExplorationTabContent: React.FC<ExplorationTabContentProps> = ({
           name={editName}
           description={editDescription}
           isCollectible={editIsCollectible}
+          itemImage={editImage}
           onNameChange={onNameChange}
           onDescriptionChange={onDescriptionChange}
           onCollectibleChange={onCollectibleChange}
+          onOpenImageSelector={onOpenImageSelector}
           onCancel={onCancel}
           onSave={onSave}
         />
@@ -78,6 +91,14 @@ const ExplorationTabContent: React.FC<ExplorationTabContentProps> = ({
           onDeleteItem={onDeleteItem}
         />
       )}
+
+      <ImageSelectorDialog
+        open={isImageSelectorOpen}
+        onOpenChange={onCloseImageSelector}
+        onImageSelected={onImageSelected}
+        aspectRatio={1}
+        title="选择物品图片"
+      />
     </div>
   );
 };

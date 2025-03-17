@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Image } from "lucide-react";
 import { ExplorationItem } from "@/utils/types";
 
 interface ExplorationItemCardProps {
@@ -39,7 +39,22 @@ const ExplorationItemCard: React.FC<ExplorationItemCardProps> = ({
         </div>
       </CardHeader>
       <CardContent className="py-2 px-3">
-        <CardDescription>{item.description}</CardDescription>
+        <div className="flex gap-2">
+          {item.type === "item" && (
+            item.image ? (
+              <div className="shrink-0 w-12 h-12 rounded overflow-hidden">
+                <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+              </div>
+            ) : (
+              <div className="shrink-0 w-12 h-12 rounded bg-muted flex items-center justify-center">
+                <Image className="h-6 w-6 text-muted-foreground" />
+              </div>
+            )
+          )}
+          <CardDescription className={item.type === "item" ? "flex-1" : ""}>
+            {item.description}
+          </CardDescription>
+        </div>
       </CardContent>
     </Card>
   );
