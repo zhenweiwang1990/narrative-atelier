@@ -8,7 +8,7 @@ interface StepTwoContentProps {
   chapter: {
     id: string;
     originalContent: string;
-    mainStoryContent: string | undefined;
+    mainStoryContent?: string;
   };
   onChapterChange: (chapterId: string, field: string, value: string) => void;
   onAIProcess: (chapterId: string) => Promise<void>;

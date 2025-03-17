@@ -8,7 +8,7 @@ interface StepOneContentProps {
   chapter: {
     id: string;
     originalContent: string;
-    isProcessed: boolean;
+    isProcessed?: boolean;
   };
   onChapterChange: (chapterId: string, field: string, value: string) => void;
   onAIProcess: (chapterId: string) => Promise<void>;
