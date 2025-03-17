@@ -33,9 +33,9 @@ const QteFailureOutcome: React.FC<QteFailureOutcomeProps> = ({
         scenes={scenes}
         globalValues={globalValues}
         successSceneId=""
-        failureSceneId={element.failure.sceneId}
-        failureTransition={element.failure.transition}
-        failureValueChanges={element.failure.valueChanges}
+        failureSceneId={element.failure.sceneId || ""}
+        failureTransition={element.failure.transition || ""}
+        failureValueChanges={element.failure.valueChanges || []}
         updateSuccessSceneId={() => {}}
         updateFailureSceneId={updateFailureSceneId}
         updateSuccessTransition={() => {}}

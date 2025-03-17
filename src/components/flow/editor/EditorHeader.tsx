@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ElementTypeButtons from "@/components/elements/ElementTypeButtons";
+import { getElementTypeLabel } from "@/components/elements/ElementHeader";
 
 interface EditorHeaderProps {
   title: string;
@@ -33,9 +34,29 @@ const EditorHeader: React.FC<EditorHeaderProps> = ({
   onAiGenerate,
   onPopout,
 }) => {
+  // Get human-readable element type description
+  const getElementTypeDisplay = (type?: ElementType) => {
+    if (!type) return "";
+    
+    switch (type) {
+      case "narration": return "旁白";
+      case "dialogue": return "对话";
+      case "thought": return "思考";
+      case "choice": return "选择";
+      case "qte": return "游戏互动";
+      case "dialogueTask": return "对话任务";
+      default: return "";
+    }
+  };
+
+  const elementTypeDisplay = getElementTypeDisplay(elementType);
+  const headerTitle = elementTypeDisplay 
+    ? `${title} - ${elementTypeDisplay}` 
+    : title;
+  
   return (
     <div className="p-3 flex items-center justify-between border-b bg-[hsl(var(--preview-header))] text-[hsl(var(--preview-header-foreground))]">
-      <h3 className="text-sm font-medium">{title}</h3>
+      <h3 className="text-sm font-medium">{headerTitle}</h3>
       <div className="flex items-center space-x-1">
         {showElementActions && (
           <>

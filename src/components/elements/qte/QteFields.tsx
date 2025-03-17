@@ -2,7 +2,7 @@
 import React from 'react';
 import { QteElement } from '@/utils/types';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import QteDescription from './QteDescription';
 import ActionQteFields from './types/ActionQteFields';
 import ComboQteFields from './types/ComboQteFields';
@@ -66,21 +66,26 @@ const QteFields: React.FC<QteFieldsProps> = ({
     <div className="space-y-2">
       <QteDescription element={element} onUpdate={onUpdate} />
       
-      <div className="mb-2">
-        <Label className="text-xs mb-1 block">QTE类型</Label>
-        <Select 
+      <div className="mb-4">
+        <Label className="text-xs mb-2 block">QTE类型</Label>
+        <RadioGroup 
           value={qteType} 
           onValueChange={handleQteTypeChange}
+          className="flex flex-wrap gap-3"
         >
-          <SelectTrigger className="h-7 text-xs">
-            <SelectValue placeholder="选择QTE类型" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="action">QTE动作</SelectItem>
-            <SelectItem value="combo">QTE连击</SelectItem>
-            <SelectItem value="unlock">QTE解锁</SelectItem>
-          </SelectContent>
-        </Select>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="action" id="qte-action" />
+            <Label htmlFor="qte-action" className="text-sm cursor-pointer">快速反应</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="combo" id="qte-combo" />
+            <Label htmlFor="qte-combo" className="text-sm cursor-pointer">方向连击</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="unlock" id="qte-unlock" />
+            <Label htmlFor="qte-unlock" className="text-sm cursor-pointer">图案解锁</Label>
+          </div>
+        </RadioGroup>
       </div>
       
       {renderQteTypeFields()}

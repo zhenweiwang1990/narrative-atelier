@@ -30,6 +30,16 @@ export const useQteElementContainerState = (
     removeValueChange
   } = useElementOutcomes(element, onUpdate);
   
+  // Ensure proper update of success scene ID
+  const handleUpdateSuccessSceneId = (sceneId: string) => {
+    updateSuccessSceneId(sceneId);
+  };
+  
+  // Ensure proper update of failure scene ID
+  const handleUpdateFailureSceneId = (sceneId: string) => {
+    updateFailureSceneId(sceneId);
+  };
+  
   return {
     aiDialogState: {
       aiDialogOpen,
@@ -41,8 +51,8 @@ export const useQteElementContainerState = (
     },
     outcomeState: {
       safeElement,
-      updateSuccessSceneId,
-      updateFailureSceneId,
+      updateSuccessSceneId: handleUpdateSuccessSceneId,
+      updateFailureSceneId: handleUpdateFailureSceneId,
       updateSuccessTransition,
       updateFailureTransition,
       addValueChange,
