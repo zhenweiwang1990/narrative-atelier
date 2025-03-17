@@ -1,7 +1,7 @@
 
 import React from "react";
 import { CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Character } from "@/types";
+import { Character } from "@/utils/types";
 import CharacterBadges from "./CharacterBadges";
 
 interface CharacterCardInfoProps {

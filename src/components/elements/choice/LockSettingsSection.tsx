@@ -2,7 +2,7 @@
 // This file is no longer needed and can be replaced with a simple stub
 // It's kept for now to avoid breaking imports, but can be removed later
 import React from "react";
-import { ChoiceOption, GlobalValue } from "@/types";
+import { ChoiceOption, GlobalValue } from "@/utils/types";
 
 interface LockSettingsProps {
   option: ChoiceOption;

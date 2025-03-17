@@ -8,7 +8,7 @@ import {
   DialogueTaskElement,
   ElementOutcome,
   GlobalValue
-} from "@/types";
+} from "@/utils/types";
 
 export interface ValueModification {
   sceneId: string;

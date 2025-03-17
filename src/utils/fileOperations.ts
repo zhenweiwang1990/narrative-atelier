@@ -1,5 +1,5 @@
 
-import { Story, Scene, Location, GlobalValue } from "../types";
+import { Story, Scene, Location } from "./types";
 import { generateId } from "./storage";
 import { migrateStoryElementsToNewFormat } from './storyLoading';
 
