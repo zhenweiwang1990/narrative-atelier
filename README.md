@@ -1,5 +1,5 @@
 
-# 欢迎使用您的 Lovable 项目
+# Miss AI Editor
 
 ## 项目信息
 
